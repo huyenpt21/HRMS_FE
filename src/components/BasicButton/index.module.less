@@ -1,0 +1,27 @@
+@import 'styles/_variables.less';
+
+.btn {
+  &--filled {
+    background-color: @primary-color;
+    border-radius: 5px !important;
+    padding: 10px 22px;
+    font-size: 14px;
+    line-height: 1;
+    color: white;
+  }
+
+  &--outline {
+    background-color: @white !important;
+    color: @primary-color !important;
+    font-size: 14px;
+    border: 1px solid @primary-color !important;
+    border-radius: 5px !important;
+    padding: 10px 22px;
+    line-height: 1;
+
+    &:hover {
+      background-color: @primary-color !important;
+      color: @white !important;
+    }
+  }
+}

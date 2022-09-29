@@ -1,0 +1,213 @@
+@import '_variables.less';
+
+html,
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: @text-color !important;
+  font-size: 14px;
+}
+
+code {
+  font-family: 'Inter', sans-serif;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: @primary-color !important;
+  color: @white !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.ant-picker-week-panel-row-selected td {
+  background-color: @table-row-selected !important;
+
+  &:first-child {
+    background-color: @primary-color !important;
+    border-radius: 100px 0 0 100px;
+  }
+
+  &:last-child {
+    background-color: @primary-color !important;
+    border-radius: 0 100px 100px 0;
+  }
+}
+
+.ant-card-body {
+  padding: 0px !important;
+}
+
+thead.ant-table-thead {
+  > tr > th {
+    background-color: @table-header !important;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 14px;
+    color: @white;
+
+    &:first-child {
+      padding-left: 24px !important;
+    }
+
+    &::before {
+      width: 0px !important;
+    }
+
+    &:active,
+    &:hover,
+    &:target,
+    &:focus {
+      background-color: @table-header !important;
+    }
+  }
+}
+
+.ant-checkbox-inner {
+  width: 18px;
+  height: 18px;
+}
+
+.ant-checkbox-inner::after {
+  left: 25%;
+}
+
+td.ant-table-cell {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: @text-color;
+
+  &:first-child {
+    padding-left: 24px !important;
+  }
+}
+
+.ant-layout-sider-children {
+  overflow-y: auto;
+}
+
+.ant-menu-item-selected a {
+  color: @white !important;
+}
+
+.ant-menu-item-selected svg {
+  stroke: @white !important;
+}
+
+.menu__item {
+  .anticon {
+    font-size: 20px !important;
+    min-width: 20px !important;
+  }
+}
+
+.ant-picker-large .ant-picker-input > input {
+  text-align: center;
+  width: 215px;
+}
+
+.ant-picker-clear {
+  display: none;
+}
+
+.ant-select-selector {
+  border-radius: 5px !important;
+}
+
+.ant-layout-footer {
+  padding: 13px 50px !important;
+  background: @white !important;
+}
+
+.table-card {
+  .ant-card-head {
+    padding: 0 28px;
+
+    .ant-card-extra {
+      width: 100%;
+      margin-left: unset;
+      padding: 28px 0 40px;
+    }
+  }
+
+  .ant-pagination {
+    margin: 16px 28px !important;
+  }
+}
+
+.ant-modal-header {
+  background-color: @primary-color !important;
+
+  .ant-modal-title {
+    color: @white !important;
+  }
+}
+
+.ant-input-number {
+  width: 100% !important;
+}
+
+.menu__item {
+  .ant-menu-submenu-title {
+    column-gap: 8px;
+  }
+}
+
+.ant-picker-large .ant-picker-input > input {
+  width: fit-content;
+}
+
+.ant-picker {
+  border-radius: 5px !important;
+}
+
+.ant-form-item-control-input-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ant-table-column-sorter {
+  color: @white !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.ant-table-filter-trigger.active {
+  color: @white !important;
+}
+
+.h-100vh {
+  height: 100vh !important;
+}
+.ant-select-item.ant-select-item-group {
+  color: @primary-color;
+  font-weight: 600;
+  font-size: 14px;
+}
+.filter-container {
+  width: 100%;
+  height: auto;
+  background-color: @white;
+  padding: 12px 0 0 12px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  :global {
+    .ant-form-item {
+      margin-bottom: 12px;
+    }
+  }
+  .filter-title {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: @light-black;
+    margin-bottom: 16px;
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "code": "200",
+    "message": "Success",
+    "pagination": {
+      "limit": 0,
+      "page": 0,
+      "records": 0,
+      "totalRecords": 0
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "label": "Coming late/leaving soon/going out",
+        "options": [
+          {
+            "label": "Coming late",
+            "value": "e1d87d00-3494-44cf-a07f-f08e49345b2b",
+            "type": "COME_LEAVE_GO"
+          },
+          {
+            "label": "Comming Late",
+            "value": "36ef6e8a-5e88-4667-8dc7-5384c0c2c240",
+            "type": "COME_LEAVE_GO"
+          },
+          {
+            "label": "comming late test",
+            "value": "bf3d87c2-c317-4860-ab10-826c1e6f3917",
+            "type": "COME_LEAVE_GO"
+          },
+          {
+            "label": "comming late test2",
+            "value": "b46a3628-c524-4018-95b1-d777d9945927",
+            "type": "COME_LEAVE_GO"
+          },
+          {
+            "label": "comming late test3",
+            "value": "cdd7f1d1-9a0b-4dbc-87f7-c7a025053ad9",
+            "type": "COME_LEAVE_GO"
+          }
+        ]
+      },
+      {
+        "label": "Absent",
+        "options": [
+          {
+            "label": "Full day Absent",
+            "value": "d4a5a41f-7403-41d9-8330-74a0b31f8e82",
+            "type": "ABSENCE"
+          }
+        ]
+      }
+    ]
+  }
+}

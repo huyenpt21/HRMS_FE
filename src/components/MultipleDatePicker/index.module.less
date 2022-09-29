@@ -1,0 +1,25 @@
+@import 'styles/_variables.less';
+.selectedDate {
+  background: @open-color;
+  color: @white;
+  margin: 3px;
+}
+
+.calendar {
+  width: 100%;
+  max-width: 440px;
+  :global {
+    .ant-picker-cell-selected {
+      background-color: @primary-color;
+      color: @white;
+    }
+  }
+}
+
+.select {
+  min-width: 300px;
+}
+
+.tag__item {
+  border-radius: 6px !important;
+}
