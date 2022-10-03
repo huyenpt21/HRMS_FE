@@ -14,9 +14,37 @@ code {
   font-family: 'Inter', sans-serif;
 }
 
+//Custom styles for ant menu
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background-color: @primary-color !important;
   color: @white !important;
+}
+
+.ant-menu-submenu-selected {
+  background-color: @primary-background-color !important;
+  color: @text-color !important;
+}
+
+.ant-menu-item-selected a {
+  color: @white !important;
+}
+
+.ant-menu-item-selected svg {
+  stroke: @white !important;
+  fill: @white !important;
+}
+
+.ant-menu-item-active {
+  background-color: @primary-background-color !important;
+}
+
+.ant-menu-submenu-active:hover {
+  background-color: @primary-background-color !important;
+}
+
+.ant-menu-item:hover,
+.ant-menu-submenu-active:hover .ant-menu-submenu-title {
+  color: @text-color !important;
 }
 
 .cursor-pointer {
@@ -88,14 +116,6 @@ td.ant-table-cell {
 
 .ant-layout-sider-children {
   overflow-y: auto;
-}
-
-.ant-menu-item-selected a {
-  color: @white !important;
-}
-
-.ant-menu-item-selected svg {
-  stroke: @white !important;
 }
 
 .menu__item {

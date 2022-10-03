@@ -1,13 +1,11 @@
-import { HomeOutlined } from '@ant-design/icons';
-import { Breadcrumb, Drawer, Grid, Layout } from 'antd';
-import Breadcrumbs from 'layouts/Common/Breadcrumb';
-import Footer from 'layouts/Common/Footer';
-import Header from 'layouts/Common/Header';
+import { Drawer, Grid, Layout } from 'antd';
+import ContentPage from 'layouts/Common/ContentPage';
+import HeaderContent from 'layouts/Common/HeaderContent';
 import MenuSidebar from 'layouts/Menu';
-import { useMemo, useState } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import ucwords from 'utils/ucwords';
-const { Content, Sider } = Layout;
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './index.module.less';
+const { Content, Sider, Header } = Layout;
 
 const { useBreakpoint } = Grid;
 
@@ -15,16 +13,6 @@ const MainLayout = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const { xs, sm, lg } = useBreakpoint();
-  const router = useLocation();
-
-  document.title = useMemo(() => {
-    const paths = router.pathname.split('/');
-    const pathName = paths[paths.length - 1];
-
-    if (router.pathname === '/') return 'Dashboard';
-
-    return `${ucwords(paths[1])} | ${ucwords(pathName)}`;
-  }, [router]);
 
   let siderWidth = 280;
   let collapsedWidth = 80;
@@ -54,7 +42,7 @@ const MainLayout = () => {
   };
 
   const getImageSource = () => {
-    const imageLink = process.env.REACT_APP_IMAGE_FILE_LINK;
+    const imageLink = '/images/fileName.svg';
 
     if (xs) {
       return imageLink?.replace('fileName', 'main-logo');
@@ -66,37 +54,6 @@ const MainLayout = () => {
     );
   };
 
-  const itemRender = () => {
-    const bc = getBreadcrumb();
-
-    return bc.map((r: any, i: number) => {
-      if (r.path) {
-        return (
-          <Breadcrumb.Item key={i}>
-            <Link to={r.path}>{r.title}</Link>
-          </Breadcrumb.Item>
-        );
-      }
-
-      return <Breadcrumb.Item key={i}>{r.title}</Breadcrumb.Item>;
-    });
-  };
-
-  const getBreadcrumb = () => {
-    const path = router.pathname;
-
-    if (path === '/')
-      return [
-        {
-          title: 'Dashboard',
-        },
-      ];
-
-    const newBreadcrumbs =
-      Breadcrumbs.find((bc) => path.includes(bc.path))?.breadcrumbs || [];
-
-    return newBreadcrumbs;
-  };
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -119,12 +76,12 @@ const MainLayout = () => {
       >
         <div
           style={{
-            padding: `${collapsed ? '14px' : '18px'} 24px`,
+            padding: collapsed ? '14px 24px' : '32px 40px',
           }}
         >
           <Link to="/">
             <img
-              src="/images/logo-company.svg"
+              src={getImageSource()}
               style={{
                 width: '100%',
               }}
@@ -173,19 +130,20 @@ const MainLayout = () => {
           transition: 'all 0.2s',
         }}
       >
-        <Header sidebarWidth={marginLeft} />
-        <Content style={{ margin: '80px 16px 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>
-              <Link to="/">
-                <HomeOutlined />
-              </Link>
-            </Breadcrumb.Item>
-            {itemRender()}
-          </Breadcrumb>
-          <Outlet />
+        <Header
+          style={{
+            width: `calc(100% - ${marginLeft + 32}px )`,
+            padding: '0 24px',
+          }}
+          className={styles.header}
+        >
+          <HeaderContent />
+        </Header>
+        <Content style={{ margin: '110px 16px 16px' }}>
+          <ContentPage />
         </Content>
-        <Footer sidebarWidth={marginLeft} />
+
+        {/* <Footer sidebarWidth={marginLeft} /> */}
       </Layout>
     </Layout>
   );

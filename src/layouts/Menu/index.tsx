@@ -1,11 +1,5 @@
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
 import { Menu, MenuProps } from 'antd';
+import SvgIcon from 'components/SvgIcon';
 
 export default function MenuSidebar() {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -23,18 +17,27 @@ export default function MenuSidebar() {
     } as MenuItem;
   }
   const items: MenuItem[] = [
-    getItem('Option 1', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Tom', '3'),
-      getItem('Bill', '4'),
-      getItem('Alex', '5'),
+    getItem('Dashboard', 'dashboard', <SvgIcon icon="home" />),
+    getItem('Employee', 'employee', <SvgIcon icon="user" color="#000" />, [
+      getItem('Employee List', 'allEmployees'),
+      getItem('Subordinate List', 'mySubordinate'),
     ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [
-      getItem('Team 1', '6'),
-      getItem('Team 2', '8'),
+    getItem('Request', 'request', <SvgIcon icon="delivery" />, [
+      getItem('My request History', 'myRequest'),
+      getItem('Subordinate Request List', 'subordinateRequestList'),
+      getItem('All Request List', 'allRequestList'),
     ]),
-    getItem('Files', '9', <FileOutlined />),
+    getItem('Device', 'device', <SvgIcon icon="mouse" />, [
+      getItem('My Device List', 'myDeviceList'),
+      getItem('My Request History', 'myDeviceRequest'),
+      getItem('Subodinate Device List', 'subordinateDeviceList'),
+      getItem('Subodinate Request List', 'subordinateDeviceRequestList'),
+      getItem('All Request List', 'allDeviceRequestList'),
+    ]),
+    getItem('Time Check', 'timecheck', <SvgIcon icon="deadline" />, [
+      getItem('My Time Check', 'myTimeCheck'),
+      getItem('All Time Check List', 'allTimeCheckList'),
+    ]),
   ];
   const onOpenChange = (keys: string[]) => {
     if (keys.length >= 2) {

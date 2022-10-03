@@ -1,10 +1,11 @@
 import React from 'react';
 import IcomoonReact from 'icomoon-react';
 import selection from './selection.json';
+import { DEFAULT_SIZE_ICON } from 'constants/common';
 
 interface Props {
   color?: string;
-  size: string | number;
+  size?: string | number;
   icon: string;
   className?: string;
   iconSet?: object;
@@ -13,7 +14,7 @@ interface Props {
 const SvgIcon = (props: Props) => {
   const {
     color,
-    size = '100%',
+    size = DEFAULT_SIZE_ICON,
     iconSet = selection,
     icon,
     className = '',

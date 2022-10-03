@@ -1,0 +1,57 @@
+@import 'styles/_variables.less';
+
+.container {
+  line-height: 75px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.user__avt {
+  display: inline-block;
+  line-height: 75px;
+}
+
+.user__infor {
+  display: inline-block;
+  text-align: left;
+  margin: auto 10px;
+}
+
+.user__name {
+  font-weight: 600;
+  line-height: normal;
+  font-size: 18px;
+}
+
+.user__role {
+  padding-top: 4px;
+  line-height: normal;
+  color: @text-color;
+}
+
+.menu__expand,
+.user__noti {
+  cursor: pointer;
+  :global {
+    .ant-avatar {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    .ant-badge-count {
+      top: 4px !important;
+    }
+  }
+}
+
+.menu__expand:hover,
+.user__noti:hover {
+  :global {
+    .ant-avatar {
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.2s;
+    }
+  }
+}
+
+.menu__expand {
+  margin-left: 10px;
+}
