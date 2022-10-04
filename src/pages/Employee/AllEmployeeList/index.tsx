@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function EmployeeList() {
+export default function AllEmployeeList() {
   return <div>EmployeeList</div>;
 }
