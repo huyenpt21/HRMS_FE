@@ -1,13 +1,14 @@
 import { Menu } from 'antd';
 import SvgIcon from 'components/SvgIcon';
-import { getItem, MenuItem, MenuItemType } from 'models/menu';
-import { useMemo, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
+import { useMemo, useState, useEffect } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { menus } from './menu';
 
-export default function MenuSidebar() {
+export default function MenuSidebar({ collapsed }: IMenuCProps) {
+  const [openKeys, setOpenKeys] = useState<any>([]);
   const [activeMenu, setActiveMenu] = useState<any>(undefined);
-
+  const router = useLocation();
   const menuList: MenuItemType[] = menus;
 
   const menuItems: MenuItem[] = useMemo(() => {
@@ -58,17 +59,31 @@ export default function MenuSidebar() {
     });
   }, [menuList]);
 
+  const menuActive = (path: string) => {
+    let paths = path.split('/');
+    paths.shift();
+    setOpenKeys([paths[0]]);
+  };
+
   const onOpenChange = (keys: string[]) => {
     if (keys.length >= 2) {
       keys.splice(0, 1);
     }
 
-    // setOpenKeys(keys);
+    setOpenKeys(keys);
   };
+
+  useEffect(() => {
+    const { pathname } = router;
+
+    if (menus && menus.length) {
+      menuActive(pathname);
+    }
+  }, [menus, router.pathname, collapsed]);
   return (
     <Menu
       theme="light"
-      defaultSelectedKeys={['home']}
+      openKeys={openKeys}
       selectedKeys={[activeMenu]}
       mode="inline"
       onOpenChange={onOpenChange}

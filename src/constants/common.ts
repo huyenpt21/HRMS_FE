@@ -1,3 +1,4 @@
+import { TablePaginationConfig } from 'antd';
 import i18n from 'i18n';
 
 const { t } = i18n;
@@ -8,6 +9,14 @@ export enum SortDir {
   ASC = 'asc',
   DESC = 'desc',
 }
+
+export const paginationConfig: TablePaginationConfig = {
+  current: 1,
+  pageSize: 10,
+  pageSizeOptions: ['10', '20', '50', '100'],
+  showSizeChanger: true,
+  showQuickJumper: false,
+};
 
 export const RecordStatus = {
   ACTIVE: true,

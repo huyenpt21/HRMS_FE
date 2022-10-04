@@ -1,0 +1,40 @@
+{
+  "code": 200,
+  "metadata": {
+    "message": "Success",
+    "pagination": {
+      "limit": 10,
+      "page": 2,
+      "records": 10,
+      "totalRecords": 3
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "uid": "1",
+        "code": "HE00001",
+        "name": "Nguyen Van A",
+        "email": "anvhe00001@minswap.com.vn",
+        "department": "DEV",
+        "position": "Web - Front End"
+      },
+      {
+        "uid": "2",
+        "code": "HE00002",
+        "name": "Nguyen Thuc Thuy Tien",
+        "email": "tienntthe00002@minswap.com.vn",
+        "department": "SALE",
+        "position": "Sale"
+      },
+      {
+        "uid": "3",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      }
+    ]
+  }
+}

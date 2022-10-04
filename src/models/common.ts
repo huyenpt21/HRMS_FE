@@ -32,3 +32,23 @@ export interface DisableTime {
   disabledHours: () => number[];
   disabledMinutes: () => number[];
 }
+
+interface FilterTable {
+  text: string;
+  value: string;
+}
+
+export interface HeaderTableFields {
+  key: string;
+  title: string | { titleName: string; titleDate: string };
+  dataIndex: string;
+  fixed?: string;
+  width?: number;
+  sorter?: boolean;
+  align?: 'left' | 'right' | 'center';
+  render?: any;
+  code?: string;
+  filters?: FilterTable[];
+  filterMultiple?: boolean;
+  sortOrder?: 'ascend' | 'descend' | false;
+}

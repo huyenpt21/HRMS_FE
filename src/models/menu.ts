@@ -1,5 +1,9 @@
 import { MenuProps } from 'antd';
 
+export interface IMenuCProps {
+  collapsed?: boolean;
+}
+
 export interface MenuItemType {
   title: string;
   key: string;
