@@ -1,59 +1,94 @@
-import { Menu, MenuProps } from 'antd';
+import { Menu } from 'antd';
 import SvgIcon from 'components/SvgIcon';
+import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
+import { useMemo, useState, useEffect } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { menus } from './menu';
 
-export default function MenuSidebar() {
-  type MenuItem = Required<MenuProps>['items'][number];
-  function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-  ): MenuItem {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    } as MenuItem;
-  }
-  const items: MenuItem[] = [
-    getItem('Dashboard', 'dashboard', <SvgIcon icon="home" />),
-    getItem('Employee', 'employee', <SvgIcon icon="user" color="#000" />, [
-      getItem('Employee List', 'allEmployees'),
-      getItem('Subordinate List', 'mySubordinate'),
-    ]),
-    getItem('Request', 'request', <SvgIcon icon="delivery" />, [
-      getItem('My request History', 'myRequest'),
-      getItem('Subordinate Request List', 'subordinateRequestList'),
-      getItem('All Request List', 'allRequestList'),
-    ]),
-    getItem('Device', 'device', <SvgIcon icon="mouse" />, [
-      getItem('My Device List', 'myDeviceList'),
-      getItem('My Request History', 'myDeviceRequest'),
-      getItem('Subodinate Device List', 'subordinateDeviceList'),
-      getItem('Subodinate Request List', 'subordinateDeviceRequestList'),
-      getItem('All Request List', 'allDeviceRequestList'),
-    ]),
-    getItem('Time Check', 'timecheck', <SvgIcon icon="deadline" />, [
-      getItem('My Time Check', 'myTimeCheck'),
-      getItem('All Time Check List', 'allTimeCheckList'),
-    ]),
-  ];
+export default function MenuSidebar({ collapsed }: IMenuCProps) {
+  const [openKeys, setOpenKeys] = useState<any>([]);
+  const [activeMenu, setActiveMenu] = useState<any>(undefined);
+  const router = useLocation();
+  const menuList: MenuItemType[] = menus;
+
+  const menuItems: MenuItem[] = useMemo(() => {
+    return menuList.map((menu: MenuItemType) => {
+      return menu?.children?.length
+        ? getItem(
+            menu.title,
+            menu.key,
+            menu?.icon && (
+              <div>
+                <SvgIcon icon={menu.icon} color="#000" />
+              </div>
+            ),
+            menu?.children.map((subMenu: MenuItemType) => {
+              return getItem(
+                subMenu?.path && (
+                  <NavLink to={subMenu.path}>
+                    {({ isActive }) => {
+                      isActive && setActiveMenu(subMenu.key);
+                      return (
+                        <span className={isActive ? 'active-link' : undefined}>
+                          {subMenu.title}{' '}
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+                ),
+                subMenu.key,
+              );
+            }),
+          )
+        : getItem(
+            menu?.path && (
+              <NavLink to={menu.path}>
+                {({ isActive }) => {
+                  isActive && setActiveMenu(menu.key);
+                  return (
+                    <span className={isActive ? 'active-link' : undefined}>
+                      {menu.title}
+                    </span>
+                  );
+                }}
+              </NavLink>
+            ),
+            menu.key,
+            menu?.icon && <SvgIcon icon={menu.icon} size={24} color="#000" />,
+          );
+    });
+  }, [menuList]);
+
+  const menuActive = (path: string) => {
+    let paths = path.split('/');
+    paths.shift();
+    setOpenKeys([paths[0]]);
+  };
+
   const onOpenChange = (keys: string[]) => {
     if (keys.length >= 2) {
       keys.splice(0, 1);
     }
 
-    // setOpenKeys(keys);
+    setOpenKeys(keys);
   };
+
+  useEffect(() => {
+    const { pathname } = router;
+
+    if (menus && menus.length) {
+      menuActive(pathname);
+    }
+  }, [menus, router.pathname, collapsed]);
   return (
     <Menu
       theme="light"
-      defaultSelectedKeys={['1']}
+      openKeys={openKeys}
+      selectedKeys={[activeMenu]}
       mode="inline"
       onOpenChange={onOpenChange}
       triggerSubMenuAction="click"
-      items={items}
+      items={menuItems}
     />
   );
 }

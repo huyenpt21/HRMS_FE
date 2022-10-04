@@ -1,5 +1,7 @@
 import { Drawer, Grid, Layout } from 'antd';
+import { Footer } from 'antd/lib/layout/layout';
 import ContentPage from 'layouts/Common/ContentPage';
+import FooterContent from 'layouts/Common/FooterContent';
 import HeaderContent from 'layouts/Common/HeaderContent';
 import MenuSidebar from 'layouts/Menu';
 import { useState } from 'react';
@@ -89,8 +91,7 @@ const MainLayout = () => {
             />
           </Link>
         </div>
-        {/* <MenuSidebar collapsed={collapsed} /> */}
-        <MenuSidebar />
+        <MenuSidebar collapsed={collapsed} />
       </Sider>
       {xs && (
         <Drawer
@@ -132,18 +133,24 @@ const MainLayout = () => {
       >
         <Header
           style={{
-            width: `calc(100% - ${marginLeft + 32}px )`,
-            padding: '0 24px',
+            width: `calc(100% - ${marginLeft + 56}px )`,
+            padding: '0 32px',
           }}
           className={styles.header}
         >
           <HeaderContent />
         </Header>
-        <Content style={{ margin: '110px 16px 16px' }}>
+        <Content style={{ margin: '110px 28px 0px 28px' }}>
           <ContentPage />
         </Content>
-
-        {/* <Footer sidebarWidth={marginLeft} /> */}
+        <Footer
+          style={{
+            width: `calc(100% - ${marginLeft}px )`,
+          }}
+          className={styles.footer}
+        >
+          <FooterContent />
+        </Footer>
       </Layout>
     </Layout>
   );

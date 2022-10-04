@@ -47,6 +47,19 @@ code {
   color: @text-color !important;
 }
 
+.menu__item {
+  .anticon {
+    font-size: 20px !important;
+    min-width: 20px !important;
+  }
+}
+
+.menu__item {
+  .ant-menu-submenu-title {
+    column-gap: 8px;
+  }
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -65,17 +78,14 @@ code {
   }
 }
 
-.ant-card-body {
-  padding: 0px !important;
-}
-
+//Custom table antd
 thead.ant-table-thead {
   > tr > th {
     background-color: @table-header !important;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 14px;
-    color: @white;
+    color: @text-color;
 
     &:first-child {
       padding-left: 24px !important;
@@ -86,12 +96,15 @@ thead.ant-table-thead {
     }
 
     &:active,
-    &:hover,
     &:target,
     &:focus {
-      background-color: @table-header !important;
+      background-color: @table-row-selected !important;
     }
   }
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background-color: @table-row-selected !important;
 }
 
 .ant-checkbox-inner {
@@ -118,13 +131,6 @@ td.ant-table-cell {
   overflow-y: auto;
 }
 
-.menu__item {
-  .anticon {
-    font-size: 20px !important;
-    min-width: 20px !important;
-  }
-}
-
 .ant-picker-large .ant-picker-input > input {
   text-align: center;
   width: 215px;
@@ -143,6 +149,7 @@ td.ant-table-cell {
   background: @white !important;
 }
 
+//Custom card antd
 .table-card {
   .ant-card-head {
     padding: 0 28px;
@@ -150,13 +157,17 @@ td.ant-table-cell {
     .ant-card-extra {
       width: 100%;
       margin-left: unset;
-      padding: 28px 0 40px;
+      padding: 28px 24px 40px 24px;
     }
   }
 
   .ant-pagination {
     margin: 16px 28px !important;
   }
+}
+
+.ant-card {
+  border-radius: 8px !important;
 }
 
 .ant-modal-header {
@@ -169,12 +180,6 @@ td.ant-table-cell {
 
 .ant-input-number {
   width: 100% !important;
-}
-
-.menu__item {
-  .ant-menu-submenu-title {
-    column-gap: 8px;
-  }
 }
 
 .ant-picker-large .ant-picker-input > input {
@@ -192,7 +197,7 @@ td.ant-table-cell {
 }
 
 .ant-table-column-sorter {
-  color: @white !important;
+  color: @primary-background-color !important;
 }
 
 .mb-0 {
@@ -200,7 +205,7 @@ td.ant-table-cell {
 }
 
 .ant-table-filter-trigger.active {
-  color: @white !important;
+  color: @primary-background-color !important;
 }
 
 .h-100vh {

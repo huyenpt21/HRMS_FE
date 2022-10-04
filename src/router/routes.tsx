@@ -4,6 +4,7 @@ import HomePage from 'pages/homePage';
 import ForbiddenPage from 'pages/forbidden';
 import NotFound from 'pages/notFound';
 import { useRoutes } from 'react-router-dom';
+import AllEmployeeList from 'pages/Employee/AllEmployeeList';
 export default function RouterElement() {
   let element = useRoutes([
     {
@@ -13,6 +14,15 @@ export default function RouterElement() {
         {
           index: true,
           element: <HomePage />,
+        },
+        {
+          path: 'employee',
+          children: [
+            {
+              path: 'all/list',
+              element: <AllEmployeeList />,
+            },
+          ],
         },
       ],
     },
