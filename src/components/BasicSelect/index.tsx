@@ -57,7 +57,7 @@ const BasicSelect = (props: Props) => {
     >
       <Select
         getPopupContainer={props.getPopupContainer}
-        className={props.className + ' ' + styles.item}
+        className={`${props.className} ${styles.item}`}
         disabled={props.disabled}
         placeholder={props.placeholder}
         loading={props.loading}

@@ -1,12 +1,18 @@
-import { Space, TablePaginationConfig } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Col, Row, TablePaginationConfig } from 'antd';
+import BasicButton from 'components/BasicButton';
+import BasicInput from 'components/BasicInput';
+import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
+import SvgIcon from 'components/SvgIcon';
+import { paginationConfig } from 'constants/common';
+import { EmployeeListItem } from 'models/allEmployee';
 import { HeaderTableFields } from 'models/common';
 import { useEffect, useState } from 'react';
-import { Header } from './header';
-import dataMock from './dataMock.json';
-import { EmployeeListItem } from 'models/allEmployee';
 import { isEmptyPagination } from 'utils/common';
-import { paginationConfig } from 'constants/common';
+import dataMock from './dataMock.json';
+import { Header } from './header';
+import styles from './index.module.less';
 
 export default function AllEmployeeList() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -45,9 +51,28 @@ export default function AllEmployeeList() {
   }, [dataMock]);
   const extraHeader = (
     <>
-      <Space>
-        <div>Header</div>
-      </Space>
+      <div className={styles.header__title}>Employee List</div>
+      <div className={styles.header__container}>
+        <Row gutter={10} className={styles.filter__section}>
+          <Col span={8}>
+            <BasicInput
+              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
+              placeholder="Search..."
+            />
+          </Col>
+          <Col span={8}>
+            <BasicSelect options={[]} placeholder="Department" />
+          </Col>
+          <Col span={8}>
+            <BasicSelect options={[]} placeholder="Position" />
+          </Col>
+        </Row>
+        <BasicButton
+          title="Add Employee"
+          type="filled"
+          icon={<PlusOutlined />}
+        />
+      </div>
     </>
   );
   return (
