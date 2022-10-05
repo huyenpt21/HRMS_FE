@@ -1,27 +1,69 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Col, Row, TablePaginationConfig } from 'antd';
+import { SorterResult } from 'antd/lib/table/interface';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
 import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
-import { EmployeeListItem } from 'models/allEmployee';
+import {
+  EmployeeListFields,
+  EmployeeListItem,
+  EmployeeListQuery,
+} from 'models/allEmployee';
 import { HeaderTableFields } from 'models/common';
 import { useEffect, useState } from 'react';
-import { isEmptyPagination } from 'utils/common';
+import { useSearchParams } from 'react-router-dom';
+import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
 import dataMock from './dataMock.json';
-import { Header } from './header';
+import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 import styles from './index.module.less';
 
 export default function AllEmployeeList() {
+  const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const header: HeaderTableFields[] = Header;
-  // const dataTable = dataMock;
+
+  // * defailt filters
+  const defaultFilter: EmployeeListQuery = {
+    page: searchParams.get('page')
+      ? Number(searchParams.get('page'))
+      : paginationConfig.current,
+    limit: searchParams.get('limit')
+      ? Number(searchParams.get('limit'))
+      : paginationConfig.pageSize,
+    dir: searchParams.get('dir') ?? undefined,
+    sort: searchParams.get('sort') ?? undefined,
+  };
+
+  // * state query
+  const [stateQuery, setStateQuery] = useState(
+    removeEmptyValueInObject(defaultFilter),
+  );
+
+  const header: HeaderTableFields[] = dataHeader;
+  // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
+      if (el.key === 'name') {
+        el.width = 250;
+        el.sorter = true;
+      } else if (el.key === 'code') {
+        el.width = 150;
+        el.sorter = true;
+      } else if (el.key === 'email') {
+        el.width = 300;
+      } else if (el.key === 'department') {
+        el.width = 150;
+        el.filters = [
+          { text: 'Dev', value: 'dev' },
+          { text: 'Sale', value: 'sale' },
+        ];
+      } else {
+        el.width = 200;
+      }
       return {
         ...el,
         render: (data: any) => {
@@ -32,6 +74,7 @@ export default function AllEmployeeList() {
     setColumnsHeader(columns);
   }, []);
 
+  // * get data source from API and set to state that store records for table
   useEffect(() => {
     if (dataMock && dataMock.data) {
       let {
@@ -40,15 +83,50 @@ export default function AllEmployeeList() {
       } = dataMock;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
+        // * set the pagination data from API
+        // setPagination((prevPagination: TablePaginationConfig) => ({
+        //   ...prevPagination,
+        //   current: pagination.page,
+        //   pageSize: pagination.limit,
+        //   total: pagination.totalRecords,
+        // }));
       }
     }
-  }, [dataMock]);
+  }, [dataMock, stateQuery]);
+
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: any,
+    sorter: SorterResult<object>,
+  ) => {
+    let sort = stateQuery.sort;
+    let dir = stateQuery.dir;
+
+    if (sorter.order) {
+      const sortField = sorter.field as EmployeeListFields;
+      const sortDirections = sorter.order === 'ascend' ? 'asc' : 'desc';
+
+      sort = `${sortField}`;
+      dir = sortDirections;
+    }
+
+    // ! Delete this function after setup API
+    setPagination((prevPagination: TablePaginationConfig) => ({
+      ...prevPagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    }));
+
+    // * set changing of pagination to state query
+    setStateQuery((prev: EmployeeListQuery) => ({
+      ...prev,
+      page: pagination.current,
+      limit: pagination.pageSize,
+      sort,
+      dir,
+    }));
+  };
+
   const extraHeader = (
     <>
       <div className={styles.header__section}>
@@ -81,9 +159,13 @@ export default function AllEmployeeList() {
     <CommonTable
       columns={columnsHeader}
       data={records}
-      onChange={() => {}}
+      onChange={handleTableChange}
       pagination={pagination}
       extra={extraHeader}
+      stateQuery={stateQuery}
+      rowKey={(record: EmployeeListItem) => record.uid}
+      loading={false}
+      scroll={{ y: 240 }}
     />
   );
 }
