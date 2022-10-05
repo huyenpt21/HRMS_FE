@@ -51,7 +51,14 @@ export default function AllEmployeeList() {
   }, [dataMock]);
   const extraHeader = (
     <>
-      <div className={styles.header__title}>Employee List</div>
+      <div className={styles.header__section}>
+        <div className={styles.header__title}>Employee List</div>
+        <BasicButton
+          title="Add Employee"
+          type="filled"
+          icon={<PlusOutlined />}
+        />
+      </div>
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
           <Col span={8}>
@@ -67,11 +74,6 @@ export default function AllEmployeeList() {
             <BasicSelect options={[]} placeholder="Position" />
           </Col>
         </Row>
-        <BasicButton
-          title="Add Employee"
-          type="filled"
-          icon={<PlusOutlined />}
-        />
       </div>
     </>
   );
