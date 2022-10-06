@@ -18,7 +18,7 @@ export interface Feature<T> {
   service: string;
   api_url: string | undefined;
   key: string;
-  getFilterList: (old: any, uid: string) => { [key: string]: T[] };
+  getFilterList?: (old: any, uid: string) => { [key: string]: T[] };
 }
 
 export interface MutationProps<T> {
