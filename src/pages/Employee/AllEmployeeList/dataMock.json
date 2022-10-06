@@ -3,9 +3,8 @@
   "metadata": {
     "message": "Success",
     "pagination": {
-      "limit": 5,
       "page": 1,
-      "records": 1,
+      "limit": 5,
       "totalRecords": 15
     }
   },

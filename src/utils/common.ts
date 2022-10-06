@@ -29,7 +29,7 @@ export const sortInforWithDir = (
   field: string | undefined,
   stateQuery: QueryParams<string>,
 ) => {
-  if (field != null) {
+  if (field) {
     return (
       stateQuery?.sort === field &&
       (stateQuery?.dir === SortDir.ASC ? 'ascend' : 'descend')

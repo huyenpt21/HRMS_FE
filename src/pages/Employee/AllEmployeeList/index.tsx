@@ -7,6 +7,7 @@ import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
 import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
+import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 import {
   EmployeeListFields,
   EmployeeListItem,
@@ -15,9 +16,12 @@ import {
 import { HeaderTableFields } from 'models/common';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
+import {
+  isEmptyPagination,
+  removeEmptyValueInObject,
+  sortInforWithDir,
+} from 'utils/common';
 import dataMock from './dataMock.json';
-import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 import styles from './index.module.less';
 
 export default function AllEmployeeList() {
@@ -34,8 +38,8 @@ export default function AllEmployeeList() {
     limit: searchParams.get('limit')
       ? Number(searchParams.get('limit'))
       : paginationConfig.pageSize,
-    dir: searchParams.get('dir') ?? undefined,
     sort: searchParams.get('sort') ?? undefined,
+    dir: searchParams.get('dir') ?? undefined,
   };
 
   // * state query
@@ -47,16 +51,20 @@ export default function AllEmployeeList() {
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
+      // * enable sort in column
+      if (el.key === 'name' || el.key === 'code') {
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+      }
       if (el.key === 'name') {
         el.width = 250;
-        el.sorter = true;
       } else if (el.key === 'code') {
         el.width = 150;
-        el.sorter = true;
       } else if (el.key === 'email') {
         el.width = 300;
       } else if (el.key === 'department') {
         el.width = 150;
+        el.filterMultiple = true;
         el.filters = [
           { text: 'Dev', value: 'dev' },
           { text: 'Sale', value: 'sale' },
@@ -64,6 +72,7 @@ export default function AllEmployeeList() {
       } else {
         el.width = 200;
       }
+
       return {
         ...el,
         render: (data: any) => {
@@ -72,7 +81,7 @@ export default function AllEmployeeList() {
       };
     });
     setColumnsHeader(columns);
-  }, []);
+  }, [stateQuery]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
@@ -124,6 +133,14 @@ export default function AllEmployeeList() {
       limit: pagination.pageSize,
       sort,
       dir,
+    }));
+
+    // * set filter to state query
+    const filterKey: any = Object.keys(filters)[0];
+    const filterValues: any = Object.values(filters)[0];
+    setStateQuery((prev: EmployeeListQuery) => ({
+      ...prev,
+      [filterKey]: filterValues,
     }));
   };
 
