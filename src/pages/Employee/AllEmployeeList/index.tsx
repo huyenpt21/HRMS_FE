@@ -2,9 +2,9 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Col, Row, TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import BasicButton from 'components/BasicButton';
-import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
+import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
 import { EmployeeListAllHeader as dataHeader } from 'constants/header';
@@ -157,9 +157,12 @@ export default function AllEmployeeList() {
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
           <Col span={8}>
-            <BasicInput
+            <InputDebounce
               suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
               placeholder="Search..."
+              allowClear
+              setStateQuery={setStateQuery}
+              keyParam="search"
             />
           </Col>
           <Col span={8}>
