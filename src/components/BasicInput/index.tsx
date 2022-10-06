@@ -10,7 +10,7 @@ export interface IInputProps {
   colon?: boolean;
   useLabel?: boolean;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   id?: string;
   onChange?: (e: any) => void;
   addonAfter?: ReactNode;
