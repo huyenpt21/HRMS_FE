@@ -15,7 +15,7 @@ export const paginationConfig: TablePaginationConfig = {
   pageSize: 10,
   pageSizeOptions: ['10', '20', '50', '100'],
   showSizeChanger: true,
-  showQuickJumper: false,
+  showQuickJumper: true,
 };
 
 export const RecordStatus = {

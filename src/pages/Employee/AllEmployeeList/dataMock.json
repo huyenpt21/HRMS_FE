@@ -3,10 +3,9 @@
   "metadata": {
     "message": "Success",
     "pagination": {
-      "limit": 10,
-      "page": 2,
-      "records": 10,
-      "totalRecords": 3
+      "page": 1,
+      "limit": 5,
+      "totalRecords": 15
     }
   },
   "data": {
@@ -29,6 +28,102 @@
       },
       {
         "uid": "3",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "4",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "5",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "6",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "7",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "8",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "9",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "10",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "11",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "12",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "13",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "14",
+        "code": "HE00003",
+        "name": "Nguyen Khanh Van",
+        "email": "vannkhe00003@minswap.com.vn",
+        "department": "HR",
+        "position": "Human Resource Management"
+      },
+      {
+        "uid": "15",
         "code": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",

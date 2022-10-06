@@ -3,10 +3,9 @@ export interface Resource {
 }
 
 export interface Pagination {
-  records: number;
-  totalRecords: number;
-  limit: number;
   page: number;
+  limit: number;
+  totalRecords: number;
 }
 
 export interface Metadata {
