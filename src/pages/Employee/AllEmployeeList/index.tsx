@@ -8,6 +8,7 @@ import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
 import { EmployeeListAllHeader as dataHeader } from 'constants/header';
+
 import {
   EmployeeListFields,
   EmployeeListItem,
@@ -47,12 +48,16 @@ export default function AllEmployeeList() {
     removeEmptyValueInObject(defaultFilter),
   );
 
+  //  * get data header and content table
   const header: HeaderTableFields[] = dataHeader;
+  // const { isLoading, isError, data: dataTable } = useEmployeeList(stateQuery);
+
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
       if (el.key === 'name' || el.key === 'code') {
+        // el.sorter = isError;
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
@@ -64,6 +69,7 @@ export default function AllEmployeeList() {
         el.width = 300;
       } else if (el.key === 'department') {
         el.width = 150;
+        // el.filterMultiple = isError;
         el.filterMultiple = true;
         el.filters = [
           { text: 'Dev', value: 'dev' },
@@ -82,6 +88,7 @@ export default function AllEmployeeList() {
     });
     setColumnsHeader(columns);
   }, [stateQuery]);
+  // }, [stateQuery, isError]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
@@ -102,6 +109,7 @@ export default function AllEmployeeList() {
       }
     }
   }, [dataMock, stateQuery]);
+  // }, [dataMock, stateQuery, isError]);
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -184,7 +192,7 @@ export default function AllEmployeeList() {
       extra={extraHeader}
       stateQuery={stateQuery}
       rowKey={(record: EmployeeListItem) => record.uid}
-      loading={false}
+      // loading={isLoading}
       scroll={{ y: 240 }}
     />
   );
