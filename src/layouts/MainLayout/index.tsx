@@ -1,6 +1,7 @@
 import { Drawer, Grid, Layout } from 'antd';
 import { Footer } from 'antd/lib/layout/layout';
-import ContentPage from 'layouts/Common/ContentPage';
+import BreadcrumbLayout from 'layouts/Common/Breadcrumb/BreadcrumbLayout';
+import ContentPage from 'layouts/Common/ContentPage/ContentPage';
 import FooterContent from 'layouts/Common/FooterContent';
 import HeaderContent from 'layouts/Common/HeaderContent';
 import MenuSidebar from 'layouts/Menu';
@@ -140,7 +141,8 @@ const MainLayout = () => {
         >
           <HeaderContent />
         </Header>
-        <Content style={{ margin: '110px 28px 0px 28px' }}>
+        <Content style={{ margin: '97px 28px 0px 28px' }}>
+          <BreadcrumbLayout xs={xs} visible={visible} onVisible={onVisible} />
           <ContentPage />
         </Content>
         <Footer

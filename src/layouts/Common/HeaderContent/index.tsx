@@ -2,9 +2,9 @@ import { Badge, Image } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import SvgIcon from 'components/SvgIcon';
 import styles from './index.module.less';
-
 export default function HeaderContent() {
   const notiNum = 5;
+
   return (
     <div className={styles.container}>
       <div className={styles['user__avt']}>
