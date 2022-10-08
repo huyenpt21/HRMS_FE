@@ -205,7 +205,7 @@ export default function AllEmployeeList() {
         stateQuery={stateQuery}
         rowKey={(record: EmployeeListItem) => record.uid}
         // loading={isLoading}
-        scroll={{ y: 240 }}
+        scroll={{ y: 500 }}
       />
       <AddEmployeeModal
         isVisible={isShowModalAdd}

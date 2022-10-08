@@ -65,6 +65,10 @@ export const Gender = {
   TRANSGENDER: 'Transgender',
 };
 
+export const URL_PATH = {
+  employeeList: '/employee/all/list',
+};
+
 export const regexNumber = /^[0-9]+$/;
 
 export const regexNumberAndDot = /^[0-9]*\.?[0-9]*$/;
