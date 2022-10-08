@@ -5,7 +5,7 @@ import React, { ReactNode } from 'react';
 interface Props {
   title?: string;
   children: JSX.Element;
-  visible: boolean;
+  open: boolean;
   className?: string;
   footer?: ReactNode;
   closable?: boolean;
@@ -18,7 +18,7 @@ interface Props {
 
 const CommonModal = ({
   children,
-  visible,
+  open,
   footer,
   closeIcon,
   width,
@@ -34,7 +34,7 @@ const CommonModal = ({
       title={title}
       closeIcon={closeIcon ? closeIcon : <CloseOutlined />}
       width={width}
-      visible={visible}
+      open={open}
       className={`mainModal ${className}`}
       footer={footer}
       closable={closable}

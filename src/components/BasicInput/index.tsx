@@ -8,7 +8,6 @@ export interface IInputProps {
   rules?: object[];
   name?: string;
   colon?: boolean;
-  useLabel?: boolean;
   placeholder?: string;
   value?: string | number;
   id?: string;
@@ -132,7 +131,7 @@ const BasicInput = (props: IInputProps) => {
   }
   return (
     <Form.Item
-      label={props.useLabel ? props.label : ''}
+      label={props.label ? props.label : ''}
       colon={props.colon || false}
       name={props.name}
       required={isRequired}

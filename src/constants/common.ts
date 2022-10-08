@@ -1,8 +1,4 @@
 import { TablePaginationConfig } from 'antd';
-import i18n from 'i18n';
-
-const { t } = i18n;
-
 export const ACCESS_TOKEN = 'at';
 
 export enum SortDir {
@@ -43,18 +39,13 @@ export interface SELECT_TYPE {
 }
 
 export const validateMessages = () => ({
-  required: '${label}' + ` ${t('isRequired')}`,
+  required: '${label} is required',
   types: {
-    email: '${label}' + ` ${t('isNotAValidEmail')}`,
-    number: '${label}' + ` ${t('isNotAValidNumber')}`,
+    email: '${label} is not valid email',
+    number: '${label} is not a valid number',
   },
   number: {
-    range:
-      '${label}' +
-      ` ${t('mustBeBetween')} ` +
-      '${min}' +
-      ` ${t('and')} ` +
-      '${max}',
+    range: '${label} must be between ' + '${min} and ' + '${max}',
   },
 });
 

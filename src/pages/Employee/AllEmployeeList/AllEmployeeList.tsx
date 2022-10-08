@@ -22,14 +22,16 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
+import AddEmployeeModal from '../AddEmployeeModal/AddEmployeeModal';
 import dataMock from './dataMock.json';
-import styles from './index.module.less';
+import styles from './AllEmployeeList.module.less';
 
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
+  const [isShowModalAdd, setIsShowModalAdd] = useState(false);
 
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
@@ -50,7 +52,7 @@ export default function AllEmployeeList() {
 
   //  * get data header and content table
   const header: HeaderTableFields[] = dataHeader;
-  // const { isLoading, isError, data: dataTable } = useEmployeeList(stateQuery);
+  // const { isLoading, isError, data: dataTable, refetch } = useEmployeeList(stateQuery);
 
   // * render header and data in table
   useEffect(() => {
@@ -152,6 +154,14 @@ export default function AllEmployeeList() {
     }));
   };
 
+  const addEmployeeHandler = () => {
+    setIsShowModalAdd(true);
+  };
+
+  const cancelModalHandler = () => {
+    setIsShowModalAdd(false);
+  };
+
   const extraHeader = (
     <>
       <div className={styles.header__section}>
@@ -160,6 +170,7 @@ export default function AllEmployeeList() {
           title="Add Employee"
           type="filled"
           icon={<PlusOutlined />}
+          onClick={addEmployeeHandler}
         />
       </div>
       <div className={styles.header__container}>
@@ -184,16 +195,23 @@ export default function AllEmployeeList() {
     </>
   );
   return (
-    <CommonTable
-      columns={columnsHeader}
-      data={records}
-      onChange={handleTableChange}
-      pagination={pagination}
-      extra={extraHeader}
-      stateQuery={stateQuery}
-      rowKey={(record: EmployeeListItem) => record.uid}
-      // loading={isLoading}
-      scroll={{ y: 240 }}
-    />
+    <>
+      <CommonTable
+        columns={columnsHeader}
+        data={records}
+        onChange={handleTableChange}
+        pagination={pagination}
+        extra={extraHeader}
+        stateQuery={stateQuery}
+        rowKey={(record: EmployeeListItem) => record.uid}
+        // loading={isLoading}
+        scroll={{ y: 240 }}
+      />
+      <AddEmployeeModal
+        isVisible={isShowModalAdd}
+        onCancel={cancelModalHandler}
+        // refetchList={refetchList}
+      />
+    </>
   );
 }
