@@ -2,7 +2,7 @@ import {
   DATE_DISPLAY,
   DATE_REQUEST,
   RecordStatus,
-  SELECT_TYPE,
+  SelectType,
   SortDir,
   TIME_HOUR,
 } from 'constants/common';
@@ -236,7 +236,7 @@ export const optsDayOfWeek = () => [
 ];
 
 export const optsDate = () => {
-  let date: SELECT_TYPE[] = [];
+  let date: SelectType[] = [];
   for (let i = 0; i < 31; i++) {
     date.push({ value: i + 1, label: `${i + 1}` });
   }

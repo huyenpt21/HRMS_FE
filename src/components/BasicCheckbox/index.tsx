@@ -5,7 +5,6 @@ export interface ICheckboxProps {
   label?: string | ReactNode;
   rules?: object[];
   name?: string;
-  useLabel?: boolean;
   placeholder?: string;
   value?: string;
   disabled?: boolean;
@@ -24,7 +23,7 @@ const BasicCheckbox = (props: ICheckboxProps) => {
   return (
     <Form.Item
       valuePropName="checked"
-      label={props.useLabel ? props.label : ''}
+      label={props.label ? props.label : ''}
       name={props.name}
       required={props.isRequired}
       rules={props.rules}
