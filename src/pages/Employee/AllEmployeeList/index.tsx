@@ -22,9 +22,9 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import AddEmployeeModal from '../AddEmployeeModal/AddEmployeeModal';
+import AddEmployeeModal from '../AddEmployeeModal';
 import dataMock from './dataMock.json';
-import styles from './AllEmployeeList.module.less';
+import styles from './allEmployeeList.module.less';
 
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
@@ -205,7 +205,7 @@ export default function AllEmployeeList() {
         stateQuery={stateQuery}
         rowKey={(record: EmployeeListItem) => record.uid}
         // loading={isLoading}
-        scroll={{ y: 500 }}
+        scroll={{ y: 240 }}
       />
       <AddEmployeeModal
         isVisible={isShowModalAdd}

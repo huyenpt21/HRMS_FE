@@ -1,12 +1,23 @@
 import { HeartTwoTone } from '@ant-design/icons';
-import styles from './index.module.less';
+import { Footer } from 'antd/lib/layout/layout';
+import styles from './footerContent.module.less';
 
-const FooterContent = () => {
+interface IProps {
+  marginLeft: number;
+}
+const FooterContent = ({ marginLeft }: IProps) => {
   return (
-    <div className={styles.footer}>
-      Made with <HeartTwoTone twoToneColor="#eb2f96" /> by{' '}
-      <span className={styles['company-name']}>Ky nay ra truong</span>
-    </div>
+    <Footer
+      style={{
+        width: `calc(100% - ${marginLeft}px )`,
+      }}
+      className={styles.footer__wrapper}
+    >
+      <div className={styles.footer}>
+        Made with <HeartTwoTone twoToneColor="#eb2f96" /> by{' '}
+        <span className={styles['company-name']}>Ky nay ra truong</span>
+      </div>
+    </Footer>
   );
 };
 
