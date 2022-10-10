@@ -20,6 +20,7 @@ export const RecordStatus = {
 };
 
 export const DATE_DISPLAY = 'DD/MM/YYYY';
+export const US_DATE_FORMAT = 'MM/DD/YYYY';
 export const DATE_REQUEST = 'YYYY-MM-DD';
 export const DATE_DMY = 'DD-MM-YYYY';
 export const DATE_SYSTEM = 'MM-DD-YYYY';
@@ -33,7 +34,7 @@ export const YEAR_MONTH_NUM = 'YYYY-MM';
 
 export const DEFAULT_SIZE_ICON = 24;
 
-export interface SELECT_TYPE {
+export interface SelectType {
   value: any;
   label: string;
 }

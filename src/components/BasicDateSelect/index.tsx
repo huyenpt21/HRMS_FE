@@ -1,5 +1,6 @@
 import { DatePicker, Form } from 'antd';
-import { DATE_DISPLAY, DATE_REQUEST } from 'constants/common';
+import SvgIcon from 'components/SvgIcon';
+import { DATE_REQUEST, US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
 import { useState } from 'react';
 import styles from './index.module.less';
@@ -7,7 +8,6 @@ import styles from './index.module.less';
 interface Props {
   name?: string;
   colon?: boolean;
-  useLabel?: boolean;
   label?: string;
   className?: string;
   classNameFormItem?: string;
@@ -27,7 +27,6 @@ const BasicDatePicker = ({
   name,
   rules,
   classNameFormItem,
-  useLabel,
   initialValueForm,
   defaultValue,
   disabled,
@@ -45,7 +44,7 @@ const BasicDatePicker = ({
   );
   return (
     <Form.Item
-      label={useLabel ? label : ''}
+      label={label ? label : ''}
       colon={colon || false}
       name={name}
       required={isRequired}
@@ -57,7 +56,7 @@ const BasicDatePicker = ({
         className={styles.date__picker}
         size={'large'}
         defaultValue={value}
-        format={DATE_DISPLAY}
+        format={US_DATE_FORMAT}
         onChange={(e: any) => {
           setValue(e);
           onChangeHandle(e);
@@ -65,6 +64,8 @@ const BasicDatePicker = ({
         disabled={disabled}
         disabledDate={disabledDate}
         picker={picker}
+        placeholder={US_DATE_FORMAT}
+        suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
       />
     </Form.Item>
   );

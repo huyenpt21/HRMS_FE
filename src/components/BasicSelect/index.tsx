@@ -1,6 +1,6 @@
 import { Form, Select } from 'antd';
 import { NamePath } from 'antd/lib/form/interface';
-import { SELECT_TYPE } from 'constants/common';
+import { SelectType } from 'constants/common';
 import { MODE_TYPE, SIZE_TYPE } from 'constants/enums/common';
 import { debounce } from 'lodash';
 import { CSSProperties, Key } from 'react';
@@ -9,8 +9,7 @@ import styles from './index.module.less';
 interface Props {
   name?: string;
   colon?: boolean;
-  useLabel?: boolean;
-  options: SELECT_TYPE[];
+  options: SelectType[];
   disabled?: boolean;
   label?: string;
   className?: string;
@@ -45,7 +44,7 @@ const BasicSelect = (props: Props) => {
 
   return (
     <Form.Item
-      label={props.useLabel ? props.label : ''}
+      label={props.label ? props.label : ''}
       colon={props.colon || false}
       name={props.name ?? props.namePath}
       required={isRequired}
@@ -71,7 +70,7 @@ const BasicSelect = (props: Props) => {
         onSearch={props.showSearch ? handleSearchDebounce : undefined}
         style={props.selectStyle}
       >
-        {props.options.map((o: SELECT_TYPE, i: number) => (
+        {props.options.map((o: SelectType, i: number) => (
           <Select.Option value={o.value} key={i}>
             {o.label}
           </Select.Option>

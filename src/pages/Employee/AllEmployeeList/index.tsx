@@ -31,7 +31,7 @@ export default function AllEmployeeList() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const [isShowModalAdd, setIsShowModalAdd] = useState(false);
+  const [isShowModalAdd, setIsShowModalAdd] = useState(true);
 
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
