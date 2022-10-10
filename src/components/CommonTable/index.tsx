@@ -60,7 +60,7 @@ const CommonTable = (tb: TableProps) => {
 
   return (
     <Card
-      className={`table-card  ${tb.className}`}
+      className={tb.className ? `table-card  ${tb.className}` : 'table-card'}
       bordered={false}
       extra={tb.extra}
     >

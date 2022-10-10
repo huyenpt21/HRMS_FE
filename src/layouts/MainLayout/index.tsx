@@ -1,14 +1,12 @@
 import { Drawer, Grid, Layout } from 'antd';
-import { Footer } from 'antd/lib/layout/layout';
 import BreadcrumbLayout from 'layouts/Common/Breadcrumb/BreadcrumbLayout';
-import ContentPage from 'layouts/Common/ContentPage/ContentPage';
+import ContentPage from 'layouts/Common/ContentPage';
 import FooterContent from 'layouts/Common/FooterContent';
 import HeaderContent from 'layouts/Common/HeaderContent';
 import MenuSidebar from 'layouts/Menu';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './index.module.less';
-const { Content, Sider, Header } = Layout;
+const { Content, Sider } = Layout;
 
 const { useBreakpoint } = Grid;
 
@@ -132,27 +130,12 @@ const MainLayout = () => {
           transition: 'all 0.2s',
         }}
       >
-        <Header
-          style={{
-            width: `calc(100% - ${marginLeft + 56}px )`,
-            padding: '0 32px',
-          }}
-          className={styles.header}
-        >
-          <HeaderContent />
-        </Header>
-        <Content style={{ margin: '97px 28px 0px 28px' }}>
+        <HeaderContent marginLeft={marginLeft} />
+        <Content style={{ margin: '80px 28px 0px 28px' }}>
           <BreadcrumbLayout xs={xs} visible={visible} onVisible={onVisible} />
           <ContentPage />
         </Content>
-        <Footer
-          style={{
-            width: `calc(100% - ${marginLeft}px )`,
-          }}
-          className={styles.footer}
-        >
-          <FooterContent />
-        </Footer>
+        <FooterContent marginLeft={marginLeft} />
       </Layout>
     </Layout>
   );

@@ -4,7 +4,7 @@ import BasicInput from 'components/BasicInput';
 import CommonModal from 'components/CommonModal';
 import { validateMessages } from 'constants/common';
 import { EmployeeListItem, ResEmployeeModify } from 'models/allEmployee';
-import styles from './AddEmployeeModal.module.less';
+import styles from './addEmployeeModal.module.less';
 import { useAddEmployeeModal } from 'hooks/useEmployeeList/UseEmployee';
 
 interface IProps {
