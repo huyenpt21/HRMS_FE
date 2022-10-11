@@ -18,7 +18,7 @@ import {
   EmployeeListQuery,
 } from 'models/allEmployee';
 import { HeaderTableFields, MenuOptionsType } from 'models/common';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   isEmptyPagination,
@@ -28,15 +28,20 @@ import {
 import AddEmployeeModal from '../AddEmployeeModal';
 import styles from './allEmployeeList.module.less';
 import dataMock from './dataMock.json';
-import { MENU_OPTION_KEY, STATUS_COLORS } from 'constants/enums/common';
-
+import {
+  ACTION_TYPE,
+  MENU_OPTION_KEY,
+  STATUS_COLORS,
+} from 'constants/enums/common';
+import { MenuInfo } from 'rc-menu/lib/interface';
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowModalAdd, setIsShowModalAdd] = useState(false);
-
+  const modalAction = useRef(ACTION_TYPE.CREATE);
+  const rollNumber = useRef('');
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
     page: searchParams.get('page')
@@ -164,7 +169,27 @@ export default function AllEmployeeList() {
   }, [dataMock, stateQuery]);
   // }, [dataMock, stateQuery, isError]);
 
-  const menuActionHandler = () => {};
+  const menuActionHandler = (
+    menuItem: MenuInfo,
+    itemSelected: EmployeeListItem,
+  ) => {
+    switch (menuItem.key) {
+      case MENU_OPTION_KEY.EDIT: {
+        setIsShowModalAdd(true);
+        modalAction.current = ACTION_TYPE.EDIT;
+        rollNumber.current = itemSelected.rollNumber;
+        break;
+      }
+      case MENU_OPTION_KEY.ACTIVE: {
+        rollNumber.current = itemSelected.rollNumber;
+        break;
+      }
+      case MENU_OPTION_KEY.DEACTIVE: {
+        rollNumber.current = itemSelected.rollNumber;
+        break;
+      }
+    }
+  };
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -209,10 +234,21 @@ export default function AllEmployeeList() {
 
   const addEmployeeHandler = () => {
     setIsShowModalAdd(true);
+    modalAction.current = ACTION_TYPE.CREATE;
   };
 
   const cancelModalHandler = () => {
     setIsShowModalAdd(false);
+  };
+
+  const rowClickHandler = (uid: string) => {
+    return {
+      onClick: () => {
+        rollNumber.current = uid;
+        modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+        setIsShowModalAdd(true);
+      },
+    };
   };
 
   const extraHeader = (
@@ -259,12 +295,20 @@ export default function AllEmployeeList() {
         rowKey={(record: EmployeeListItem) => record.uid}
         // loading={isLoading}
         scroll={{ y: 240 }}
+        onRow={(record: EmployeeListItem) => {
+          return rowClickHandler(record.uid);
+        }}
+        className={styles.table}
       />
-      <AddEmployeeModal
-        isVisible={isShowModalAdd}
-        onCancel={cancelModalHandler}
-        // refetchList={refetchList}
-      />
+      {isShowModalAdd && (
+        <AddEmployeeModal
+          isVisible={isShowModalAdd}
+          onCancel={cancelModalHandler}
+          action={modalAction.current}
+          rollNumber={rollNumber.current}
+          // refetchList={refetchList}
+        />
+      )}
     </>
   );
 }

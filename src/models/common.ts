@@ -1,3 +1,4 @@
+import { MENU_OPTION_KEY } from 'constants/enums/common';
 import { ReactNode } from 'react';
 
 export interface Resource {
@@ -55,7 +56,7 @@ export interface HeaderTableFields {
 }
 
 export interface MenuOptionsType {
-  key: any;
+  key: MENU_OPTION_KEY;
   label: string | ReactNode;
 }
 
