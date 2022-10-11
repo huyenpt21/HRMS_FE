@@ -5,9 +5,9 @@ export const EmployeeListAllHeader = [
     dataIndex: 'name',
   },
   {
-    title: 'Code',
-    key: 'code',
-    dataIndex: 'code',
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
   },
   {
     title: 'Email',
@@ -23,5 +23,10 @@ export const EmployeeListAllHeader = [
     title: 'Position',
     key: 'position',
     dataIndex: 'position',
+  },
+  {
+    title: 'Status',
+    key: 'status',
+    dataIndex: 'status',
   },
 ];

@@ -8,12 +8,13 @@ export enum STATUS {
   ACTIVE = 'Active',
   INACTIVE = 'Inactive',
 }
-
-export enum MENU_OPTIONS {
-  EDIT = 'edit',
-  DETAIL = 'detail',
-  CANCELLED = 'cancelled',
-  DELETE = 'delete',
+export enum MENU_OPTION_KEY {
+  EDIT,
+  DETAIL,
+  CANCELLED,
+  DELETE,
+  DEACTIVE,
+  ACTIVE,
 }
 
 export enum CHECKBOX {
@@ -54,4 +55,18 @@ export enum SHAPE_TYPE {
   DEFAULT = 'default',
   CIRCLE = 'circle',
   ROUND = 'round',
+}
+
+export enum GENDER_KEY {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
+}
+
+export enum STATUS_COLORS {
+  SUCCESS = 'success',
+  PROCESSING = 'processing',
+  ERROR = 'error',
+  WARING = 'warning',
+  DEFAULT = 'default',
 }

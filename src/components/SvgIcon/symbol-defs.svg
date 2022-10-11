@@ -1,5 +1,11 @@
 <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <defs>
+<symbol id="icon-function" viewBox="0 0 32 32">
+<path stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" stroke-width="2" d="M3.333 11.889v-6.556c0-1.105 0.895-2 2-2h6.556c1.105 0 2 0.895 2 2v6.556c0 1.105-0.895 2-2 2h-6.556c-1.105 0-2-0.895-2-2z"></path>
+<path stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" stroke-width="2" d="M3.333 26.667v-6.556c0-1.105 0.895-2 2-2h6.556c1.105 0 2 0.895 2 2v6.556c0 1.105-0.895 2-2 2h-6.556c-1.105 0-2-0.895-2-2z"></path>
+<path stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" stroke-width="2" d="M18.111 11.889v-6.556c0-1.105 0.895-2 2-2h6.556c1.105 0 2 0.895 2 2v6.556c0 1.105-0.895 2-2 2h-6.556c-1.105 0-2-0.895-2-2z"></path>
+<path stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" stroke-width="2" d="M18.111 26.667v-6.556c0-1.105 0.895-2 2-2h6.556c1.105 0 2 0.895 2 2v6.556c0 1.105-0.895 2-2 2h-6.556c-1.105 0-2-0.895-2-2z"></path>
+</symbol>
 <symbol id="icon-list" viewBox="0 0 32 32">
 <path fill="none" stroke="#121219" style="stroke: var(--color1, #121219)" stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2" d="M10.667 8h17.333"></path>
 <path fill="none" stroke="#121219" style="stroke: var(--color1, #121219)" stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2" d="M10.667 16h17.333"></path>

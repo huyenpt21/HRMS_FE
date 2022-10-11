@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface Resource {
   uid: string;
 }
@@ -39,7 +41,7 @@ interface FilterTable {
 
 export interface HeaderTableFields {
   key: string;
-  title: string | { titleName: string; titleDate: string };
+  title: string;
   dataIndex: string;
   fixed?: string;
   width?: number;
@@ -50,4 +52,14 @@ export interface HeaderTableFields {
   filters?: FilterTable[];
   filterMultiple?: boolean;
   sortOrder?: 'ascend' | 'descend' | false;
+}
+
+export interface MenuOptionsType {
+  key: any;
+  label: string | ReactNode;
+}
+
+export interface SelectBoxType {
+  value: any;
+  label: string;
 }

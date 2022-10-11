@@ -1,6 +1,7 @@
-import { SelectType } from './common';
+import { MenuOptionsType, SelectBoxType } from 'models/common';
+import { GENDER_KEY, MENU_OPTION_KEY } from './enums/common';
 
-export const RANKING_LIST: SelectType[] = [
+export const RANKING_LIST: SelectBoxType[] = [
   {
     label: 'Intern',
     value: 'intern',
@@ -23,7 +24,7 @@ export const RANKING_LIST: SelectType[] = [
   },
 ];
 
-export const POSITION_WORKING: SelectType[] = [
+export const POSITION_WORKING: SelectBoxType[] = [
   {
     label: 'HR',
     value: 'hr',
@@ -50,4 +51,24 @@ export const POSITION_WORKING: SelectType[] = [
   },
 ];
 
-export const ROLE_CHECK_LIST = ['Manager'];
+export const MENU_COMMON: MenuOptionsType[] = [
+  {
+    key: MENU_OPTION_KEY.EDIT,
+    label: 'Edit',
+  },
+];
+
+export const GENDER_LIST: SelectBoxType[] = [
+  {
+    value: GENDER_KEY.FEMALE,
+    label: 'Female',
+  },
+  {
+    value: GENDER_KEY.MALE,
+    label: 'Male',
+  },
+  {
+    value: GENDER_KEY.OTHER,
+    label: 'Other',
+  },
+];

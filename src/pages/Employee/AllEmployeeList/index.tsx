@@ -9,12 +9,15 @@ import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
 import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 
+import BasicTag from 'components/BasicTag';
+import MenuOptions from 'components/MenuOpstions';
+import { MENU_COMMON } from 'constants/fixData';
 import {
   EmployeeListFields,
   EmployeeListItem,
   EmployeeListQuery,
 } from 'models/allEmployee';
-import { HeaderTableFields } from 'models/common';
+import { HeaderTableFields, MenuOptionsType } from 'models/common';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -23,15 +26,16 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import AddEmployeeModal from '../AddEmployeeModal';
-import dataMock from './dataMock.json';
 import styles from './allEmployeeList.module.less';
+import dataMock from './dataMock.json';
+import { MENU_OPTION_KEY, STATUS_COLORS } from 'constants/enums/common';
 
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const [isShowModalAdd, setIsShowModalAdd] = useState(true);
+  const [isShowModalAdd, setIsShowModalAdd] = useState(false);
 
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
@@ -63,14 +67,10 @@ export default function AllEmployeeList() {
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
-      if (el.key === 'name') {
-        el.width = 250;
-      } else if (el.key === 'code') {
-        el.width = 150;
-      } else if (el.key === 'email') {
-        el.width = 300;
+      if (el.key === 'rollNumber' || el.key === 'status') {
+        el.width = 100;
       } else if (el.key === 'department') {
-        el.width = 150;
+        el.width = 100;
         // el.filterMultiple = isError;
         el.filterMultiple = true;
         el.filters = [
@@ -80,13 +80,64 @@ export default function AllEmployeeList() {
       } else {
         el.width = 200;
       }
-
       return {
         ...el,
-        render: (data: any) => {
+        render: (data: any, record: EmployeeListItem) => {
+          if (el.key === 'status') {
+            if (record.isActive)
+              return (
+                <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
+              );
+            else
+              return (
+                <BasicTag statusColor={STATUS_COLORS.DEFAULT} text="Inactive" />
+              );
+          }
           return <div>{data}</div>;
         },
       };
+    });
+
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 60,
+      align: 'left',
+      render: (_, record: EmployeeListItem) => {
+        let menuOptions: MenuOptionsType[] = MENU_COMMON;
+        if (record?.isActive) {
+          menuOptions = [
+            ...menuOptions,
+            {
+              key: MENU_OPTION_KEY.DEACTIVE,
+              label: 'Deactive',
+            },
+          ];
+        } else {
+          menuOptions = [
+            ...menuOptions,
+            {
+              key: MENU_OPTION_KEY.ACTIVE,
+              label: 'Active',
+            },
+            {
+              key: MENU_OPTION_KEY.DELETE,
+              label: 'Delete',
+            },
+          ];
+        }
+        return (
+          <div className={styles.action}>
+            <MenuOptions
+              trigger={['click']}
+              items={menuOptions}
+              itemHandler={menuActionHandler}
+              itemSelected={record}
+            />
+          </div>
+        );
+      },
     });
     setColumnsHeader(columns);
   }, [stateQuery]);
@@ -112,6 +163,8 @@ export default function AllEmployeeList() {
     }
   }, [dataMock, stateQuery]);
   // }, [dataMock, stateQuery, isError]);
+
+  const menuActionHandler = () => {};
 
   const handleTableChange = (
     pagination: TablePaginationConfig,

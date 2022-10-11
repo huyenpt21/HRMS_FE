@@ -12,123 +12,138 @@
     "items": [
       {
         "uid": "1",
-        "code": "HE00001",
+        "rollNumber": "HE00001",
         "name": "Nguyen Van A",
         "email": "anvhe00001@minswap.com.vn",
         "department": "DEV",
-        "position": "Web - Front End"
+        "position": "Web - Front End",
+        "isActive": true
       },
       {
         "uid": "2",
-        "code": "HE00002",
+        "rollNumber": "HE00002",
         "name": "Nguyen Thuc Thuy Tien",
         "email": "tienntthe00002@minswap.com.vn",
         "department": "SALE",
-        "position": "Sale"
+        "position": "Sale",
+        "isActive": true
       },
       {
         "uid": "3",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": false
       },
       {
         "uid": "4",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "5",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": false
       },
       {
         "uid": "6",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "7",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "8",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": false
       },
       {
         "uid": "9",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": false
       },
       {
         "uid": "10",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "11",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "12",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "13",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "14",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "15",
-        "code": "HE00003",
+        "rollNumber": "HE00003",
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       }
     ]
   }
