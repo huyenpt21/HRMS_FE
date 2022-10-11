@@ -26,7 +26,7 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import AddEmployeeModal from '../AddEmployeeModal';
-import styles from './allEmployeeList.module.less';
+import styles from './employeeList.module.less';
 import dataMock from './dataMock.json';
 import {
   ACTION_TYPE,
