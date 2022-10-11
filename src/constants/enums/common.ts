@@ -70,3 +70,8 @@ export enum STATUS_COLORS {
   WARING = 'warning',
   DEFAULT = 'default',
 }
+
+export enum DIRECTION {
+  HORIZONTAL = 'horizontal',
+  VERTICAL = 'vertical',
+}

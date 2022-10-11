@@ -3,13 +3,19 @@ import BasicButton from 'components/BasicButton';
 import BasicCheckbox from 'components/BasicCheckbox';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
+import BasicRadioGroup from 'components/BasicRadioGroup';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
-import { validateMessages } from 'constants/common';
-import { GENDER_LIST, POSITION_WORKING, RANKING_LIST } from 'constants/fixData';
+import { COMMON_STATUS, validateMessages } from 'constants/common';
+import {
+  GENDER_LIST,
+  POSITION_WORKING,
+  RANKING_LIST,
+  STATUS_RADIO_LIST,
+} from 'constants/fixData';
 import { useAddEmployeeModal } from 'hooks/useEmployeeList/UseEmployee';
 import { EmployeeListItem, ResEmployeeModify } from 'models/allEmployee';
-import styles from './addEmployeeModal.module.less';
+import styles from './addEmployee.module.less';
 
 interface IProps {
   isVisible: boolean;
@@ -116,7 +122,7 @@ export default function AddEmployeeModal({
                   label="Citizen Identification"
                   allowClear
                   rules={[{ required: true }]}
-                  placeholder="Enter address"
+                  placeholder="Enter Citizen Identification"
                 />
               </Col>
               <Col span={12}>
@@ -139,6 +145,7 @@ export default function AddEmployeeModal({
               <Col span={24}>
                 <BasicInput
                   label="Address"
+                  name="address"
                   type="textarea"
                   allowClear
                   placeholder="Enter address"
@@ -229,6 +236,14 @@ export default function AddEmployeeModal({
             <Row gutter={32}>
               <Col span={8}>
                 <BasicCheckbox label="Role" name="isManager" value="Manager" />
+              </Col>
+              <Col span={8}>
+                <BasicRadioGroup
+                  label="Status"
+                  name="isActive"
+                  initialValue={COMMON_STATUS.TRUE}
+                  listRadio={STATUS_RADIO_LIST}
+                />
               </Col>
             </Row>
           </Col>
