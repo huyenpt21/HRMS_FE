@@ -1,5 +1,5 @@
-import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Space } from 'antd';
+import SvgIcon from 'components/SvgIcon';
 import { PLACEMENT } from 'constants/enums/common';
 import { MenuOptionsType } from 'models/common';
 import { MenuInfo } from 'rc-menu/lib/interface';
@@ -35,7 +35,7 @@ const MenuOptions = (props: MenuOptionsProps) => {
     >
       <span onClick={(e) => e.stopPropagation()}>
         <Space className="cursor-pointer">
-          {props.icon || <MoreOutlined />}
+          {props.icon || <SvgIcon icon="function" size={20} color="#6e6b7b" />}
         </Space>
       </span>
     </Dropdown>

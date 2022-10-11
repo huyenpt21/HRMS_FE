@@ -9,6 +9,9 @@ import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
 import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 
+import BasicTag from 'components/BasicTag';
+import MenuOptions from 'components/MenuOpstions';
+import { MENU_COMMON } from 'constants/fixData';
 import {
   EmployeeListFields,
   EmployeeListItem,
@@ -23,10 +26,9 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import AddEmployeeModal from '../AddEmployeeModal';
-import dataMock from './dataMock.json';
 import styles from './allEmployeeList.module.less';
-import MenuOptions from 'components/MenuOpstions';
-import { MENU_COMMON } from 'constants/fixData';
+import dataMock from './dataMock.json';
+import { MENU_OPTION_KEY, STATUS_COLORS } from 'constants/enums/common';
 
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
@@ -65,12 +67,8 @@ export default function AllEmployeeList() {
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
-      if (el.key === 'name') {
-        el.width = 200;
-      } else if (el.key === 'code') {
+      if (el.key === 'rollNumber' || el.key === 'status') {
         el.width = 100;
-      } else if (el.key === 'email') {
-        el.width = 200;
       } else if (el.key === 'department') {
         el.width = 100;
         // el.filterMultiple = isError;
@@ -85,6 +83,16 @@ export default function AllEmployeeList() {
       return {
         ...el,
         render: (data: any, record: EmployeeListItem) => {
+          if (el.key === 'status') {
+            if (record.isActive)
+              return (
+                <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
+              );
+            else
+              return (
+                <BasicTag statusColor={STATUS_COLORS.DEFAULT} text="Inactive" />
+              );
+          }
           return <div>{data}</div>;
         },
       };
@@ -95,14 +103,14 @@ export default function AllEmployeeList() {
       key: 'action',
       dataIndex: 'action',
       width: 60,
-      align: 'center',
-      render: (item: EmployeeListItem) => {
+      align: 'left',
+      render: (_, record: EmployeeListItem) => {
         let menuOptions: MenuOptionsType[] = MENU_COMMON;
-        if (item?.isActive) {
+        if (record?.isActive) {
           menuOptions = [
             ...menuOptions,
             {
-              key: 'deactive',
+              key: MENU_OPTION_KEY.DEACTIVE,
               label: 'Deactive',
             },
           ];
@@ -110,8 +118,12 @@ export default function AllEmployeeList() {
           menuOptions = [
             ...menuOptions,
             {
-              key: 'active',
+              key: MENU_OPTION_KEY.ACTIVE,
               label: 'Active',
+            },
+            {
+              key: MENU_OPTION_KEY.DELETE,
+              label: 'Delete',
             },
           ];
         }
@@ -121,7 +133,7 @@ export default function AllEmployeeList() {
               trigger={['click']}
               items={menuOptions}
               itemHandler={menuActionHandler}
-              itemSelected={item}
+              itemSelected={record}
             />
           </div>
         );

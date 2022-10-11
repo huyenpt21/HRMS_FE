@@ -56,10 +56,6 @@ export const MENU_COMMON: MenuOptionsType[] = [
     key: MENU_OPTION_KEY.EDIT,
     label: 'Edit',
   },
-  {
-    key: MENU_OPTION_KEY.DELETE,
-    label: 'Delete',
-  },
 ];
 
 export const GENDER_LIST: SelectBoxType[] = [
