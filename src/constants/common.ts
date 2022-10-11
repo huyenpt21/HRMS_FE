@@ -14,9 +14,9 @@ export const paginationConfig: TablePaginationConfig = {
   showQuickJumper: true,
 };
 
-export const RecordStatus = {
-  ACTIVE: true,
-  INACTIVE: false,
+export const COMMON_STATUS = {
+  TRUE: true,
+  FALSE: false,
 };
 
 export const DATE_DISPLAY = 'DD/MM/YYYY';
