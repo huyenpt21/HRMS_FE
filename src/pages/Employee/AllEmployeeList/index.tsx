@@ -14,7 +14,7 @@ import {
   EmployeeListItem,
   EmployeeListQuery,
 } from 'models/allEmployee';
-import { HeaderTableFields } from 'models/common';
+import { HeaderTableFields, MenuOptionsType } from 'models/common';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -25,13 +25,15 @@ import {
 import AddEmployeeModal from '../AddEmployeeModal';
 import dataMock from './dataMock.json';
 import styles from './allEmployeeList.module.less';
+import MenuOptions from 'components/MenuOpstions';
+import { MENU_COMMON } from 'constants/fixData';
 
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const [isShowModalAdd, setIsShowModalAdd] = useState(true);
+  const [isShowModalAdd, setIsShowModalAdd] = useState(false);
 
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
@@ -64,13 +66,13 @@ export default function AllEmployeeList() {
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
       if (el.key === 'name') {
-        el.width = 250;
+        el.width = 200;
       } else if (el.key === 'code') {
-        el.width = 150;
+        el.width = 100;
       } else if (el.key === 'email') {
-        el.width = 300;
+        el.width = 200;
       } else if (el.key === 'department') {
-        el.width = 150;
+        el.width = 100;
         // el.filterMultiple = isError;
         el.filterMultiple = true;
         el.filters = [
@@ -80,13 +82,50 @@ export default function AllEmployeeList() {
       } else {
         el.width = 200;
       }
-
       return {
         ...el,
-        render: (data: any) => {
+        render: (data: any, record: EmployeeListItem) => {
           return <div>{data}</div>;
         },
       };
+    });
+
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 60,
+      align: 'center',
+      render: (item: EmployeeListItem) => {
+        let menuOptions: MenuOptionsType[] = MENU_COMMON;
+        if (item?.isActive) {
+          menuOptions = [
+            ...menuOptions,
+            {
+              key: 'deactive',
+              label: 'Deactive',
+            },
+          ];
+        } else {
+          menuOptions = [
+            ...menuOptions,
+            {
+              key: 'active',
+              label: 'Active',
+            },
+          ];
+        }
+        return (
+          <div className={styles.action}>
+            <MenuOptions
+              trigger={['click']}
+              items={menuOptions}
+              itemHandler={menuActionHandler}
+              itemSelected={item}
+            />
+          </div>
+        );
+      },
     });
     setColumnsHeader(columns);
   }, [stateQuery]);
@@ -112,6 +151,8 @@ export default function AllEmployeeList() {
     }
   }, [dataMock, stateQuery]);
   // }, [dataMock, stateQuery, isError]);
+
+  const menuActionHandler = () => {};
 
   const handleTableChange = (
     pagination: TablePaginationConfig,

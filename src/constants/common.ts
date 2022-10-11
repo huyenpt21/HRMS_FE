@@ -31,14 +31,7 @@ export const DATE_TIME = 'YYYY-MM-DD HH:mm:ss';
 export const YEAR = 'YYYY';
 export const MONTH_YEAR = 'MMM-YYYY';
 export const YEAR_MONTH_NUM = 'YYYY-MM';
-
 export const DEFAULT_SIZE_ICON = 24;
-
-export interface SelectType {
-  value: any;
-  label: string;
-}
-
 export const validateMessages = () => ({
   required: '${label} is required',
   types: {

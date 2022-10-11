@@ -6,6 +6,7 @@ export interface EmployeeListItem extends Resource {
   email: string;
   department: string;
   position: string;
+  isActive: boolean;
 }
 
 export interface EmployeeListFilter {

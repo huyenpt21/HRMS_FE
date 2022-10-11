@@ -1,22 +1,17 @@
 import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Space } from 'antd';
 import { PLACEMENT } from 'constants/enums/common';
+import { MenuOptionsType } from 'models/common';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { ReactNode } from 'react';
 
 export interface MenuOptionsProps {
   trigger: ['click' | 'hover' | 'contextMenu'];
-  items: ItemType[];
+  items: MenuOptionsType[];
   icon?: React.ReactNode;
   title?: string;
   itemSelected?: object;
   itemHandler: (e: MenuInfo, itemSelected?: any) => void;
   placement?: PLACEMENT;
-}
-
-export interface ItemType {
-  key: string;
-  label: string | ReactNode;
 }
 
 const MenuOptions = (props: MenuOptionsProps) => {

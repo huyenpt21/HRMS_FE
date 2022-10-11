@@ -24,7 +24,7 @@ export interface IInputProps {
   suffix?: ReactNode;
   onPressEnter?: (e: any) => void;
   className?: string;
-  type?: 'number' | 'textarea' | 'password';
+  type?: 'number' | 'textarea' | 'password' | 'email';
   classNameFormItem?: string;
   initialValueForm?: string;
   tooltip?: LabelTooltipType;
@@ -35,6 +35,7 @@ export interface IInputProps {
   validateFirst?: boolean;
   min?: string;
   max?: string;
+  rows?: number;
 }
 const BasicInput = (props: IInputProps) => {
   const isRequired = props.rules
@@ -101,6 +102,7 @@ const BasicInput = (props: IInputProps) => {
           onChange={props.onChange}
           size="large"
           style={props.inputStyle}
+          rows={props.rows}
         />
       );
       break;

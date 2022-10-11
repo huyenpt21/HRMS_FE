@@ -2,13 +2,12 @@ import {
   DATE_DISPLAY,
   DATE_REQUEST,
   RecordStatus,
-  SelectType,
   SortDir,
   TIME_HOUR,
 } from 'constants/common';
 import i18n from 'i18n';
 import { isNumber } from 'lodash';
-import { Pagination, QueryParams } from 'models/common';
+import { Pagination, QueryParams, SelectBoxType } from 'models/common';
 import moment from 'moment';
 const { t } = i18n;
 
@@ -236,7 +235,7 @@ export const optsDayOfWeek = () => [
 ];
 
 export const optsDate = () => {
-  let date: SelectType[] = [];
+  let date: SelectBoxType[] = [];
   for (let i = 0; i < 31; i++) {
     date.push({ value: i + 1, label: `${i + 1}` });
   }

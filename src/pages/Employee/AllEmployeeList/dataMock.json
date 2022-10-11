@@ -16,7 +16,8 @@
         "name": "Nguyen Van A",
         "email": "anvhe00001@minswap.com.vn",
         "department": "DEV",
-        "position": "Web - Front End"
+        "position": "Web - Front End",
+        "isActive": true
       },
       {
         "uid": "2",
@@ -24,7 +25,8 @@
         "name": "Nguyen Thuc Thuy Tien",
         "email": "tienntthe00002@minswap.com.vn",
         "department": "SALE",
-        "position": "Sale"
+        "position": "Sale",
+        "isActive": true
       },
       {
         "uid": "3",
@@ -32,7 +34,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "4",
@@ -40,7 +43,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "5",
@@ -48,7 +52,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "6",
@@ -56,7 +61,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "7",
@@ -64,7 +70,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "8",
@@ -72,7 +79,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "9",
@@ -80,7 +88,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "10",
@@ -88,7 +97,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "11",
@@ -96,7 +106,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "12",
@@ -104,7 +115,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "13",
@@ -112,7 +124,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "14",
@@ -120,7 +133,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       },
       {
         "uid": "15",
@@ -128,7 +142,8 @@
         "name": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
         "department": "HR",
-        "position": "Human Resource Management"
+        "position": "Human Resource Management",
+        "isActive": true
       }
     ]
   }
