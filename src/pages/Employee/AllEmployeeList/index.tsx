@@ -11,6 +11,12 @@ import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 
 import BasicTag from 'components/BasicTag';
 import MenuOptions from 'components/MenuOpstions';
+import {
+  ACTION_TYPE,
+  MENU_OPTION_KEY,
+  STATUS_COLORS,
+  VIEW_LIST_EMPLOYEE_TYPE,
+} from 'constants/enums/common';
 import { MENU_COMMON } from 'constants/fixData';
 import {
   EmployeeListFields,
@@ -18,22 +24,17 @@ import {
   EmployeeListQuery,
 } from 'models/allEmployee';
 import { HeaderTableFields, MenuOptionsType } from 'models/common';
-import { useEffect, useState, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { MenuInfo } from 'rc-menu/lib/interface';
+import { useEffect, useRef, useState } from 'react';
+import { Params, useParams, useSearchParams } from 'react-router-dom';
 import {
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
 import AddEmployeeModal from '../AddEmployeeModal';
-import styles from './employeeList.module.less';
 import dataMock from './dataMock.json';
-import {
-  ACTION_TYPE,
-  MENU_OPTION_KEY,
-  STATUS_COLORS,
-} from 'constants/enums/common';
-import { MenuInfo } from 'rc-menu/lib/interface';
+import styles from './employeeList.module.less';
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -42,6 +43,8 @@ export default function AllEmployeeList() {
   const [isShowModalAdd, setIsShowModalAdd] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const rollNumber = useRef('');
+  const paramUrl: Readonly<Params<string>> = useParams();
+  const viewType = paramUrl.viewType || '';
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
     page: searchParams.get('page')
@@ -102,50 +105,51 @@ export default function AllEmployeeList() {
         },
       };
     });
-
-    columns.push({
-      title: 'Action',
-      key: 'action',
-      dataIndex: 'action',
-      width: 60,
-      align: 'left',
-      render: (_, record: EmployeeListItem) => {
-        let menuOptions: MenuOptionsType[] = MENU_COMMON;
-        if (record?.isActive) {
-          menuOptions = [
-            ...menuOptions,
-            {
-              key: MENU_OPTION_KEY.DEACTIVE,
-              label: 'Deactive',
-            },
-          ];
-        } else {
-          menuOptions = [
-            ...menuOptions,
-            {
-              key: MENU_OPTION_KEY.ACTIVE,
-              label: 'Active',
-            },
-            {
-              key: MENU_OPTION_KEY.DELETE,
-              label: 'Delete',
-            },
-          ];
-        }
-        return (
-          <div className={styles.action}>
-            <MenuOptions
-              trigger={['click']}
-              items={menuOptions}
-              itemHandler={menuActionHandler}
-              itemSelected={record}
-            />
-          </div>
-        );
-      },
-    });
+    if (viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL) {
+      columns.push({
+        title: 'Action',
+        key: 'action',
+        dataIndex: 'action',
+        width: 60,
+        align: 'left',
+        render: (_, record: EmployeeListItem) => {
+          let menuOptions: MenuOptionsType[] = MENU_COMMON;
+          if (record?.isActive) {
+            menuOptions = [
+              ...menuOptions,
+              {
+                key: MENU_OPTION_KEY.DEACTIVE,
+                label: 'Deactive',
+              },
+            ];
+          } else {
+            menuOptions = [
+              ...menuOptions,
+              {
+                key: MENU_OPTION_KEY.ACTIVE,
+                label: 'Active',
+              },
+              {
+                key: MENU_OPTION_KEY.DELETE,
+                label: 'Delete',
+              },
+            ];
+          }
+          return (
+            <div className={styles.action}>
+              <MenuOptions
+                trigger={['click']}
+                items={menuOptions}
+                itemHandler={menuActionHandler}
+                itemSelected={record}
+              />
+            </div>
+          );
+        },
+      });
+    }
     setColumnsHeader(columns);
-  }, [stateQuery]);
+  }, [stateQuery, viewType]);
   // }, [stateQuery, isError]);
 
   // * get data source from API and set to state that store records for table
@@ -255,12 +259,14 @@ export default function AllEmployeeList() {
     <>
       <div className={styles.header__section}>
         <div className={styles.header__title}>Employee List</div>
-        <BasicButton
-          title="Add Employee"
-          type="filled"
-          icon={<PlusOutlined />}
-          onClick={addEmployeeHandler}
-        />
+        {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
+          <BasicButton
+            title="Add Employee"
+            type="filled"
+            icon={<PlusOutlined />}
+            onClick={addEmployeeHandler}
+          />
+        )}
       </div>
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
@@ -307,6 +313,7 @@ export default function AllEmployeeList() {
           action={modalAction.current}
           rollNumber={rollNumber.current}
           // refetchList={refetchList}
+          viewType={viewType}
         />
       )}
     </>

@@ -19,7 +19,7 @@ export default function RouterElement() {
           path: 'employee',
           children: [
             {
-              path: 'all/list',
+              path: ':viewType/list',
               element: <AllEmployeeList />,
             },
           ],
