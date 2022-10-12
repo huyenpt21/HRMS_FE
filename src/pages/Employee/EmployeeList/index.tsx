@@ -136,14 +136,12 @@ export default function EmployeeList() {
             ];
           }
           return (
-            <div className={styles.action}>
-              <MenuOptions
-                trigger={['click']}
-                items={menuOptions}
-                itemHandler={menuActionHandler}
-                itemSelected={record}
-              />
-            </div>
+            <MenuOptions
+              trigger={['click']}
+              items={menuOptions}
+              itemHandler={menuActionHandler}
+              itemSelected={record}
+            />
           );
         },
       });

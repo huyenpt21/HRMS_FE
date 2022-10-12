@@ -2,16 +2,18 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
+import MenuOptions from 'components/MenuOpstions';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { STATUS, STATUS_COLORS } from 'constants/enums/common';
+import { MENU_COMMON } from 'constants/fixData';
 import { MyRequestListHeader } from 'constants/header';
 import { HeaderTableFields, StatusTag } from 'models/common';
 import {
-  RequestListSortFields,
   RequestListModel,
   RequestListQuery,
+  RequestListSortFields,
 } from 'models/request';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   convertDate,
@@ -63,7 +65,7 @@ export default function MyRequestList() {
       }
       return {
         ...el,
-        render: (data: any) => {
+        render: (data: any, record: RequestListModel) => {
           if (
             el.key === 'createDate' ||
             el.key === 'startTime' ||
@@ -106,12 +108,31 @@ export default function MyRequestList() {
               />
             );
           }
-          return data;
+          return <div>{data}</div>;
         },
       };
     });
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 60,
+      align: 'left',
+      render: (_, record: RequestListModel) => {
+        if (record?.status === STATUS.PENDING) {
+          return (
+            <MenuOptions
+              trigger={['click']}
+              items={MENU_COMMON}
+              itemHandler={menuActionHandler}
+              itemSelected={record}
+            />
+          );
+        }
+      },
+    });
     setColumnsHeader(columns);
-  }, [header, stateQuery]);
+  }, [stateQuery]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
@@ -132,6 +153,8 @@ export default function MyRequestList() {
       }
     }
   }, []);
+
+  const menuActionHandler = () => {};
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
