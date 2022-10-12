@@ -1,6 +1,6 @@
 import { Form, Select } from 'antd';
 import { NamePath } from 'antd/lib/form/interface';
-import { useGetDataOptions } from 'hooks/useGetDataOptions/insex';
+import { useGetDataOptions } from 'hooks/useGetDataOptions';
 import { debounce, isEqual } from 'lodash';
 import { Key, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
