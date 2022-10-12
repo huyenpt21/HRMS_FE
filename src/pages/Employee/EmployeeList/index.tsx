@@ -32,10 +32,10 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import AddEmployeeModal from '../EmployeeDetailModal';
+import EmployeeDetailModal from '../EmployeeDetailModal';
 import dataMock from './dataMock.json';
 import styles from './employeeList.module.less';
-export default function AllEmployeeList() {
+export default function EmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
@@ -307,7 +307,7 @@ export default function AllEmployeeList() {
         className={styles.table}
       />
       {isShowModalAdd && (
-        <AddEmployeeModal
+        <EmployeeDetailModal
           isVisible={isShowModalAdd}
           onCancel={cancelModalHandler}
           action={modalAction.current}
