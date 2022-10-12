@@ -136,14 +136,12 @@ export default function EmployeeList() {
             ];
           }
           return (
-            <div className={styles.action}>
-              <MenuOptions
-                trigger={['click']}
-                items={menuOptions}
-                itemHandler={menuActionHandler}
-                itemSelected={record}
-              />
-            </div>
+            <MenuOptions
+              trigger={['click']}
+              items={menuOptions}
+              itemHandler={menuActionHandler}
+              itemSelected={record}
+            />
           );
         },
       });
@@ -155,7 +153,7 @@ export default function EmployeeList() {
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     if (dataMock && dataMock.data) {
-      let {
+      const {
         metadata: { pagination },
         data: { employeeList: recordsTable },
       } = dataMock;
