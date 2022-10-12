@@ -29,7 +29,7 @@ interface IProps {
   rollNumber?: string;
   viewType?: string;
 }
-export default function AddEmployeeModal({
+export default function EmployeeDetailModal({
   isVisible,
   onCancel,
   refetchList,
