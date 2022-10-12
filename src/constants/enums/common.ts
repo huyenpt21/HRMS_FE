@@ -81,3 +81,8 @@ export enum ACTION_TYPE {
   VIEW_DETAIL,
   CREATE,
 }
+
+export enum VIEW_LIST_EMPLOYEE_TYPE {
+  ALL = 'all',
+  SUBORDINATE = 'subordinate',
+}

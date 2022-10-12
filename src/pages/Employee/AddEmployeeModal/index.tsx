@@ -7,7 +7,7 @@ import BasicRadioGroup from 'components/BasicRadioGroup';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import { COMMON_STATUS, validateMessages } from 'constants/common';
-import { ACTION_TYPE } from 'constants/enums/common';
+import { ACTION_TYPE, VIEW_LIST_EMPLOYEE_TYPE } from 'constants/enums/common';
 import {
   GENDER_LIST,
   POSITION_WORKING,
@@ -25,6 +25,7 @@ interface IProps {
   refetchList?: () => void;
   action: ACTION_TYPE;
   rollNumber: string;
+  viewType?: string;
 }
 export default function AddEmployeeModal({
   isVisible,
@@ -32,6 +33,7 @@ export default function AddEmployeeModal({
   refetchList,
   action,
   rollNumber,
+  viewType,
 }: IProps) {
   const [employeeForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
@@ -58,6 +60,7 @@ export default function AddEmployeeModal({
     console.log(1111, formValues);
     createEmployee(formValues);
   };
+  console.log(1111, actionModal);
   return (
     <CommonModal
       open={isVisible}
@@ -261,30 +264,34 @@ export default function AddEmployeeModal({
             </Col>
           </Row>
           <div className={styles['modal__footer']}>
-            {actionModal === ACTION_TYPE.CREATE ||
-              (actionModal === ACTION_TYPE.EDIT && (
-                <BasicButton
-                  title="Cancel"
-                  type="outline"
-                  className={styles['btn--cancel']}
-                  onClick={cancelHandler}
-                />
-              ))}
-            {actionModal === ACTION_TYPE.CREATE && (
+            {(actionModal === ACTION_TYPE.CREATE ||
+              actionModal === ACTION_TYPE.EDIT) && (
               <BasicButton
-                title="Add"
-                type="filled"
-                className={styles['btn--save']}
-                htmlType={'submit'}
+                title="Cancel"
+                type="outline"
+                className={styles['btn--cancel']}
+                onClick={cancelHandler}
               />
             )}
-            {actionModal === ACTION_TYPE.EDIT && (
-              <BasicButton
-                title="Update"
-                type="filled"
-                className={styles['btn--save']}
-                htmlType={'submit'}
-              />
+            {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
+              <>
+                {actionModal === ACTION_TYPE.CREATE && (
+                  <BasicButton
+                    title="Add"
+                    type="filled"
+                    className={styles['btn--save']}
+                    htmlType={'submit'}
+                  />
+                )}
+                {actionModal === ACTION_TYPE.EDIT && (
+                  <BasicButton
+                    title="Update"
+                    type="filled"
+                    className={styles['btn--save']}
+                    htmlType={'submit'}
+                  />
+                )}
+              </>
             )}
           </div>
         </Form>
@@ -297,12 +304,14 @@ export default function AddEmployeeModal({
                 className={styles['btn--cancel']}
                 onClick={cancelHandler}
               />
-              <BasicButton
-                title="Edit"
-                type="filled"
-                className={styles['btn--save']}
-                onClick={() => setActionModal(ACTION_TYPE.EDIT)}
-              />
+              {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
+                <BasicButton
+                  title="Edit"
+                  type="filled"
+                  className={styles['btn--save']}
+                  onClick={() => setActionModal(ACTION_TYPE.EDIT)}
+                />
+              )}
             </>
           )}
         </div>

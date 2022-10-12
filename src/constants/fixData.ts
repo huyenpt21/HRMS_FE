@@ -2,6 +2,11 @@ import { MenuOptionsType, RadioButtonType, SelectBoxType } from 'models/common';
 import { COMMON_STATUS } from './common';
 import { GENDER_KEY, MENU_OPTION_KEY } from './enums/common';
 
+export const URL_PATH = {
+  employeeList: '/employee/all/list',
+  subordinateList: 'subordinate/list',
+};
+
 export const RANKING_LIST: SelectBoxType[] = [
   {
     label: 'Intern',
