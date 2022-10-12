@@ -28,6 +28,7 @@ export const TIME_HOUR = 'HH:mm';
 export const TIME_DAY = 'DD-MM';
 export const TIME_MONTH = 'YYYY-MM';
 export const DATE_TIME = 'YYYY-MM-DD HH:mm:ss';
+export const DATE_TIME_US = 'MM/DD/YYYY HH:mm';
 export const YEAR = 'YYYY';
 export const MONTH_YEAR = 'MMM-YYYY';
 export const YEAR_MONTH_NUM = 'YYYY-MM';

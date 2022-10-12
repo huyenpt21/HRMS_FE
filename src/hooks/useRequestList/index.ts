@@ -1,7 +1,7 @@
 import { REQUEST_LIST } from 'constants/services';
 import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
 import {
-  RequestListFields,
+  RequestListSortFields,
   RequestListModel,
   RequestListQuery,
   ResRequestDetail,
@@ -9,7 +9,7 @@ import {
   ResRequestModify,
 } from 'models/request';
 
-class RequestList implements Feature<RequestListFields> {
+class RequestList implements Feature<RequestListSortFields> {
   constructor(
     public readonly service: string,
     public readonly api_url: string | undefined,

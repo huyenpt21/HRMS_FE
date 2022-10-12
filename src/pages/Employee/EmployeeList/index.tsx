@@ -155,7 +155,7 @@ export default function EmployeeList() {
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     if (dataMock && dataMock.data) {
-      let {
+      const {
         metadata: { pagination },
         data: { employeeList: recordsTable },
       } = dataMock;

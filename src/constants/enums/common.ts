@@ -3,6 +3,8 @@ export enum STATUS {
   CANCELLED = 'Cancelled',
   COMPLETED = 'Completed',
   PENDING = 'Pending',
+  REJECTED = 'Rejected',
+  APPROVED = 'Approved',
   FAILED = 'Failed',
   SUCCESS = 'Success',
   ACTIVE = 'Active',

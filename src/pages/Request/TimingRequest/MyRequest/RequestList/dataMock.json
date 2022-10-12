@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 15
+    }
+  },
+  "data": {
+    "requestList": [
+      {
+        "id": "1",
+        "requestId": 1,
+        "requestType": "đơn xin nghỉ",
+        "createDate": "2022-10-12 16:00:00",
+        "startTime": "2022-10-13 08:00:00",
+        "endTime": "2022-10-17 17:30:00",
+        "reason": "Sick leave",
+        "status": "Approved"
+      },
+      {
+        "id": "2",
+        "requestId": 2,
+        "requestType": "đơn mượn thiết bị",
+        "createDate": "2022-10-20 12:00:00",
+        "startTime": "2022-10-21 08:00:00",
+        "endTime": "",
+        "reason": "Lack of screen",
+        "status": "Rejected"
+      },
+      {
+        "id": "3",
+        "requestId": 3,
+        "requestType": "đơn mượn thiết bị",
+        "createDate": "2022-10-20 12:00:00",
+        "startTime": "2022-10-21 08:00:00",
+        "endTime": "",
+        "reason": "Lack of screen",
+        "status": "Pending"
+      }
+    ]
+  }
+}

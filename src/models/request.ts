@@ -20,9 +20,9 @@ export interface RequestListFilter {
   aprovalDate?: string;
 }
 
-export type RequestListFields = 'requestType';
+export type RequestListSortFields = 'requestType';
 
-export type RequestListQuery = QueryParams<RequestListFields> &
+export type RequestListQuery = QueryParams<RequestListSortFields> &
   RequestListFilter;
 
 export type ResRequestList = ResponseData<
