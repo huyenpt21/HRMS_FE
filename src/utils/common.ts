@@ -1,7 +1,7 @@
 import {
   DATE_DISPLAY,
   DATE_REQUEST,
-  RecordStatus,
+  RECORD_STATUS,
   SortDir,
   TIME_HOUR,
 } from 'constants/common';
@@ -85,9 +85,9 @@ export const getCurrentDate = (format?: string) => {
 
 export const onHandleShowingStatus = (status: boolean) => {
   switch (status) {
-    case RecordStatus.ACTIVE:
+    case RECORD_STATUS.ACTIVE:
       return t('status.active');
-    case RecordStatus.INACTIVE:
+    case RECORD_STATUS.INACTIVE:
       return t('status.inactive');
     default:
       return t('status.unknown');

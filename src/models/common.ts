@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 export interface Resource {
-  uid: string;
+  id: string;
 }
 
 export interface Pagination {
@@ -60,6 +60,11 @@ export interface MenuOptionsType {
 }
 
 export interface SelectBoxType {
+  value: any;
+  label: string;
+}
+
+export interface RadioButtonType {
   value: any;
   label: string;
 }

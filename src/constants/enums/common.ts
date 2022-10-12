@@ -9,12 +9,12 @@ export enum STATUS {
   INACTIVE = 'Inactive',
 }
 export enum MENU_OPTION_KEY {
-  EDIT,
-  DETAIL,
-  CANCELLED,
-  DELETE,
-  DEACTIVE,
-  ACTIVE,
+  EDIT = 'edit',
+  DETAIL = 'detail',
+  CANCELLED = 'cancelled',
+  DELETE = 'delete',
+  DEACTIVE = 'deactive',
+  ACTIVE = 'active',
 }
 
 export enum CHECKBOX {
@@ -69,4 +69,20 @@ export enum STATUS_COLORS {
   ERROR = 'error',
   WARING = 'warning',
   DEFAULT = 'default',
+}
+
+export enum DIRECTION {
+  HORIZONTAL = 'horizontal',
+  VERTICAL = 'vertical',
+}
+
+export enum ACTION_TYPE {
+  EDIT,
+  VIEW_DETAIL,
+  CREATE,
+}
+
+export enum VIEW_LIST_EMPLOYEE_TYPE {
+  ALL = 'all',
+  SUBORDINATE = 'subordinate',
 }

@@ -1,4 +1,4 @@
-import { URL_PATH } from 'constants/common';
+import { URL_PATH } from 'constants/fixData';
 
 const BreadcrumbsContent = [
   {
@@ -6,6 +6,22 @@ const BreadcrumbsContent = [
     breadcrumbs: [
       {
         title: 'Employee List',
+      },
+    ],
+  },
+  {
+    path: URL_PATH.subordinateList,
+    breadcrumbs: [
+      {
+        title: 'Subordinate List',
+      },
+    ],
+  },
+  {
+    path: URL_PATH.myRequestList,
+    breadcrumbs: [
+      {
+        title: 'My Request List',
       },
     ],
   },

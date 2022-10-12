@@ -14,9 +14,9 @@ export const paginationConfig: TablePaginationConfig = {
   showQuickJumper: true,
 };
 
-export const RecordStatus = {
-  ACTIVE: true,
-  INACTIVE: false,
+export const COMMON_STATUS = {
+  TRUE: true,
+  FALSE: false,
 };
 
 export const DATE_DISPLAY = 'DD/MM/YYYY';
@@ -58,11 +58,6 @@ export const Gender = {
   OTHER: 'Other',
   TRANSGENDER: 'Transgender',
 };
-
-export const URL_PATH = {
-  employeeList: '/employee/all/list',
-};
-
 export const regexNumber = /^[0-9]+$/;
 
 export const regexNumberAndDot = /^[0-9]*\.?[0-9]*$/;
@@ -80,3 +75,13 @@ export const acceptFile =
   '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
 export const pathNameLocalStorage = 'current-path';
+
+export const MESSAGE_RES = {
+  SUCCESS: 'Success',
+  ERROR: 'Error',
+};
+
+export const RECORD_STATUS = {
+  ACTIVE: true,
+  INACTIVE: false,
+};

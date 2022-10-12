@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 15
+    }
+  },
+  "data": {
+    "employee": {
+      "id": "716383626ss6d7f",
+      "name": "Nguyen Van A",
+      "dob": "2000/05/23",
+      "gender": "male",
+      "phoneNumber": "012345556788",
+      "citizenIdentification": "02665454565650",
+      "individualEmail": "nguyenvana23@gmail.com",
+      "address": "Ha Noi - Viet Nam",
+      "rollNumber": "MS0001",
+      "companyEmail": "anvms0001@minswap.com",
+      "manager": "MS0003",
+      "department": "DEV",
+      "position": "WEB-FE",
+      "ranking": "junior",
+      "onBoardDate": "2021/05/21",
+      "isManager": true,
+      "isActive": false
+    }
+  }
+}

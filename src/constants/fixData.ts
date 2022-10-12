@@ -1,5 +1,13 @@
-import { MenuOptionsType, SelectBoxType } from 'models/common';
+import { MenuOptionsType, RadioButtonType, SelectBoxType } from 'models/common';
+import { COMMON_STATUS } from './common';
 import { GENDER_KEY, MENU_OPTION_KEY } from './enums/common';
+
+export const URL_PATH = {
+  employeeList: '/employee/all/list',
+  subordinateList: 'subordinate/list',
+  myRequestList: 'request/my-request/list',
+  subordinateRequestList: 'request/subordinate/list',
+};
 
 export const RANKING_LIST: SelectBoxType[] = [
   {
@@ -70,5 +78,16 @@ export const GENDER_LIST: SelectBoxType[] = [
   {
     value: GENDER_KEY.OTHER,
     label: 'Other',
+  },
+];
+
+export const STATUS_RADIO_LIST: RadioButtonType[] = [
+  {
+    value: COMMON_STATUS.TRUE,
+    label: 'Active',
+  },
+  {
+    value: COMMON_STATUS.FALSE,
+    label: 'Inactive',
   },
 ];
