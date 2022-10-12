@@ -260,37 +260,50 @@ export default function AddEmployeeModal({
               </Row>
             </Col>
           </Row>
+          <div className={styles['modal__footer']}>
+            {actionModal === ACTION_TYPE.CREATE ||
+              (actionModal === ACTION_TYPE.EDIT && (
+                <BasicButton
+                  title="Cancel"
+                  type="outline"
+                  className={styles['btn--cancel']}
+                  onClick={cancelHandler}
+                />
+              ))}
+            {actionModal === ACTION_TYPE.CREATE && (
+              <BasicButton
+                title="Add"
+                type="filled"
+                className={styles['btn--save']}
+                htmlType={'submit'}
+              />
+            )}
+            {actionModal === ACTION_TYPE.EDIT && (
+              <BasicButton
+                title="Update"
+                type="filled"
+                className={styles['btn--save']}
+                htmlType={'submit'}
+              />
+            )}
+          </div>
         </Form>
         <div className={styles['modal__footer']}>
-          <BasicButton
-            title="Cancel"
-            type="outline"
-            className={styles['btn--cancel']}
-            onClick={cancelHandler}
-          />
-          {actionModal === ACTION_TYPE.CREATE && (
-            <BasicButton
-              title="Add"
-              type="filled"
-              className={styles['btn--save']}
-              htmlType={'submit'}
-            />
-          )}
-          {actionModal === ACTION_TYPE.EDIT && (
-            <BasicButton
-              title="Update"
-              type="filled"
-              className={styles['btn--save']}
-              htmlType={'submit'}
-            />
-          )}
           {actionModal === ACTION_TYPE.VIEW_DETAIL && (
-            <BasicButton
-              title="Edit"
-              type="filled"
-              className={styles['btn--save']}
-              onClick={() => setActionModal(ACTION_TYPE.EDIT)}
-            />
+            <>
+              <BasicButton
+                title="Cancel"
+                type="outline"
+                className={styles['btn--cancel']}
+                onClick={cancelHandler}
+              />
+              <BasicButton
+                title="Edit"
+                type="filled"
+                className={styles['btn--save']}
+                onClick={() => setActionModal(ACTION_TYPE.EDIT)}
+              />
+            </>
           )}
         </div>
       </>
