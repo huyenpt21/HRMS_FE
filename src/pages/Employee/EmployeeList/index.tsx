@@ -32,7 +32,7 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import AddEmployeeModal from '../AddEmployeeModal';
+import AddEmployeeModal from '../EmployeeDetailModal';
 import dataMock from './dataMock.json';
 import styles from './employeeList.module.less';
 export default function AllEmployeeList() {
@@ -157,7 +157,7 @@ export default function AllEmployeeList() {
     if (dataMock && dataMock.data) {
       let {
         metadata: { pagination },
-        data: { items: recordsTable },
+        data: { employeeList: recordsTable },
       } = dataMock;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
@@ -245,10 +245,10 @@ export default function AllEmployeeList() {
     setIsShowModalAdd(false);
   };
 
-  const rowClickHandler = (uid: string) => {
+  const rowClickHandler = (id: string) => {
     return {
       onClick: () => {
-        rollNumber.current = uid;
+        rollNumber.current = id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowModalAdd(true);
       },
@@ -298,11 +298,11 @@ export default function AllEmployeeList() {
         pagination={pagination}
         extra={extraHeader}
         stateQuery={stateQuery}
-        rowKey={(record: EmployeeListItem) => record.uid}
+        rowKey={(record: EmployeeListItem) => record.id}
         // loading={isLoading}
         scroll={{ y: 240 }}
         onRow={(record: EmployeeListItem) => {
-          return rowClickHandler(record.uid);
+          return rowClickHandler(record.id);
         }}
         className={styles.table}
       />

@@ -1,5 +1,4 @@
 import { Form, Radio, Space } from 'antd';
-import { COMMON_STATUS } from 'constants/common';
 import { DIRECTION } from 'constants/enums/common';
 import { RadioButtonType } from 'models/common';
 
@@ -23,7 +22,7 @@ export default function BasicRadioGroup({
       name={name}
       initialValue={initialValue}
     >
-      <Radio.Group defaultValue={COMMON_STATUS.FALSE}>
+      <Radio.Group>
         <Space direction={direction ? direction : DIRECTION.HORIZONTAL}>
           {listRadio.map((item: RadioButtonType, index: number) => {
             return (

@@ -6,7 +6,7 @@ import BasicInput from 'components/BasicInput';
 import BasicRadioGroup from 'components/BasicRadioGroup';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
-import { COMMON_STATUS, validateMessages } from 'constants/common';
+import { COMMON_STATUS, MESSAGE_RES, validateMessages } from 'constants/common';
 import { ACTION_TYPE, VIEW_LIST_EMPLOYEE_TYPE } from 'constants/enums/common';
 import {
   GENDER_LIST,
@@ -14,17 +14,19 @@ import {
   RANKING_LIST,
   STATUS_RADIO_LIST,
 } from 'constants/fixData';
-import { useAddEmployeeModal } from 'hooks/useEmployeeList/UseEmployee';
+import { useAddEmployeeModal } from 'hooks/useEmployeeList';
 import { EmployeeListItem, ResEmployeeModify } from 'models/allEmployee';
-import { useState } from 'react';
+import moment from 'moment-timezone';
+import { useEffect, useState } from 'react';
 import styles from './addEmployee.module.less';
+import detailMock from './detailMock.json';
 
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  rollNumber: string;
+  rollNumber?: string;
   viewType?: string;
 }
 export default function AddEmployeeModal({
@@ -37,6 +39,8 @@ export default function AddEmployeeModal({
 }: IProps) {
   const [employeeForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
+  // const [detailEmployeeData, setDetailEmployeeData] =
+  //   useState<EmployeeListItem>();
   const cancelHandler = () => {
     onCancel();
     employeeForm.resetFields();
@@ -56,11 +60,27 @@ export default function AddEmployeeModal({
     },
   });
 
+  // const { data: detailEmployee } = useEmployeeDetail(rollNumber || '');
+  const detailEmployee = detailMock;
+  useEffect(() => {
+    if (detailEmployee && detailEmployee.data) {
+      const {
+        metadata: { message },
+        data: { employee },
+      } = detailEmployee;
+      if (message === MESSAGE_RES.SUCCESS && employee) {
+        // setDetailEmployeeData(employee);
+        employeeForm.setFieldsValue(employee);
+        employeeForm.setFieldValue('dob', moment(employee.dob));
+        employeeForm.setFieldValue('onBoardDate', moment(employee.onBoardDate));
+      }
+    }
+  }, [detailEmployee]);
+
   const submitHandler = (formValues: EmployeeListItem) => {
     console.log(1111, formValues);
     createEmployee(formValues);
   };
-  console.log(1111, actionModal);
   return (
     <CommonModal
       open={isVisible}
@@ -179,7 +199,7 @@ export default function AddEmployeeModal({
                 </Col>
                 <Col span={12}>
                   <BasicInput
-                    name="email"
+                    name="companyEmail"
                     label="Company Email"
                     rules={[
                       { required: true },
@@ -238,7 +258,7 @@ export default function AddEmployeeModal({
               <Row gutter={12}>
                 <Col span={12}>
                   <BasicDatePicker
-                    name="onboardDate"
+                    name="onBoardDate"
                     label="Onboard Date"
                     rules={[{ required: true }]}
                   />

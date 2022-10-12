@@ -5,6 +5,8 @@ import { GENDER_KEY, MENU_OPTION_KEY } from './enums/common';
 export const URL_PATH = {
   employeeList: '/employee/all/list',
   subordinateList: 'subordinate/list',
+  myRequestList: 'request/my-request/list',
+  subordinateRequestList: 'request/subordinate/list',
 };
 
 export const RANKING_LIST: SelectBoxType[] = [

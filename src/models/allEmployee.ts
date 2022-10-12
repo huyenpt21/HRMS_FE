@@ -3,10 +3,20 @@ import { Pagination, QueryParams, Resource, ResponseData } from './common';
 export interface EmployeeListItem extends Resource {
   rollNumber: string;
   name: string;
-  email: string;
-  department: string;
-  position: string;
-  isActive: boolean;
+  dob?: string;
+  gender?: string;
+  phoneNumber?: string;
+  citizenIdentification?: string;
+  individualEmail?: string;
+  address?: string;
+  companyEmail?: string;
+  manager?: string;
+  department?: string;
+  position?: string;
+  ranking?: string;
+  onBoardDate?: string;
+  isManager?: boolean;
+  isActive?: boolean;
 }
 
 export interface EmployeeListFilter {
@@ -21,10 +31,13 @@ export type EmployeeListQuery = QueryParams<EmployeeListFields> &
   EmployeeListFilter;
 
 export type ResEmployeeList = ResponseData<
-  { items: EmployeeListItem[] },
+  { employeeList: EmployeeListItem[] },
   Pagination
 >;
 
-export type ResEmployeeDetail = ResponseData<{ item: EmployeeListItem }, {}>;
+export type ResEmployeeDetail = ResponseData<
+  { employee: EmployeeListItem },
+  {}
+>;
 
 export type ResEmployeeModify = ResponseData<{}, {}>;

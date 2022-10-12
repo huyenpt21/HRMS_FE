@@ -1,6 +1,7 @@
 import {
   DATE_DISPLAY,
   DATE_REQUEST,
+  RECORD_STATUS,
   SortDir,
   TIME_HOUR,
 } from 'constants/common';
@@ -80,6 +81,17 @@ export const getEndOfMonth = (
 
 export const getCurrentDate = (format?: string) => {
   return format ? moment().format(format) : moment().toString();
+};
+
+export const onHandleShowingStatus = (status: boolean) => {
+  switch (status) {
+    case RECORD_STATUS.ACTIVE:
+      return t('status.active');
+    case RECORD_STATUS.INACTIVE:
+      return t('status.inactive');
+    default:
+      return t('status.unknown');
+  }
 };
 
 export const getDateUTC = (date: string | moment.Moment, format?: string) => {

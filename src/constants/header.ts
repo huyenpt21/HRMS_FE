@@ -30,3 +30,16 @@ export const EmployeeListAllHeader = [
     dataIndex: 'status',
   },
 ];
+
+export const MyRequestListHeader = [
+  {
+    title: 'Request',
+    key: 'request',
+    dataIndex: 'request',
+  },
+  {
+    title: 'Create Date',
+    key: 'createDate',
+    dataIndex: 'createDate',
+  },
+];

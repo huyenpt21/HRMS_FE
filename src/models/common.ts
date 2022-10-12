@@ -2,7 +2,7 @@ import { MENU_OPTION_KEY } from 'constants/enums/common';
 import { ReactNode } from 'react';
 
 export interface Resource {
-  uid: string;
+  id: string;
 }
 
 export interface Pagination {
