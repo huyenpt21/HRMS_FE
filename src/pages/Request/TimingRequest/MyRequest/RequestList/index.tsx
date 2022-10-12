@@ -1,8 +1,14 @@
-import { TablePaginationConfig } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Col, Row, TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
+import BasicButton from 'components/BasicButton';
+import BasicDatePicker from 'components/BasicDatePicker';
+import BasicSelect from 'components/BasicSelect';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
+import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import MenuOptions from 'components/MenuOpstions';
+import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { STATUS, STATUS_COLORS } from 'constants/enums/common';
 import { MENU_COMMON } from 'constants/fixData';
@@ -21,6 +27,7 @@ import {
   removeEmptyValueInObject,
 } from 'utils/common';
 import dataMock from './dataMock.json';
+import styles from './requestList.module.less';
 
 export default function MyRequestList() {
   const [searchParams] = useSearchParams();
@@ -66,49 +73,52 @@ export default function MyRequestList() {
       return {
         ...el,
         render: (data: any, record: RequestListModel) => {
-          if (
-            el.key === 'createDate' ||
-            el.key === 'startTime' ||
-            el.key === 'endTime'
-          ) {
-            return convertDate(data, DATE_TIME_US);
-          }
-          if (el.key === 'status') {
-            let statusTag: StatusTag = {
-              statusColor: STATUS_COLORS.PROCESSING,
-              text: '',
-            };
-            switch (data) {
-              case STATUS.PENDING: {
-                statusTag = {
-                  statusColor: STATUS_COLORS.WARING,
-                  text: STATUS.PENDING,
-                };
-                break;
+          if (data) {
+            if (
+              el.key === 'createDate' ||
+              el.key === 'startTime' ||
+              el.key === 'endTime'
+            ) {
+              return convertDate(data, DATE_TIME_US);
+            } else if (el.key === 'status') {
+              let statusTag: StatusTag = {
+                statusColor: STATUS_COLORS.PROCESSING,
+                text: '',
+              };
+              switch (data) {
+                case STATUS.PENDING: {
+                  statusTag = {
+                    statusColor: STATUS_COLORS.WARING,
+                    text: STATUS.PENDING,
+                  };
+                  break;
+                }
+                case STATUS.APPROVED: {
+                  statusTag = {
+                    statusColor: STATUS_COLORS.SUCCESS,
+                    text: STATUS.APPROVED,
+                  };
+                  break;
+                }
+                case STATUS.REJECTED: {
+                  statusTag = {
+                    statusColor: STATUS_COLORS.ERROR,
+                    text: STATUS.REJECTED,
+                  };
+                  break;
+                }
               }
-              case STATUS.APPROVED: {
-                statusTag = {
-                  statusColor: STATUS_COLORS.SUCCESS,
-                  text: STATUS.APPROVED,
-                };
-                break;
-              }
-              case STATUS.REJECTED: {
-                statusTag = {
-                  statusColor: STATUS_COLORS.ERROR,
-                  text: STATUS.REJECTED,
-                };
-                break;
-              }
+              return (
+                <BasicTag
+                  statusColor={statusTag.statusColor}
+                  text={statusTag.text}
+                />
+              );
             }
-            return (
-              <BasicTag
-                statusColor={statusTag.statusColor}
-                text={statusTag.text}
-              />
-            );
+            return data;
+          } else {
+            return '-';
           }
-          return <div>{data}</div>;
         },
       };
     });
@@ -182,6 +192,39 @@ export default function MyRequestList() {
     }));
   };
 
+  const extraHeader = (
+    <>
+      <div className={styles.header__section}>
+        <div className={styles.header__title}>Employee List</div>
+        <BasicButton
+          title="Add Request"
+          type="filled"
+          icon={<PlusOutlined />}
+          // onClick={addEmployeeHandler}
+        />
+      </div>
+      <div className={styles.header__container}>
+        <Row gutter={10} className={styles.filter__section}>
+          <Col span={8}>
+            <InputDebounce
+              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
+              placeholder="Search..."
+              allowClear
+              setStateQuery={setStateQuery}
+              keyParam="search"
+            />
+          </Col>
+          <Col span={8}>
+            <BasicSelect options={[]} placeholder="Request Type" />
+          </Col>
+          <Col span={8}>
+            <BasicDatePicker placeholder="Create Date" />
+          </Col>
+        </Row>
+      </div>
+    </>
+  );
+
   return (
     <>
       <CommonTable
@@ -189,10 +232,11 @@ export default function MyRequestList() {
         data={records}
         onChange={handleTableChange}
         pagination={pagination}
-        extra={<></>}
+        extra={extraHeader}
         stateQuery={stateQuery}
         rowKey={(record: RequestListModel) => record.id}
         scroll={{ y: 240 }}
+        className={styles.table}
       />
     </>
   );
