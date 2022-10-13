@@ -5,7 +5,6 @@ import styles from './index.module.less';
 
 interface TimeComponentProps {
   name: string;
-  useLabel?: boolean;
   label?: string;
   rules?: object[];
   className?: string;
@@ -16,11 +15,11 @@ interface TimeComponentProps {
   defaultEndTime?: string;
   onChange?: (e: any) => void;
   disableTime?: () => {};
+  placeholder?: [string, string];
 }
 
 const TimeRangePicker = ({
   name,
-  useLabel,
   label,
   rules,
   className,
@@ -31,6 +30,7 @@ const TimeRangePicker = ({
   defaultEndTime,
   onChange,
   disableTime,
+  placeholder,
 }: TimeComponentProps) => {
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
@@ -45,7 +45,7 @@ const TimeRangePicker = ({
             ? [moment(defaultStartTime), moment(defaultEndTime)]
             : undefined
         }
-        label={useLabel ? label : ''}
+        label={label ? label : ''}
         rules={rules}
         required={isRequired}
         className={classNameFormItem}
@@ -58,6 +58,7 @@ const TimeRangePicker = ({
           onChange={onChange}
           disabledTime={disableTime}
           suffixIcon={null}
+          placeholder={placeholder}
         />
       </Form.Item>
     </span>
