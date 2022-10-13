@@ -4,6 +4,7 @@ import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
+import UploadFilePictureWall from 'components/UploadFile';
 import { validateMessages } from 'constants/common';
 import { ACTION_TYPE } from 'constants/enums/common';
 import { RequestListModel } from 'models/request';
@@ -86,6 +87,11 @@ export default function RequestDetailModal({
                 label="Reason"
                 rules={[{ required: true }]}
               />
+            </Col>
+          </Row>
+          <Row gutter={20}>
+            <Col span={24}>
+              <UploadFilePictureWall />
             </Col>
           </Row>
         </Form>
