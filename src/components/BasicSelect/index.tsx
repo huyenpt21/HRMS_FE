@@ -4,7 +4,6 @@ import { MODE_TYPE, SIZE_TYPE } from 'constants/enums/common';
 import { debounce } from 'lodash';
 import { SelectBoxType } from 'models/common';
 import { CSSProperties, Key } from 'react';
-import styles from './index.module.less';
 
 interface Props {
   name?: string;
@@ -56,7 +55,7 @@ const BasicSelect = (props: Props) => {
     >
       <Select
         getPopupContainer={props.getPopupContainer}
-        className={`${props.className} ${styles.item}`}
+        className={props.className}
         disabled={props.disabled}
         placeholder={props.placeholder}
         loading={props.loading}
