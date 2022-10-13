@@ -40,7 +40,7 @@ export default function EmployeeList() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const [isShowModalAdd, setIsShowModalAdd] = useState(false);
+  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const rollNumber = useRef('');
   const paramUrl: Readonly<Params<string>> = useParams();
@@ -177,7 +177,7 @@ export default function EmployeeList() {
   ) => {
     switch (menuItem.key) {
       case MENU_OPTION_KEY.EDIT: {
-        setIsShowModalAdd(true);
+        setIsShowDetailModal(true);
         modalAction.current = ACTION_TYPE.EDIT;
         rollNumber.current = itemSelected.rollNumber;
         break;
@@ -235,12 +235,12 @@ export default function EmployeeList() {
   };
 
   const addEmployeeHandler = () => {
-    setIsShowModalAdd(true);
+    setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
   };
 
   const cancelModalHandler = () => {
-    setIsShowModalAdd(false);
+    setIsShowDetailModal(false);
   };
 
   const rowClickHandler = (id: string) => {
@@ -248,7 +248,7 @@ export default function EmployeeList() {
       onClick: () => {
         rollNumber.current = id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
-        setIsShowModalAdd(true);
+        setIsShowDetailModal(true);
       },
     };
   };
@@ -304,9 +304,9 @@ export default function EmployeeList() {
         }}
         className={styles.table}
       />
-      {isShowModalAdd && (
+      {isShowDetailModal && (
         <EmployeeDetailModal
-          isVisible={isShowModalAdd}
+          isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
           rollNumber={rollNumber.current}

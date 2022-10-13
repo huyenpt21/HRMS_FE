@@ -8,7 +8,7 @@ import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { STATUS, STATUS_COLORS } from 'constants/enums/common';
+import { ACTION_TYPE, STATUS, STATUS_COLORS } from 'constants/enums/common';
 import { MyRequestListHeader } from 'constants/header';
 import { HeaderTableFields, StatusTag } from 'models/common';
 import {
@@ -16,7 +16,7 @@ import {
   RequestListQuery,
   RequestListSortFields,
 } from 'models/request';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   convertDate,
@@ -24,13 +24,16 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
+import RequestDetailModal from '../RequestDetailModal';
 import dataMock from './dataMock.json';
 import styles from './requestList.module.less';
 
 export default function MyRequestList() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
-
+  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
+  const modalAction = useRef(ACTION_TYPE.CREATE);
+  const requestId = useRef('');
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestListModel[]>([]);
   // * default feilters
@@ -143,14 +146,25 @@ export default function MyRequestList() {
       render: (_, record: RequestListModel) => {
         if (record?.status === STATUS.PENDING) {
           return (
-            <div className={styles.menu__action}>
+            <div
+              className={styles.menu__action}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
               <Tooltip title="Edit">
-                <span onClick={() => editRequestHandler(record.id)}>
+                <span
+                  onClick={() => editRequestHandler(record.id)}
+                  className="cursor-pointer"
+                >
                   <SvgIcon icon="edit-border" />
                 </span>
               </Tooltip>
               <Tooltip title="Cancel">
-                <span onClick={() => cancelRequestHandler(record.id)}>
+                <span
+                  onClick={() => cancelRequestHandler(record.id)}
+                  className="cursor-pointer"
+                >
                   <SvgIcon icon="close-circle" />
                 </span>
               </Tooltip>
@@ -182,7 +196,11 @@ export default function MyRequestList() {
     }
   }, []);
 
-  const editRequestHandler = (requestId: string) => {};
+  const editRequestHandler = (id: string) => {
+    requestId.current = id;
+    modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+    setIsShowDetailModal(true);
+  };
   const cancelRequestHandler = (requestId: string) => {};
 
   const handleTableChange = (
@@ -219,15 +237,34 @@ export default function MyRequestList() {
     }));
   };
 
+  const cancelModalHandler = () => {
+    setIsShowDetailModal(false);
+  };
+
+  const addRequestHandler = () => {
+    setIsShowDetailModal(true);
+    modalAction.current = ACTION_TYPE.CREATE;
+  };
+
+  const rowClickHandler = (id: string) => {
+    return {
+      onClick: () => {
+        requestId.current = id;
+        modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+        setIsShowDetailModal(true);
+      },
+    };
+  };
+
   const extraHeader = (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Employee List</div>
+        <div className={styles.header__title}>My Request List</div>
         <BasicButton
           title="Add Request"
           type="filled"
           icon={<PlusOutlined />}
-          // onClick={addEmployeeHandler}
+          onClick={addRequestHandler}
         />
       </div>
       <div className={styles.header__container}>
@@ -262,7 +299,17 @@ export default function MyRequestList() {
         stateQuery={stateQuery}
         rowKey={(record: RequestListModel) => record.id}
         scroll={{ y: 240 }}
-        className={styles.table}
+        className={'cursor-pointer'}
+        onRow={(record: RequestListModel) => {
+          return rowClickHandler(record.id);
+        }}
+      />
+      <RequestDetailModal
+        isVisible={isShowDetailModal}
+        onCancel={cancelModalHandler}
+        action={modalAction.current}
+        requestId={requestId.current}
+        // refetchList={refetchList}
       />
     </>
   );
