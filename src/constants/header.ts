@@ -33,14 +33,14 @@ export const EmployeeListAllHeader = [
 
 export const MyRequestListHeader = [
   {
-    title: 'Request Type',
-    key: 'requestType',
-    dataIndex: 'requestType',
-  },
-  {
     title: 'Create Date',
     key: 'createDate',
     dataIndex: 'createDate',
+  },
+  {
+    title: 'Request Type',
+    key: 'requestType',
+    dataIndex: 'requestType',
   },
   {
     title: 'Start Time',

@@ -1,17 +1,14 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, Row, TablePaginationConfig } from 'antd';
+import { Col, Row, TablePaginationConfig, Tooltip } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import BasicButton from 'components/BasicButton';
-import BasicDatePicker from 'components/BasicDatePicker';
+import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicSelect from 'components/BasicSelect';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
-import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
-import MenuOptions from 'components/MenuOpstions';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { STATUS, STATUS_COLORS } from 'constants/enums/common';
-import { MENU_COMMON } from 'constants/fixData';
 import { MyRequestListHeader } from 'constants/header';
 import { HeaderTableFields, StatusTag } from 'models/common';
 import {
@@ -25,6 +22,7 @@ import {
   convertDate,
   isEmptyPagination,
   removeEmptyValueInObject,
+  sortInforWithDir,
 } from 'utils/common';
 import dataMock from './dataMock.json';
 import styles from './requestList.module.less';
@@ -65,8 +63,22 @@ export default function MyRequestList() {
         el.key === 'endTime'
       ) {
         el.width = 150;
+      } else if (el.key === 'requestType') {
+        el.width = 200;
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'status') {
         el.width = 100;
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+        el.filterMultiple = true;
+        el.filters = [
+          { text: STATUS.PENDING, value: STATUS.PENDING },
+          { text: STATUS.APPROVED, value: STATUS.APPROVED },
+          { text: STATUS.REJECTED, value: STATUS.REJECTED },
+        ];
+      } else if (el.key === 'reason') {
+        el.width = 200;
       } else {
         el.width = 200;
       }
@@ -131,12 +143,18 @@ export default function MyRequestList() {
       render: (_, record: RequestListModel) => {
         if (record?.status === STATUS.PENDING) {
           return (
-            <MenuOptions
-              trigger={['click']}
-              items={MENU_COMMON}
-              itemHandler={menuActionHandler}
-              itemSelected={record}
-            />
+            <div className={styles.menu__action}>
+              <Tooltip title="Edit">
+                <span onClick={() => editRequestHandler(record.id)}>
+                  <SvgIcon icon="edit-border" />
+                </span>
+              </Tooltip>
+              <Tooltip title="Cancel">
+                <span onClick={() => cancelRequestHandler(record.id)}>
+                  <SvgIcon icon="close-circle" />
+                </span>
+              </Tooltip>
+            </div>
           );
         }
       },
@@ -164,7 +182,8 @@ export default function MyRequestList() {
     }
   }, []);
 
-  const menuActionHandler = () => {};
+  const editRequestHandler = (requestId: string) => {};
+  const cancelRequestHandler = (requestId: string) => {};
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -190,6 +209,14 @@ export default function MyRequestList() {
       sort,
       dir,
     }));
+
+    // * set filter to state query
+    const filterKey: any = Object.keys(filters)[0];
+    const filterValues: any = Object.values(filters)[0];
+    setStateQuery((prev: RequestListQuery) => ({
+      ...prev,
+      [filterKey]: filterValues,
+    }));
   };
 
   const extraHeader = (
@@ -204,21 +231,20 @@ export default function MyRequestList() {
         />
       </div>
       <div className={styles.header__container}>
-        <Row gutter={10} className={styles.filter__section}>
-          <Col span={8}>
-            <InputDebounce
-              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Search..."
-              allowClear
-              setStateQuery={setStateQuery}
-              keyParam="search"
+        <Row gutter={20} className={styles.filter__section}>
+          <Col span={10}>
+            <BasicDateRangePicker
+              placeholder={['From', 'To']}
+              label="Create Date"
             />
           </Col>
-          <Col span={8}>
-            <BasicSelect options={[]} placeholder="Request Type" />
-          </Col>
-          <Col span={8}>
-            <BasicDatePicker placeholder="Create Date" />
+          <Col span={10}>
+            <BasicSelect
+              options={[]}
+              placeholder="Request Type"
+              label="Request Type"
+              allowClear
+            />
           </Col>
         </Row>
       </div>

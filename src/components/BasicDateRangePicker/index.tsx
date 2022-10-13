@@ -10,7 +10,6 @@ interface IProps {
   rules?: object[];
   name?: string;
   colon?: boolean;
-  useLabel?: boolean;
   isUseDefaultValue?: boolean;
   defaultStartDate?: string;
   defaultEndDate?: string;
@@ -20,6 +19,7 @@ interface IProps {
   disabled?: boolean;
   disabledDate?: (currentDate: moment.Moment) => boolean;
   isConvertToUTC?: boolean;
+  placeholder?: [string, string];
 }
 
 const { RangePicker } = DatePicker;
@@ -56,7 +56,7 @@ const BasicDateRangePicker = (props: IProps) => {
   return (
     <span className={styles['picker--container']}>
       <Form.Item
-        label={props.useLabel ? props.label : ''}
+        label={props.label ? props.label : ''}
         colon={props.colon || false}
         name={props.name}
         required={isRequired}
@@ -76,6 +76,7 @@ const BasicDateRangePicker = (props: IProps) => {
           size="large"
           disabled={props.disabled}
           disabledDate={props.disabledDate}
+          placeholder={props.placeholder}
         />
       </Form.Item>
     </span>

@@ -2,7 +2,6 @@ import { DatePicker, Form } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_REQUEST, US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
-import { useState } from 'react';
 import styles from './index.module.less';
 
 interface Props {
@@ -12,14 +11,13 @@ interface Props {
   className?: string;
   classNameFormItem?: string;
   rules?: object[];
-  initialValueForm?: string;
-  isUseDefaultValue?: boolean;
   defaultValue?: string;
   disabled?: boolean;
-  onChangeHandle?: any;
+  onChange?: any;
   disabledDate?: (currentDate: moment.Moment) => boolean;
   picker?: 'week' | 'month' | 'quarter' | 'year';
   placeholder?: string;
+  allowClear?: boolean;
 }
 
 const BasicDatePicker = ({
@@ -28,22 +26,18 @@ const BasicDatePicker = ({
   name,
   rules,
   classNameFormItem,
-  initialValueForm,
   defaultValue,
   disabled,
-  isUseDefaultValue,
-  onChangeHandle,
+  onChange,
   disabledDate,
   picker,
   placeholder,
+  allowClear,
 }: Props) => {
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
     : false;
 
-  const [value, setValue] = useState(
-    isUseDefaultValue ? () => moment(defaultValue, DATE_REQUEST) : undefined,
-  );
   return (
     <Form.Item
       label={label ? label : ''}
@@ -52,22 +46,24 @@ const BasicDatePicker = ({
       required={isRequired}
       rules={rules}
       className={classNameFormItem}
-      initialValue={value}
+      initialValue={
+        defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
+      }
     >
       <DatePicker
         className={styles.date__picker}
         size={'large'}
-        defaultValue={value}
+        defaultValue={
+          defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
+        }
         format={US_DATE_FORMAT}
-        onChange={(e: any) => {
-          setValue(e);
-          onChangeHandle(e);
-        }}
+        onChange={onChange}
         disabled={disabled}
         disabledDate={disabledDate}
         picker={picker}
         placeholder={placeholder ? placeholder : US_DATE_FORMAT}
         suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
+        allowClear={true}
       />
     </Form.Item>
   );
