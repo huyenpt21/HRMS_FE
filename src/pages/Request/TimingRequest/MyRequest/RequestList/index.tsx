@@ -304,13 +304,15 @@ export default function MyRequestList() {
           return rowClickHandler(record.id);
         }}
       />
-      <RequestDetailModal
-        isVisible={isShowDetailModal}
-        onCancel={cancelModalHandler}
-        action={modalAction.current}
-        requestId={requestId.current}
-        // refetchList={refetchList}
-      />
+      {isShowDetailModal && (
+        <RequestDetailModal
+          isVisible={isShowDetailModal}
+          onCancel={cancelModalHandler}
+          action={modalAction.current}
+          requestId={requestId.current}
+          // refetchList={refetchList}
+        />
+      )}
     </>
   );
 }
