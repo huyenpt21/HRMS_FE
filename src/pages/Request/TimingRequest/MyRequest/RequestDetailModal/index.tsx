@@ -1,4 +1,5 @@
 import { Col, Form, Row } from 'antd';
+import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
@@ -8,6 +9,8 @@ import UploadFilePictureWall from 'components/UploadFile';
 import { validateMessages } from 'constants/common';
 import { ACTION_TYPE } from 'constants/enums/common';
 import { RequestListModel } from 'models/request';
+import { useState } from 'react';
+import styles from './requestDetailModal.module.less';
 
 interface IProps {
   isVisible: boolean;
@@ -24,7 +27,7 @@ export default function RequestDetailModal({
   requestId,
 }: IProps) {
   const [requestForm] = Form.useForm();
-  // const [actionModal, setActionModal] = useState(action);
+  const [actionModal, setActionModal] = useState(action);
 
   const cancelHandler = () => {
     onCancel();
@@ -39,7 +42,7 @@ export default function RequestDetailModal({
       title={'REQUEST INFORMATION'}
       onCancel={cancelHandler}
       footer={false}
-      width={800}
+      width={850}
     >
       <>
         <Form
@@ -57,6 +60,24 @@ export default function RequestDetailModal({
                 label="Request Type"
                 rules={[{ required: true }]}
                 placeholder="Choose request type"
+                name="requestType"
+              />
+            </Col>
+            <Col span="8">
+              <BasicInput
+                label="Your Approver"
+                placeholder="You don't have approver"
+                name="approver"
+                disabled
+                defaultValue="Nguyen Van B"
+              />
+            </Col>
+            <Col span="4">
+              <BasicInput
+                label="Remaining Time"
+                name="reaminingTimeOff"
+                disabled
+                defaultValue="2 / 44 hours"
               />
             </Col>
           </Row>
@@ -82,19 +103,72 @@ export default function RequestDetailModal({
             <Col span={24}>
               <BasicInput
                 type="textarea"
-                rows={4}
+                rows={3}
                 placeholder="Enter your reason . . ."
                 label="Reason"
                 rules={[{ required: true }]}
+                name="reason"
               />
             </Col>
           </Row>
           <Row gutter={20}>
             <Col span={24}>
-              <UploadFilePictureWall />
+              <Form.Item
+                label="Evidence"
+                rules={[{ required: true }]}
+                className={styles.form__upload}
+                name="evidence"
+              >
+                <UploadFilePictureWall />
+              </Form.Item>
             </Col>
           </Row>
+          <div className={styles['modal__footer']}>
+            {(actionModal === ACTION_TYPE.CREATE ||
+              actionModal === ACTION_TYPE.EDIT) && (
+              <BasicButton
+                title="Cancel"
+                type="outline"
+                className={styles['btn--cancel']}
+                onClick={cancelHandler}
+              />
+            )}
+            {actionModal === ACTION_TYPE.CREATE && (
+              <BasicButton
+                title="Add"
+                type="filled"
+                className={styles['btn--save']}
+                htmlType={'submit'}
+              />
+            )}
+            {actionModal === ACTION_TYPE.EDIT && (
+              <BasicButton
+                title="Update"
+                type="filled"
+                className={styles['btn--save']}
+                htmlType={'submit'}
+              />
+            )}
+          </div>
         </Form>
+        <div className={styles['modal__footer']}>
+          {actionModal === ACTION_TYPE.VIEW_DETAIL && (
+            <>
+              <BasicButton
+                title="Cancel"
+                type="outline"
+                className={styles['btn--cancel']}
+                onClick={cancelHandler}
+              />
+              <BasicButton
+                title="Edit"
+                type="filled"
+                className={styles['btn--save']}
+                onClick={() => setActionModal(ACTION_TYPE.EDIT)}
+              />
+            </>
+          )}
+        </div>
       </>
     </CommonModal>
   );
