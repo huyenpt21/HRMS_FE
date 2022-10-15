@@ -91,3 +91,18 @@ export const STATUS_RADIO_LIST: RadioButtonType[] = [
     label: 'Inactive',
   },
 ];
+
+export const REQUEST_TYPE_LIST: SelectBoxType[] = [
+  {
+    label: 'Request Type 1',
+    value: 'type1',
+  },
+  {
+    label: 'Request Type 2',
+    value: 'type2',
+  },
+  {
+    label: 'Request Type 3',
+    value: 'type3',
+  },
+];
