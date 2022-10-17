@@ -5,8 +5,17 @@ export interface EmployeeListItem extends Resource {
   fullName: string;
   email: string;
   departmentID: string;
-  position: string;
-  isActive: boolean;
+  dob?: string;
+  gender?: number;
+  phoneNumber?: string;
+  citizenIdentification?: string;
+  address?: string;
+  managerID?: string;
+  position?: string;
+  ranking?: string;
+  onBoardDate?: string;
+  isManager?: boolean;
+  isActive?: boolean;
 }
 
 export interface EmployeeListFilter {
@@ -21,10 +30,13 @@ export type EmployeeListQuery = QueryParams<EmployeeListFields> &
   EmployeeListFilter;
 
 export type ResEmployeeList = ResponseData<
-  { items: EmployeeListItem[] },
+  { employeeList: EmployeeListItem[] },
   Pagination
 >;
 
-export type ResEmployeeDetail = ResponseData<{ item: EmployeeListItem }, {}>;
+export type ResEmployeeDetail = ResponseData<
+  { employee: EmployeeListItem },
+  {}
+>;
 
 export type ResEmployeeModify = ResponseData<{}, {}>;

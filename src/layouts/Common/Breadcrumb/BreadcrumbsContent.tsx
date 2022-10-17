@@ -17,5 +17,13 @@ const BreadcrumbsContent = [
       },
     ],
   },
+  {
+    path: URL_PATH.myRequestList,
+    breadcrumbs: [
+      {
+        title: 'My Request List',
+      },
+    ],
+  },
 ];
 export default BreadcrumbsContent;

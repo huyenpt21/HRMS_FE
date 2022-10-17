@@ -64,6 +64,11 @@ code {
   cursor: pointer;
 }
 
+//custom upload
+.ant-upload.ant-upload-drag {
+  height: auto !important;
+}
+
 .ant-picker-week-panel-row-selected td {
   background-color: @table-row-selected !important;
 
@@ -108,6 +113,10 @@ thead.ant-table-thead {
   background-color: @table-row-selected !important;
 }
 
+.ant-picker-status-error.ant-picker {
+  border-color: @color-icon-req-label-form !important;
+}
+
 .ant-checkbox-inner {
   width: 18px;
   height: 18px;
@@ -132,17 +141,32 @@ td.ant-table-cell {
   overflow-y: auto;
 }
 
+.ant-row.ant-form-item-row {
+  display: block !important;
+}
+
+//custom disabled styles for components
+.ant-input-disabled,
+.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector,
+.ant-picker.ant-picker-disabled,
+.ant-input-affix-wrapper-disabled,
+.ant-checkbox-disabled .ant-checkbox-inner,
+.ant-input[disabled],
+.ant-picker-input > input[disabled],
+.ant-checkbox-disabled + span,
+.ant-radio-disabled + span {
+  background-color: @white !important;
+  color: @text-color !important;
+}
+
 .ant-picker-large .ant-picker-input > input {
   text-align: center;
   width: 215px;
 }
 
-.ant-picker-clear {
-  display: none;
-}
-
 .ant-form-item-control-input-content .ant-select-selector {
-  border-radius: 10px !important;
+  border-radius: 8px !important;
 }
 
 .ant-layout-footer {
@@ -206,7 +230,7 @@ nav.ant-breadcrumb {
 }
 
 .ant-picker {
-  border-radius: 5px !important;
+  border-radius: 8px !important;
 }
 
 .ant-form-item-control-input-content {

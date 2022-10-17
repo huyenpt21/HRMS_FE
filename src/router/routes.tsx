@@ -4,7 +4,9 @@ import HomePage from 'pages/homePage';
 import ForbiddenPage from 'pages/forbidden';
 import NotFound from 'pages/notFound';
 import { useRoutes } from 'react-router-dom';
-import AllEmployeeList from 'pages/Employee/AllEmployeeList';
+import EmployeeList from 'pages/Employee/EmployeeList';
+import MyRequestList from 'pages/Request/TimingRequest/MyRequest/RequestList';
+
 export default function RouterElement() {
   let element = useRoutes([
     {
@@ -20,7 +22,16 @@ export default function RouterElement() {
           children: [
             {
               path: ':viewType/list',
-              element: <AllEmployeeList />,
+              element: <EmployeeList />,
+            },
+          ],
+        },
+        {
+          path: 'request',
+          children: [
+            {
+              path: 'my-request/list',
+              element: <MyRequestList />,
             },
           ],
         },

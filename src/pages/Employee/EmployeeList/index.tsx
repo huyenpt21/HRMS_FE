@@ -32,15 +32,15 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import AddEmployeeModal from '../AddEmployeeModal';
+import EmployeeDetailModal from '../EmployeeDetailModal';
 import dataMock from './dataMock.json';
 import styles from './employeeList.module.less';
-export default function AllEmployeeList() {
+export default function EmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeListItem[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const [isShowModalAdd, setIsShowModalAdd] = useState(false);
+  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const rollNumber = useRef('');
   const paramUrl: Readonly<Params<string>> = useParams();
@@ -136,14 +136,12 @@ export default function AllEmployeeList() {
             ];
           }
           return (
-            <div className={styles.action}>
-              <MenuOptions
-                trigger={['click']}
-                items={menuOptions}
-                itemHandler={menuActionHandler}
-                itemSelected={record}
-              />
-            </div>
+            <MenuOptions
+              trigger={['click']}
+              items={menuOptions}
+              itemHandler={menuActionHandler}
+              itemSelected={record}
+            />
           );
         },
       });
@@ -155,9 +153,9 @@ export default function AllEmployeeList() {
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     if (dataMock && dataMock.data) {
-      let {
+      const {
         metadata: { pagination },
-        data: { items: recordsTable },
+        data: { employeeList: recordsTable },
       } = dataMock;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
@@ -179,7 +177,7 @@ export default function AllEmployeeList() {
   ) => {
     switch (menuItem.key) {
       case MENU_OPTION_KEY.EDIT: {
-        setIsShowModalAdd(true);
+        setIsShowDetailModal(true);
         modalAction.current = ACTION_TYPE.EDIT;
         rollNumber.current = itemSelected.rollNumber;
         break;
@@ -237,20 +235,20 @@ export default function AllEmployeeList() {
   };
 
   const addEmployeeHandler = () => {
-    setIsShowModalAdd(true);
+    setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
   };
 
   const cancelModalHandler = () => {
-    setIsShowModalAdd(false);
+    setIsShowDetailModal(false);
   };
 
-  const rowClickHandler = (uid: string) => {
+  const rowClickHandler = (id: string) => {
     return {
       onClick: () => {
-        rollNumber.current = uid;
+        rollNumber.current = id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
-        setIsShowModalAdd(true);
+        setIsShowDetailModal(true);
       },
     };
   };
@@ -298,17 +296,17 @@ export default function AllEmployeeList() {
         pagination={pagination}
         extra={extraHeader}
         stateQuery={stateQuery}
-        rowKey={(record: EmployeeListItem) => record.uid}
+        rowKey={(record: EmployeeListItem) => record.id}
         // loading={isLoading}
         scroll={{ y: 240 }}
         onRow={(record: EmployeeListItem) => {
-          return rowClickHandler(record.uid);
+          return rowClickHandler(record.id);
         }}
         className={styles.table}
       />
-      {isShowModalAdd && (
-        <AddEmployeeModal
-          isVisible={isShowModalAdd}
+      {isShowDetailModal && (
+        <EmployeeDetailModal
+          isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
           rollNumber={rollNumber.current}

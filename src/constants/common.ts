@@ -28,6 +28,7 @@ export const TIME_HOUR = 'HH:mm';
 export const TIME_DAY = 'DD-MM';
 export const TIME_MONTH = 'YYYY-MM';
 export const DATE_TIME = 'YYYY-MM-DD HH:mm:ss';
+export const DATE_TIME_US = 'MM/DD/YYYY HH:mm';
 export const YEAR = 'YYYY';
 export const MONTH_YEAR = 'MMM-YYYY';
 export const YEAR_MONTH_NUM = 'YYYY-MM';
@@ -49,16 +50,6 @@ export const namePath = {
 
 export const LOCALE = 'locale';
 
-export const Gender = {
-  MALE: 'Male',
-  FEMALE: 'Female',
-  GENDERQUEER: 'Genderqueer',
-  NONCONFORMING: 'Non-Conforming',
-  PREFERNOTTOSAY: 'Prefer not to say',
-  OTHER: 'Other',
-  TRANSGENDER: 'Transgender',
-};
-
 export const regexNumber = /^[0-9]+$/;
 
 export const regexNumberAndDot = /^[0-9]*\.?[0-9]*$/;
@@ -76,3 +67,13 @@ export const acceptFile =
   '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
 export const pathNameLocalStorage = 'current-path';
+
+export const MESSAGE_RES = {
+  SUCCESS: 'Success',
+  ERROR: 'Error',
+};
+
+export const RECORD_STATUS = {
+  ACTIVE: true,
+  INACTIVE: false,
+};

@@ -4,3 +4,10 @@ export const EMPLOYEE_LIST = {
     list: 'all/list',
   },
 };
+
+export const REQUEST_LIST = {
+  service: 'request',
+  model: {
+    list: 'employee',
+  },
+};
