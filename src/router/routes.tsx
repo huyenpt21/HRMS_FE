@@ -7,6 +7,7 @@ import { useRoutes } from 'react-router-dom';
 import EmployeeList from 'pages/Employee/EmployeeList';
 import MyRequestList from 'pages/Request/TimingRequest/MyRequest/RequestList';
 import SubordinateRequestList from 'pages/Request/TimingRequest/SubordinateRequest/RequestList';
+import AllRequestList from 'pages/Request/TimingRequest/AllRequest/RequestList';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -37,6 +38,10 @@ export default function RouterElement() {
             {
               path: 'subordinate/list',
               element: <SubordinateRequestList />,
+            },
+            {
+              path: 'all/list',
+              element: <AllRequestList />,
             },
           ],
         },
