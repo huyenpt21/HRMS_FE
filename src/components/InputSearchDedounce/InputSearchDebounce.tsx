@@ -15,7 +15,6 @@ export interface IInputProps {
   rules?: object[];
   name?: string;
   colon?: boolean;
-  useLabel?: boolean;
   placeholder?: string;
   value?: string;
   id?: string;
@@ -60,7 +59,7 @@ export default function InputDebounce(props: IInputProps) {
     });
   };
   return (
-    <Form.Item>
+    <Form.Item label={props.label ? props.label : ''}>
       <Input
         placeholder={props.placeholder}
         prefix={props.prefix}

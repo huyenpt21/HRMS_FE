@@ -268,7 +268,7 @@ export default function EmployeeList() {
       </div>
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
-          <Col span={8}>
+          <Col span={4}>
             <InputDebounce
               suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
               placeholder="Search..."
@@ -277,10 +277,10 @@ export default function EmployeeList() {
               keyParam="search"
             />
           </Col>
-          <Col span={8}>
+          <Col span={4}>
             <BasicSelect options={[]} placeholder="Department" />
           </Col>
-          <Col span={8}>
+          <Col span={4}>
             <BasicSelect
               options={POSITION_WORKING}
               placeholder="Position"

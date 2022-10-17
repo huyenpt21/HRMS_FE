@@ -34,7 +34,7 @@ export default function MyRequestList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const requestId = useRef('');
+  const requestId = useRef<string>();
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestListModel[]>([]);
@@ -274,13 +274,13 @@ export default function MyRequestList() {
       </div>
       <div className={styles.header__container}>
         <Row gutter={20} className={styles.filter__section}>
-          <Col span={10}>
+          <Col span={6}>
             <BasicDateRangePicker
               placeholder={['From', 'To']}
               label="Create Date"
             />
           </Col>
-          <Col span={10}>
+          <Col span={4}>
             <BasicSelect
               options={REQUEST_TYPE_LIST}
               placeholder="Request Type"
