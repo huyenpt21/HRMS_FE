@@ -64,6 +64,9 @@ export default function RequestDetailModal({
                 rules={[{ required: true }]}
                 placeholder="Choose request type"
                 name="requestType"
+                allowClear
+                showSearch
+                optionFilterProp="children"
               />
             </Col>
             <Col span="8">
@@ -113,6 +116,7 @@ export default function RequestDetailModal({
                 label="Reason"
                 rules={[{ required: true }]}
                 name="reason"
+                allowClear
               />
             </Col>
           </Row>

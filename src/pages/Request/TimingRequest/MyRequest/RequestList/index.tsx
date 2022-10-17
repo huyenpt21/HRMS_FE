@@ -9,6 +9,7 @@ import CommonTable from 'components/CommonTable';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { ACTION_TYPE, STATUS, STATUS_COLORS } from 'constants/enums/common';
+import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { MyRequestListHeader } from 'constants/header';
 import { HeaderTableFields, StatusTag } from 'models/common';
 import {
@@ -281,10 +282,12 @@ export default function MyRequestList() {
           </Col>
           <Col span={10}>
             <BasicSelect
-              options={[]}
+              options={REQUEST_TYPE_LIST}
               placeholder="Request Type"
               label="Request Type"
               allowClear
+              showSearch
+              optionFilterProp="children"
             />
           </Col>
         </Row>

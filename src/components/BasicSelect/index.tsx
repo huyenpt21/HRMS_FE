@@ -30,6 +30,7 @@ interface Props {
   size?: SIZE_TYPE;
   namePath?: NamePath | undefined;
   key?: Key | null | undefined;
+  optionFilterProp?: string;
 }
 
 const BasicSelect = (props: Props) => {
@@ -68,6 +69,7 @@ const BasicSelect = (props: Props) => {
         size={props.size || 'large'}
         onSearch={props.showSearch ? handleSearchDebounce : undefined}
         style={props.selectStyle}
+        optionFilterProp={props.optionFilterProp}
       >
         {props.options.map((o: SelectBoxType, i: number) => (
           <Select.Option value={o.value} key={i}>

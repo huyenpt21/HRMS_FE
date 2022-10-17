@@ -17,7 +17,7 @@ import {
   STATUS_COLORS,
   VIEW_LIST_EMPLOYEE_TYPE,
 } from 'constants/enums/common';
-import { MENU_COMMON } from 'constants/fixData';
+import { MENU_COMMON, POSITION_WORKING } from 'constants/fixData';
 import {
   EmployeeListFields,
   EmployeeListItem,
@@ -281,7 +281,13 @@ export default function EmployeeList() {
             <BasicSelect options={[]} placeholder="Department" />
           </Col>
           <Col span={8}>
-            <BasicSelect options={[]} placeholder="Position" />
+            <BasicSelect
+              options={POSITION_WORKING}
+              placeholder="Position"
+              allowClear
+              showSearch
+              optionFilterProp="children"
+            />
           </Col>
         </Row>
       </div>
