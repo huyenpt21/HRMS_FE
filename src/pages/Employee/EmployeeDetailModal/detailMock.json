@@ -22,8 +22,8 @@
       "companyEmail": "anvms0001@minswap.com",
       "manager": "MS0003",
       "department": "DEV",
-      "position": "WEB-FE",
-      "ranking": "junior",
+      "position": 2,
+      "ranking": 1,
       "onBoardDate": "2021/05/21",
       "isManager": true,
       "isActive": false

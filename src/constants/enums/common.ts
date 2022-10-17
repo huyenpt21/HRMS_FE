@@ -60,9 +60,9 @@ export enum SHAPE_TYPE {
 }
 
 export enum GENDER_KEY {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHER = 'other',
+  MALE = 1,
+  FEMALE = 0,
+  OTHER = -1,
 }
 
 export enum STATUS_COLORS {

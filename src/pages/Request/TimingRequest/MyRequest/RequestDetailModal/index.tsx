@@ -7,7 +7,8 @@ import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
 import { validateMessages } from 'constants/common';
-import { ACTION_TYPE } from 'constants/enums/common';
+import { ACTION_TYPE, STATUS } from 'constants/enums/common';
+import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestListModel } from 'models/request';
 import { useState } from 'react';
 import styles from './requestDetailModal.module.less';
@@ -18,6 +19,7 @@ interface IProps {
   refetchList?: () => void;
   action: ACTION_TYPE;
   requestId?: string;
+  requestStatus?: string;
 }
 export default function RequestDetailModal({
   isVisible,
@@ -25,6 +27,7 @@ export default function RequestDetailModal({
   refetchList,
   action,
   requestId,
+  requestStatus,
 }: IProps) {
   const [requestForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
@@ -51,12 +54,12 @@ export default function RequestDetailModal({
           requiredMark
           validateMessages={validateMessages()}
           onFinish={submitHandler}
-          // disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+          disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
         >
           <Row gutter={20}>
             <Col span="12">
               <BasicSelect
-                options={[]}
+                options={REQUEST_TYPE_LIST}
                 label="Request Type"
                 rules={[{ required: true }]}
                 placeholder="Choose request type"
@@ -70,6 +73,7 @@ export default function RequestDetailModal({
                 name="approver"
                 disabled
                 defaultValue="Nguyen Van B"
+                initialValueForm="MS0002"
               />
             </Col>
             <Col span="4">
@@ -78,6 +82,7 @@ export default function RequestDetailModal({
                 name="reaminingTimeOff"
                 disabled
                 defaultValue="2 / 44 hours"
+                initialValueForm="2"
               />
             </Col>
           </Row>
@@ -115,7 +120,7 @@ export default function RequestDetailModal({
             <Col span={24}>
               <Form.Item
                 label="Evidence"
-                rules={[{ required: true }]}
+                // rules={[{ required: true }]}
                 className={styles.form__upload}
                 name="evidence"
               >
@@ -123,52 +128,54 @@ export default function RequestDetailModal({
               </Form.Item>
             </Col>
           </Row>
-          <div className={styles['modal__footer']}>
-            {(actionModal === ACTION_TYPE.CREATE ||
-              actionModal === ACTION_TYPE.EDIT) && (
-              <BasicButton
-                title="Cancel"
-                type="outline"
-                className={styles['btn--cancel']}
-                onClick={cancelHandler}
-              />
-            )}
-            {actionModal === ACTION_TYPE.CREATE && (
-              <BasicButton
-                title="Add"
-                type="filled"
-                className={styles['btn--save']}
-                htmlType={'submit'}
-              />
-            )}
-            {actionModal === ACTION_TYPE.EDIT && (
-              <BasicButton
-                title="Update"
-                type="filled"
-                className={styles['btn--save']}
-                htmlType={'submit'}
-              />
-            )}
-          </div>
+          {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
+            <div className={styles['modal__footer']}>
+              {(actionModal === ACTION_TYPE.CREATE ||
+                actionModal === ACTION_TYPE.EDIT) && (
+                <BasicButton
+                  title="Cancel"
+                  type="outline"
+                  className={styles['btn--cancel']}
+                  onClick={cancelHandler}
+                />
+              )}
+              {actionModal === ACTION_TYPE.CREATE && (
+                <BasicButton
+                  title="Add"
+                  type="filled"
+                  className={styles['btn--save']}
+                  htmlType={'submit'}
+                />
+              )}
+              {actionModal === ACTION_TYPE.EDIT && (
+                <BasicButton
+                  title="Update"
+                  type="filled"
+                  className={styles['btn--save']}
+                  htmlType={'submit'}
+                />
+              )}
+            </div>
+          )}
         </Form>
-        <div className={styles['modal__footer']}>
-          {actionModal === ACTION_TYPE.VIEW_DETAIL && (
-            <>
-              <BasicButton
-                title="Cancel"
-                type="outline"
-                className={styles['btn--cancel']}
-                onClick={cancelHandler}
-              />
+        {actionModal === ACTION_TYPE.VIEW_DETAIL && (
+          <div className={styles['modal__footer']}>
+            <BasicButton
+              title="Cancel"
+              type="outline"
+              className={styles['btn--cancel']}
+              onClick={cancelHandler}
+            />
+            {requestStatus === STATUS.PENDING && (
               <BasicButton
                 title="Edit"
                 type="filled"
                 className={styles['btn--save']}
                 onClick={() => setActionModal(ACTION_TYPE.EDIT)}
               />
-            </>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </>
     </CommonModal>
   );

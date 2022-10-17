@@ -34,6 +34,7 @@ export default function MyRequestList() {
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const requestId = useRef('');
+  const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestListModel[]>([]);
   // * default feilters
@@ -238,6 +239,8 @@ export default function MyRequestList() {
   };
 
   const cancelModalHandler = () => {
+    requestStatus.current = STATUS.PENDING;
+    requestId.current = '';
     setIsShowDetailModal(false);
   };
 
@@ -246,12 +249,13 @@ export default function MyRequestList() {
     modalAction.current = ACTION_TYPE.CREATE;
   };
 
-  const rowClickHandler = (id: string) => {
+  const rowClickHandler = (record: RequestListModel) => {
     return {
       onClick: () => {
-        requestId.current = id;
+        requestId.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
+        requestStatus.current = record.status;
       },
     };
   };
@@ -301,7 +305,7 @@ export default function MyRequestList() {
         scroll={{ y: 240 }}
         className={'cursor-pointer'}
         onRow={(record: RequestListModel) => {
-          return rowClickHandler(record.id);
+          return rowClickHandler(record);
         }}
       />
       {isShowDetailModal && (
@@ -310,6 +314,7 @@ export default function MyRequestList() {
           onCancel={cancelModalHandler}
           action={modalAction.current}
           requestId={requestId.current}
+          requestStatus={requestStatus.current}
           // refetchList={refetchList}
         />
       )}

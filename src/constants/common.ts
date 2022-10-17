@@ -50,15 +50,6 @@ export const namePath = {
 
 export const LOCALE = 'locale';
 
-export const Gender = {
-  MALE: 'Male',
-  FEMALE: 'Female',
-  GENDERQUEER: 'Genderqueer',
-  NONCONFORMING: 'Non-Conforming',
-  PREFERNOTTOSAY: 'Prefer not to say',
-  OTHER: 'Other',
-  TRANSGENDER: 'Transgender',
-};
 export const regexNumber = /^[0-9]+$/;
 
 export const regexNumberAndDot = /^[0-9]*\.?[0-9]*$/;
