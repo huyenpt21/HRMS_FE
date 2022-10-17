@@ -37,7 +37,7 @@ export const menus: MenuItemType[] = [
       {
         title: 'Subordinate Request List',
         key: 'subordinateRequestList',
-        path: '/request/subbordinate-request/list',
+        path: '/request/subordinate/list',
       },
       {
         title: 'All Request List',

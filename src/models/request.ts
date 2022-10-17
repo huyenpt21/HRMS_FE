@@ -8,6 +8,7 @@ export interface RequestListModel extends Resource {
   reason?: string;
   status?: string;
   aprovalDate?: string;
+  personName?: string;
 }
 
 export interface RequestListFilter {
