@@ -12,50 +12,58 @@ export const URL_PATH = {
 export const RANKING_LIST: SelectBoxType[] = [
   {
     label: 'Intern',
-    value: 'intern',
+    value: 1,
+  },
+  {
+    label: 'Fresher',
+    value: 2,
   },
   {
     label: 'Junior',
-    value: 'junior',
-  },
-  {
-    label: 'Middle',
-    value: 'middle',
+    value: 3,
   },
   {
     label: 'Senior',
-    value: 'senior',
-  },
-  {
-    label: 'Expert',
-    value: 'expert',
+    value: 4,
   },
 ];
 
 export const POSITION_WORKING: SelectBoxType[] = [
   {
+    label: 'Back-end Developer',
+    value: 1,
+  },
+  {
+    label: 'Front-end Developer',
+    value: 2,
+  },
+  {
+    label: 'Fullstack Developer',
+    value: 3,
+  },
+  {
+    label: 'Mobile Developer',
+    value: 9,
+  },
+  {
+    label: 'Tester',
+    value: 4,
+  },
+  {
+    label: 'General accountant',
+    value: 5,
+  },
+  {
+    label: 'Accounting officer',
+    value: 6,
+  },
+  {
     label: 'HR',
-    value: 'hr',
+    value: 7,
   },
   {
-    label: 'Maketing',
-    value: 'maketing',
-  },
-  {
-    label: 'Web - Frontend',
-    value: 'web-frontend',
-  },
-  {
-    label: 'Web  - Backend',
-    value: 'web-backend',
-  },
-  {
-    label: 'Mobile - EOS',
-    value: 'mobile-eos',
-  },
-  {
-    label: 'Mobile - Android',
-    value: 'mobile-android',
+    label: 'IT Support',
+    value: 8,
   },
 ];
 
@@ -94,15 +102,47 @@ export const STATUS_RADIO_LIST: RadioButtonType[] = [
 
 export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   {
-    label: 'Request Type 1',
-    value: 'type1',
+    label: 'Annual Leave',
+    value: 1,
   },
   {
-    label: 'Request Type 2',
-    value: 'type2',
+    label: 'Business Trip',
+    value: 2,
   },
   {
-    label: 'Request Type 3',
-    value: 'type3',
+    label: 'Sickness Of Children',
+    value: 3,
+  },
+  {
+    label: 'Forgot Check In/Out',
+    value: 4,
+  },
+  {
+    label: 'Maternity Leave',
+    value: 5,
+  },
+  {
+    label: 'Unpaid Leave',
+    value: 6,
+  },
+  {
+    label: 'Over Time',
+    value: 7,
+  },
+  {
+    label: 'Sick Leave',
+    value: 8,
+  },
+  {
+    label: 'Work from home',
+    value: 9,
+  },
+  {
+    label: 'Bereavement Leave',
+    value: 10,
+  },
+  {
+    label: 'Borrow Device',
+    value: 11,
   },
 ];

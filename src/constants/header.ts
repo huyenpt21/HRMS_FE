@@ -11,8 +11,8 @@ export const EmployeeListAllHeader = [
   },
   {
     title: 'Email',
-    key: 'companyEmail',
-    dataIndex: 'companyEmail',
+    key: 'email',
+    dataIndex: 'email',
   },
   {
     title: 'Department',
