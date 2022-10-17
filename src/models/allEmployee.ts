@@ -2,9 +2,9 @@ import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface EmployeeListItem extends Resource {
   rollNumber: string;
-  name: string;
+  fullName: string;
   email: string;
-  department: string;
+  departmentID: string;
   position: string;
   isActive: boolean;
 }
