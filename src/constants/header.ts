@@ -1,8 +1,8 @@
 export const EmployeeListAllHeader = [
   {
     title: 'Employee Name',
-    key: 'name',
-    dataIndex: 'name',
+    key: 'fullName',
+    dataIndex: 'fullName',
   },
   {
     title: 'Roll Number',
@@ -16,8 +16,8 @@ export const EmployeeListAllHeader = [
   },
   {
     title: 'Department',
-    key: 'department',
-    dataIndex: 'department',
+    key: 'departmentID',
+    dataIndex: 'departmentID',
   },
   {
     title: 'Position',
