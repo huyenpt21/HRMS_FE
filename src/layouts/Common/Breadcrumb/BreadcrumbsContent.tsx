@@ -13,7 +13,7 @@ const BreadcrumbsContent = [
     path: URL_PATH.subordinateList,
     breadcrumbs: [
       {
-        title: 'Subordinate List',
+        title: 'Subordinate Request List',
       },
     ],
   },
