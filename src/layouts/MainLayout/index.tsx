@@ -1,5 +1,4 @@
 import { Drawer, Grid, Layout } from 'antd';
-import BreadcrumbLayout from 'layouts/Common/Breadcrumb/BreadcrumbLayout';
 import ContentPage from 'layouts/Common/ContentPage';
 import FooterContent from 'layouts/Common/FooterContent';
 import HeaderContent from 'layouts/Common/HeaderContent';
@@ -131,8 +130,7 @@ const MainLayout = () => {
         }}
       >
         <HeaderContent marginLeft={marginLeft} />
-        <Content style={{ margin: '80px 28px 0px 28px' }}>
-          <BreadcrumbLayout xs={xs} visible={visible} onVisible={onVisible} />
+        <Content style={{ margin: '100px 28px 0px 28px' }}>
           <ContentPage />
         </Content>
         <FooterContent marginLeft={marginLeft} />
