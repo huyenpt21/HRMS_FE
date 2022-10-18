@@ -2,12 +2,12 @@ import { EMPLOYEE_LIST } from 'constants/services';
 import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
 import {
   EmployeeListFields,
-  EmployeeListItem,
+  EmployeeModel,
   EmployeeListQuery,
   ResEmployeeDetail,
   ResEmployeeList,
   ResEmployeeModify,
-} from 'models/allEmployee';
+} from 'models/employee';
 
 class EmployeeList implements Feature<EmployeeListFields> {
   constructor(
@@ -30,7 +30,7 @@ export const {
   useUpdateItem: useUpdateEmployee,
   useDeleteItem: useDeleteEmployee,
 } = initialCustomQuery<
-  EmployeeListItem,
+  EmployeeModel,
   ResEmployeeList,
   ResEmployeeDetail,
   ResEmployeeModify,

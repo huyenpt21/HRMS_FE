@@ -2,7 +2,7 @@ import { REQUEST_LIST } from 'constants/services';
 import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
 import {
   RequestListSortFields,
-  RequestListModel,
+  RequestModel,
   RequestListQuery,
   ResRequestDetail,
   ResRequestList,
@@ -30,7 +30,7 @@ export const {
   useUpdateItem: useUpdateRequest,
   useDeleteItem: useDeleteRequest,
 } = initialCustomQuery<
-  RequestListModel,
+  RequestModel,
   ResRequestList,
   ResRequestDetail,
   ResRequestModify,

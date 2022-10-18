@@ -15,7 +15,7 @@ import {
   STATUS_RADIO_LIST,
 } from 'constants/fixData';
 import { useAddEmployeeModal } from 'hooks/useEmployeeList';
-import { EmployeeListItem, ResEmployeeModify } from 'models/allEmployee';
+import { EmployeeModel, ResEmployeeModify } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import styles from './addEmployee.module.less';
@@ -77,7 +77,7 @@ export default function EmployeeDetailModal({
     }
   }, [detailEmployee]);
 
-  const submitHandler = (formValues: EmployeeListItem) => {
+  const submitHandler = (formValues: EmployeeModel) => {
     console.log(1111, formValues);
     createEmployee(formValues);
   };

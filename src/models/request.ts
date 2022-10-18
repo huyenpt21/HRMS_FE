@@ -1,6 +1,6 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
-export interface RequestListModel extends Resource {
+export interface RequestModel extends Resource {
   requestType?: string;
   createDate?: string;
   startTime?: string;
@@ -27,10 +27,10 @@ export type RequestListQuery = QueryParams<RequestListSortFields> &
   RequestListFilter;
 
 export type ResRequestList = ResponseData<
-  { requestList: RequestListModel[] },
+  { requestList: RequestModel[] },
   Pagination
 >;
 
-export type ResRequestDetail = ResponseData<{ request: RequestListModel }, {}>;
+export type ResRequestDetail = ResponseData<{ request: RequestModel }, {}>;
 
 export type ResRequestModify = ResponseData<{}, {}>;
