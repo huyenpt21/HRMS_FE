@@ -11,7 +11,7 @@
   "data": {
     "employeeList": [
       {
-        "id": "1",
+        "id": 1,
         "rollNumber": "HE00001",
         "fullName": "Nguyen Van A",
         "email": "anvhe00001@minswap.com.vn",
@@ -20,7 +20,7 @@
         "isActive": true
       },
       {
-        "id": "2",
+        "id": 2,
         "rollNumber": "HE00002",
         "fullName": "Nguyen Thuc Thuy Tien",
         "email": "tienntthe00002@minswap.com.vn",
@@ -29,7 +29,7 @@
         "isActive": true
       },
       {
-        "id": "3",
+        "id": 3,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -38,7 +38,7 @@
         "isActive": false
       },
       {
-        "id": "4",
+        "id": 4,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -47,7 +47,7 @@
         "isActive": true
       },
       {
-        "id": "5",
+        "id": 5,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -56,7 +56,7 @@
         "isActive": false
       },
       {
-        "id": "6",
+        "id": 6,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -65,7 +65,7 @@
         "isActive": true
       },
       {
-        "id": "7",
+        "id": 7,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -74,7 +74,7 @@
         "isActive": true
       },
       {
-        "id": "8",
+        "id": 8,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -83,7 +83,7 @@
         "isActive": false
       },
       {
-        "id": "9",
+        "id": 9,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -92,7 +92,7 @@
         "isActive": false
       },
       {
-        "id": "10",
+        "id": 10,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -101,7 +101,7 @@
         "isActive": true
       },
       {
-        "id": "11",
+        "id": 11,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -110,7 +110,7 @@
         "isActive": true
       },
       {
-        "id": "12",
+        "id": 12,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -119,7 +119,7 @@
         "isActive": true
       },
       {
-        "id": "13",
+        "id": 13,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -128,7 +128,7 @@
         "isActive": true
       },
       {
-        "id": "14",
+        "id": 14,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",
@@ -137,7 +137,7 @@
         "isActive": true
       },
       {
-        "id": "15",
+        "id": 15,
         "rollNumber": "HE00003",
         "fullName": "Nguyen Khanh Van",
         "email": "vannkhe00003@minswap.com.vn",

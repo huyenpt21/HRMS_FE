@@ -39,7 +39,7 @@ export default function LeaveBenefitRequest() {
   const tabType = paramUrl.tabType || '';
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const requestId = useRef<string>();
+  const requestId = useRef<number>();
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
@@ -72,7 +72,7 @@ export default function LeaveBenefitRequest() {
         header = MyRequestListHeader;
       }
     }
-  }, [tabType]);
+  }, [stateQuery, tabType]);
 
   // * render header and data in table
   useEffect(() => {
@@ -172,6 +172,8 @@ export default function LeaveBenefitRequest() {
     setColumnsHeader(columns);
   }, [stateQuery, tabType]);
 
+  console.log(1111, header);
+
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     if (dataMock && dataMock.data) {
@@ -237,7 +239,7 @@ export default function LeaveBenefitRequest() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestId.current = '';
+    requestId.current = -1;
     setIsShowDetailModal(false);
   };
 

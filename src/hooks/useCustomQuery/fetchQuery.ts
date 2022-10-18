@@ -8,7 +8,7 @@ interface ParamsProps {
 }
 
 interface ItemProps extends ParamsProps {
-  uid: string;
+  uid: number;
 }
 
 interface ListProps<T> extends ParamsProps {
@@ -20,12 +20,12 @@ interface AddProps<T> extends ParamsProps {
 }
 
 interface UpdateProps<T> extends ParamsProps {
-  uid: string;
+  uid: number;
   body: T;
 }
 
 interface DeleteProps extends ParamsProps {
-  uid: string;
+  uid: number;
 }
 
 const fetchItem = <T>({

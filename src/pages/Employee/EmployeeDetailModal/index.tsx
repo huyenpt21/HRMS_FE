@@ -26,7 +26,7 @@ interface IProps {
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  rollNumber?: string;
+  employeeId?: number;
   viewType?: string;
 }
 export default function EmployeeDetailModal({
@@ -34,7 +34,7 @@ export default function EmployeeDetailModal({
   onCancel,
   refetchList,
   action,
-  rollNumber,
+  employeeId,
   viewType,
 }: IProps) {
   const [employeeForm] = Form.useForm();

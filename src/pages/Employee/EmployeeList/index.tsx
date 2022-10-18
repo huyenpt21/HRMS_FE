@@ -42,7 +42,7 @@ export default function EmployeeList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const rollNumber = useRef('');
+  const employeeId = useRef<number>();
   const paramUrl: Readonly<Params<string>> = useParams();
   const viewType = paramUrl.viewType || '';
   // * defailt filters
@@ -70,7 +70,7 @@ export default function EmployeeList() {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
-      if (el.key === 'name' || el.key === 'code') {
+      if (el.key === 'fullName' || el.key === 'rollNumber') {
         // el.sorter = isError;
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
@@ -179,15 +179,15 @@ export default function EmployeeList() {
       case MENU_OPTION_KEY.EDIT: {
         setIsShowDetailModal(true);
         modalAction.current = ACTION_TYPE.EDIT;
-        rollNumber.current = itemSelected.rollNumber;
+        employeeId.current = itemSelected.id;
         break;
       }
       case MENU_OPTION_KEY.ACTIVE: {
-        rollNumber.current = itemSelected.rollNumber;
+        employeeId.current = itemSelected.id;
         break;
       }
       case MENU_OPTION_KEY.DEACTIVE: {
-        rollNumber.current = itemSelected.rollNumber;
+        employeeId.current = itemSelected.id;
         break;
       }
     }
@@ -243,10 +243,10 @@ export default function EmployeeList() {
     setIsShowDetailModal(false);
   };
 
-  const rowClickHandler = (id: string) => {
+  const rowClickHandler = (id: number) => {
     return {
       onClick: () => {
-        rollNumber.current = id;
+        employeeId.current = id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
       },
@@ -315,7 +315,7 @@ export default function EmployeeList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          rollNumber={rollNumber.current}
+          employeeId={employeeId.current}
           // refetchList={refetchList}
           viewType={viewType}
         />

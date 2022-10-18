@@ -2,7 +2,7 @@ import { MENU_OPTION_KEY, STATUS_COLORS } from 'constants/enums/common';
 import { ReactNode } from 'react';
 
 export interface Resource {
-  id: string;
+  id: number;
 }
 
 export interface Pagination {
