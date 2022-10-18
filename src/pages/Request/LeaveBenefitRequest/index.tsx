@@ -15,7 +15,7 @@ import {
 } from 'constants/header';
 import { HeaderTableFields, StatusTag } from 'models/common';
 import {
-  RequestListModel,
+  RequestModel,
   RequestListQuery,
   RequestListSortFields,
 } from 'models/request';
@@ -42,7 +42,7 @@ export default function LeaveBenefitRequest() {
   const requestId = useRef<string>();
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
-  const [records, setRecords] = useState<RequestListModel[]>([]);
+  const [records, setRecords] = useState<RequestModel[]>([]);
   // * default feilters
   const defaultFilter: RequestListQuery = {
     page: searchParams.get('page')
@@ -105,7 +105,7 @@ export default function LeaveBenefitRequest() {
       }
       return {
         ...el,
-        render: (data: any, record: RequestListModel) => {
+        render: (data: any, record: RequestModel) => {
           if (data) {
             if (
               el.key === 'createDate' ||
@@ -162,7 +162,7 @@ export default function LeaveBenefitRequest() {
         dataIndex: 'action',
         width: 60,
         align: 'left',
-        render: (_, record: RequestListModel) => {
+        render: (_, record: RequestModel) => {
           if (record?.status === STATUS.PENDING) {
             return <RequestMenuAction record={record} tabType={tabType} />;
           }
@@ -225,7 +225,7 @@ export default function LeaveBenefitRequest() {
     }));
   };
 
-  const rowClickHandler = (record: RequestListModel) => {
+  const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
         requestId.current = record.id;
@@ -257,10 +257,10 @@ export default function LeaveBenefitRequest() {
           />
         }
         stateQuery={stateQuery}
-        rowKey={(record: RequestListModel) => record.id}
+        rowKey={(record: RequestModel) => record.id}
         scroll={{ y: 240 }}
         className={'cursor-pointer'}
-        onRow={(record: RequestListModel) => {
+        onRow={(record: RequestModel) => {
           return rowClickHandler(record);
         }}
       />

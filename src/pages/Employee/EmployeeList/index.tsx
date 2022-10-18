@@ -20,9 +20,9 @@ import {
 import { MENU_COMMON, POSITION_WORKING } from 'constants/fixData';
 import {
   EmployeeListFields,
-  EmployeeListItem,
+  EmployeeModel,
   EmployeeListQuery,
-} from 'models/allEmployee';
+} from 'models/employee';
 import { HeaderTableFields, MenuOptionsType } from 'models/common';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { useEffect, useRef, useState } from 'react';
@@ -38,7 +38,7 @@ import styles from './employeeList.module.less';
 export default function EmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
-  const [records, setRecords] = useState<EmployeeListItem[]>([]);
+  const [records, setRecords] = useState<EmployeeModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
@@ -90,7 +90,7 @@ export default function EmployeeList() {
       }
       return {
         ...el,
-        render: (data: any, record: EmployeeListItem) => {
+        render: (data: any, record: EmployeeModel) => {
           if (el.key === 'status') {
             if (record.isActive)
               return (
@@ -112,7 +112,7 @@ export default function EmployeeList() {
         dataIndex: 'action',
         width: 60,
         align: 'left',
-        render: (_, record: EmployeeListItem) => {
+        render: (_, record: EmployeeModel) => {
           let menuOptions: MenuOptionsType[] = MENU_COMMON;
           if (record?.isActive) {
             menuOptions = [
@@ -173,7 +173,7 @@ export default function EmployeeList() {
 
   const menuActionHandler = (
     menuItem: MenuInfo,
-    itemSelected: EmployeeListItem,
+    itemSelected: EmployeeModel,
   ) => {
     switch (menuItem.key) {
       case MENU_OPTION_KEY.EDIT: {
@@ -302,10 +302,10 @@ export default function EmployeeList() {
         pagination={pagination}
         extra={extraHeader}
         stateQuery={stateQuery}
-        rowKey={(record: EmployeeListItem) => record.id}
+        rowKey={(record: EmployeeModel) => record.id}
         // loading={isLoading}
         scroll={{ y: 240 }}
-        onRow={(record: EmployeeListItem) => {
+        onRow={(record: EmployeeModel) => {
           return rowClickHandler(record.id);
         }}
         className={styles.table}

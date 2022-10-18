@@ -9,7 +9,7 @@ import UploadFilePictureWall from 'components/UploadFile';
 import { validateMessages } from 'constants/common';
 import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
-import { RequestListModel } from 'models/request';
+import { RequestModel } from 'models/request';
 import { useState } from 'react';
 import styles from './requestDetailModal.module.less';
 
@@ -38,7 +38,7 @@ export default function RequestDetailModal({
     onCancel();
     requestForm.resetFields();
   };
-  const submitHandler = (formValues: RequestListModel) => {
+  const submitHandler = (formValues: RequestModel) => {
     console.log(1111, formValues);
   };
   return (

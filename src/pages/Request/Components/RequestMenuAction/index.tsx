@@ -1,11 +1,11 @@
 import { Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { REQUEST_ACTION_TYPE, TAB_REQUEST_TYPE } from 'constants/enums/common';
-import { RequestListModel } from 'models/request';
+import { RequestModel } from 'models/request';
 import styles from '../../LeaveBenefitRequest/subordinateRequestList.module.less';
 interface IProps {
   tabType: string;
-  record: RequestListModel;
+  record: RequestModel;
 }
 export default function RequestMenuAction({ tabType, record }: IProps) {
   const actionRequestHandler = (

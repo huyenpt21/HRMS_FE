@@ -1,6 +1,6 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
-export interface EmployeeListItem extends Resource {
+export interface EmployeeModel extends Resource {
   rollNumber: string;
   fullName: string;
   email: string;
@@ -30,13 +30,10 @@ export type EmployeeListQuery = QueryParams<EmployeeListFields> &
   EmployeeListFilter;
 
 export type ResEmployeeList = ResponseData<
-  { employeeList: EmployeeListItem[] },
+  { employeeList: EmployeeModel[] },
   Pagination
 >;
 
-export type ResEmployeeDetail = ResponseData<
-  { employee: EmployeeListItem },
-  {}
->;
+export type ResEmployeeDetail = ResponseData<{ employee: EmployeeModel }, {}>;
 
 export type ResEmployeeModify = ResponseData<{}, {}>;
