@@ -1,35 +1,46 @@
-import { Col, Row, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
-import BasicDateRangePicker from 'components/BasicDateRangePicker';
-import BasicSelect from 'components/BasicSelect';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
-import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
-import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { STATUS, STATUS_COLORS } from 'constants/enums/common';
-import { REQUEST_TYPE_LIST } from 'constants/fixData';
-import { SubordinateRequestListHeader } from 'constants/header';
+import {
+  ACTION_TYPE,
+  STATUS,
+  STATUS_COLORS,
+  TAB_REQUEST_TYPE,
+} from 'constants/enums/common';
+import {
+  MyRequestListHeader,
+  SubordinateRequestListHeader,
+} from 'constants/header';
 import { HeaderTableFields, StatusTag } from 'models/common';
 import {
   RequestListModel,
   RequestListQuery,
   RequestListSortFields,
 } from 'models/request';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Params, useParams, useSearchParams } from 'react-router-dom';
 import {
   convertDate,
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
+import ExtraTableLeaveBenefitRequest from '../Components/ExtraHeaderRequest';
+import RequestDetailModal from '../Components/RequestDetailModal';
+import RequestMenuAction from '../Components/RequestMenuAction';
 import dataMock from './dataMock.json';
-import styles from './subordinateRequestList.module.less';
 
-export default function AllRequestList() {
+export default function LeaveBenefitRequest() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
+  const paramUrl: Readonly<Params<string>> = useParams();
+  const tabType = paramUrl.tabType || '';
+  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
+  const modalAction = useRef(ACTION_TYPE.CREATE);
+  const requestId = useRef<string>();
+  const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestListModel[]>([]);
   // * default feilters
@@ -49,7 +60,19 @@ export default function AllRequestList() {
   );
 
   // * get header and data table
-  const header: HeaderTableFields[] = SubordinateRequestListHeader;
+  let header: HeaderTableFields[] = [];
+  useEffect(() => {
+    switch (tabType) {
+      case TAB_REQUEST_TYPE.SUBORDINATE:
+      case TAB_REQUEST_TYPE.ALL: {
+        header = SubordinateRequestListHeader;
+        break;
+      }
+      default: {
+        header = MyRequestListHeader;
+      }
+    }
+  }, [tabType]);
 
   // * render header and data in table
   useEffect(() => {
@@ -132,8 +155,22 @@ export default function AllRequestList() {
         },
       };
     });
+    if (tabType !== TAB_REQUEST_TYPE.ALL) {
+      columns.push({
+        title: 'Action',
+        key: 'action',
+        dataIndex: 'action',
+        width: 60,
+        align: 'left',
+        render: (_, record: RequestListModel) => {
+          if (record?.status === STATUS.PENDING) {
+            return <RequestMenuAction record={record} tabType={tabType} />;
+          }
+        },
+      });
+    }
     setColumnsHeader(columns);
-  }, [stateQuery]);
+  }, [stateQuery, tabType]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
@@ -187,57 +224,57 @@ export default function AllRequestList() {
       [filterKey]: filterValues,
     }));
   };
-  const extraHeader = (
-    <>
-      <div className={styles.header__section}>
-        <div className={styles.header__title}>My Request List</div>
-      </div>
-      <div className={styles.header__container}>
-        <Row gutter={20} className={styles.filter__section}>
-          <Col span={6}>
-            <InputDebounce
-              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Search..."
-              allowClear
-              setStateQuery={setStateQuery}
-              keyParam="search"
-              label="Employee Name"
-            />
-          </Col>
-          <Col span={6}>
-            <BasicDateRangePicker
-              placeholder={['From', 'To']}
-              label="Create Date"
-            />
-          </Col>
-          <Col span={4}>
-            <BasicSelect
-              options={REQUEST_TYPE_LIST}
-              placeholder="Request Type"
-              label="Request Type"
-              allowClear
-              showSearch
-              optionFilterProp="children"
-            />
-          </Col>
-        </Row>
-      </div>
-    </>
-  );
+
+  const rowClickHandler = (record: RequestListModel) => {
+    return {
+      onClick: () => {
+        requestId.current = record.id;
+        modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+        setIsShowDetailModal(true);
+        requestStatus.current = record.status;
+      },
+    };
+  };
+  const cancelModalHandler = () => {
+    requestStatus.current = STATUS.PENDING;
+    requestId.current = '';
+    setIsShowDetailModal(false);
+  };
+
   return (
-    <CommonTable
-      columns={columnsHeader}
-      data={records}
-      onChange={handleTableChange}
-      pagination={pagination}
-      extra={extraHeader}
-      stateQuery={stateQuery}
-      rowKey={(record: RequestListModel) => record.id}
-      scroll={{ y: 240 }}
-      className={'cursor-pointer'}
-      // onRow={(record: RequestListModel) => {
-      //   return rowClickHandler(record);
-      // }}
-    />
+    <>
+      <CommonTable
+        columns={columnsHeader}
+        data={records}
+        onChange={handleTableChange}
+        pagination={pagination}
+        extra={
+          <ExtraTableLeaveBenefitRequest
+            setIsShowDetailModal={setIsShowDetailModal}
+            modalAction={modalAction}
+            setStateQuery={setStateQuery}
+            tabType={tabType}
+          />
+        }
+        stateQuery={stateQuery}
+        rowKey={(record: RequestListModel) => record.id}
+        scroll={{ y: 240 }}
+        className={'cursor-pointer'}
+        onRow={(record: RequestListModel) => {
+          return rowClickHandler(record);
+        }}
+      />
+      {isShowDetailModal && (
+        <RequestDetailModal
+          isVisible={isShowDetailModal}
+          onCancel={cancelModalHandler}
+          action={modalAction.current}
+          requestId={requestId.current}
+          requestStatus={requestStatus.current}
+          tabType={tabType}
+          // refetchList={refetchList}
+        />
+      )}
+    </>
   );
 }

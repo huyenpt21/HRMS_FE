@@ -15,12 +15,12 @@ export const menus: MenuItemType[] = [
       {
         title: 'Employee List',
         key: 'allEmployees',
-        path: '/employee/all/list',
+        path: '/employee/all',
       },
       {
         title: 'Subordinate List',
         key: 'mySubordinate',
-        path: '/employee/subordinate/list',
+        path: '/employee/subordinate',
       },
     ],
   },
@@ -32,17 +32,17 @@ export const menus: MenuItemType[] = [
       {
         title: 'My Request History',
         key: 'myRequest',
-        path: '/request/my-request/list',
+        path: '/request/my-request',
       },
       {
         title: 'Subordinate Request List',
         key: 'subordinateRequestList',
-        path: '/request/subordinate/list',
+        path: '/request/subordinate',
       },
       {
         title: 'All Request List',
         key: 'allRequestList',
-        path: '/request/all/list',
+        path: '/request/all',
       },
     ],
   },
@@ -54,27 +54,27 @@ export const menus: MenuItemType[] = [
       {
         title: 'My Device List',
         key: 'myDeviceList',
-        path: '/device/my-device/list',
+        path: '/device/my-device',
       },
       {
         title: 'My Request History',
         key: 'myDeviceRequest',
-        path: '/device/my-request/list',
+        path: '/device/my-request',
       },
       {
         title: 'Subodinate Device List',
         key: 'subordinateDeviceList',
-        path: '/device/subordinate-device/list',
+        path: '/device/subordinate-device',
       },
       {
         title: 'Subodinate Request List',
         key: 'subordinateDeviceRequestList',
-        path: '/device/subordinate-request/list',
+        path: '/device/subordinate-request',
       },
       {
         title: 'All Request List',
         key: 'allDeviceRequestList',
-        path: '/device/all/list',
+        path: '/device/all',
       },
     ],
   },
@@ -86,12 +86,12 @@ export const menus: MenuItemType[] = [
       {
         title: 'My Time Check',
         key: 'myTimeCheck',
-        path: '/time-check/my-request/list',
+        path: '/time-check/my-request',
       },
       {
         title: 'All Time Check List',
         key: 'allTimeCheckList',
-        path: '/time-check/all/list',
+        path: '/time-check/all',
       },
     ],
   },

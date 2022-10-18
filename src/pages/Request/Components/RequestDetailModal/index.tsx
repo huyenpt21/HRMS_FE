@@ -7,7 +7,7 @@ import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
 import { validateMessages } from 'constants/common';
-import { ACTION_TYPE, STATUS } from 'constants/enums/common';
+import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestListModel } from 'models/request';
 import { useState } from 'react';
@@ -20,6 +20,7 @@ interface IProps {
   action: ACTION_TYPE;
   requestId?: string;
   requestStatus?: string;
+  tabType?: string;
 }
 export default function RequestDetailModal({
   isVisible,
@@ -28,6 +29,7 @@ export default function RequestDetailModal({
   action,
   requestId,
   requestStatus,
+  tabType,
 }: IProps) {
   const [requestForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
@@ -170,14 +172,15 @@ export default function RequestDetailModal({
               className={styles['btn--cancel']}
               onClick={cancelHandler}
             />
-            {requestStatus === STATUS.PENDING && (
-              <BasicButton
-                title="Edit"
-                type="filled"
-                className={styles['btn--save']}
-                onClick={() => setActionModal(ACTION_TYPE.EDIT)}
-              />
-            )}
+            {requestStatus === STATUS.PENDING &&
+              tabType === TAB_REQUEST_TYPE.MY_REQUEST && (
+                <BasicButton
+                  title="Edit"
+                  type="filled"
+                  className={styles['btn--save']}
+                  onClick={() => setActionModal(ACTION_TYPE.EDIT)}
+                />
+              )}
           </div>
         )}
       </>

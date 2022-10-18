@@ -130,7 +130,7 @@ const MainLayout = () => {
         }}
       >
         <HeaderContent marginLeft={marginLeft} />
-        <Content style={{ margin: '100px 28px 0px 28px' }}>
+        <Content style={{ margin: '92px 28px 0px 28px' }}>
           <ContentPage />
         </Content>
         <FooterContent marginLeft={marginLeft} />
