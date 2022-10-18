@@ -18,7 +18,7 @@ export interface Feature<T> {
   service: string;
   api_url: string | undefined;
   key: string;
-  getFilterList?: (old: any, uid: string) => { [key: string]: T[] };
+  getFilterList?: (old: any, uid: number) => { [key: string]: T[] };
 }
 
 export interface MutationProps<T> {
@@ -32,13 +32,13 @@ export interface MultiProps<T> {
 }
 
 export interface UpdateProps<T> {
-  uid: string;
+  uid: number;
   body: T;
   endPoint?: string;
 }
 
 export interface DeleteProps<T> {
-  uid: string;
+  uid: number;
   currentFilter: T;
 }
 
@@ -76,7 +76,7 @@ const initialCustomQuery = <
   feature: Feature<X>,
 ) => {
   const useItem = (
-    uid: string,
+    uid: number,
     payload?: any,
     reactQueryOtps?: QueryObserverOptions,
     root_url?: string,

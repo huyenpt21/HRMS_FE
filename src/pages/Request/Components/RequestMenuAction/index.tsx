@@ -9,7 +9,7 @@ interface IProps {
 }
 export default function RequestMenuAction({ tabType, record }: IProps) {
   const actionRequestHandler = (
-    requestId: string,
+    requestId: number,
     requestType: REQUEST_ACTION_TYPE,
   ) => {};
   return (

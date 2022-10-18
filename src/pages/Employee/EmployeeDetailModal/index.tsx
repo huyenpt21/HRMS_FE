@@ -26,7 +26,7 @@ interface IProps {
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  rollNumber?: string;
+  employeeId?: number;
   viewType?: string;
 }
 export default function EmployeeDetailModal({
@@ -34,7 +34,7 @@ export default function EmployeeDetailModal({
   onCancel,
   refetchList,
   action,
-  rollNumber,
+  employeeId,
   viewType,
 }: IProps) {
   const [employeeForm] = Form.useForm();
@@ -283,40 +283,42 @@ export default function EmployeeDetailModal({
               </Row>
             </Col>
           </Row>
-          <div className={styles['modal__footer']}>
-            {(actionModal === ACTION_TYPE.CREATE ||
-              actionModal === ACTION_TYPE.EDIT) && (
-              <BasicButton
-                title="Cancel"
-                type="outline"
-                className={styles['btn--cancel']}
-                onClick={cancelHandler}
-              />
-            )}
-            {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
-              <>
-                {actionModal === ACTION_TYPE.CREATE && (
-                  <BasicButton
-                    title="Add"
-                    type="filled"
-                    className={styles['btn--save']}
-                    htmlType={'submit'}
-                  />
-                )}
-                {actionModal === ACTION_TYPE.EDIT && (
-                  <BasicButton
-                    title="Update"
-                    type="filled"
-                    className={styles['btn--save']}
-                    htmlType={'submit'}
-                  />
-                )}
-              </>
-            )}
-          </div>
+          {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
+            <div className={styles['modal__footer']}>
+              {(actionModal === ACTION_TYPE.CREATE ||
+                actionModal === ACTION_TYPE.EDIT) && (
+                <BasicButton
+                  title="Cancel"
+                  type="outline"
+                  className={styles['btn--cancel']}
+                  onClick={cancelHandler}
+                />
+              )}
+              {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
+                <>
+                  {actionModal === ACTION_TYPE.CREATE && (
+                    <BasicButton
+                      title="Add"
+                      type="filled"
+                      className={styles['btn--save']}
+                      htmlType={'submit'}
+                    />
+                  )}
+                  {actionModal === ACTION_TYPE.EDIT && (
+                    <BasicButton
+                      title="Update"
+                      type="filled"
+                      className={styles['btn--save']}
+                      htmlType={'submit'}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </Form>
-        <div className={styles['modal__footer']}>
-          {actionModal === ACTION_TYPE.VIEW_DETAIL && (
+        {actionModal === ACTION_TYPE.VIEW_DETAIL && (
+          <div className={styles['modal__footer']}>
             <>
               <BasicButton
                 title="Cancel"
@@ -333,8 +335,8 @@ export default function EmployeeDetailModal({
                 />
               )}
             </>
-          )}
-        </div>
+          </div>
+        )}
       </>
     </CommonModal>
   );

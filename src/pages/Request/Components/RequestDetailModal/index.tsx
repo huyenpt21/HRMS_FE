@@ -18,7 +18,7 @@ interface IProps {
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  requestId?: string;
+  requestId?: number;
   requestStatus?: string;
   tabType?: string;
 }
