@@ -1,13 +1,11 @@
 // import { pathNameLocalStorage } from 'constants/common';
 import MainLayout from 'layouts/MainLayout';
-import HomePage from 'pages/homePage';
-import ForbiddenPage from 'pages/forbidden';
-import NotFound from 'pages/notFound';
-import { useRoutes } from 'react-router-dom';
 import EmployeeList from 'pages/Employee/EmployeeList';
-import MyRequestList from 'pages/Request/TimingRequest/MyRequest/RequestList';
-import SubordinateRequestList from 'pages/Request/TimingRequest/SubordinateRequest/RequestList';
-import AllRequestList from 'pages/Request/TimingRequest/AllRequest/RequestList';
+import ForbiddenPage from 'pages/forbidden';
+import HomePage from 'pages/homePage';
+import NotFound from 'pages/notFound';
+import RequestTabs from 'pages/Request';
+import { useRoutes } from 'react-router-dom';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -23,27 +21,14 @@ export default function RouterElement() {
           path: 'employee',
           children: [
             {
-              path: ':viewType/list',
+              path: ':viewType',
               element: <EmployeeList />,
             },
           ],
         },
         {
-          path: 'request',
-          children: [
-            {
-              path: 'my-request/list',
-              element: <MyRequestList />,
-            },
-            {
-              path: 'subordinate/list',
-              element: <SubordinateRequestList />,
-            },
-            {
-              path: 'all/list',
-              element: <AllRequestList />,
-            },
-          ],
+          path: 'request/:tabType',
+          element: <RequestTabs />,
         },
       ],
     },

@@ -84,7 +84,20 @@ export enum ACTION_TYPE {
   CREATE,
 }
 
+export enum REQUEST_ACTION_TYPE {
+  EDIT,
+  REJECT,
+  APPROVE,
+  CANCEL,
+}
+
 export enum VIEW_LIST_EMPLOYEE_TYPE {
   ALL = 'all',
   SUBORDINATE = 'subordinate',
+}
+
+export enum TAB_REQUEST_TYPE {
+  MY_REQUEST = 'my-request',
+  SUBORDINATE = 'subordinate',
+  ALL = 'all',
 }
