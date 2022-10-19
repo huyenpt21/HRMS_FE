@@ -2,7 +2,6 @@ import { Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { REQUEST_ACTION_TYPE, TAB_REQUEST_TYPE } from 'constants/enums/common';
 import { RequestModel } from 'models/request';
-import styles from '../../LeaveBenefitRequest/subordinateRequestList.module.less';
 interface IProps {
   tabType: string;
   record: RequestModel;
@@ -14,7 +13,7 @@ export default function RequestMenuAction({ tabType, record }: IProps) {
   ) => {};
   return (
     <div
-      className={styles.menu__action}
+      className="menu-action"
       onClick={(e) => {
         e.stopPropagation();
       }}
