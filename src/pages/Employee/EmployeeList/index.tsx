@@ -10,21 +10,19 @@ import { paginationConfig } from 'constants/common';
 import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 
 import BasicTag from 'components/BasicTag';
-import MenuOptions from 'components/MenuOpstions';
 import {
   ACTION_TYPE,
   MENU_OPTION_KEY,
   STATUS_COLORS,
   VIEW_LIST_EMPLOYEE_TYPE,
 } from 'constants/enums/common';
-import { MENU_COMMON, POSITION_WORKING } from 'constants/fixData';
+import { POSITION_WORKING } from 'constants/fixData';
+import { HeaderTableFields } from 'models/common';
 import {
   EmployeeListFields,
-  EmployeeModel,
   EmployeeListQuery,
+  EmployeeModel,
 } from 'models/employee';
-import { HeaderTableFields, MenuOptionsType } from 'models/common';
-import { MenuInfo } from 'rc-menu/lib/interface';
 import { useEffect, useRef, useState } from 'react';
 import { Params, useParams, useSearchParams } from 'react-router-dom';
 import {
@@ -32,6 +30,7 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
+import MenuAction from '../Components/MenuAction';
 import EmployeeDetailModal from '../EmployeeDetailModal';
 import dataMock from './dataMock.json';
 import styles from './employeeList.module.less';
@@ -113,36 +112,7 @@ export default function EmployeeList() {
         width: 60,
         align: 'left',
         render: (_, record: EmployeeModel) => {
-          let menuOptions: MenuOptionsType[] = MENU_COMMON;
-          if (record?.isActive) {
-            menuOptions = [
-              ...menuOptions,
-              {
-                key: MENU_OPTION_KEY.DEACTIVE,
-                label: 'Deactive',
-              },
-            ];
-          } else {
-            menuOptions = [
-              ...menuOptions,
-              {
-                key: MENU_OPTION_KEY.ACTIVE,
-                label: 'Active',
-              },
-              {
-                key: MENU_OPTION_KEY.DELETE,
-                label: 'Delete',
-              },
-            ];
-          }
-          return (
-            <MenuOptions
-              trigger={['click']}
-              items={menuOptions}
-              itemHandler={menuActionHandler}
-              itemSelected={record}
-            />
-          );
+          return <MenuAction record={record} onClickMenu={menuActionHandler} />;
         },
       });
     }
@@ -172,10 +142,10 @@ export default function EmployeeList() {
   // }, [dataMock, stateQuery, isError]);
 
   const menuActionHandler = (
-    menuItem: MenuInfo,
     itemSelected: EmployeeModel,
+    actionType: MENU_OPTION_KEY,
   ) => {
-    switch (menuItem.key) {
+    switch (actionType) {
       case MENU_OPTION_KEY.EDIT: {
         setIsShowDetailModal(true);
         modalAction.current = ACTION_TYPE.EDIT;
