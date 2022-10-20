@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 15
+    }
+  },
+  "data": {
+    "items": {
+      "requestId": 4,
+      "personName": "Nguyen Van Binh",
+      "requestTypeName": 4,
+      "createDate": "2022-10-19T15:00:00.000+00:00",
+      "startTime": "2022-10-22T10:00:00.000+00:00",
+      "endTime": "2022-10-24T12:00:00.000+00:00",
+      "image": null,
+      "reason": "I don't have laptop to code",
+      "status": "Pending",
+      "receiver": "Nguyen Thi Huyen",
+      "deviceTypeName": "Laptop",
+      "approvalDate": "2022-10-24T12:00:00.000+00:00"
+    }
+  }
+}

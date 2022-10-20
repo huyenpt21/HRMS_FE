@@ -6,13 +6,16 @@ import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
-import { validateMessages } from 'constants/common';
+import { DATE_DISPLAY, MESSAGE_RES, validateMessages } from 'constants/common';
 import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestModel } from 'models/request';
-import { useState } from 'react';
+import moment from 'moment-timezone';
+import { useEffect, useState } from 'react';
+import { getDateFormat } from 'utils/common';
+import RequestStatus from '../RequestStatus';
+import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
-
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -33,7 +36,40 @@ export default function RequestDetailModal({
 }: IProps) {
   const [requestForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
-
+  const [requestData, setRequestData] = useState<RequestModel>();
+  const detailRequest = detailMock;
+  useEffect(() => {
+    if (detailRequest && detailRequest.data) {
+      const {
+        metadata: { message },
+        data: { items },
+      } = detailRequest;
+      if (message === MESSAGE_RES.SUCCESS && items) {
+        // setDetailEmployeeData(employee);
+        requestForm.setFieldsValue(items);
+        requestForm.setFieldValue('date', [
+          moment(items.startTime),
+          moment(items.endTime),
+        ]);
+        requestForm.setFieldValue('time', [
+          moment(items.startTime),
+          moment(items.endTime),
+        ]);
+        const requestFixInfor: RequestModel = {
+          id: items.requestId,
+          receiver: items.receiver,
+          createdBy: items.personName,
+          createDate: getDateFormat(items.createDate, DATE_DISPLAY),
+          status: items.status,
+          approvalDate:
+            items.approvalDate !== null
+              ? getDateFormat(items?.approvalDate, DATE_DISPLAY)
+              : undefined,
+        };
+        setRequestData(requestFixInfor);
+      }
+    }
+  }, [detailRequest]);
   const cancelHandler = () => {
     onCancel();
     requestForm.resetFields();
@@ -58,6 +94,40 @@ export default function RequestDetailModal({
           onFinish={submitHandler}
           disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
         >
+          <Row gutter={20} className={styles['infor--header']}>
+            <Col span={12}>
+              <span>Created By:</span>
+              <span className={styles['text--bold']}>
+                {requestData?.createdBy}
+              </span>
+            </Col>
+            <Col span={12}>
+              <span>Creat Date:</span>
+              <span className={styles['text--bold']}>
+                {requestData?.createDate}
+              </span>
+            </Col>
+          </Row>
+          <Row gutter={20} className={styles['infor--header']}>
+            <Col span={12}>
+              <span>Receiver:</span>
+              <span className={styles['text--bold']}>
+                {requestData?.receiver}
+              </span>
+            </Col>
+            <Col span={5}>
+              <span>Status:</span>{' '}
+              <RequestStatus data={requestData?.status ?? ''} />
+            </Col>
+            {requestData?.approvalDate && (
+              <Col span={7}>
+                <span>Approval Date:</span>
+                <span className={styles['text--bold']}>
+                  {requestData?.approvalDate}
+                </span>
+              </Col>
+            )}
+          </Row>
           <Row gutter={20}>
             <Col span="12">
               <BasicSelect
@@ -65,20 +135,10 @@ export default function RequestDetailModal({
                 label="Request Type"
                 rules={[{ required: true }]}
                 placeholder="Choose request type"
-                name="requestType"
+                name="requestTypeName"
                 allowClear
                 showSearch
                 optionFilterProp="children"
-              />
-            </Col>
-            <Col span="8">
-              <BasicInput
-                label="Your Approver"
-                placeholder="You don't have approver"
-                name="approver"
-                disabled
-                defaultValue="Nguyen Van B"
-                initialValueForm="MS0002"
               />
             </Col>
             <Col span="4">
@@ -87,7 +147,7 @@ export default function RequestDetailModal({
                 name="reaminingTimeOff"
                 disabled
                 defaultValue="2 / 44 hours"
-                initialValueForm="2"
+                // initialValueForm="2"
               />
             </Col>
           </Row>
