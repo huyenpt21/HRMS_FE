@@ -39,8 +39,8 @@ export const MyRequestListHeader = [
   },
   {
     title: 'Request Type',
-    key: 'requestType',
-    dataIndex: 'requestType',
+    key: 'requestTypeName',
+    dataIndex: 'requestTypeName',
   },
   {
     title: 'Start Time',
@@ -77,8 +77,8 @@ export const SubordinateRequestListHeader = [
   },
   {
     title: 'Request Type',
-    key: 'requestType',
-    dataIndex: 'requestType',
+    key: 'requestTypeName',
+    dataIndex: 'requestTypeName',
   },
   {
     title: 'Start Time',

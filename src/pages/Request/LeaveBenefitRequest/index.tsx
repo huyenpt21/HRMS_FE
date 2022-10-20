@@ -1,23 +1,17 @@
 import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
-import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import {
-  ACTION_TYPE,
-  STATUS,
-  STATUS_COLORS,
-  TAB_REQUEST_TYPE,
-} from 'constants/enums/common';
+import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
 import {
   MyRequestListHeader,
   SubordinateRequestListHeader,
 } from 'constants/header';
-import { HeaderTableFields, StatusTag } from 'models/common';
+import { HeaderTableFields } from 'models/common';
 import {
-  RequestModel,
   RequestListQuery,
   RequestListSortFields,
+  RequestModel,
 } from 'models/request';
 import { useEffect, useRef, useState } from 'react';
 import { Params, useParams, useSearchParams } from 'react-router-dom';
@@ -30,6 +24,7 @@ import {
 import ExtraTableLeaveBenefitRequest from '../Components/ExtraHeaderRequest';
 import RequestDetailModal from '../Components/RequestDetailModal';
 import RequestMenuAction from '../Components/RequestMenuAction';
+import RequestStatus from '../Components/RequestStatus';
 import dataMock from './dataMock.json';
 
 export default function LeaveBenefitRequest() {
@@ -114,39 +109,7 @@ export default function LeaveBenefitRequest() {
             ) {
               return convertDate(data, DATE_TIME_US);
             } else if (el.key === 'status') {
-              let statusTag: StatusTag = {
-                statusColor: STATUS_COLORS.PROCESSING,
-                text: '',
-              };
-              switch (data) {
-                case STATUS.PENDING: {
-                  statusTag = {
-                    statusColor: STATUS_COLORS.WARING,
-                    text: STATUS.PENDING,
-                  };
-                  break;
-                }
-                case STATUS.APPROVED: {
-                  statusTag = {
-                    statusColor: STATUS_COLORS.SUCCESS,
-                    text: STATUS.APPROVED,
-                  };
-                  break;
-                }
-                case STATUS.REJECTED: {
-                  statusTag = {
-                    statusColor: STATUS_COLORS.ERROR,
-                    text: STATUS.REJECTED,
-                  };
-                  break;
-                }
-              }
-              return (
-                <BasicTag
-                  statusColor={statusTag.statusColor}
-                  text={statusTag.text}
-                />
-              );
+              return <RequestStatus data={data} />;
             }
             return data;
           } else {
