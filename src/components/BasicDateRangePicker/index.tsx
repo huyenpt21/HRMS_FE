@@ -1,8 +1,7 @@
 import { DatePicker, Form } from 'antd';
-import { DATE_DISPLAY, DATE_DMY } from 'constants/common';
+import { US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
 import { Dispatch, SetStateAction } from 'react';
-import { convertToDateUtc } from 'utils/common';
 import styles from './index.module.less';
 
 interface IProps {
@@ -29,27 +28,6 @@ const BasicDateRangePicker = (props: IProps) => {
     ? props.rules.filter((r: any) => r.required === true).length > 0
     : false;
 
-  const getDateHandler = (_: any, formatString: [string, string]) => {
-    let [from, to] = formatString;
-    submitDate(`${from} - ${to}`);
-  };
-
-  const submitDate = (value: string) => {
-    const [fromDate, toDate] = value.split(' - ');
-
-    if (props.setStateQuery) {
-      props.setStateQuery((prev: any) => ({
-        ...prev,
-        fromDate: !props.isConvertToUTC
-          ? moment(fromDate, DATE_DMY).format()
-          : convertToDateUtc(fromDate, true, DATE_DISPLAY),
-        toDate: !props.isConvertToUTC
-          ? moment(toDate, DATE_DMY).format()
-          : convertToDateUtc(toDate, false, DATE_DISPLAY),
-      }));
-    }
-  };
-
   const defaultDate = props.isUseDefaultValue
     ? [moment(props.defaultStartDate), moment(props.defaultEndDate)]
     : undefined;
@@ -65,13 +43,13 @@ const BasicDateRangePicker = (props: IProps) => {
       >
         <RangePicker
           className={`${styles['header__time']} ${props.className}`}
-          format={DATE_DISPLAY}
+          format={US_DATE_FORMAT}
           defaultValue={
             props.isUseDefaultValue
               ? [moment(props.defaultStartDate), moment(props.defaultEndDate)]
               : undefined
           }
-          onChange={props.onChange ?? getDateHandler}
+          onChange={props.onChange}
           suffixIcon={null}
           size="large"
           disabled={props.disabled}

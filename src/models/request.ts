@@ -18,9 +18,11 @@ export interface RequestListFilter {
   startTime?: string;
   endTime?: string;
   createDate?: string;
-  requestType?: string;
+  requestTypeId?: string;
   status?: string;
   aprovalDate?: string;
+  createDateFrom?: string;
+  createDateTo?: string;
 }
 
 export type RequestListSortFields = 'requestType';
