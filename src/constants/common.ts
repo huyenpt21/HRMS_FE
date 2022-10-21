@@ -19,7 +19,6 @@ export const COMMON_STATUS = {
   FALSE: false,
 };
 
-export const DATE_DISPLAY = 'DD/MM/YYYY';
 export const US_DATE_FORMAT = 'MM/DD/YYYY';
 export const DATE_REQUEST = 'YYYY-MM-DD';
 export const DATE_DMY = 'DD-MM-YYYY';

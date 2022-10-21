@@ -1,16 +1,13 @@
 import {
-  DATE_DISPLAY,
   DATE_REQUEST,
-  RECORD_STATUS,
   SortDir,
   TIME_HOUR,
+  US_DATE_FORMAT,
 } from 'constants/common';
-import i18n from 'i18n';
+
 import { isNumber } from 'lodash';
 import { Pagination, QueryParams, SelectBoxType } from 'models/common';
 import moment from 'moment';
-const { t } = i18n;
-
 export const isEmptyPagination = (pagination: Pagination) => {
   return Object.entries(pagination).length === 0;
 };
@@ -83,17 +80,6 @@ export const getCurrentDate = (format?: string) => {
   return format ? moment().format(format) : moment().toString();
 };
 
-export const onHandleShowingStatus = (status: boolean) => {
-  switch (status) {
-    case RECORD_STATUS.ACTIVE:
-      return t('status.active');
-    case RECORD_STATUS.INACTIVE:
-      return t('status.inactive');
-    default:
-      return t('status.unknown');
-  }
-};
-
 export const getDateUTC = (date: string | moment.Moment, format?: string) => {
   return format ? moment.utc(date).format(format) : moment.utc(date).format();
 };
@@ -106,7 +92,7 @@ export const getLocalTime = (date: string) => {
 export const convertToDateUtc = (
   date: string | moment.Moment,
   startDate = true,
-  currentFormat = DATE_DISPLAY,
+  currentFormat = US_DATE_FORMAT,
 ) => {
   if (startDate) {
     return moment(date, currentFormat).startOf('date').utc().format();
@@ -118,7 +104,7 @@ export const convertToDateUtc = (
 //convert UTC to local time
 export const convertDate = (
   date: string | undefined,
-  format: string = DATE_DISPLAY,
+  format: string = US_DATE_FORMAT,
 ) => {
   const dateMoment = moment(date);
   if (dateMoment.isValid()) return dateMoment.format(format);
@@ -126,7 +112,7 @@ export const convertDate = (
 
 export const convertToDateTimeUtc = (
   date: string | moment.Moment,
-  currentFormat = DATE_DISPLAY,
+  currentFormat = US_DATE_FORMAT,
 ) => {
   return moment(date, currentFormat).utc().format();
 };
@@ -145,7 +131,7 @@ export const TimeCombine = (
   isConvertToUTC = true,
   formatOutput?: string,
 ) => {
-  const convertDate = moment(date).format(DATE_DISPLAY);
+  const convertDate = moment(date).format(US_DATE_FORMAT);
   let convertTime;
   if (time) {
     convertTime = moment(time).format(TIME_HOUR);
@@ -157,7 +143,7 @@ export const TimeCombine = (
     }
   }
 
-  const format = `${DATE_DISPLAY} ${TIME_HOUR}`;
+  const format = `${US_DATE_FORMAT} ${TIME_HOUR}`;
   if (isConvertToUTC) {
     return moment(`${convertDate} ${convertTime}`, format).utc().format();
   }
@@ -223,17 +209,6 @@ export const getUserInfo = () => {
 
   return !oidcAuth ? null : JSON.parse(oidcAuth);
 };
-
-export const optsDayOfWeek = () => [
-  { value: 1, label: t('mon') },
-  { value: 2, label: t('tue') },
-  { value: 3, label: t('wed') },
-  { value: 4, label: t('thu') },
-  { value: 5, label: t('fri') },
-  { value: 6, label: t('sat') },
-  { value: 7, label: t('sun') },
-];
-
 export const optsDate = () => {
   let date: SelectBoxType[] = [];
   for (let i = 0; i < 31; i++) {

@@ -5,10 +5,12 @@ import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
+import { DATE_TIME } from 'constants/common';
 import { ACTION_TYPE, TAB_REQUEST_TYPE } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestListQuery } from 'models/request';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { getDateFormat } from 'utils/common';
 import styles from '../../LeaveBenefitRequest/subordinateRequestList.module.less';
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
@@ -25,6 +27,22 @@ export default function ExtraTableLeaveBenefitRequest({
   const addRequestHandler = () => {
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
+  };
+  const handleChangeCreateDate = (_: any, dateString: string) => {
+    const fromDate = getDateFormat(dateString[0], DATE_TIME);
+    const toDate = getDateFormat(dateString[1], DATE_TIME);
+    setStateQuery((prev: any) => ({
+      ...prev,
+      createDateFrom: fromDate,
+      createDateTo: toDate,
+    }));
+  };
+
+  const handleChangeRequestType = (value: number) => {
+    setStateQuery((prev: any) => ({
+      ...prev,
+      requestTypeId: value,
+    }));
   };
   return (
     <>
@@ -63,6 +81,7 @@ export default function ExtraTableLeaveBenefitRequest({
             <BasicDateRangePicker
               placeholder={['From', 'To']}
               label="Create Date"
+              onChange={handleChangeCreateDate}
             />
           </Col>
           <Col span={4}>
@@ -73,6 +92,7 @@ export default function ExtraTableLeaveBenefitRequest({
               allowClear
               showSearch
               optionFilterProp="children"
+              onChange={handleChangeRequestType}
             />
           </Col>
         </Row>

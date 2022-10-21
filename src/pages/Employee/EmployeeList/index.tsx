@@ -223,6 +223,13 @@ export default function EmployeeList() {
     };
   };
 
+  const handleChangePosition = (value: number) => {
+    setStateQuery((prev: any) => ({
+      ...prev,
+      position: value,
+    }));
+  };
+
   const extraHeader = (
     <>
       <div className={styles.header__section}>
@@ -257,6 +264,7 @@ export default function EmployeeList() {
               allowClear
               showSearch
               optionFilterProp="children"
+              onChange={handleChangePosition}
             />
           </Col>
         </Row>

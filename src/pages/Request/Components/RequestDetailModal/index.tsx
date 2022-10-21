@@ -6,7 +6,11 @@ import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
-import { DATE_DISPLAY, MESSAGE_RES, validateMessages } from 'constants/common';
+import {
+  US_DATE_FORMAT,
+  MESSAGE_RES,
+  validateMessages,
+} from 'constants/common';
 import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestModel } from 'models/request';
@@ -59,11 +63,11 @@ export default function RequestDetailModal({
           id: items.requestId,
           receiver: items.receiver,
           createdBy: items.personName,
-          createDate: getDateFormat(items.createDate, DATE_DISPLAY),
+          createDate: getDateFormat(items.createDate, US_DATE_FORMAT),
           status: items.status,
           approvalDate:
             items.approvalDate !== null
-              ? getDateFormat(items?.approvalDate, DATE_DISPLAY)
+              ? getDateFormat(items?.approvalDate, US_DATE_FORMAT)
               : undefined,
         };
         setRequestData(requestFixInfor);
@@ -166,6 +170,7 @@ export default function RequestDetailModal({
                 rules={[{ required: true }]}
                 placeholder={['From', 'To']}
                 name="time"
+                disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
               />
             </Col>
           </Row>
