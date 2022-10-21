@@ -11,6 +11,7 @@ export interface RequestModel extends Resource {
   personName?: string;
   receiver?: string;
   createdBy?: string;
+  deviceTypeName?: string;
 }
 
 export interface RequestListFilter {

@@ -11,7 +11,7 @@ import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestListQuery } from 'models/request';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { getDateFormat } from 'utils/common';
-import styles from '../../LeaveBenefitRequest/subordinateRequestList.module.less';
+import styles from '../../requestList.module.less';
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
   modalAction: MutableRefObject<ACTION_TYPE>;
