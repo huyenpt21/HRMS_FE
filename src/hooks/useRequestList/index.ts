@@ -1,5 +1,6 @@
-import { REQUEST_LIST } from 'constants/services';
+import { MY_REQUEST_LIST } from 'constants/services';
 import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
+import { fetchList } from 'hooks/useCustomQuery/fetchQuery';
 import {
   RequestListSortFields,
   RequestModel,
@@ -7,7 +8,9 @@ import {
   ResRequestDetail,
   ResRequestList,
   ResRequestModify,
+  RequestListFilter,
 } from 'models/request';
+import { useQuery } from 'react-query';
 
 class RequestList implements Feature<RequestListSortFields> {
   constructor(
@@ -18,13 +21,13 @@ class RequestList implements Feature<RequestListSortFields> {
 }
 
 const RequestListInstance = new RequestList(
-  REQUEST_LIST.service,
+  MY_REQUEST_LIST.service,
   undefined,
-  'request-list',
+  'my-request-list',
 );
 
 export const {
-  useList: useRequestList,
+  useList: useMyRequestList,
   useItem: useRequestDetail,
   useAddItemModal: useAddRequestModal,
   useUpdateItem: useUpdateRequest,
@@ -36,3 +39,20 @@ export const {
   ResRequestModify,
   RequestListQuery
 >(RequestListInstance);
+
+export const useSubodinateRequestList = (
+  payload: RequestListFilter,
+  url: string,
+) => {
+  return useQuery<ResRequestList>(
+    ['subordinate-request-list', payload],
+    () =>
+      fetchList<RequestListQuery, ResRequestList>({
+        payload,
+        service: url,
+      }),
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+};

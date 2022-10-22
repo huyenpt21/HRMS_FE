@@ -7,6 +7,7 @@ import {
   MyRequestListHeader,
   SubordinateRequestListHeader,
 } from 'constants/header';
+import { useMyRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
 import {
   RequestListQuery,
@@ -54,7 +55,7 @@ export default function LeaveBenefitRequest() {
     removeEmptyValueInObject(defaultFilter),
   );
 
-  // * get header and data table
+  // * get header
   let header: HeaderTableFields[] = [];
   useEffect(() => {
     switch (tabType) {
@@ -69,6 +70,21 @@ export default function LeaveBenefitRequest() {
     }
   }, [stateQuery, tabType]);
 
+  // * get data table from API
+  const {
+    isLoading,
+    isError,
+    data: dataTable,
+    refetch: refetchList,
+  } = useMyRequestList(stateQuery);
+
+  // const {
+  //   isLoading,
+  //   isError,
+  //   data: dataTable,
+  //   refetch: refetchList,
+  // } = useSubodinateRequestList(stateQuery, MANAGER_REQUEST_LIST.service);
+
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -81,13 +97,13 @@ export default function LeaveBenefitRequest() {
         el.width = 150;
       } else if (el.key === 'requestType' || el.key === 'personName') {
         el.width = 200;
-        el.sorter = true;
+        el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'status') {
         el.width = 100;
-        el.sorter = true;
+        el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        el.filterMultiple = true;
+        el.filterMultiple = isError;
         el.filters = [
           { text: STATUS.PENDING, value: STATUS.PENDING },
           { text: STATUS.APPROVED, value: STATUS.APPROVED },
@@ -137,23 +153,23 @@ export default function LeaveBenefitRequest() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataMock && dataMock.data) {
-      const {
-        metadata: { pagination },
-        data: { requestList },
-      } = dataMock;
-      setRecords(requestList);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable?.data) {
+    const {
+      metadata: { pagination },
+      data: { requestList },
+    } = dataMock;
+    setRecords(requestList);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
-  }, []);
+    // }
+  }, [dataTable]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -226,6 +242,7 @@ export default function LeaveBenefitRequest() {
         onRow={(record: RequestModel) => {
           return rowClickHandler(record);
         }}
+        loading={isLoading}
       />
       {isShowDetailModal && (
         <RequestDetailModal
@@ -235,7 +252,7 @@ export default function LeaveBenefitRequest() {
           requestId={requestId.current}
           requestStatus={requestStatus.current}
           tabType={tabType}
-          // refetchList={refetchList}
+          refetchList={refetchList}
         />
       )}
     </>

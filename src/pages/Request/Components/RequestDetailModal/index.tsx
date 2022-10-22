@@ -120,6 +120,8 @@ export default function RequestDetailModal({
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
     options?.type && setRequestType(options?.type);
   };
+
+  const handleQickActionRequest = (isApprove: boolean) => {};
   return (
     <CommonModal
       open={isVisible}
@@ -127,6 +129,7 @@ export default function RequestDetailModal({
       onCancel={cancelHandler}
       footer={false}
       width={850}
+      closeIcon
     >
       <>
         <Form
@@ -287,15 +290,39 @@ export default function RequestDetailModal({
               className={styles['btn--cancel']}
               onClick={cancelHandler}
             />
-            {requestStatus === STATUS.PENDING &&
-              tabType === TAB_REQUEST_TYPE.MY_REQUEST && (
-                <BasicButton
-                  title="Edit"
-                  type="filled"
-                  className={styles['btn--save']}
-                  onClick={() => setActionModal(ACTION_TYPE.EDIT)}
-                />
-              )}
+            {requestStatus === STATUS.PENDING && (
+              <div>
+                {tabType === TAB_REQUEST_TYPE.MY_REQUEST && (
+                  <BasicButton
+                    title="Edit"
+                    type="filled"
+                    className={styles['btn--save']}
+                    onClick={() => setActionModal(ACTION_TYPE.EDIT)}
+                  />
+                )}
+                {tabType === TAB_REQUEST_TYPE.SUBORDINATE && (
+                  <>
+                    <BasicButton
+                      title="Approve"
+                      type="filled"
+                      className={styles['btn--approve']}
+                      onClick={() => {
+                        handleQickActionRequest(true);
+                      }}
+                    />
+                    <BasicButton
+                      title="Reject"
+                      type="filled"
+                      className={styles['btn--save']}
+                      danger
+                      onClick={() => {
+                        handleQickActionRequest(false);
+                      }}
+                    />
+                  </>
+                )}
+              </div>
+            )}
           </div>
         )}
       </>

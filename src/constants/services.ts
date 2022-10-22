@@ -5,9 +5,12 @@ export const EMPLOYEE_LIST = {
   },
 };
 
-export const REQUEST_LIST = {
+export const MY_REQUEST_LIST = {
   service: 'request',
-  model: {
-    list: 'employee',
-  },
+};
+export const MANAGER_REQUEST_LIST = {
+  service: 'manager/request',
+};
+export const HR_REQUEST_LIST = {
+  service: 'hr/request',
 };
