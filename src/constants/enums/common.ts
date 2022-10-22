@@ -101,3 +101,9 @@ export enum TAB_REQUEST_TYPE {
   SUBORDINATE = 'subordinate',
   ALL = 'all',
 }
+
+export enum REQUEST_TYPE_KEY {
+  LEAVE = 'leave',
+  OT = 'ot',
+  DEVICE = 'device',
+}

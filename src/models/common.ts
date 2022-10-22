@@ -63,6 +63,7 @@ export interface MenuOptionsType {
 export interface SelectBoxType {
   value: any;
   label: string;
+  type?: string;
 }
 export interface RadioButtonType {
   value: any;

@@ -21,7 +21,8 @@
       "status": "Pending",
       "receiver": "Nguyen Thi Huyen",
       "deviceTypeName": "Laptop",
-      "approvalDate": "2022-10-24T12:00:00.000+00:00"
+      "approvalDate": "2022-10-24T12:00:00.000+00:00",
+      "reaminingTimeOff": "2 / 4 hours"
     }
   }
 }

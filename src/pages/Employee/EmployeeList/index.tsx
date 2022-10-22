@@ -263,7 +263,7 @@ export default function EmployeeList() {
               placeholder="Position"
               allowClear
               showSearch
-              optionFilterProp="children"
+              optionFilterProp="label"
               onChange={handleChangePosition}
             />
           </Col>

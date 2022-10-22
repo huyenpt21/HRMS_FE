@@ -91,7 +91,7 @@ export default function ExtraTableLeaveBenefitRequest({
               label="Request Type"
               allowClear
               showSearch
-              optionFilterProp="children"
+              optionFilterProp="label"
               onChange={handleChangeRequestType}
             />
           </Col>

@@ -1,6 +1,6 @@
 import { MenuOptionsType, RadioButtonType, SelectBoxType } from 'models/common';
 import { COMMON_STATUS } from './common';
-import { GENDER_KEY, MENU_OPTION_KEY } from './enums/common';
+import { GENDER_KEY, MENU_OPTION_KEY, REQUEST_TYPE_KEY } from './enums/common';
 
 export const URL_PATH = {
   employeeList: '/employee/all/list',
@@ -103,46 +103,57 @@ export const STATUS_RADIO_LIST: RadioButtonType[] = [
 export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   {
     label: 'Annual Leave',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 1,
   },
   {
     label: 'Business Trip',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 2,
   },
   {
     label: 'Sickness Of Children',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 3,
   },
   {
     label: 'Forgot Check In/Out',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 4,
   },
   {
     label: 'Maternity Leave',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 5,
   },
   {
     label: 'Unpaid Leave',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 6,
   },
   {
     label: 'Over Time',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 7,
   },
   {
     label: 'Sick Leave',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 8,
   },
   {
     label: 'Work from home',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 9,
   },
   {
     label: 'Bereavement Leave',
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 10,
   },
   {
     label: 'Borrow Device',
+    type: REQUEST_TYPE_KEY.DEVICE,
     value: 11,
   },
 ];
