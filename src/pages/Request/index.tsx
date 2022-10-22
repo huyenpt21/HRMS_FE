@@ -135,8 +135,6 @@ export default function LeaveBenefitRequest() {
     setColumnsHeader(columns);
   }, [stateQuery, tabType]);
 
-  console.log(1111, header);
-
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     if (dataMock && dataMock.data) {

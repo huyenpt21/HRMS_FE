@@ -55,6 +55,7 @@ const BasicSelect = (props: Props) => {
       key={props.key}
     >
       <Select
+        options={props.options}
         getPopupContainer={props.getPopupContainer}
         className={props.className}
         disabled={props.disabled}
@@ -70,13 +71,7 @@ const BasicSelect = (props: Props) => {
         onSearch={props.showSearch ? handleSearchDebounce : undefined}
         style={props.selectStyle}
         optionFilterProp={props.optionFilterProp}
-      >
-        {props.options.map((o: SelectBoxType, i: number) => (
-          <Select.Option value={o.value} key={i}>
-            {o.label}
-          </Select.Option>
-        ))}
-      </Select>
+      />
     </Form.Item>
   );
 };

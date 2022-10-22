@@ -11,8 +11,14 @@ import {
   MESSAGE_RES,
   validateMessages,
 } from 'constants/common';
-import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
+import {
+  ACTION_TYPE,
+  REQUEST_TYPE_KEY,
+  STATUS,
+  TAB_REQUEST_TYPE,
+} from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
+import { SelectBoxType } from 'models/common';
 import { RequestModel } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
@@ -41,15 +47,16 @@ export default function RequestDetailModal({
   const [requestForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
   const [requestData, setRequestData] = useState<RequestModel>();
-  const detailRequest = detailMock;
+  const [requestType, setRequestType] = useState('');
+  const detailRequest =
+    actionModal === ACTION_TYPE.CREATE ? undefined : detailMock;
   useEffect(() => {
-    if (detailRequest && detailRequest.data) {
+    if (detailRequest && detailRequest?.data) {
       const {
         metadata: { message },
         data: { items },
       } = detailRequest;
       if (message === MESSAGE_RES.SUCCESS && items) {
-        // setDetailEmployeeData(employee);
         requestForm.setFieldsValue(items);
         requestForm.setFieldValue('date', [
           moment(items.startTime),
@@ -80,6 +87,9 @@ export default function RequestDetailModal({
   };
   const submitHandler = (formValues: RequestModel) => {
     console.log(1111, formValues);
+  };
+  const handleChangeRequestType = (_: number, options: SelectBoxType) => {
+    options?.type && setRequestType(options?.type);
   };
   return (
     <CommonModal
@@ -142,38 +152,41 @@ export default function RequestDetailModal({
                 name="requestTypeName"
                 allowClear
                 showSearch
-                optionFilterProp="children"
+                optionFilterProp="label"
+                onChange={handleChangeRequestType}
               />
             </Col>
-            <Col span="4">
-              <BasicInput
-                label="Remaining Time"
-                name="reaminingTimeOff"
-                disabled
-                defaultValue="2 / 44 hours"
-                // initialValueForm="2"
-              />
-            </Col>
+            {requestType !== REQUEST_TYPE_KEY.DEVICE && (
+              <Col span="4">
+                <BasicInput
+                  label="Remaining Time"
+                  name="reaminingTimeOff"
+                  disabled
+                />
+              </Col>
+            )}
           </Row>
-          <Row gutter={20}>
-            <Col span="12">
-              <BasicDateRangePicker
-                name="date"
-                label="Applicable Date"
-                rules={[{ required: true }]}
-                placeholder={['From', 'To']}
-              />
-            </Col>
-            <Col span="12">
-              <TimeRangePicker
-                label="Applicable Time"
-                rules={[{ required: true }]}
-                placeholder={['From', 'To']}
-                name="time"
-                disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
-              />
-            </Col>
-          </Row>
+          {requestType !== REQUEST_TYPE_KEY.DEVICE && (
+            <Row gutter={20}>
+              <Col span="12">
+                <BasicDateRangePicker
+                  name="date"
+                  label="Applicable Date"
+                  rules={[{ required: true }]}
+                  placeholder={['From', 'To']}
+                />
+              </Col>
+              <Col span="12">
+                <TimeRangePicker
+                  label="Applicable Time"
+                  rules={[{ required: true }]}
+                  placeholder={['From', 'To']}
+                  name="time"
+                  disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+                />
+              </Col>
+            </Row>
+          )}
           <Row gutter={20}>
             <Col span={24}>
               <BasicInput
@@ -187,18 +200,19 @@ export default function RequestDetailModal({
               />
             </Col>
           </Row>
-          <Row gutter={20}>
-            <Col span={24}>
-              <Form.Item
-                label="Evidence"
-                // rules={[{ required: true }]}
-                className={styles.form__upload}
-                name="evidence"
-              >
-                <UploadFilePictureWall />
-              </Form.Item>
-            </Col>
-          </Row>
+          {requestType !== REQUEST_TYPE_KEY.DEVICE && (
+            <Row gutter={20}>
+              <Col span={24}>
+                <Form.Item
+                  label="Evidence"
+                  className={styles.form__upload}
+                  name="evidence"
+                >
+                  <UploadFilePictureWall />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
             <div className={styles['modal__footer']}>
               {(actionModal === ACTION_TYPE.CREATE ||
