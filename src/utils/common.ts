@@ -125,11 +125,10 @@ export const convertDateToDateString = (
 };
 
 export const TimeCombine = (
-  date: moment.Moment | string | undefined,
+  date?: moment.Moment | string | undefined,
   time?: moment.Moment | string | undefined,
-  isStartDate = true,
-  isConvertToUTC = true,
   formatOutput?: string,
+  isStartDate = true,
 ) => {
   const convertDate = moment(date).format(US_DATE_FORMAT);
   let convertTime;
@@ -142,16 +141,10 @@ export const TimeCombine = (
       convertTime = '23:59';
     }
   }
-
   const format = `${US_DATE_FORMAT} ${TIME_HOUR}`;
-  if (isConvertToUTC) {
-    return moment(`${convertDate} ${convertTime}`, format).utc().format();
-  }
-  if (!isConvertToUTC) {
-    return formatOutput
-      ? moment(`${convertDate} ${convertTime}`, format).format(formatOutput)
-      : moment(`${convertDate} ${convertTime}`, format).format();
-  }
+  return formatOutput
+    ? moment(`${convertDate} ${convertTime}`, format).format(formatOutput)
+    : moment(`${convertDate} ${convertTime}`, format).format();
 };
 
 export const convertMillisecondToMinute = (milliSeconds: number) => {

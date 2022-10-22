@@ -1,4 +1,4 @@
-import { Col, Form, Row } from 'antd';
+import { Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
@@ -7,8 +7,9 @@ import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
 import {
-  US_DATE_FORMAT,
+  DATE_TIME,
   MESSAGE_RES,
+  US_DATE_FORMAT,
   validateMessages,
 } from 'constants/common';
 import {
@@ -18,11 +19,12 @@ import {
   TAB_REQUEST_TYPE,
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
+import { useAddRequestModal } from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
-import { RequestModel } from 'models/request';
+import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
-import { getDateFormat } from 'utils/common';
+import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../RequestStatus';
 import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
@@ -48,6 +50,20 @@ export default function RequestDetailModal({
   const [actionModal, setActionModal] = useState(action);
   const [requestData, setRequestData] = useState<RequestModel>();
   const [requestType, setRequestType] = useState('');
+  const { mutate: createRequest } = useAddRequestModal({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+
+      if (message === 'Success') {
+        notification.success({
+          message: 'Send request successfully',
+        });
+        // refetchList();
+      }
+    },
+  });
   const detailRequest =
     actionModal === ACTION_TYPE.CREATE ? undefined : detailMock;
   useEffect(() => {
@@ -86,8 +102,21 @@ export default function RequestDetailModal({
     requestForm.resetFields();
   };
   const submitHandler = (formValues: RequestModel) => {
-    console.log(1111, formValues);
+    formValues.startTime = TimeCombine(
+      formValues.date && formValues.date[0],
+      formValues.time && formValues.time[0],
+      DATE_TIME,
+    );
+    formValues.endTime = TimeCombine(
+      formValues.date && formValues.date[1],
+      formValues.time && formValues.time[1],
+      DATE_TIME,
+    );
+    delete formValues.date;
+    delete formValues.time;
+    createRequest(formValues);
   };
+
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
     options?.type && setRequestType(options?.type);
   };
@@ -108,40 +137,45 @@ export default function RequestDetailModal({
           onFinish={submitHandler}
           disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
         >
-          <Row gutter={20} className={styles['infor--header']}>
-            <Col span={12}>
-              <span>Created By:</span>
-              <span className={styles['text--bold']}>
-                {requestData?.createdBy}
-              </span>
-            </Col>
-            <Col span={12}>
-              <span>Creat Date:</span>
-              <span className={styles['text--bold']}>
-                {requestData?.createDate}
-              </span>
-            </Col>
-          </Row>
-          <Row gutter={20} className={styles['infor--header']}>
-            <Col span={12}>
-              <span>Receiver:</span>
-              <span className={styles['text--bold']}>
-                {requestData?.receiver}
-              </span>
-            </Col>
-            <Col span={5}>
-              <span>Status:</span>{' '}
-              <RequestStatus data={requestData?.status ?? ''} />
-            </Col>
-            {requestData?.approvalDate && (
-              <Col span={7}>
-                <span>Approval Date:</span>
-                <span className={styles['text--bold']}>
-                  {requestData?.approvalDate}
-                </span>
-              </Col>
-            )}
-          </Row>
+          {actionModal !== ACTION_TYPE.CREATE && (
+            <>
+              <Row gutter={20} className={styles['infor--header']}>
+                <Col span={12}>
+                  <span>Created By:</span>
+                  <span className={styles['text--bold']}>
+                    {requestData?.createdBy}
+                  </span>
+                </Col>
+                <Col span={12}>
+                  <span>Created Date:</span>
+                  <span className={styles['text--bold']}>
+                    {requestData?.createDate}
+                  </span>
+                </Col>
+              </Row>
+              <Row gutter={20} className={styles['infor--header']}>
+                <Col span={12}>
+                  <span>Receiver:</span>
+                  <span className={styles['text--bold']}>
+                    {requestData?.receiver}
+                  </span>
+                </Col>
+                <Col span={5}>
+                  <span>Status:</span>{' '}
+                  <RequestStatus data={requestData?.status ?? ''} />
+                </Col>
+                {requestData?.approvalDate && (
+                  <Col span={7}>
+                    <span>Approval Date:</span>
+                    <span className={styles['text--bold']}>
+                      {requestData?.approvalDate}
+                    </span>
+                  </Col>
+                )}
+              </Row>
+            </>
+          )}
+
           <Row gutter={20}>
             <Col span="12">
               <BasicSelect
@@ -154,17 +188,19 @@ export default function RequestDetailModal({
                 showSearch
                 optionFilterProp="label"
                 onChange={handleChangeRequestType}
+                disabled={actionModal === ACTION_TYPE.EDIT}
               />
             </Col>
-            {requestType !== REQUEST_TYPE_KEY.DEVICE && (
-              <Col span="4">
-                <BasicInput
-                  label="Remaining Time"
-                  name="reaminingTimeOff"
-                  disabled
-                />
-              </Col>
-            )}
+            {requestType !== REQUEST_TYPE_KEY.DEVICE &&
+              actionModal !== ACTION_TYPE.CREATE && (
+                <Col span="4">
+                  <BasicInput
+                    label="Remaining Time"
+                    name="reaminingTimeOff"
+                    disabled
+                  />
+                </Col>
+              )}
           </Row>
           {requestType !== REQUEST_TYPE_KEY.DEVICE && (
             <Row gutter={20}>
@@ -226,7 +262,7 @@ export default function RequestDetailModal({
               )}
               {actionModal === ACTION_TYPE.CREATE && (
                 <BasicButton
-                  title="Add"
+                  title="Send"
                   type="filled"
                   className={styles['btn--save']}
                   htmlType={'submit'}

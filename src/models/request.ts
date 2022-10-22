@@ -1,17 +1,20 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface RequestModel extends Resource {
+  requestId?: number;
   requestType?: string;
   createDate?: string;
   startTime?: string;
   endTime?: string;
   reason?: string;
-  status: string;
+  status?: string;
   approvalDate?: string;
   personName?: string;
   receiver?: string;
   createdBy?: string;
   deviceTypeName?: string;
+  date?: string;
+  time?: string;
 }
 
 export interface RequestListFilter {
