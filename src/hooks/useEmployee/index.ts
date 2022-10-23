@@ -1,4 +1,4 @@
-import { EMPLOYEE_LIST } from 'constants/services';
+import { EMPLOYEE_LIST_ALL } from 'constants/services';
 import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
 import {
   EmployeeListFields,
@@ -18,7 +18,7 @@ class EmployeeList implements Feature<EmployeeListFields> {
 }
 
 const EmployeeListInstance = new EmployeeList(
-  EMPLOYEE_LIST.service,
+  EMPLOYEE_LIST_ALL.service,
   undefined,
   'employee-list-all',
 );

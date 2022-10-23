@@ -26,6 +26,8 @@ import {
 import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
 import dataMock from '../dataMock.json';
+import { useEmployeeList } from 'hooks/useEmployee';
+import { SUBORDINATE_LIST } from 'constants/services';
 export default function SubordinateList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -54,23 +56,26 @@ export default function SubordinateList() {
 
   //  * get data header and content table
   const header: HeaderTableFields[] = dataHeader;
-  // const { isLoading, isError, data: dataTable, refetch } = useEmployeeList(stateQuery);
+  const {
+    isLoading,
+    isError,
+    data: dataTable,
+    refetch,
+  } = useEmployeeList(stateQuery, SUBORDINATE_LIST.service);
 
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
       if (el.key === 'fullName' || el.key === 'rollNumber') {
-        // el.sorter = isError;
-        el.sorter = true;
+        el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
       if (el.key === 'rollNumber' || el.key === 'status') {
         el.width = 100;
       } else if (el.key === 'department') {
         el.width = 100;
-        // el.filterMultiple = isError;
-        el.filterMultiple = true;
+        el.filterMultiple = isError;
         el.filters = [
           { text: 'Dev', value: 'dev' },
           { text: 'Sale', value: 'sale' },
@@ -96,8 +101,7 @@ export default function SubordinateList() {
       };
     });
     setColumnsHeader(columns);
-  }, [stateQuery]);
-  // }, [stateQuery, isError]);
+  }, [stateQuery, isError]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
@@ -117,8 +121,7 @@ export default function SubordinateList() {
         // }));
       }
     }
-  }, [dataMock, stateQuery]);
-  // }, [dataMock, stateQuery, isError]);
+  }, [dataTable, stateQuery, isError]);
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -192,7 +195,7 @@ export default function SubordinateList() {
         }
         stateQuery={stateQuery}
         rowKey={(record: EmployeeModel) => record.id}
-        // loading={isLoading}
+        loading={isLoading}
         scroll={{ y: 240 }}
         onRow={(record: EmployeeModel) => {
           return rowClickHandler(record.id);
@@ -205,7 +208,7 @@ export default function SubordinateList() {
           onCancel={cancelModalHandler}
           action={modalAction.current}
           employeeId={employeeId.current}
-          // refetchList={refetchList}
+          refetchList={refetch}
           viewType={EMPLOYEE_MENU.SUBORDINATE}
         />
       )}
