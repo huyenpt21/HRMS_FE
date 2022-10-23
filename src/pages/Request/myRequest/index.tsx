@@ -3,11 +3,8 @@ import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
-import {
-  MyRequestListHeader,
-  SubordinateRequestListHeader,
-} from 'constants/header';
-import { useMyRequestList } from 'hooks/useRequestList';
+import { MyRequestListHeader } from 'constants/header';
+import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
 import {
   RequestListQuery,
@@ -15,25 +12,22 @@ import {
   RequestModel,
 } from 'models/request';
 import { useEffect, useRef, useState } from 'react';
-import { Params, useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   convertDate,
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import RequestDetailModal from './components/detailModal';
-import ExtraTableHeader from './components/extraHeader';
-import RequestMenuAction from './components/requestMenuAction';
-import RequestStatus from './components/requestStatus';
+import RequestDetailModal from '../components/detailModal';
+import ExtraTableHeader from '../components/extraHeader';
+import RequestMenuAction from '../components/requestMenuAction';
+import RequestStatus from '../components/requestStatus';
+import dataMock from '../dataMock.json';
 
-import dataMock from './dataMock.json';
-
-export default function LeaveBenefitRequest() {
+export default function MyRequestList() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
-  const paramUrl: Readonly<Params<string>> = useParams();
-  const tabType = paramUrl.tabType || '';
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const requestId = useRef<number>();
@@ -57,34 +51,14 @@ export default function LeaveBenefitRequest() {
   );
 
   // * get header
-  let header: HeaderTableFields[] = [];
-  useEffect(() => {
-    switch (tabType) {
-      case TAB_REQUEST_TYPE.SUBORDINATE:
-      case TAB_REQUEST_TYPE.ALL: {
-        header = SubordinateRequestListHeader;
-        break;
-      }
-      default: {
-        header = MyRequestListHeader;
-      }
-    }
-  }, [stateQuery, tabType]);
-
+  let header: HeaderTableFields[] = MyRequestListHeader;
   // * get data table from API
   const {
     isLoading,
     isError,
     data: dataTable,
     refetch: refetchList,
-  } = useMyRequestList(stateQuery);
-
-  // const {
-  //   isLoading,
-  //   isError,
-  //   data: dataTable,
-  //   refetch: refetchList,
-  // } = useSubodinateRequestList(stateQuery, MANAGER_REQUEST_LIST.service);
+  } = useRequestList(stateQuery);
 
   // * render header and data in table
   useEffect(() => {
@@ -135,22 +109,26 @@ export default function LeaveBenefitRequest() {
         },
       };
     });
-    if (tabType !== TAB_REQUEST_TYPE.ALL) {
-      columns.push({
-        title: 'Action',
-        key: 'action',
-        dataIndex: 'action',
-        width: 60,
-        align: 'left',
-        render: (_, record: RequestModel) => {
-          if (record?.status === STATUS.PENDING) {
-            return <RequestMenuAction record={record} tabType={tabType} />;
-          }
-        },
-      });
-    }
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 60,
+      align: 'left',
+      render: (_, record: RequestModel) => {
+        if (record?.status === STATUS.PENDING) {
+          return (
+            <RequestMenuAction
+              record={record}
+              tabType={TAB_REQUEST_TYPE.MY_REQUEST}
+            />
+          );
+        }
+      },
+    });
+
     setColumnsHeader(columns);
-  }, [stateQuery, tabType]);
+  }, [stateQuery]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
@@ -233,7 +211,7 @@ export default function LeaveBenefitRequest() {
             setIsShowDetailModal={setIsShowDetailModal}
             modalAction={modalAction}
             setStateQuery={setStateQuery}
-            tabType={tabType}
+            tabType={TAB_REQUEST_TYPE.MY_REQUEST}
           />
         }
         stateQuery={stateQuery}
@@ -252,7 +230,7 @@ export default function LeaveBenefitRequest() {
           action={modalAction.current}
           requestId={requestId.current}
           requestStatus={requestStatus.current}
-          tabType={tabType}
+          tabType={TAB_REQUEST_TYPE.MY_REQUEST}
           refetchList={refetchList}
         />
       )}

@@ -99,7 +99,7 @@ const fetchApi = async (
     //     message: 'Oops!',
     //     description: err.metadata?.message,
     //   });
-    if (err.metadata.code === 401) {
+    if (err.metadata?.code === 401) {
       localStorage.clear();
       notification.error({
         message: 'Error!',

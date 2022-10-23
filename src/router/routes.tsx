@@ -4,7 +4,9 @@ import EmployeeList from 'pages/employee/employeeList';
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
 import NotFound from 'pages/notFound';
-import RequestTabs from 'pages/request';
+import AllRequestList from 'pages/request/allRequest';
+import MyRequestList from 'pages/request/myRequest';
+import SubordinateRequestList from 'pages/request/subordinateRequest';
 import { useRoutes } from 'react-router-dom';
 
 export default function RouterElement() {
@@ -27,8 +29,21 @@ export default function RouterElement() {
           ],
         },
         {
-          path: 'request/:tabType',
-          element: <RequestTabs />,
+          path: 'request',
+          children: [
+            {
+              path: 'my-request',
+              element: <MyRequestList />,
+            },
+            {
+              path: 'subordinate',
+              element: <SubordinateRequestList />,
+            },
+            {
+              path: 'all',
+              element: <AllRequestList />,
+            },
+          ],
         },
       ],
     },
