@@ -1,6 +1,7 @@
 // import { pathNameLocalStorage } from 'constants/common';
 import MainLayout from 'layouts/MainLayout';
-import EmployeeList from 'pages/employee/employeeList';
+import AllEmployeeList from 'pages/employee/allEmployee';
+import SubordinateList from 'pages/employee/subordinate';
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
 import NotFound from 'pages/notFound';
@@ -23,8 +24,12 @@ export default function RouterElement() {
           path: 'employee',
           children: [
             {
-              path: ':viewType',
-              element: <EmployeeList />,
+              path: 'subordinate',
+              element: <SubordinateList />,
+            },
+            {
+              path: 'all',
+              element: <AllEmployeeList />,
             },
           ],
         },

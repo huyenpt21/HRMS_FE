@@ -6,7 +6,7 @@ import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME } from 'constants/common';
-import { ACTION_TYPE, TAB_REQUEST_TYPE } from 'constants/enums/common';
+import { ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestListQuery } from 'models/request';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
@@ -48,13 +48,13 @@ const ExtraTableHeader = ({
     <>
       <div className={styles.header__section}>
         <div className={styles.header__title}>
-          {tabType === TAB_REQUEST_TYPE.MY_REQUEST
+          {tabType === REQUEST_MENU.MY_REQUEST
             ? 'My Request List'
-            : tabType === TAB_REQUEST_TYPE.SUBORDINATE
+            : tabType === REQUEST_MENU.SUBORDINATE
             ? 'Subordinate Request List'
             : 'All Request List'}
         </div>
-        {tabType === TAB_REQUEST_TYPE.MY_REQUEST && (
+        {tabType === REQUEST_MENU.MY_REQUEST && (
           <BasicButton
             title="Add Request"
             type="filled"
@@ -65,7 +65,7 @@ const ExtraTableHeader = ({
       </div>
       <div className={styles.header__container}>
         <Row gutter={20} className={styles.filter__section}>
-          {tabType !== TAB_REQUEST_TYPE.MY_REQUEST && (
+          {tabType !== REQUEST_MENU.MY_REQUEST && (
             <Col span={6}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}

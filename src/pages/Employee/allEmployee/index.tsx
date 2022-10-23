@@ -1,22 +1,16 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, Row, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
-import BasicButton from 'components/BasicButton';
-import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
-import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
-import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
 import { EmployeeListAllHeader as dataHeader } from 'constants/header';
 
 import BasicTag from 'components/BasicTag';
 import {
   ACTION_TYPE,
+  EMPLOYEE_MENU,
   MENU_OPTION_KEY,
   STATUS_COLORS,
-  VIEW_LIST_EMPLOYEE_TYPE,
 } from 'constants/enums/common';
-import { POSITION_WORKING } from 'constants/fixData';
 import { HeaderTableFields } from 'models/common';
 import {
   EmployeeListFields,
@@ -24,17 +18,17 @@ import {
   EmployeeModel,
 } from 'models/employee';
 import { useEffect, useRef, useState } from 'react';
-import { Params, useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
+import EmployeeDetailModal from '../components/detailModal';
+import ExtraHeaderTable from '../components/extraHeader';
 import MenuAction from '../components/menuAction';
-import EmployeeDetailModal from '../employeeDetailModal';
-import dataMock from './dataMock.json';
-import styles from './employeeList.module.less';
-export default function EmployeeList() {
+import dataMock from '../dataMock.json';
+export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<EmployeeModel[]>([]);
@@ -42,8 +36,6 @@ export default function EmployeeList() {
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const employeeId = useRef<number>();
-  const paramUrl: Readonly<Params<string>> = useParams();
-  const viewType = paramUrl.viewType || '';
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
     page: searchParams.get('page')
@@ -104,20 +96,18 @@ export default function EmployeeList() {
         },
       };
     });
-    if (viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL) {
-      columns.push({
-        title: 'Action',
-        key: 'action',
-        dataIndex: 'action',
-        width: 60,
-        align: 'left',
-        render: (_, record: EmployeeModel) => {
-          return <MenuAction record={record} onClickMenu={menuActionHandler} />;
-        },
-      });
-    }
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 60,
+      align: 'left',
+      render: (_, record: EmployeeModel) => {
+        return <MenuAction record={record} onClickMenu={menuActionHandler} />;
+      },
+    });
     setColumnsHeader(columns);
-  }, [stateQuery, viewType]);
+  }, [stateQuery]);
   // }, [stateQuery, isError]);
 
   // * get data source from API and set to state that store records for table
@@ -204,11 +194,6 @@ export default function EmployeeList() {
     }));
   };
 
-  const addEmployeeHandler = () => {
-    setIsShowDetailModal(true);
-    modalAction.current = ACTION_TYPE.CREATE;
-  };
-
   const cancelModalHandler = () => {
     setIsShowDetailModal(false);
   };
@@ -223,54 +208,6 @@ export default function EmployeeList() {
     };
   };
 
-  const handleChangePosition = (value: number) => {
-    setStateQuery((prev: any) => ({
-      ...prev,
-      position: value,
-    }));
-  };
-
-  const extraHeader = (
-    <>
-      <div className={styles.header__section}>
-        <div className={styles.header__title}>Employee List</div>
-        {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
-          <BasicButton
-            title="Add Employee"
-            type="filled"
-            icon={<PlusOutlined />}
-            onClick={addEmployeeHandler}
-          />
-        )}
-      </div>
-      <div className={styles.header__container}>
-        <Row gutter={10} className={styles.filter__section}>
-          <Col span={4}>
-            <InputDebounce
-              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Search..."
-              allowClear
-              setStateQuery={setStateQuery}
-              keyParam="search"
-            />
-          </Col>
-          <Col span={4}>
-            <BasicSelect options={[]} placeholder="Department" />
-          </Col>
-          <Col span={4}>
-            <BasicSelect
-              options={POSITION_WORKING}
-              placeholder="Position"
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              onChange={handleChangePosition}
-            />
-          </Col>
-        </Row>
-      </div>
-    </>
-  );
   return (
     <>
       <CommonTable
@@ -278,7 +215,14 @@ export default function EmployeeList() {
         data={records}
         onChange={handleTableChange}
         pagination={pagination}
-        extra={extraHeader}
+        extra={
+          <ExtraHeaderTable
+            modalAction={modalAction}
+            setIsShowDetailModal={setIsShowDetailModal}
+            setStateQuery={setStateQuery}
+            menuType={EMPLOYEE_MENU.ALL}
+          />
+        }
         stateQuery={stateQuery}
         rowKey={(record: EmployeeModel) => record.id}
         // loading={isLoading}
@@ -286,7 +230,7 @@ export default function EmployeeList() {
         onRow={(record: EmployeeModel) => {
           return rowClickHandler(record.id);
         }}
-        className={styles.table}
+        className={'cursor-pointer'}
       />
       {isShowDetailModal && (
         <EmployeeDetailModal
@@ -295,7 +239,7 @@ export default function EmployeeList() {
           action={modalAction.current}
           employeeId={employeeId.current}
           // refetchList={refetchList}
-          viewType={viewType}
+          viewType={EMPLOYEE_MENU.ALL}
         />
       )}
     </>

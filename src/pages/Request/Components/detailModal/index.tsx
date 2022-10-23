@@ -16,7 +16,7 @@ import {
   ACTION_TYPE,
   REQUEST_TYPE_KEY,
   STATUS,
-  TAB_REQUEST_TYPE,
+  REQUEST_MENU,
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { useAddRequestModal } from 'hooks/useRequestList';
@@ -292,7 +292,7 @@ export default function RequestDetailModal({
             />
             {requestStatus === STATUS.PENDING && (
               <div>
-                {tabType === TAB_REQUEST_TYPE.MY_REQUEST && (
+                {tabType === REQUEST_MENU.MY_REQUEST && (
                   <BasicButton
                     title="Edit"
                     type="filled"
@@ -300,7 +300,7 @@ export default function RequestDetailModal({
                     onClick={() => setActionModal(ACTION_TYPE.EDIT)}
                   />
                 )}
-                {tabType === TAB_REQUEST_TYPE.SUBORDINATE && (
+                {tabType === REQUEST_MENU.SUBORDINATE && (
                   <>
                     <BasicButton
                       title="Approve"

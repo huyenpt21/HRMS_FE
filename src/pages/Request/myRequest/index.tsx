@@ -2,7 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
+import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
 import { MyRequestListHeader } from 'constants/header';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
@@ -120,7 +120,7 @@ export default function MyRequestList() {
           return (
             <RequestMenuAction
               record={record}
-              tabType={TAB_REQUEST_TYPE.MY_REQUEST}
+              tabType={REQUEST_MENU.MY_REQUEST}
             />
           );
         }
@@ -211,7 +211,7 @@ export default function MyRequestList() {
             setIsShowDetailModal={setIsShowDetailModal}
             modalAction={modalAction}
             setStateQuery={setStateQuery}
-            tabType={TAB_REQUEST_TYPE.MY_REQUEST}
+            tabType={REQUEST_MENU.MY_REQUEST}
           />
         }
         stateQuery={stateQuery}
@@ -230,7 +230,7 @@ export default function MyRequestList() {
           action={modalAction.current}
           requestId={requestId.current}
           requestStatus={requestStatus.current}
-          tabType={TAB_REQUEST_TYPE.MY_REQUEST}
+          tabType={REQUEST_MENU.MY_REQUEST}
           refetchList={refetchList}
         />
       )}

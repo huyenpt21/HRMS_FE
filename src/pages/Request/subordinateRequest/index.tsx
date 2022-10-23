@@ -2,7 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, TAB_REQUEST_TYPE } from 'constants/enums/common';
+import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
 import { SubordinateRequestListHeader } from 'constants/header';
 import { MANAGER_REQUEST_LIST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
@@ -121,7 +121,7 @@ export default function SubordinateRequestList() {
           return (
             <RequestMenuAction
               record={record}
-              tabType={TAB_REQUEST_TYPE.SUBORDINATE}
+              tabType={REQUEST_MENU.SUBORDINATE}
             />
           );
         }
@@ -212,7 +212,7 @@ export default function SubordinateRequestList() {
             setIsShowDetailModal={setIsShowDetailModal}
             modalAction={modalAction}
             setStateQuery={setStateQuery}
-            tabType={TAB_REQUEST_TYPE.SUBORDINATE}
+            tabType={REQUEST_MENU.SUBORDINATE}
           />
         }
         stateQuery={stateQuery}
@@ -231,7 +231,7 @@ export default function SubordinateRequestList() {
           action={modalAction.current}
           requestId={requestId.current}
           requestStatus={requestStatus.current}
-          tabType={TAB_REQUEST_TYPE.SUBORDINATE}
+          tabType={REQUEST_MENU.SUBORDINATE}
           refetchList={refetchList}
         />
       )}

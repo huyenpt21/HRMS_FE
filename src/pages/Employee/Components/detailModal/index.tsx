@@ -7,7 +7,7 @@ import BasicRadioGroup from 'components/BasicRadioGroup';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import { COMMON_STATUS, MESSAGE_RES, validateMessages } from 'constants/common';
-import { ACTION_TYPE, VIEW_LIST_EMPLOYEE_TYPE } from 'constants/enums/common';
+import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import {
   GENDER_LIST,
   POSITION_WORKING,
@@ -294,7 +294,7 @@ export default function EmployeeDetailModal({
                   onClick={cancelHandler}
                 />
               )}
-              {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
+              {viewType === EMPLOYEE_MENU.ALL && (
                 <>
                   {actionModal === ACTION_TYPE.CREATE && (
                     <BasicButton
@@ -326,7 +326,7 @@ export default function EmployeeDetailModal({
                 className={styles['btn--cancel']}
                 onClick={cancelHandler}
               />
-              {viewType === VIEW_LIST_EMPLOYEE_TYPE.ALL && (
+              {viewType === EMPLOYEE_MENU.ALL && (
                 <BasicButton
                   title="Edit"
                   type="filled"
