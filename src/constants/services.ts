@@ -1,5 +1,11 @@
-export const EMPLOYEE_LIST = {
-  service: 'employee',
+export const EMPLOYEE_LIST_ALL = {
+  service: 'hr/employee',
+  model: {
+    list: 'all/list',
+  },
+};
+export const SUBORDINATE_LIST = {
+  service: 'manager/employee',
   model: {
     list: 'all/list',
   },

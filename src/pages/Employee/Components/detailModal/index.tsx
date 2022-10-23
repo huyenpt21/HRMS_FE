@@ -14,7 +14,7 @@ import {
   RANKING_LIST,
   STATUS_RADIO_LIST,
 } from 'constants/fixData';
-import { useAddEmployeeModal } from 'hooks/useEmployeeList';
+import { useAddEmployeeModal } from 'hooks/useEmployee';
 import { EmployeeModel, ResEmployeeModify } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
@@ -41,10 +41,9 @@ export default function EmployeeDetailModal({
   const [actionModal, setActionModal] = useState(action);
   // const [detailEmployeeData, setDetailEmployeeData] =
   //   useState<EmployeeListItem>();
-  const cancelHandler = () => {
-    onCancel();
-    employeeForm.resetFields();
-  };
+
+  // const { data: detailEmployee } = useEmployeeDetail(rollNumber || '');
+
   const { mutate: createEmployee } = useAddEmployeeModal({
     onSuccess: (response: ResEmployeeModify) => {
       const {
@@ -60,7 +59,6 @@ export default function EmployeeDetailModal({
     },
   });
 
-  // const { data: detailEmployee } = useEmployeeDetail(rollNumber || '');
   const detailEmployee = detailMock;
   useEffect(() => {
     if (detailEmployee && detailEmployee.data) {
@@ -76,6 +74,11 @@ export default function EmployeeDetailModal({
       }
     }
   }, [detailEmployee]);
+
+  const cancelHandler = () => {
+    onCancel();
+    employeeForm.resetFields();
+  };
 
   const submitHandler = (formValues: EmployeeModel) => {
     console.log(1111, formValues);
