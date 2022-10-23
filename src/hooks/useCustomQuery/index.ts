@@ -104,8 +104,8 @@ const initialCustomQuery = <
 
   const useList = (
     payload: T,
-    reactQueryOtps?: QueryObserverOptions,
     endPoint?: string,
+    reactQueryOtps?: QueryObserverOptions,
     root_url?: string,
   ) => {
     const defaultOptions = {
