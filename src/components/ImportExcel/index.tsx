@@ -55,7 +55,7 @@ const ImportExcel = ({
           },
         });
         const response = await data.json();
-        if (response.metadata.code === 200) {
+        if (response.metadata?.code === 200) {
           notification.success({
             message: t('timeLeaveManagement.importSuccess'),
           });

@@ -91,12 +91,12 @@ export enum REQUEST_ACTION_TYPE {
   CANCEL,
 }
 
-export enum VIEW_LIST_EMPLOYEE_TYPE {
+export enum EMPLOYEE_MENU {
   ALL = 'all',
   SUBORDINATE = 'subordinate',
 }
 
-export enum TAB_REQUEST_TYPE {
+export enum REQUEST_MENU {
   MY_REQUEST = 'my-request',
   SUBORDINATE = 'subordinate',
   ALL = 'all',

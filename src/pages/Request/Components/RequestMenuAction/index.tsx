@@ -1,6 +1,6 @@
 import { Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
-import { REQUEST_ACTION_TYPE, TAB_REQUEST_TYPE } from 'constants/enums/common';
+import { REQUEST_ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
 import { RequestModel } from 'models/request';
 interface IProps {
   tabType: string;
@@ -18,7 +18,7 @@ export default function RequestMenuAction({ tabType, record }: IProps) {
         e.stopPropagation();
       }}
     >
-      {tabType === TAB_REQUEST_TYPE.SUBORDINATE && (
+      {tabType === REQUEST_MENU.SUBORDINATE && (
         <>
           <Tooltip title="Approve">
             <span
@@ -42,7 +42,7 @@ export default function RequestMenuAction({ tabType, record }: IProps) {
           </Tooltip>
         </>
       )}
-      {tabType === TAB_REQUEST_TYPE.MY_REQUEST && (
+      {tabType === REQUEST_MENU.MY_REQUEST && (
         <>
           <Tooltip title="Edit">
             <span
