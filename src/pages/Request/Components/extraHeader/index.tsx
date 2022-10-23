@@ -18,12 +18,12 @@ interface IProps {
   tabType: string;
   setStateQuery: Dispatch<SetStateAction<RequestListQuery>>;
 }
-export default function ExtraTableLeaveBenefitRequest({
+const ExtraTableHeader = ({
   setIsShowDetailModal,
   modalAction,
   tabType,
   setStateQuery,
-}: IProps) {
+}: IProps) => {
   const addRequestHandler = () => {
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
@@ -99,4 +99,6 @@ export default function ExtraTableLeaveBenefitRequest({
       </div>
     </>
   );
-}
+};
+
+export default ExtraTableHeader;

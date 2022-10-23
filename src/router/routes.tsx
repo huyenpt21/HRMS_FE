@@ -1,10 +1,10 @@
 // import { pathNameLocalStorage } from 'constants/common';
 import MainLayout from 'layouts/MainLayout';
-import EmployeeList from 'pages/Employee/EmployeeList';
+import EmployeeList from 'pages/employee/employeeList';
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
 import NotFound from 'pages/notFound';
-import RequestTabs from 'pages/Request';
+import RequestTabs from 'pages/request';
 import { useRoutes } from 'react-router-dom';
 
 export default function RouterElement() {

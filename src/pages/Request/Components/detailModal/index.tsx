@@ -25,7 +25,7 @@ import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
-import RequestStatus from '../RequestStatus';
+import RequestStatus from '../requestStatus';
 import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 interface IProps {

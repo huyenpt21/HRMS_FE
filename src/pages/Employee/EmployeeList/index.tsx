@@ -30,8 +30,8 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import MenuAction from '../Components/MenuAction';
-import EmployeeDetailModal from '../EmployeeDetailModal';
+import MenuAction from '../components/menuAction';
+import EmployeeDetailModal from '../employeeDetailModal';
 import dataMock from './dataMock.json';
 import styles from './employeeList.module.less';
 export default function EmployeeList() {

@@ -22,10 +22,11 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import ExtraTableLeaveBenefitRequest from './Components/ExtraHeaderRequest';
-import RequestDetailModal from './Components/RequestDetailModal';
-import RequestMenuAction from './Components/RequestMenuAction';
-import RequestStatus from './Components/RequestStatus';
+import RequestDetailModal from './components/detailModal';
+import ExtraTableHeader from './components/extraHeader';
+import RequestMenuAction from './components/requestMenuAction';
+import RequestStatus from './components/requestStatus';
+
 import dataMock from './dataMock.json';
 
 export default function LeaveBenefitRequest() {
@@ -228,7 +229,7 @@ export default function LeaveBenefitRequest() {
         onChange={handleTableChange}
         pagination={pagination}
         extra={
-          <ExtraTableLeaveBenefitRequest
+          <ExtraTableHeader
             setIsShowDetailModal={setIsShowDetailModal}
             modalAction={modalAction}
             setStateQuery={setStateQuery}
