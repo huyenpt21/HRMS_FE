@@ -1,4 +1,4 @@
-import { TablePaginationConfig } from 'antd';
+import { notification, TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
@@ -16,6 +16,7 @@ import {
   EmployeeListFields,
   EmployeeListQuery,
   EmployeeModel,
+  ResEmployeeModify,
 } from 'models/employee';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -28,7 +29,7 @@ import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
 import MenuAction from '../components/menuAction';
 import dataMock from '../dataMock.json';
-import { useEmployeeList } from 'hooks/useEmployee';
+import { useEmployeeList, useUpdateEmployee } from 'hooks/useEmployee';
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -48,7 +49,6 @@ export default function AllEmployeeList() {
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
   };
-
   // * state query
   const [stateQuery, setStateQuery] = useState(
     removeEmptyValueInObject(defaultFilter),
@@ -62,6 +62,20 @@ export default function AllEmployeeList() {
     data: dataTable,
     refetch,
   } = useEmployeeList(stateQuery);
+  const { mutate: updateEmployee } = useUpdateEmployee({
+    onSuccess: (response: ResEmployeeModify) => {
+      const {
+        metadata: { message },
+      } = response;
+
+      if (message === 'Success') {
+        notification.success({
+          message: 'Update status successfully',
+        });
+        refetch();
+      }
+    },
+  });
 
   // * render header and data in table
   useEffect(() => {
@@ -86,7 +100,7 @@ export default function AllEmployeeList() {
       return {
         ...el,
         render: (data: any, record: EmployeeModel) => {
-          if (el.key === 'status') {
+          if (el.key === 'isActive') {
             if (record.isActive)
               return (
                 <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
@@ -145,11 +159,17 @@ export default function AllEmployeeList() {
         break;
       }
       case MENU_OPTION_KEY.ACTIVE: {
-        employeeId.current = itemSelected.id;
+        updateEmployee({
+          uid: itemSelected.id,
+          body: { id: itemSelected.id, isActive: true },
+        });
         break;
       }
       case MENU_OPTION_KEY.DEACTIVE: {
-        employeeId.current = itemSelected.id;
+        updateEmployee({
+          uid: itemSelected.id,
+          body: { id: itemSelected.id, isActive: false },
+        });
         break;
       }
     }

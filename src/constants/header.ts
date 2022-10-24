@@ -16,18 +16,18 @@ export const EmployeeListAllHeader = [
   },
   {
     title: 'Department',
-    key: 'departmentID',
-    dataIndex: 'departmentID',
+    key: 'departmentName',
+    dataIndex: 'departmentName',
   },
   {
     title: 'Position',
-    key: 'position',
-    dataIndex: 'position',
+    key: 'positionName',
+    dataIndex: 'positionName',
   },
   {
     title: 'Status',
-    key: 'status',
-    dataIndex: 'status',
+    key: 'isActive',
+    dataIndex: 'isActive',
   },
 ];
 

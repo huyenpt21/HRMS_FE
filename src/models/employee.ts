@@ -1,17 +1,17 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface EmployeeModel extends Resource {
-  rollNumber: string;
-  fullName: string;
-  email: string;
-  departmentID: string;
+  rollNumber?: string;
+  fullName?: string;
+  email?: string;
+  departmentName?: string;
   dob?: string;
   gender?: number;
   phoneNumber?: string;
   citizenIdentification?: string;
   address?: string;
   managerID?: string;
-  position?: string;
+  positionName?: string;
   ranking?: string;
   onBoardDate?: string;
   isManager?: boolean;

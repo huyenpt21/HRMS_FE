@@ -6,7 +6,12 @@ import BasicInput from 'components/BasicInput';
 import BasicRadioGroup from 'components/BasicRadioGroup';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
-import { COMMON_STATUS, MESSAGE_RES, validateMessages } from 'constants/common';
+import {
+  COMMON_STATUS,
+  DATE_TIME,
+  MESSAGE_RES,
+  validateMessages,
+} from 'constants/common';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import {
   GENDER_LIST,
@@ -14,10 +19,15 @@ import {
   RANKING_LIST,
   STATUS_RADIO_LIST,
 } from 'constants/fixData';
-import { useAddEmployeeModal } from 'hooks/useEmployee';
+import {
+  useAddEmployeeModal,
+  useEmployeeDetail,
+  useUpdateEmployee,
+} from 'hooks/useEmployee';
 import { EmployeeModel, ResEmployeeModify } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
+import { getDateFormat } from 'utils/common';
 import styles from './addEmployee.module.less';
 import detailMock from './detailMock.json';
 
@@ -39,10 +49,21 @@ export default function EmployeeDetailModal({
 }: IProps) {
   const [employeeForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
-  // const [detailEmployeeData, setDetailEmployeeData] =
-  //   useState<EmployeeListItem>();
 
-  // const { data: detailEmployee } = useEmployeeDetail(rollNumber || '');
+  const { data: detailEmployee } = useEmployeeDetail(employeeId || 0);
+  const { mutate: updateEmployee } = useUpdateEmployee({
+    onSuccess: (response: ResEmployeeModify) => {
+      const {
+        metadata: { message },
+      } = response;
+
+      if (message === 'Success') {
+        notification.success({
+          message: 'Update information successfully',
+        });
+      }
+    },
+  });
 
   const { mutate: createEmployee } = useAddEmployeeModal({
     onSuccess: (response: ResEmployeeModify) => {
@@ -54,25 +75,21 @@ export default function EmployeeDetailModal({
         notification.success({
           message: 'Create employee successfully',
         });
-        // refetchList();
       }
     },
   });
-
-  const detailEmployee = detailMock;
   useEffect(() => {
-    if (detailEmployee && detailEmployee.data) {
-      const {
-        metadata: { message },
-        data: { employee },
-      } = detailEmployee;
-      if (message === MESSAGE_RES.SUCCESS && employee) {
-        // setDetailEmployeeData(employee);
-        employeeForm.setFieldsValue(employee);
-        employeeForm.setFieldValue('dob', moment(employee.dob));
-        employeeForm.setFieldValue('onBoardDate', moment(employee.onBoardDate));
-      }
+    // if (detailEmployee && detailEmployee.data) {
+    const {
+      metadata: { message },
+      data: { employee },
+    } = detailMock;
+    if (message === MESSAGE_RES.SUCCESS && employee) {
+      employeeForm.setFieldsValue(employee);
+      employeeForm.setFieldValue('dob', moment(employee.dob));
+      employeeForm.setFieldValue('onBoardDate', moment(employee.onBoardDate));
     }
+    // }
   }, [detailEmployee]);
 
   const cancelHandler = () => {
@@ -81,8 +98,21 @@ export default function EmployeeDetailModal({
   };
 
   const submitHandler = (formValues: EmployeeModel) => {
-    console.log(1111, formValues);
-    createEmployee(formValues);
+    formValues.onBoardDate = getDateFormat(formValues.onBoardDate, DATE_TIME);
+    formValues.dob = getDateFormat(formValues.dob, DATE_TIME);
+
+    switch (actionModal) {
+      case ACTION_TYPE.CREATE: {
+        createEmployee(formValues);
+        break;
+      }
+      case ACTION_TYPE.EDIT: {
+        if (employeeId) {
+          updateEmployee({ uid: employeeId, body: formValues });
+          break;
+        }
+      }
+    }
   };
   return (
     <CommonModal
