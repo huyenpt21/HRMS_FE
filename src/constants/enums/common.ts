@@ -88,7 +88,7 @@ export enum REQUEST_ACTION_TYPE {
   EDIT,
   REJECT,
   APPROVE,
-  CANCEL,
+  DELETE,
 }
 
 export enum EMPLOYEE_MENU {
