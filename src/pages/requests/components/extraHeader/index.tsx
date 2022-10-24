@@ -10,7 +10,7 @@ import { ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestListQuery } from 'models/request';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
-import { getDateFormat } from 'utils/common';
+import { getStartEndDateFormat } from 'utils/common';
 import styles from './extraHeaderRequest.module.less';
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
@@ -29,8 +29,8 @@ const ExtraTableHeader = ({
     modalAction.current = ACTION_TYPE.CREATE;
   };
   const handleChangeCreateDate = (_: any, dateString: string) => {
-    const fromDate = getDateFormat(dateString[0], DATE_TIME);
-    const toDate = getDateFormat(dateString[1], DATE_TIME);
+    const fromDate = getStartEndDateFormat(dateString[0], DATE_TIME);
+    const toDate = getStartEndDateFormat(dateString[1], DATE_TIME, false);
     setStateQuery((prev: any) => ({
       ...prev,
       createDateFrom: fromDate,

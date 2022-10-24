@@ -2,7 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
+import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { SubordinateRequestListHeader } from 'constants/header';
 import { MANAGER_REQUEST_LIST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
@@ -31,7 +31,7 @@ export default function SubordinateRequestList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const requestId = useRef<number>();
+  const requestIdRef = useRef<number>();
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
@@ -60,7 +60,6 @@ export default function SubordinateRequestList() {
     data: dataTable,
     refetch: refetchList,
   } = useRequestList(stateQuery, MANAGER_REQUEST_LIST.service);
-
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -187,7 +186,7 @@ export default function SubordinateRequestList() {
   const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
-        requestId.current = record.id;
+        requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
         requestStatus.current = record.status;
@@ -196,7 +195,7 @@ export default function SubordinateRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestId.current = -1;
+    requestIdRef.current = -1;
     setIsShowDetailModal(false);
   };
 
@@ -229,7 +228,7 @@ export default function SubordinateRequestList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          requestId={requestId.current}
+          requestIdRef={requestIdRef.current}
           requestStatus={requestStatus.current}
           tabType={REQUEST_MENU.SUBORDINATE}
           refetchList={refetchList}

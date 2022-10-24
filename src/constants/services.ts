@@ -13,6 +13,9 @@ export const SUBORDINATE_LIST = {
 
 export const MY_REQUEST_LIST = {
   service: 'request',
+  model: {
+    status: 'status',
+  },
 };
 export const MANAGER_REQUEST_LIST = {
   service: 'manager/request',
