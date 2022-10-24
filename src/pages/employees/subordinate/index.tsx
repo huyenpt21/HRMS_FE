@@ -86,7 +86,7 @@ export default function SubordinateList() {
       return {
         ...el,
         render: (data: any, record: EmployeeModel) => {
-          if (el.key === 'status') {
+          if (el.key === 'isActive') {
             if (record.isActive)
               return (
                 <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
