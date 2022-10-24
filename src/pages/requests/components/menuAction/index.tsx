@@ -54,10 +54,10 @@ export default function RequestMenuAction({ tabType, record }: IProps) {
               <SvgIcon icon="edit-border" />
             </span>
           </Tooltip>
-          <Tooltip title="Cancel">
+          <Tooltip title="Delete">
             <span
               onClick={() =>
-                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL)
+                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.DELETE)
               }
               className="cursor-pointer"
             >

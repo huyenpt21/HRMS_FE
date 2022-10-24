@@ -22,8 +22,8 @@ import {
 } from 'utils/common';
 import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
-import RequestMenuAction from '../components/requestMenuAction';
-import RequestStatus from '../components/requestStatus';
+import RequestMenuAction from '../components/menuAction';
+import RequestStatus from '../components/statusRequest';
 import dataMock from '../dataMock.json';
 
 export default function SubordinateRequestList() {

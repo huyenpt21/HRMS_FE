@@ -22,7 +22,7 @@ import {
 } from 'utils/common';
 import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
-import RequestStatus from '../components/requestStatus';
+import RequestStatus from '../components/statusRequest';
 
 import dataMock from '../dataMock.json';
 
