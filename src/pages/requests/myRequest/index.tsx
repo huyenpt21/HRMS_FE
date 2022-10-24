@@ -30,7 +30,7 @@ export default function MyRequestList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const requestId = useRef<number>();
+  const requestIdRef = useRef<number>(0);
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
@@ -121,12 +121,15 @@ export default function MyRequestList() {
             <RequestMenuAction
               record={record}
               tabType={REQUEST_MENU.MY_REQUEST}
+              setIsShowDetailModal={setIsShowDetailModal}
+              modalAction={modalAction}
+              requestIdRef={requestIdRef}
+              stateQuery={stateQuery}
             />
           );
         }
       },
     });
-
     setColumnsHeader(columns);
   }, [stateQuery]);
 
@@ -186,7 +189,7 @@ export default function MyRequestList() {
   const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
-        requestId.current = record.id;
+        requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
         requestStatus.current = record.status;
@@ -195,7 +198,7 @@ export default function MyRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestId.current = -1;
+    requestIdRef.current = -1;
     setIsShowDetailModal(false);
   };
 
@@ -228,7 +231,7 @@ export default function MyRequestList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          requestId={requestId.current}
+          requestIdRef={requestIdRef.current}
           requestStatus={requestStatus.current}
           tabType={REQUEST_MENU.MY_REQUEST}
           refetchList={refetchList}

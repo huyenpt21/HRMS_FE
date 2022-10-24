@@ -33,7 +33,7 @@ interface IProps {
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  requestId?: number;
+  requestIdRef?: number;
   requestStatus?: string;
   tabType?: string;
 }
@@ -42,7 +42,7 @@ export default function RequestDetailModal({
   onCancel,
   refetchList,
   action,
-  requestId,
+  requestIdRef,
   requestStatus,
   tabType,
 }: IProps) {

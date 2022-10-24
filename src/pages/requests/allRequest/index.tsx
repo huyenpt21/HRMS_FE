@@ -31,7 +31,7 @@ export default function AllRequestList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const requestId = useRef<number>();
+  const requestIdRef = useRef<number>();
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
@@ -168,7 +168,7 @@ export default function AllRequestList() {
   const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
-        requestId.current = record.id;
+        requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
         requestStatus.current = record.status;
@@ -177,7 +177,7 @@ export default function AllRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestId.current = -1;
+    requestIdRef.current = -1;
     setIsShowDetailModal(false);
   };
 
@@ -210,7 +210,7 @@ export default function AllRequestList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          requestId={requestId.current}
+          requestIdRef={requestIdRef.current}
           requestStatus={requestStatus.current}
           tabType={REQUEST_MENU.ALL}
           refetchList={refetchList}

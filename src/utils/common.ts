@@ -58,6 +58,18 @@ export const getDateFormat = (
     : moment(date).format(outputFormat);
 };
 
+export const getStartEndDateFormat = (
+  date: string | moment.Moment,
+  outputFormat: string,
+  isStartDate = true,
+) => {
+  if (isStartDate) {
+    return moment(date).startOf('day').format(outputFormat);
+  } else {
+    return moment(date).endOf('day').format(outputFormat);
+  }
+};
+
 export const getStartOfMonth = (
   date: moment.Moment | string,
   format?: string,

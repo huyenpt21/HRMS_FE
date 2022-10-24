@@ -17,6 +17,10 @@ export interface RequestModel extends Resource {
   time?: string;
 }
 
+export interface RequestStatus {
+  status: string;
+}
+
 export interface RequestListFilter {
   search?: string;
   startTime?: string;
