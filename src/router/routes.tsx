@@ -9,6 +9,7 @@ import NotFound from 'pages/notFound';
 import AllRequestList from 'pages/requests/allRequest';
 import MyRequestList from 'pages/requests/myRequest';
 import SubordinateRequestList from 'pages/requests/subordinateRequest';
+import MyTimeCheck from 'pages/timeCheck/myTimeCheck';
 
 import { useRoutes } from 'react-router-dom';
 
@@ -49,6 +50,15 @@ export default function RouterElement() {
             {
               path: 'all',
               element: <AllRequestList />,
+            },
+          ],
+        },
+        {
+          path: 'time-check',
+          children: [
+            {
+              path: 'my-time-check',
+              element: <MyTimeCheck />,
             },
           ],
         },

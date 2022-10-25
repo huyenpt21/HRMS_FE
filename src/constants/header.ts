@@ -120,8 +120,8 @@ export const MyTimeCheckHeader = [
   },
   {
     title: 'In Late',
-    key: 'date',
-    dataIndex: 'date',
+    key: 'inLate',
+    dataIndex: 'inLate',
   },
   {
     title: 'Out Early',

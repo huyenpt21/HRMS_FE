@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 15
+    }
+  },
+  "data": {
+    "timeCheckList": [
+      {
+        "id": 1,
+        "personName": "Trinh Kim Chi",
+        "date": "2022-10-07 00:00:00",
+        "timeIn": "2022-10-07 08:00:00",
+        "timeOut": "2022-10-07 17:00:00",
+        "inLate": 0,
+        "outEarly": 2.0,
+        "ot": 5,
+        "workingTime": 6.0,
+        "requestTypeName": "Sickless"
+      },
+      {
+        "id": 2,
+        "personName": "Trinh Kim Chi",
+        "date": "2022-10-07 00:00:00",
+        "timeIn": "2022-10-07 08:40:00",
+        "timeOut": "2022-10-07 18:00:00",
+        "inLate": 10,
+        "outEarly": 2.0,
+        "ot": 5,
+        "workingTime": 8.0,
+        "requestTypeName": "Sickless"
+      },
+      {
+        "id": 3,
+        "personName": "Trinh Kim Chi",
+        "date": "2022-10-07 00:00:00",
+        "timeIn": "2022-10-07 07:45:00",
+        "timeOut": "2022-10-07 17:00:00",
+        "inLate": 3.5,
+        "outEarly": 2.0,
+        "ot": 5,
+        "workingTime": 7.5,
+        "requestTypeName": "Sickless"
+      }
+    ]
+  }
+}
