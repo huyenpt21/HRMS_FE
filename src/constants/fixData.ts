@@ -91,11 +91,11 @@ export const GENDER_LIST: SelectBoxType[] = [
 
 export const STATUS_RADIO_LIST: RadioButtonType[] = [
   {
-    value: COMMON_STATUS.TRUE,
+    value: COMMON_STATUS.ACTIVE,
     label: 'Active',
   },
   {
-    value: COMMON_STATUS.FALSE,
+    value: COMMON_STATUS.INACTIVE,
     label: 'Inactive',
   },
 ];

@@ -34,6 +34,6 @@ export type ResEmployeeList = ResponseData<
   Pagination
 >;
 
-export type ResEmployeeDetail = ResponseData<{ employee: EmployeeModel }, {}>;
+export type ResEmployeeDetail = ResponseData<{ item: EmployeeModel }, {}>;
 
 export type ResEmployeeModify = ResponseData<{}, {}>;
