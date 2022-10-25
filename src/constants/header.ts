@@ -101,3 +101,46 @@ export const SubordinateRequestListHeader = [
     dataIndex: 'status',
   },
 ];
+
+export const MyTimeCheckHeader = [
+  {
+    title: 'Date',
+    key: 'date',
+    dataIndex: 'date',
+  },
+  {
+    title: 'Time In',
+    key: 'timeIn',
+    dataIndex: 'timeIn',
+  },
+  {
+    title: 'Time Out',
+    key: 'timeOut',
+    dataIndex: 'timeOut',
+  },
+  {
+    title: 'In Late',
+    key: 'date',
+    dataIndex: 'date',
+  },
+  {
+    title: 'Out Early',
+    key: 'outEarly',
+    dataIndex: 'outEarly',
+  },
+  {
+    title: 'Working Time',
+    key: 'workingTime',
+    dataIndex: 'workingTime',
+  },
+  {
+    title: 'OT',
+    key: 'ot',
+    dataIndex: 'ot',
+  },
+  {
+    title: 'Request Type',
+    key: 'requestTypeName',
+    dataIndex: 'requestTypeName',
+  },
+];
