@@ -25,7 +25,7 @@ export default function MenuAction({ record, onClickMenu }: IProps) {
           <SvgIcon icon="edit-border" />
         </span>
       </Tooltip>
-      {record.isActive && (
+      {!!record.isActive && (
         <Tooltip title="Deactive">
           <span
             onClick={() => onClickMenu(record, MENU_OPTION_KEY.DEACTIVE)}

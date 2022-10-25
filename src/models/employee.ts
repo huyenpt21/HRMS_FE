@@ -30,7 +30,7 @@ export type EmployeeListQuery = QueryParams<EmployeeListFields> &
   EmployeeListFilter;
 
 export type ResEmployeeList = ResponseData<
-  { employeeList: EmployeeModel[] },
+  { items: EmployeeModel[] },
   Pagination
 >;
 

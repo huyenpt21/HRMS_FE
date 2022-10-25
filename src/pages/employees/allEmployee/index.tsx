@@ -11,6 +11,7 @@ import {
   MENU_OPTION_KEY,
   STATUS_COLORS,
 } from 'constants/enums/common';
+import { useEmployeeList, useUpdateEmployee } from 'hooks/useEmployee';
 import { HeaderTableFields } from 'models/common';
 import {
   EmployeeListFields,
@@ -28,8 +29,6 @@ import {
 import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
 import MenuAction from '../components/menuAction';
-import dataMock from '../dataMock.json';
-import { useEmployeeList, useUpdateEmployee } from 'hooks/useEmployee';
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -100,17 +99,23 @@ export default function AllEmployeeList() {
       return {
         ...el,
         render: (data: any, record: EmployeeModel) => {
-          if (el.key === 'isActive') {
-            if (record.isActive)
-              return (
-                <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
-              );
-            else
-              return (
-                <BasicTag statusColor={STATUS_COLORS.DEFAULT} text="Inactive" />
-              );
+          if (data !== null) {
+            if (el.key === 'isActive') {
+              if (data)
+                return (
+                  <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
+                );
+              else
+                return (
+                  <BasicTag
+                    statusColor={STATUS_COLORS.DEFAULT}
+                    text="Inactive"
+                  />
+                );
+            }
+            return <div>{data}</div>;
           }
-          return <div>{data}</div>;
+          return <span>-</span>;
         },
       };
     });
@@ -129,20 +134,20 @@ export default function AllEmployeeList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataMock && dataMock.data) {
+    if (dataTable && dataTable.data) {
       const {
         metadata: { pagination },
-        data: { employeeList: recordsTable },
-      } = dataMock;
+        data: { items: recordsTable },
+      } = dataTable;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API
-        // setPagination((prevPagination: TablePaginationConfig) => ({
-        //   ...prevPagination,
-        //   current: pagination.page,
-        //   pageSize: pagination.limit,
-        //   total: pagination.totalRecords,
-        // }));
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
       }
     }
   }, [dataTable, stateQuery, isError]);
@@ -190,14 +195,6 @@ export default function AllEmployeeList() {
       sort = `${sortField}`;
       dir = sortDirections;
     }
-
-    // ! Delete this function after setup API
-    setPagination((prevPagination: TablePaginationConfig) => ({
-      ...prevPagination,
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    }));
-
     // * set changing of pagination to state query
     setStateQuery((prev: EmployeeListQuery) => ({
       ...prev,
