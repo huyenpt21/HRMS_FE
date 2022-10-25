@@ -7,7 +7,7 @@ export enum SortDir {
 }
 
 export const paginationConfig: TablePaginationConfig = {
-  current: 0,
+  current: 1,
   pageSize: 10,
   pageSizeOptions: ['10', '20', '50', '100'],
   showSizeChanger: true,

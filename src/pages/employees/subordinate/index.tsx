@@ -85,18 +85,24 @@ export default function SubordinateList() {
       }
       return {
         ...el,
-        render: (data: any, record: EmployeeModel) => {
-          if (el.key === 'isActive') {
-            if (record.isActive)
-              return (
-                <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
-              );
-            else
-              return (
-                <BasicTag statusColor={STATUS_COLORS.DEFAULT} text="Inactive" />
-              );
+        render: (data: any) => {
+          if (data !== null) {
+            if (el.key === 'isActive') {
+              if (data)
+                return (
+                  <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
+                );
+              else
+                return (
+                  <BasicTag
+                    statusColor={STATUS_COLORS.DEFAULT}
+                    text="Inactive"
+                  />
+                );
+            }
+            return <div>{data}</div>;
           }
-          return <div>{data}</div>;
+          return <span>-</span>;
         },
       };
     });
@@ -113,12 +119,12 @@ export default function SubordinateList() {
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API
-        // setPagination((prevPagination: TablePaginationConfig) => ({
-        //   ...prevPagination,
-        //   current: pagination.page,
-        //   pageSize: pagination.limit,
-        //   total: pagination.totalRecords,
-        // }));
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
       }
     }
   }, [dataTable, stateQuery, isError]);
@@ -138,14 +144,6 @@ export default function SubordinateList() {
       sort = `${sortField}`;
       dir = sortDirections;
     }
-
-    // ! Delete this function after setup API
-    setPagination((prevPagination: TablePaginationConfig) => ({
-      ...prevPagination,
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    }));
-
     // * set changing of pagination to state query
     setStateQuery((prev: EmployeeListQuery) => ({
       ...prev,
