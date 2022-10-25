@@ -59,14 +59,16 @@ export const getDateFormat = (
 };
 
 export const getStartEndDateFormat = (
-  date: string | moment.Moment,
+  date: string | moment.Moment | undefined,
   outputFormat: string,
   isStartDate = true,
 ) => {
-  if (isStartDate) {
-    return moment(date).startOf('day').format(outputFormat);
-  } else {
-    return moment(date).endOf('day').format(outputFormat);
+  if (date) {
+    if (isStartDate) {
+      return moment(date).startOf('day').format(outputFormat);
+    } else {
+      return moment(date).endOf('day').format(outputFormat);
+    }
   }
 };
 
