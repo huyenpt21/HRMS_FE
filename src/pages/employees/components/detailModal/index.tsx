@@ -29,7 +29,6 @@ import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { getDateFormat } from 'utils/common';
 import styles from './addEmployee.module.less';
-import detailMock from './detailMock.json';
 
 interface IProps {
   isVisible: boolean;
@@ -79,17 +78,17 @@ export default function EmployeeDetailModal({
     },
   });
   useEffect(() => {
-    // if (detailEmployee && detailEmployee.data) {
-    const {
-      metadata: { message },
-      data: { employee },
-    } = detailMock;
-    if (message === MESSAGE_RES.SUCCESS && employee) {
-      employeeForm.setFieldsValue(employee);
-      employeeForm.setFieldValue('dob', moment(employee.dob));
-      employeeForm.setFieldValue('onBoardDate', moment(employee.onBoardDate));
+    if (detailEmployee && detailEmployee.data) {
+      const {
+        metadata: { message },
+        data: { item: employee },
+      } = detailEmployee;
+      if (message === MESSAGE_RES.SUCCESS && employee) {
+        employeeForm.setFieldsValue(employee);
+        employeeForm.setFieldValue('dob', moment(employee.dob));
+        employeeForm.setFieldValue('onBoardDate', moment(employee.onBoardDate));
+      }
     }
-    // }
   }, [detailEmployee]);
 
   const cancelHandler = () => {
@@ -187,21 +186,6 @@ export default function EmployeeDetailModal({
                     allowClear
                     rules={[{ required: true }]}
                     placeholder="Enter Citizen Identification"
-                  />
-                </Col>
-                <Col span={12}>
-                  <BasicInput
-                    name="individualEmail"
-                    label="Individual Email"
-                    allowClear
-                    rules={[
-                      { required: true },
-                      {
-                        pattern: '[a-z0-9]+@[a-z]+.[a-z]{2,3}',
-                        message: 'Please enter a valid email address',
-                      },
-                    ]}
-                    placeholder="Enter address"
                   />
                 </Col>
               </Row>
@@ -309,7 +293,7 @@ export default function EmployeeDetailModal({
                   <BasicRadioGroup
                     label="Status"
                     name="isActive"
-                    initialValue={COMMON_STATUS.TRUE}
+                    initialValue={COMMON_STATUS.ACTIVE}
                     listRadio={STATUS_RADIO_LIST}
                   />
                 </Col>
