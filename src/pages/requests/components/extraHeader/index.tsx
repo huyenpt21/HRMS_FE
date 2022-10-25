@@ -63,40 +63,38 @@ const ExtraTableHeader = ({
           />
         )}
       </div>
-      <div className={styles.header__container}>
-        <Row gutter={20} className={styles.filter__section}>
-          {tabType !== REQUEST_MENU.MY_REQUEST && (
-            <Col span={6}>
-              <InputDebounce
-                suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-                placeholder="Search..."
-                allowClear
-                setStateQuery={setStateQuery}
-                keyParam="search"
-                label="Employee Name"
-              />
-            </Col>
-          )}
+      <Row gutter={20} className={styles.filter__section}>
+        {tabType !== REQUEST_MENU.MY_REQUEST && (
           <Col span={6}>
-            <BasicDateRangePicker
-              placeholder={['From', 'To']}
-              label="Create Date"
-              onChange={handleChangeCreateDate}
-            />
-          </Col>
-          <Col span={4}>
-            <BasicSelect
-              options={REQUEST_TYPE_LIST}
-              placeholder="Request Type"
-              label="Request Type"
+            <InputDebounce
+              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
+              placeholder="Search..."
               allowClear
-              showSearch
-              optionFilterProp="label"
-              onChange={handleChangeRequestType}
+              setStateQuery={setStateQuery}
+              keyParam="search"
+              label="Employee Name"
             />
           </Col>
-        </Row>
-      </div>
+        )}
+        <Col span={6}>
+          <BasicDateRangePicker
+            placeholder={['From', 'To']}
+            label="Create Date"
+            onChange={handleChangeCreateDate}
+          />
+        </Col>
+        <Col span={4}>
+          <BasicSelect
+            options={REQUEST_TYPE_LIST}
+            placeholder="Request Type"
+            label="Request Type"
+            allowClear
+            showSearch
+            optionFilterProp="label"
+            onChange={handleChangeRequestType}
+          />
+        </Col>
+      </Row>
     </>
   );
 };

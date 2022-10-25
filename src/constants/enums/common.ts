@@ -107,3 +107,9 @@ export enum REQUEST_TYPE_KEY {
   OT = 'ot',
   DEVICE = 'device',
 }
+
+export enum MENU_TYPE {
+  MIME,
+  SUBORDINATE,
+  ALL,
+}

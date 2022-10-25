@@ -2,6 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig, TIME_HOUR } from 'constants/common';
+import { MENU_TYPE } from 'constants/enums/common';
 import { MyTimeCheckHeader } from 'constants/header';
 import { useTimeCheckList } from 'hooks/useTimeCheck';
 import { HeaderTableFields } from 'models/common';
@@ -14,6 +15,7 @@ import {
   isEmptyPagination,
   removeEmptyValueInObject,
 } from 'utils/common';
+import ExtraTableTimeCheck from '../components/extraHeader';
 import dataMock from './dataMock.json';
 
 export default function MyTimeCheck() {
@@ -131,7 +133,12 @@ export default function MyTimeCheck() {
       data={records}
       onChange={handleTableChange}
       pagination={pagination}
-      extra={<></>}
+      extra={
+        <ExtraTableTimeCheck
+          menuType={MENU_TYPE.MIME}
+          setStateQuery={setStateQuery}
+        />
+      }
       stateQuery={stateQuery}
       rowKey={(record: TimeCheckModel) => record.id}
       scroll={{ y: 240 }}
