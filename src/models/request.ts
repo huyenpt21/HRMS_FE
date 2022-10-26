@@ -43,6 +43,6 @@ export type ResRequestList = ResponseData<
   Pagination
 >;
 
-export type ResRequestDetail = ResponseData<{ request: RequestModel }, {}>;
+export type ResRequestDetail = ResponseData<{ item: RequestModel }, {}>;
 
 export type ResRequestModify = ResponseData<{}, {}>;

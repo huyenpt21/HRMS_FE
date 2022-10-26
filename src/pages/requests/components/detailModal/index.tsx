@@ -19,19 +19,20 @@ import {
   REQUEST_MENU,
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
-import { useAddRequestModal } from 'hooks/useRequestList';
+import { MY_REQUEST_LIST } from 'constants/services';
+import { useAddRequestModal, useRequestDetail } from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
-import detailMock from './detailMock.json';
+// import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
-  refetchList?: () => void;
+  refetchList: () => void;
   action: ACTION_TYPE;
   requestIdRef?: number;
   requestStatus?: string;
@@ -60,37 +61,40 @@ export default function RequestDetailModal({
         notification.success({
           message: 'Send request successfully',
         });
-        // refetchList();
+        refetchList();
+        onCancel();
       }
     },
   });
-  const detailRequest =
-    actionModal === ACTION_TYPE.CREATE ? undefined : detailMock;
+  const { data: detailRequest } = useRequestDetail(
+    requestIdRef || 0,
+    `${MY_REQUEST_LIST.service}/detail`,
+  );
   useEffect(() => {
     if (detailRequest && detailRequest?.data) {
       const {
         metadata: { message },
-        data: { items },
+        data: { item },
       } = detailRequest;
-      if (message === MESSAGE_RES.SUCCESS && items) {
-        requestForm.setFieldsValue(items);
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        requestForm.setFieldsValue(item);
         requestForm.setFieldValue('date', [
-          moment(items.startTime),
-          moment(items.endTime),
+          moment(item.startTime),
+          moment(item.endTime),
         ]);
         requestForm.setFieldValue('time', [
-          moment(items.startTime),
-          moment(items.endTime),
+          moment(item.startTime),
+          moment(item.endTime),
         ]);
         const requestFixInfor: RequestModel = {
-          id: items.requestId,
-          receiver: items.receiver,
-          createdBy: items.personName,
-          createDate: getDateFormat(items.createDate, US_DATE_FORMAT),
-          status: items.status,
+          id: item.id,
+          receiver: item.receiver,
+          createdBy: item.personName,
+          createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
+          status: item.status,
           approvalDate:
-            items.approvalDate !== null
-              ? getDateFormat(items?.approvalDate, US_DATE_FORMAT)
+            item.approvalDate !== null
+              ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
               : undefined,
         };
         setRequestData(requestFixInfor);

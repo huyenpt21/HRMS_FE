@@ -77,10 +77,10 @@ const initialCustomQuery = <
 ) => {
   const useItem = (
     uid: number,
+    endPoint?: string,
     payload?: any,
     reactQueryOtps?: QueryObserverOptions,
     root_url?: string,
-    endPoint?: string,
   ) => {
     const defaultOptions = {
       refetchOnWindowFocus: false,
