@@ -1,8 +1,7 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface RequestModel extends Resource {
-  requestId?: number;
-  requestType?: string;
+  requestTypeName?: string;
   createDate?: string;
   startTime?: string;
   endTime?: string;
@@ -10,11 +9,12 @@ export interface RequestModel extends Resource {
   status?: string;
   approvalDate?: string;
   personName?: string;
-  receiver?: string;
+  receiver?: string | null;
   createdBy?: string;
-  deviceTypeName?: string;
+  deviceTypeName?: string | null;
   date?: string;
   time?: string;
+  listEvidence?: string[] | null;
 }
 
 export interface RequestStatus {
@@ -39,7 +39,7 @@ export type RequestListQuery = QueryParams<RequestListSortFields> &
   RequestListFilter;
 
 export type ResRequestList = ResponseData<
-  { requestList: RequestModel[] },
+  { items: RequestModel[] },
   Pagination
 >;
 
