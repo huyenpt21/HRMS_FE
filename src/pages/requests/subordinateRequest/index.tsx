@@ -24,6 +24,7 @@ import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
+import dataMock from '../dataMock.json';
 
 export default function SubordinateRequestList() {
   const [searchParams] = useSearchParams();
@@ -136,7 +137,7 @@ export default function SubordinateRequestList() {
       const {
         metadata: { pagination },
         data: { items: requestList },
-      } = dataTable;
+      } = dataMock;
       setRecords(requestList);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API
@@ -195,7 +196,7 @@ export default function SubordinateRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestIdRef.current = -1;
+    requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
 

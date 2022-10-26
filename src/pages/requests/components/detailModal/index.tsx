@@ -22,6 +22,7 @@ import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { MY_REQUEST_LIST } from 'constants/services';
 import {
   useAddRequestModal,
+  useChangeStatusRequest,
   useRequestDetail,
   useUpdateRequest,
 } from 'hooks/useRequestList';
@@ -92,6 +93,19 @@ export default function RequestDetailModal({
     requestIdRef || 0,
     `${MY_REQUEST_LIST.service}/detail`,
   );
+  const { mutate: statusRequest } = useChangeStatusRequest({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === 'Success') {
+        notification.success({
+          message: 'Responding request successfully',
+        });
+        refetchList();
+      }
+    },
+  });
   useEffect(() => {
     if (detailRequest && detailRequest?.data) {
       const {
@@ -152,7 +166,13 @@ export default function RequestDetailModal({
     options?.type && setRequestType(options?.type);
   };
 
-  const handleQickActionRequest = (isApprove: boolean) => {};
+  const handleQickActionRequest = (statusValue: string) => {
+    requestIdRef &&
+      statusRequest({
+        uid: requestIdRef,
+        body: { status: statusValue },
+      });
+  };
   return (
     <CommonModal
       open={isVisible}
@@ -337,7 +357,7 @@ export default function RequestDetailModal({
                       type="filled"
                       className={styles['btn--approve']}
                       onClick={() => {
-                        handleQickActionRequest(true);
+                        handleQickActionRequest(STATUS.APPROVED);
                       }}
                     />
                     <BasicButton
@@ -346,7 +366,7 @@ export default function RequestDetailModal({
                       className={styles['btn--save']}
                       danger
                       onClick={() => {
-                        handleQickActionRequest(false);
+                        handleQickActionRequest(STATUS.REJECTED);
                       }}
                     />
                   </>

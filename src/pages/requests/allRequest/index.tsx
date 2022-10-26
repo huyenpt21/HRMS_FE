@@ -175,7 +175,7 @@ export default function AllRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestIdRef.current = -1;
+    requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
 
