@@ -2,7 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
+import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { MyRequestListHeader } from 'constants/header';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
@@ -70,7 +70,7 @@ export default function MyRequestList() {
         el.key === 'endTime'
       ) {
         el.width = 150;
-      } else if (el.key === 'requestType' || el.key === 'personName') {
+      } else if (el.key === 'requestTypeName') {
         el.width = 200;
         el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
@@ -85,14 +85,12 @@ export default function MyRequestList() {
           { text: STATUS.REJECTED, value: STATUS.REJECTED },
         ];
       } else if (el.key === 'reason') {
-        el.width = 200;
-      } else {
-        el.width = 200;
+        el.width = 180;
       }
       return {
         ...el,
         render: (data: any, record: RequestModel) => {
-          if (data) {
+          if (data !== null) {
             if (
               el.key === 'createDate' ||
               el.key === 'startTime' ||
@@ -102,10 +100,9 @@ export default function MyRequestList() {
             } else if (el.key === 'status') {
               return <RequestStatus data={data} />;
             }
-            return data;
-          } else {
-            return '-';
+            return <span>{data}</span>;
           }
+          return '-';
         },
       };
     });
@@ -115,7 +112,7 @@ export default function MyRequestList() {
       dataIndex: 'action',
       width: 60,
       align: 'left',
-      render: (_, record: RequestModel) => {
+      render: (data: any, record: RequestModel) => {
         if (record?.status === STATUS.PENDING) {
           return (
             <RequestMenuAction
@@ -125,33 +122,34 @@ export default function MyRequestList() {
               modalAction={modalAction}
               requestIdRef={requestIdRef}
               stateQuery={stateQuery}
+              refetchList={refetchList}
             />
           );
         }
       },
     });
     setColumnsHeader(columns);
-  }, [stateQuery]);
+  }, [stateQuery, isError]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { requestList },
-    } = dataMock;
-    setRecords(requestList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { items },
+      } = dataMock;
+      setRecords(items);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
-  }, [dataTable]);
+  }, [dataTable, stateQuery, isError]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -185,7 +183,6 @@ export default function MyRequestList() {
       [filterKey]: filterValues,
     }));
   };
-
   const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
@@ -198,7 +195,7 @@ export default function MyRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestIdRef.current = -1;
+    requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
 

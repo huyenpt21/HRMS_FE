@@ -14,24 +14,30 @@ import {
 } from 'constants/common';
 import {
   ACTION_TYPE,
+  REQUEST_MENU,
   REQUEST_TYPE_KEY,
   STATUS,
-  REQUEST_MENU,
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
-import { useAddRequestModal } from 'hooks/useRequestList';
+import { MY_REQUEST_LIST } from 'constants/services';
+import {
+  useAddRequestModal,
+  useChangeStatusRequest,
+  useRequestDetail,
+  useUpdateRequest,
+} from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
-import detailMock from './detailMock.json';
+// import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
-  refetchList?: () => void;
+  refetchList: () => void;
   action: ACTION_TYPE;
   requestIdRef?: number;
   requestStatus?: string;
@@ -60,37 +66,71 @@ export default function RequestDetailModal({
         notification.success({
           message: 'Send request successfully',
         });
-        // refetchList();
+        refetchList();
+        onCancel();
       }
     },
   });
-  const detailRequest =
-    actionModal === ACTION_TYPE.CREATE ? undefined : detailMock;
+  const { mutate: updateRequest } = useUpdateRequest(
+    {
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+
+        if (message === 'Success') {
+          notification.success({
+            message: 'Send request successfully',
+          });
+          refetchList();
+          onCancel();
+        }
+      },
+    },
+    `${MY_REQUEST_LIST.service}/edit`,
+  );
+  const { data: detailRequest } = useRequestDetail(
+    requestIdRef || 0,
+    `${MY_REQUEST_LIST.service}/detail`,
+  );
+  const { mutate: statusRequest } = useChangeStatusRequest({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === 'Success') {
+        notification.success({
+          message: 'Responding request successfully',
+        });
+        refetchList();
+      }
+    },
+  });
   useEffect(() => {
     if (detailRequest && detailRequest?.data) {
       const {
         metadata: { message },
-        data: { items },
+        data: { item },
       } = detailRequest;
-      if (message === MESSAGE_RES.SUCCESS && items) {
-        requestForm.setFieldsValue(items);
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        requestForm.setFieldsValue(item);
         requestForm.setFieldValue('date', [
-          moment(items.startTime),
-          moment(items.endTime),
+          moment(item.startTime),
+          moment(item.endTime),
         ]);
         requestForm.setFieldValue('time', [
-          moment(items.startTime),
-          moment(items.endTime),
+          moment(item.startTime),
+          moment(item.endTime),
         ]);
         const requestFixInfor: RequestModel = {
-          id: items.requestId,
-          receiver: items.receiver,
-          createdBy: items.personName,
-          createDate: getDateFormat(items.createDate, US_DATE_FORMAT),
-          status: items.status,
+          id: item.id,
+          receiver: item.receiver,
+          createdBy: item.personName,
+          createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
+          status: item.status,
           approvalDate:
-            items.approvalDate !== null
-              ? getDateFormat(items?.approvalDate, US_DATE_FORMAT)
+            item.approvalDate !== null
+              ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
               : undefined,
         };
         setRequestData(requestFixInfor);
@@ -114,14 +154,25 @@ export default function RequestDetailModal({
     );
     delete formValues.date;
     delete formValues.time;
-    createRequest(formValues);
+    !formValues.reason && delete formValues.reason;
+    if (requestIdRef) {
+      updateRequest({ uid: requestIdRef, body: formValues });
+    } else {
+      createRequest(formValues);
+    }
   };
 
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
     options?.type && setRequestType(options?.type);
   };
 
-  const handleQickActionRequest = (isApprove: boolean) => {};
+  const handleQickActionRequest = (statusValue: string) => {
+    requestIdRef &&
+      statusRequest({
+        uid: requestIdRef,
+        body: { status: statusValue },
+      });
+  };
   return (
     <CommonModal
       open={isVisible}
@@ -233,7 +284,6 @@ export default function RequestDetailModal({
                 rows={3}
                 placeholder="Enter your reason . . ."
                 label="Reason"
-                rules={[{ required: true }]}
                 name="reason"
                 allowClear
               />
@@ -307,7 +357,7 @@ export default function RequestDetailModal({
                       type="filled"
                       className={styles['btn--approve']}
                       onClick={() => {
-                        handleQickActionRequest(true);
+                        handleQickActionRequest(STATUS.APPROVED);
                       }}
                     />
                     <BasicButton
@@ -316,7 +366,7 @@ export default function RequestDetailModal({
                       className={styles['btn--save']}
                       danger
                       onClick={() => {
-                        handleQickActionRequest(false);
+                        handleQickActionRequest(STATUS.REJECTED);
                       }}
                     />
                   </>

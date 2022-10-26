@@ -21,6 +21,7 @@ interface IProps {
   modalAction?: MutableRefObject<ACTION_TYPE>;
   requestIdRef?: MutableRefObject<number>;
   stateQuery?: RequestListQuery;
+  refetchList: () => void;
 }
 export default function RequestMenuAction({
   tabType,
@@ -29,6 +30,7 @@ export default function RequestMenuAction({
   modalAction,
   requestIdRef,
   stateQuery,
+  refetchList,
 }: IProps) {
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
@@ -39,6 +41,7 @@ export default function RequestMenuAction({
         notification.success({
           message: 'Responding request successfully',
         });
+        refetchList();
       }
     },
   });
@@ -51,6 +54,7 @@ export default function RequestMenuAction({
         notification.success({
           message: 'Delete request successfully',
         });
+        refetchList();
       }
     },
   });
