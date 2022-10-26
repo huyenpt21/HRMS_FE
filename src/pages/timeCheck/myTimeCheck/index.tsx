@@ -17,6 +17,7 @@ import {
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
 import dataMock from './dataMock.json';
+import styles from './myTimeCheck.module.less';
 
 export default function MyTimeCheck() {
   const [searchParams] = useSearchParams();
@@ -67,13 +68,36 @@ export default function MyTimeCheck() {
       }
       return {
         ...el,
-        render: (data: any) => {
+        render: (data: any, record: TimeCheckModel) => {
           if (data !== null) {
             if (el.key === 'date') {
               return <span>{getDateFormat(data, DATE_TIME_US)}</span>;
             }
-            if (el.key === 'timeIn' || el.key === 'timeOut') {
-              return <span>{getDateFormat(data, TIME_HOUR)}</span>;
+            if (el.key === 'timeIn') {
+              return (
+                <span
+                  className={
+                    !!record?.inLate
+                      ? styles['time--red']
+                      : styles['time--green']
+                  }
+                >
+                  {getDateFormat(data, TIME_HOUR)}
+                </span>
+              );
+            }
+            if (el.key === 'timeOut') {
+              return (
+                <span
+                  className={
+                    !!record?.outEarly
+                      ? styles['time--red']
+                      : styles['time--green']
+                  }
+                >
+                  {getDateFormat(data, TIME_HOUR)}
+                </span>
+              );
             }
             return <span>{data}</span>;
           }
