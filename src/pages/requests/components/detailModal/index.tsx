@@ -14,13 +14,17 @@ import {
 } from 'constants/common';
 import {
   ACTION_TYPE,
+  REQUEST_MENU,
   REQUEST_TYPE_KEY,
   STATUS,
-  REQUEST_MENU,
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { MY_REQUEST_LIST } from 'constants/services';
-import { useAddRequestModal, useRequestDetail } from 'hooks/useRequestList';
+import {
+  useAddRequestModal,
+  useRequestDetail,
+  useUpdateRequest,
+} from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
@@ -66,6 +70,24 @@ export default function RequestDetailModal({
       }
     },
   });
+  const { mutate: updateRequest } = useUpdateRequest(
+    {
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+
+        if (message === 'Success') {
+          notification.success({
+            message: 'Send request successfully',
+          });
+          refetchList();
+          onCancel();
+        }
+      },
+    },
+    `${MY_REQUEST_LIST.service}/edit`,
+  );
   const { data: detailRequest } = useRequestDetail(
     requestIdRef || 0,
     `${MY_REQUEST_LIST.service}/detail`,
@@ -118,7 +140,12 @@ export default function RequestDetailModal({
     );
     delete formValues.date;
     delete formValues.time;
-    createRequest(formValues);
+    !formValues.reason && delete formValues.reason;
+    if (requestIdRef) {
+      updateRequest({ uid: requestIdRef, body: formValues });
+    } else {
+      createRequest(formValues);
+    }
   };
 
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
@@ -237,7 +264,6 @@ export default function RequestDetailModal({
                 rows={3}
                 placeholder="Enter your reason . . ."
                 label="Reason"
-                rules={[{ required: true }]}
                 name="reason"
                 allowClear
               />

@@ -120,6 +120,7 @@ export default function SubordinateRequestList() {
             <RequestMenuAction
               record={record}
               tabType={REQUEST_MENU.SUBORDINATE}
+              refetchList={refetchList}
             />
           );
         }

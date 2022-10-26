@@ -20,7 +20,7 @@
         "endTime": "2022-10-26 01:30:00",
         "listEvidence": null,
         "reason": "Don't know",
-        "status": "Rejected",
+        "status": "Approved",
         "receiver": null,
         "deviceTypeName": null,
         "approvalDate": "2022-10-06 00:00:00"
@@ -40,7 +40,7 @@
         "approvalDate": "2022-10-06 00:00:00"
       },
       {
-        "id": 3,
+        "id": 4,
         "personName": "Trinh Kim Chi",
         "requestTypeName": "Business Trip",
         "createDate": "2022-10-06 00:00:00",

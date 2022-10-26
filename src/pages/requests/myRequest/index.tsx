@@ -90,7 +90,6 @@ export default function MyRequestList() {
       return {
         ...el,
         render: (data: any, record: RequestModel) => {
-          console.log(2222, data);
           if (data !== null) {
             if (
               el.key === 'createDate' ||
@@ -123,6 +122,7 @@ export default function MyRequestList() {
               modalAction={modalAction}
               requestIdRef={requestIdRef}
               stateQuery={stateQuery}
+              refetchList={refetchList}
             />
           );
         }
@@ -183,8 +183,6 @@ export default function MyRequestList() {
       [filterKey]: filterValues,
     }));
   };
-
-  console.log(1111, records);
   const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
@@ -197,7 +195,7 @@ export default function MyRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestIdRef.current = -1;
+    requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
 
