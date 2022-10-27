@@ -5,9 +5,16 @@ import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { TimeCheckListQuery } from 'models/timeCheck';
+import moment from 'moment-timezone';
 import { Dispatch, SetStateAction } from 'react';
-import { getDateFormat, getStartEndDateFormat } from 'utils/common';
+import {
+  getDateFormat,
+  getEndOfWeek,
+  getStartEndDateFormat,
+  getStartOfWeek,
+} from 'utils/common';
 import BasicDatePicker from '../../../../components/BasicDatePicker';
+import styles from './extraHeaderTimeCheck.module.less';
 
 interface IProps {
   menuType: MENU_TYPE;
@@ -19,15 +26,44 @@ export default function ExtraTableTimeCheck({
   setStateQuery,
   stateQuery,
 }: IProps) {
-  const handleChangeDate = (_: any, dateString: string[]) => {
-    const fromDate = getStartEndDateFormat(dateString[0], DATE_TIME);
-    const endDate = getStartEndDateFormat(dateString[1], DATE_TIME);
+  const handleChangeDate = (date: any, dateString: string[]) => {
+    let startDate: string | undefined;
+    let endDate: string | undefined;
+    switch (menuType) {
+      case MENU_TYPE.MIME: {
+        startDate = getStartEndDateFormat(dateString[0], DATE_TIME);
+        endDate = getStartEndDateFormat(dateString[1], DATE_TIME);
+        break;
+      }
+      case MENU_TYPE.ALL:
+      case MENU_TYPE.SUBORDINATE: {
+        startDate = getStartOfWeek(date, DATE_TIME).toString();
+        endDate = getEndOfWeek(date, DATE_TIME).toString();
+      }
+    }
     setStateQuery((prev: any) => ({
       ...prev,
-      startDate: fromDate,
+      startDate: startDate,
       endDate: endDate,
     }));
   };
+  const extraFooter = () => {
+    return (
+      <div className={styles['current--week']} onClick={handleClickToday}>
+        Current Week
+      </div>
+    );
+  };
+  const handleClickToday = () => {
+    const startDate = getStartOfWeek(moment(), DATE_TIME).toString();
+    const endDate = getEndOfWeek(moment(), DATE_TIME).toString();
+    setStateQuery((prev: any) => ({
+      ...prev,
+      startDate: startDate,
+      endDate: endDate,
+    }));
+  };
+
   return (
     <>
       <div className="header__section">
@@ -69,6 +105,11 @@ export default function ExtraTableTimeCheck({
                   stateQuery.startDate,
                   US_DATE_FORMAT,
                 )} - ${getDateFormat(stateQuery.endDate, US_DATE_FORMAT)}`}
+                defaultValue={moment(stateQuery.startDate)}
+                allowClear={false}
+                onChange={handleChangeDate}
+                renderExtraFooter={extraFooter}
+                value={moment(stateQuery.startDate)}
               />
             </Col>
           </>
