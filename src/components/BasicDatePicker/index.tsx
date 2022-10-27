@@ -43,9 +43,9 @@ const BasicDatePicker = ({
   defaultPickerValue,
   value,
 }: Props) => {
-  moment.locale('vi', {
+  moment.updateLocale('vi', {
     week: {
-      dow: 1, // Date offset
+      dow: 1,
     },
   });
   const isRequired = rules
