@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.less';
-
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
