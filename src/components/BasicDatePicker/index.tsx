@@ -18,6 +18,7 @@ interface Props {
   picker?: 'week' | 'month' | 'quarter' | 'year';
   placeholder?: string;
   allowClear?: boolean;
+  format?: string;
 }
 
 const BasicDatePicker = ({
@@ -33,6 +34,7 @@ const BasicDatePicker = ({
   picker,
   placeholder,
   allowClear,
+  format,
 }: Props) => {
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
@@ -56,14 +58,14 @@ const BasicDatePicker = ({
         defaultValue={
           defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
         }
-        format={US_DATE_FORMAT}
+        format={format ?? US_DATE_FORMAT}
         onChange={onChange}
         disabled={disabled}
         disabledDate={disabledDate}
         picker={picker}
         placeholder={placeholder ? placeholder : US_DATE_FORMAT}
         suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
-        allowClear={true}
+        allowClear={allowClear ?? true}
       />
     </Form.Item>
   );

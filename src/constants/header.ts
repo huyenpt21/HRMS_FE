@@ -144,3 +144,56 @@ export const MyTimeCheckHeader = [
     dataIndex: 'requestTypeName',
   },
 ];
+
+export const AllTimeCheckHeader = [
+  {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
+    title: 'Employee Name',
+    key: 'personName',
+    dataIndex: 'personName',
+  },
+  {
+    title: 'Monday',
+    key: 'mon',
+    dataIndex: 'mon',
+  },
+  {
+    title: 'Tuesday',
+    key: 'tue',
+    dataIndex: 'tue',
+  },
+  {
+    title: 'Wednesday',
+    key: 'wed',
+    dataIndex: 'wed',
+  },
+  {
+    title: 'Thursday',
+    key: 'thu',
+    dataIndex: 'thu',
+  },
+  {
+    title: 'Friday',
+    key: 'fri',
+    dataIndex: 'fri',
+  },
+  {
+    title: 'Saturday',
+    key: 'sat',
+    dataIndex: 'sat',
+  },
+  {
+    title: 'Sunday',
+    key: 'sun',
+    dataIndex: 'sun',
+  },
+  {
+    title: 'Request Type',
+    key: 'requestTypeName',
+    dataIndex: 'requestTypeName',
+  },
+];

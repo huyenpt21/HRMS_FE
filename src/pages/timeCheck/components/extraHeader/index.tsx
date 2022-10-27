@@ -2,7 +2,7 @@ import { Col, Row } from 'antd';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_TIME } from 'constants/common';
+import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { TimeCheckListQuery } from 'models/timeCheck';
 import { Dispatch, SetStateAction } from 'react';
@@ -29,7 +29,13 @@ export default function ExtraTableTimeCheck({
   return (
     <>
       <div className="header__section">
-        <div className="header__title">My Time Check</div>
+        <div className="header__title">
+          {menuType === MENU_TYPE.MIME
+            ? 'My Time Check'
+            : menuType === MENU_TYPE.ALL
+            ? 'All Time Check'
+            : 'Subordinate Time Check'}
+        </div>
       </div>
       <Row gutter={20}>
         {menuType === MENU_TYPE.MIME && (
@@ -41,7 +47,7 @@ export default function ExtraTableTimeCheck({
             />
           </Col>
         )}
-        {menuType === MENU_TYPE.SUBORDINATE && (
+        {(menuType === MENU_TYPE.SUBORDINATE || menuType === MENU_TYPE.ALL) && (
           <>
             <Col span={6}>
               <InputDebounce
@@ -54,7 +60,11 @@ export default function ExtraTableTimeCheck({
               />
             </Col>
             <Col span={5}>
-              <BasicDatePicker label="Date" picker="week" />
+              <BasicDatePicker
+                label="Date"
+                picker="week"
+                format={`${US_DATE_FORMAT} - ${US_DATE_FORMAT}`}
+              />
             </Col>
           </>
         )}

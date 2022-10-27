@@ -6,9 +6,12 @@ import { MENU_TYPE } from 'constants/enums/common';
 import { MyTimeCheckHeader } from 'constants/header';
 import { useTimeCheckList } from 'hooks/useTimeCheck';
 import { HeaderTableFields } from 'models/common';
-import { RequestListQuery } from 'models/request';
-import { TimeCheckListSortFields, TimeCheckModel } from 'models/timeCheck';
-import { useState, useEffect } from 'react';
+import {
+  TimeCheckListQuery,
+  TimeCheckListSortFields,
+  TimeCheckModel,
+} from 'models/timeCheck';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
@@ -25,7 +28,7 @@ export default function MyTimeCheck() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<TimeCheckModel[]>([]);
   // * default feilters
-  const defaultFilter: RequestListQuery = {
+  const defaultFilter: TimeCheckListQuery = {
     page: searchParams.get('page')
       ? Number(searchParams.get('page'))
       : paginationConfig.current,
@@ -143,7 +146,7 @@ export default function MyTimeCheck() {
     }
 
     // * set changing of pagination to state query
-    setStateQuery((prev: RequestListQuery) => ({
+    setStateQuery((prev: TimeCheckListQuery) => ({
       ...prev,
       page: pagination.current,
       limit: pagination.pageSize,
