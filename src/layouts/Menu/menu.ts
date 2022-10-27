@@ -70,7 +70,7 @@ export const menus: MenuItemType[] = [
   },
   {
     title: 'Time Check',
-    key: 'timeCheck',
+    key: 'time-check',
     icon: 'deadline',
     children: [
       {

@@ -130,6 +130,7 @@ export default function AllTimeCheck() {
         <ExtraTableTimeCheck
           menuType={MENU_TYPE.ALL}
           setStateQuery={setStateQuery}
+          stateQuery={stateQuery}
         />
       }
       stateQuery={stateQuery}

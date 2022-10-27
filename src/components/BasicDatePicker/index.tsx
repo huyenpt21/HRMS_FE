@@ -1,9 +1,9 @@
 import { ConfigProvider, DatePicker, Form } from 'antd';
+import locale from 'antd/es/locale/vi_VN';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_REQUEST, US_DATE_FORMAT } from 'constants/common';
+import { US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
 import styles from './index.module.less';
-import locale from 'antd/es/locale/vi_VN';
 
 interface Props {
   name?: string;
@@ -12,7 +12,7 @@ interface Props {
   className?: string;
   classNameFormItem?: string;
   rules?: object[];
-  defaultValue?: string;
+  defaultValue?: moment.Moment;
   disabled?: boolean;
   onChange?: any;
   disabledDate?: (currentDate: moment.Moment) => boolean;
@@ -20,6 +20,9 @@ interface Props {
   placeholder?: string;
   allowClear?: boolean;
   format?: string;
+  renderExtraFooter?: () => React.ReactNode;
+  defaultPickerValue?: moment.Moment;
+  value?: moment.Moment;
 }
 
 const BasicDatePicker = ({
@@ -36,10 +39,13 @@ const BasicDatePicker = ({
   placeholder,
   allowClear,
   format,
+  renderExtraFooter,
+  defaultPickerValue,
+  value,
 }: Props) => {
-  moment.locale('vi', {
+  moment.updateLocale('vi', {
     week: {
-      dow: 1, // Date offset
+      dow: 1,
     },
   });
   const isRequired = rules
@@ -54,17 +60,13 @@ const BasicDatePicker = ({
       required={isRequired}
       rules={rules}
       className={classNameFormItem}
-      initialValue={
-        defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
-      }
+      initialValue={defaultValue ? defaultValue : undefined}
     >
       <ConfigProvider locale={locale}>
         <DatePicker
           className={styles.date__picker}
           size={'large'}
-          defaultValue={
-            defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
-          }
+          defaultValue={defaultValue ? defaultValue : undefined}
           format={format ?? US_DATE_FORMAT}
           onChange={onChange}
           disabled={disabled}
@@ -73,6 +75,9 @@ const BasicDatePicker = ({
           placeholder={placeholder ? placeholder : US_DATE_FORMAT}
           suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
           allowClear={allowClear ?? true}
+          renderExtraFooter={renderExtraFooter}
+          defaultPickerValue={defaultPickerValue}
+          value={value}
         />
       </ConfigProvider>
     </Form.Item>
