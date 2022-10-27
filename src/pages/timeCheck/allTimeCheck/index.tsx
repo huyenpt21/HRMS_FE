@@ -1,7 +1,7 @@
 import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
-import { paginationConfig } from 'constants/common';
+import { DATE_TIME, paginationConfig } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { AllTimeCheckHeader } from 'constants/header';
 import { HeaderTableFields } from 'models/common';
@@ -10,10 +10,16 @@ import {
   TimeCheckListSortFields,
   TimeCheckModel,
 } from 'models/timeCheck';
-import React, { useEffect, useState } from 'react';
+import moment from 'moment-timezone';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { removeEmptyValueInObject } from 'utils/common';
+import {
+  getEndOfWeek,
+  getStartOfWeek,
+  removeEmptyValueInObject,
+} from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
+import styles from './allTimeCheck.module.less';
 
 export default function AllTimeCheck() {
   const [searchParams] = useSearchParams();
@@ -28,6 +34,12 @@ export default function AllTimeCheck() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    startDate:
+      searchParams.get('startDate') ??
+      getStartOfWeek(moment(), DATE_TIME).toString(),
+    endDate:
+      searchParams.get('endDate') ??
+      getEndOfWeek(moment(), DATE_TIME).toString(),
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -38,13 +50,51 @@ export default function AllTimeCheck() {
   let header: HeaderTableFields[] = AllTimeCheckHeader;
   // * render header and data in table
   useEffect(() => {
-    const columns = header.map((el: HeaderTableFields) => {
+    const columns = header.map((el: HeaderTableFields, index: number) => {
+      // * eanble sort in column & custom width
+      if (el.key === 'rollNumber') {
+        el.width = 150;
+      }
+      if (el.key === 'personName') {
+        el.width = 230;
+      }
+      if (
+        el.key !== 'rollNumber' &&
+        el.key !== 'personName' &&
+        el.key !== 'requestTypeName'
+      ) {
+        el.width = 130;
+        el.align = 'center';
+      }
+
       return {
         ...el,
+        title: () => {
+          if (
+            el.key !== 'rollNumber' &&
+            el.key !== 'personName' &&
+            el.key !== 'requestTypeName'
+          ) {
+            var days = [];
+            for (let i = 0; i <= 6; i++) {
+              days.push(
+                moment(stateQuery.startDate).add(i, 'days').format('MM/DD'),
+              );
+            }
+            return (
+              <div>
+                <div className={styles['header--title']}>{el.title}</div>
+                <div className={styles['header--date']}>{days[index - 2]}</div>
+              </div>
+            );
+          }
+          return el.title;
+        },
       };
     });
     setColumnsHeader(columns);
-  });
+  }, [stateQuery]);
+
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -84,7 +134,6 @@ export default function AllTimeCheck() {
       }
       stateQuery={stateQuery}
       rowKey={(record: TimeCheckModel) => record.id}
-      scroll={{ y: 240 }}
       className={'cursor-pointer'}
       // onRow={(record: TimeCheckModel) => {
       //   return rowClickHandler(record);

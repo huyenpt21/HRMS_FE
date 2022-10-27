@@ -1,8 +1,9 @@
-import { DatePicker, Form } from 'antd';
+import { ConfigProvider, DatePicker, Form } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_REQUEST, US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
 import styles from './index.module.less';
+import locale from 'antd/es/locale/vi_VN';
 
 interface Props {
   name?: string;
@@ -36,6 +37,11 @@ const BasicDatePicker = ({
   allowClear,
   format,
 }: Props) => {
+  moment.locale('vi', {
+    week: {
+      dow: 1, // Date offset
+    },
+  });
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
     : false;
@@ -52,21 +58,23 @@ const BasicDatePicker = ({
         defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
       }
     >
-      <DatePicker
-        className={styles.date__picker}
-        size={'large'}
-        defaultValue={
-          defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
-        }
-        format={format ?? US_DATE_FORMAT}
-        onChange={onChange}
-        disabled={disabled}
-        disabledDate={disabledDate}
-        picker={picker}
-        placeholder={placeholder ? placeholder : US_DATE_FORMAT}
-        suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
-        allowClear={allowClear ?? true}
-      />
+      <ConfigProvider locale={locale}>
+        <DatePicker
+          className={styles.date__picker}
+          size={'large'}
+          defaultValue={
+            defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
+          }
+          format={format ?? US_DATE_FORMAT}
+          onChange={onChange}
+          disabled={disabled}
+          disabledDate={disabledDate}
+          picker={picker}
+          placeholder={placeholder ? placeholder : US_DATE_FORMAT}
+          suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
+          allowClear={allowClear ?? true}
+        />
+      </ConfigProvider>
     </Form.Item>
   );
 };
