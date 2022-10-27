@@ -6,16 +6,18 @@ import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { TimeCheckListQuery } from 'models/timeCheck';
 import { Dispatch, SetStateAction } from 'react';
-import { getStartEndDateFormat } from 'utils/common';
+import { getDateFormat, getStartEndDateFormat } from 'utils/common';
 import BasicDatePicker from '../../../../components/BasicDatePicker';
 
 interface IProps {
   menuType: MENU_TYPE;
   setStateQuery: Dispatch<SetStateAction<TimeCheckListQuery>>;
+  stateQuery: TimeCheckListQuery;
 }
 export default function ExtraTableTimeCheck({
   menuType,
   setStateQuery,
+  stateQuery,
 }: IProps) {
   const handleChangeDate = (_: any, dateString: string[]) => {
     const fromDate = getStartEndDateFormat(dateString[0], DATE_TIME);
@@ -63,7 +65,10 @@ export default function ExtraTableTimeCheck({
               <BasicDatePicker
                 label="Date"
                 picker="week"
-                format={`${US_DATE_FORMAT} - ${US_DATE_FORMAT}`}
+                format={`${getDateFormat(
+                  stateQuery.startDate,
+                  US_DATE_FORMAT,
+                )} - ${getDateFormat(stateQuery.endDate, US_DATE_FORMAT)}`}
               />
             </Col>
           </>

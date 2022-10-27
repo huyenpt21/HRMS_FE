@@ -164,6 +164,7 @@ export default function MyTimeCheck() {
         <ExtraTableTimeCheck
           menuType={MENU_TYPE.MIME}
           setStateQuery={setStateQuery}
+          stateQuery={stateQuery}
         />
       }
       stateQuery={stateQuery}
