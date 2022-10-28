@@ -187,6 +187,7 @@ export default function AllTimeCheck() {
     let sort = stateQuery.sort;
     let dir = stateQuery.dir;
 
+    //! delete this after integrate api
     if (sorter.order) {
       const sortField = sorter.field as TimeCheckListSortFields;
       const sortDirections = sorter.order === 'ascend' ? 'asc' : 'desc';
