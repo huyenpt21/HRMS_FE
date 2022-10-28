@@ -191,9 +191,4 @@ export const AllTimeCheckHeader = [
     key: 'sun',
     dataIndex: 'sun',
   },
-  {
-    title: 'Request Type',
-    key: 'requestTypeName',
-    dataIndex: 'requestTypeName',
-  },
 ];
