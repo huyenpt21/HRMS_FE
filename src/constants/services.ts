@@ -26,4 +26,8 @@ export const HR_REQUEST_LIST = {
 
 export const TIME_CHECK = {
   service: 'time-check',
+  model: {
+    manager: 'manager',
+    allSubordinate: 'all-subordinate',
+  },
 };

@@ -1,9 +1,11 @@
 import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
-import { DATE_TIME, paginationConfig } from 'constants/common';
+import { DATE_TIME, paginationConfig, TIME_HOUR } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { AllTimeCheckHeader } from 'constants/header';
+import { TIME_CHECK } from 'constants/services';
+import { useTimeCheckList } from 'hooks/useTimeCheck';
 import { HeaderTableFields } from 'models/common';
 import {
   TimeCheckListQuery,
@@ -14,16 +16,22 @@ import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
+  getDateFormat,
   getEndOfWeek,
   getStartOfWeek,
+  isEmptyPagination,
   removeEmptyValueInObject,
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
 import styles from './allTimeCheck.module.less';
+import dataMock from './dataMock.json';
 
 export default function AllTimeCheck() {
   const [searchParams] = useSearchParams();
+  const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
+  const [records, setRecords] = useState<TimeCheckModel[]>([]);
+
   // * default feilters
   const defaultFilter: TimeCheckListQuery = {
     page: searchParams.get('page')
@@ -48,6 +56,16 @@ export default function AllTimeCheck() {
 
   // * get header
   let header: HeaderTableFields[] = AllTimeCheckHeader;
+  // * get data table from API
+  const {
+    isLoading,
+    // isError,
+    data: dataTable,
+    // refetch: refetchList,
+  } = useTimeCheckList(
+    stateQuery,
+    `${TIME_CHECK.model.manager} ${TIME_CHECK.service}/${TIME_CHECK.model.allSubordinate}`,
+  );
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields, index: number) => {
@@ -63,7 +81,7 @@ export default function AllTimeCheck() {
         el.key !== 'personName' &&
         el.key !== 'requestTypeName'
       ) {
-        el.width = 130;
+        el.width = 150;
         el.align = 'center';
       }
 
@@ -90,10 +108,71 @@ export default function AllTimeCheck() {
           }
           return el.title;
         },
+        render: (data: any, record: TimeCheckModel) => {
+          if (data) {
+            if (typeof data === 'object') {
+              return (
+                <div className={styles['time-container']}>
+                  {(data?.timeIn || data?.timeOut) && (
+                    <>
+                      {data?.timeIn ? (
+                        <span
+                          className={
+                            !!data?.inLate
+                              ? styles['time--red']
+                              : styles['time--green']
+                          }
+                        >
+                          {getDateFormat(data.timeIn, TIME_HOUR)}
+                        </span>
+                      ) : (
+                        '-'
+                      )}
+                      {data?.timeOut ? (
+                        <span
+                          className={
+                            !!data?.outEarly
+                              ? styles['time--red']
+                              : styles['time--green']
+                          }
+                        >
+                          {getDateFormat(data.timeOut, TIME_HOUR)}
+                        </span>
+                      ) : (
+                        '-'
+                      )}
+                    </>
+                  )}
+                </div>
+              );
+            }
+            return data;
+          }
+          return '-';
+        },
       };
     });
     setColumnsHeader(columns);
   }, [stateQuery]);
+
+  useEffect(() => {
+    // if (dataTable && dataTable?.data) {
+    const {
+      metadata: { pagination },
+      data: { timeCheckList },
+    } = dataMock;
+    setRecords(timeCheckList);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
+    }
+    // }
+  }, [dataTable]);
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -123,9 +202,9 @@ export default function AllTimeCheck() {
   return (
     <CommonTable
       columns={columnsHeader}
-      data={[]}
+      data={records}
       onChange={handleTableChange}
-      pagination={1}
+      pagination={pagination}
       extra={
         <ExtraTableTimeCheck
           menuType={MENU_TYPE.ALL}
@@ -135,11 +214,11 @@ export default function AllTimeCheck() {
       }
       stateQuery={stateQuery}
       rowKey={(record: TimeCheckModel) => record.id}
-      className={'cursor-pointer'}
+      className={`cursor-pointer ${styles.table}`}
       // onRow={(record: TimeCheckModel) => {
       //   return rowClickHandler(record);
       // }}
-      // loading={isLoading}
+      loading={isLoading}
     />
   );
 }
