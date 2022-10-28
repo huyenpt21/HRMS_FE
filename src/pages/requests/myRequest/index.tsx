@@ -216,7 +216,7 @@ export default function MyRequestList() {
         }
         stateQuery={stateQuery}
         rowKey={(record: RequestModel) => record.id}
-        scroll={{ y: 240 }}
+        isShowScroll
         className={'cursor-pointer'}
         onRow={(record: RequestModel) => {
           return rowClickHandler(record);

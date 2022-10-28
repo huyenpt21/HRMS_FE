@@ -17,6 +17,7 @@ import {
   getDateFormat,
   isEmptyPagination,
   removeEmptyValueInObject,
+  sortInforWithDir,
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
 import dataMock from './dataMock.json';
@@ -57,6 +58,8 @@ export default function MyTimeCheck() {
       // * eanble sort in column & custom width
       if (el.key === 'date') {
         el.width = 250;
+        el.sorter = isError;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
       if (
         el.key === 'timeIn' ||
@@ -109,7 +112,7 @@ export default function MyTimeCheck() {
       };
     });
     setColumnsHeader(columns);
-  }, [header, isError]);
+  }, [header, isError, stateQuery]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     // if (dataTable && dataTable?.data) {
@@ -120,12 +123,12 @@ export default function MyTimeCheck() {
     setRecords(timeCheckList);
     if (!isEmptyPagination(pagination)) {
       // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+      // setPagination((prevPagination: TablePaginationConfig) => ({
+      //   ...prevPagination,
+      //   current: pagination.page,
+      //   pageSize: pagination.limit,
+      //   total: pagination.totalRecords,
+      // }));
     }
     // }
   }, [dataTable]);
@@ -144,6 +147,12 @@ export default function MyTimeCheck() {
       sort = `${sortField}`;
       dir = sortDirections;
     }
+
+    setPagination((prevPagination: TablePaginationConfig) => ({
+      ...prevPagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    }));
 
     // * set changing of pagination to state query
     setStateQuery((prev: TimeCheckListQuery) => ({
@@ -169,12 +178,9 @@ export default function MyTimeCheck() {
       }
       stateQuery={stateQuery}
       rowKey={(record: TimeCheckModel) => record.id}
-      scroll={{ y: 240 }}
       className={'cursor-pointer'}
-      // onRow={(record: TimeCheckModel) => {
-      //   return rowClickHandler(record);
-      // }}
       loading={isLoading}
+      isShowScroll
     />
   );
 }

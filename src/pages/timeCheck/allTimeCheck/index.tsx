@@ -21,6 +21,7 @@ import {
   getStartOfWeek,
   isEmptyPagination,
   removeEmptyValueInObject,
+  sortInforWithDir,
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
 import styles from './allTimeCheck.module.less';
@@ -59,7 +60,7 @@ export default function AllTimeCheck() {
   // * get data table from API
   const {
     isLoading,
-    // isError,
+    isError,
     data: dataTable,
     // refetch: refetchList,
   } = useTimeCheckList(
@@ -71,9 +72,13 @@ export default function AllTimeCheck() {
     const columns = header.map((el: HeaderTableFields, index: number) => {
       // * eanble sort in column & custom width
       if (el.key === 'rollNumber') {
+        el.sorter = isError;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = 150;
       }
       if (el.key === 'personName') {
+        el.sorter = isError;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = 230;
       }
       if (
@@ -108,7 +113,7 @@ export default function AllTimeCheck() {
           }
           return el.title;
         },
-        render: (data: any, record: TimeCheckModel) => {
+        render: (data: any) => {
           if (data) {
             if (typeof data === 'object') {
               return (
@@ -153,7 +158,7 @@ export default function AllTimeCheck() {
       };
     });
     setColumnsHeader(columns);
-  }, [stateQuery]);
+  }, [stateQuery, isError]);
 
   useEffect(() => {
     // if (dataTable && dataTable?.data) {
@@ -219,6 +224,7 @@ export default function AllTimeCheck() {
       //   return rowClickHandler(record);
       // }}
       loading={isLoading}
+      isShowScroll
     />
   );
 }

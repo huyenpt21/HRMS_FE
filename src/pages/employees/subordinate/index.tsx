@@ -194,7 +194,7 @@ export default function SubordinateList() {
         stateQuery={stateQuery}
         rowKey={(record: EmployeeModel) => record.id}
         loading={isLoading}
-        scroll={{ y: 240 }}
+        isShowScroll
         onRow={(record: EmployeeModel) => {
           return rowClickHandler(record.id);
         }}
