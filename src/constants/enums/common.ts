@@ -112,4 +112,5 @@ export enum MENU_TYPE {
   MIME,
   SUBORDINATE,
   ALL,
+  DETAIL,
 }

@@ -1,4 +1,6 @@
+import { BackwardOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
+import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
@@ -7,6 +9,7 @@ import { MENU_TYPE } from 'constants/enums/common';
 import { TimeCheckListQuery } from 'models/timeCheck';
 import moment from 'moment-timezone';
 import { Dispatch, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   getDateFormat,
   getEndOfWeek,
@@ -20,12 +23,16 @@ interface IProps {
   menuType: MENU_TYPE;
   setStateQuery: Dispatch<SetStateAction<TimeCheckListQuery>>;
   stateQuery: TimeCheckListQuery;
+  employeeInfor?: any;
 }
 export default function ExtraTableTimeCheck({
   menuType,
   setStateQuery,
   stateQuery,
+  employeeInfor,
 }: IProps) {
+  const navigate = useNavigate();
+
   const handleChangeDate = (date: any, dateString: string[]) => {
     let startDate: string | undefined;
     let endDate: string | undefined;
@@ -64,24 +71,57 @@ export default function ExtraTableTimeCheck({
     }));
   };
 
+  const handleBackButton = () => {
+    navigate('/time-check/all');
+  };
+
   return (
     <>
-      <div className="header__section">
-        <div className="header__title">
-          {menuType === MENU_TYPE.MIME
-            ? 'My Time Check'
-            : menuType === MENU_TYPE.ALL
-            ? 'All Time Check'
-            : 'Subordinate Time Check'}
+      <div className={`header__section ${styles.header}`}>
+        <div className={styles.header__top}>
+          <div className="header__title">
+            {menuType === MENU_TYPE.MIME
+              ? 'My Time Check'
+              : menuType === MENU_TYPE.ALL
+              ? 'All Time Check'
+              : 'Subordinate Time Check'}
+          </div>
+          {menuType === MENU_TYPE.DETAIL && (
+            <BasicButton
+              title="Back"
+              type="filled"
+              icon={<BackwardOutlined />}
+              onClick={handleBackButton}
+            />
+          )}
         </div>
+        {menuType === MENU_TYPE.DETAIL && (
+          <>
+            <div>
+              <span>Full Name:</span>
+              <span className={styles['text--bold']}>
+                {employeeInfor?.name}
+              </span>
+            </div>
+            <div>
+              <span>Roll Number:</span>
+              <span className={styles['text--bold']}>
+                {employeeInfor?.rollNumber}
+              </span>
+            </div>
+          </>
+        )}
       </div>
       <Row gutter={20}>
-        {menuType === MENU_TYPE.MIME && (
+        {(menuType === MENU_TYPE.MIME || menuType === MENU_TYPE.DETAIL) && (
           <Col span={6}>
             <BasicDateRangePicker
               label="Filter date"
               onChange={handleChangeDate}
               placeholder={['From', 'To']}
+              defaultStartDate={stateQuery.startDate}
+              defaultEndDate={stateQuery.endDate}
+              isUseDefaultValue={!!stateQuery.startDate}
             />
           </Col>
         )}

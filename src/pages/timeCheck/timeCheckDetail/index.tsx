@@ -4,7 +4,6 @@ import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig, TIME_HOUR } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { MyTimeCheckHeader } from 'constants/header';
-import { useTimeCheckList } from 'hooks/useTimeCheck';
 import { HeaderTableFields } from 'models/common';
 import {
   TimeCheckListQuery,
@@ -21,13 +20,14 @@ import {
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
 import dataMock from './dataMock.json';
-import styles from './myTimeCheck.module.less';
+import styles from './timeCheckDetail.module.less';
 
-export default function MyTimeCheck() {
+export default function TimeCheckDetail() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<TimeCheckModel[]>([]);
+
   // * default feilters
   const defaultFilter: TimeCheckListQuery = {
     page: searchParams.get('page')
@@ -45,13 +45,7 @@ export default function MyTimeCheck() {
   const [stateQuery, setStateQuery] = useState(
     removeEmptyValueInObject(defaultFilter),
   );
-  // * get data table from API
-  const {
-    isLoading,
-    isError,
-    data: dataTable,
-    // refetch: refetchList,
-  } = useTimeCheckList(stateQuery);
+
   // * get header
   let header: HeaderTableFields[] = MyTimeCheckHeader;
   // * render header and data in table
@@ -59,8 +53,8 @@ export default function MyTimeCheck() {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
       if (el.key === 'date') {
-        el.width = 250;
-        el.sorter = isError;
+        el.width = 200;
+        el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
       if (
@@ -73,6 +67,9 @@ export default function MyTimeCheck() {
       ) {
         el.width = 150;
         el.align = 'center';
+      }
+      if (el.key === 'requestTypeName') {
+        el.width = 200;
       }
       return {
         ...el,
@@ -114,7 +111,8 @@ export default function MyTimeCheck() {
       };
     });
     setColumnsHeader(columns);
-  }, [header, isError, stateQuery]);
+  }, [header, stateQuery]);
+
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     // if (dataTable && dataTable?.data) {
@@ -133,7 +131,8 @@ export default function MyTimeCheck() {
       // }));
     }
     // }
-  }, [dataTable]);
+  }, []);
+
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -169,19 +168,18 @@ export default function MyTimeCheck() {
     <CommonTable
       columns={columnsHeader}
       data={records}
-      onChange={handleTableChange}
-      pagination={pagination}
       extra={
         <ExtraTableTimeCheck
-          menuType={MENU_TYPE.MIME}
+          menuType={MENU_TYPE.DETAIL}
           setStateQuery={setStateQuery}
           stateQuery={stateQuery}
         />
       }
+      onChange={handleTableChange}
+      pagination={pagination}
       stateQuery={stateQuery}
       rowKey={(record: TimeCheckModel) => record.id}
-      loading={isLoading}
-      isShowScroll
+      scroll={{ y: 200 }}
     />
   );
 }
