@@ -13,8 +13,8 @@ import {
   TimeCheckModel,
 } from 'models/timeCheck';
 import moment from 'moment-timezone';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
   getEndOfWeek,
@@ -30,8 +30,10 @@ import dataMock from './dataMock.json';
 export default function AllTimeCheck() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
+  const navigate = useNavigate();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<TimeCheckModel[]>([]);
+  const timeCheckIdRef = useRef<number>(0);
 
   // * default feilters
   const defaultFilter: TimeCheckListQuery = {
@@ -205,27 +207,40 @@ export default function AllTimeCheck() {
       dir,
     }));
   };
+  const rowClickHandler = (record: TimeCheckModel) => {
+    return {
+      onClick: () => {
+        timeCheckIdRef.current = record.id;
+        navigate({
+          pathname: `/time-check/detail/${record.id}`,
+          search: `startDate=${stateQuery.startDate}&endDate=${stateQuery.endDate}`,
+        });
+      },
+    };
+  };
   return (
-    <CommonTable
-      columns={columnsHeader}
-      data={records}
-      onChange={handleTableChange}
-      pagination={pagination}
-      extra={
-        <ExtraTableTimeCheck
-          menuType={MENU_TYPE.ALL}
-          setStateQuery={setStateQuery}
-          stateQuery={stateQuery}
-        />
-      }
-      stateQuery={stateQuery}
-      rowKey={(record: TimeCheckModel) => record.id}
-      className={`cursor-pointer ${styles.table}`}
-      // onRow={(record: TimeCheckModel) => {
-      //   return rowClickHandler(record);
-      // }}
-      loading={isLoading}
-      isShowScroll
-    />
+    <>
+      <CommonTable
+        columns={columnsHeader}
+        data={records}
+        onChange={handleTableChange}
+        pagination={pagination}
+        extra={
+          <ExtraTableTimeCheck
+            menuType={MENU_TYPE.ALL}
+            setStateQuery={setStateQuery}
+            stateQuery={stateQuery}
+          />
+        }
+        stateQuery={stateQuery}
+        rowKey={(record: TimeCheckModel) => record.id}
+        className={`cursor-pointer ${styles.table}`}
+        onRow={(record: TimeCheckModel) => {
+          return rowClickHandler(record);
+        }}
+        loading={isLoading}
+        isShowScroll
+      />
+    </>
   );
 }
