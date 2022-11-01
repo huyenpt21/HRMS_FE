@@ -1,4 +1,4 @@
-import { Col, Form, notification, Row } from 'antd';
+import { Col, Form, notification, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
@@ -31,14 +31,15 @@ import {
 import { SelectBoxType } from 'models/common';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
 
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import MultipleImagePreview from 'components/MultipleImagePreview';
 import { storageFirebase } from 'firebaseSetup';
 import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
-import MultipleImagePreview from 'components/MultipleImagePreview';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -192,6 +193,11 @@ export default function RequestDetailModal({
     return imgUrl;
   };
 
+  // * Remove image from firebase
+  const handleRemoveFile = (el: any) => {
+    console.log(3333, el);
+  };
+
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
     options?.type && setRequestType(options?.type);
   };
@@ -339,7 +345,26 @@ export default function RequestDetailModal({
           {requestType !== REQUEST_TYPE_KEY.DEVICE &&
             (actionModal === ACTION_TYPE.VIEW_DETAIL ||
               actionModal === ACTION_TYPE.EDIT) && (
-              <MultipleImagePreview src={evidenceSource.current} />
+              <MultipleImagePreview
+                src={evidenceSource.current}
+                preview={{
+                  mask: (
+                    <>
+                      <Tooltip title="Preview file">
+                        <EyeOutlined
+                          style={{ marginRight: '8px', fontSize: 16 }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Remove file">
+                        <DeleteOutlined
+                          style={{ fontSize: 16 }}
+                          onClick={(el) => handleRemoveFile(el)}
+                        />
+                      </Tooltip>
+                    </>
+                  ),
+                }}
+              />
             )}
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
             <div className={styles['modal__footer']}>

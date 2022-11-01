@@ -15,10 +15,7 @@ interface IProps {
   fileUpload?: any;
   setFileUpload: Dispatch<SetStateAction<any>>;
 }
-export default function UploadFilePictureWall({
-  fileUpload,
-  setFileUpload,
-}: IProps) {
+export default function UploadFilePictureWall({ setFileUpload }: IProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
