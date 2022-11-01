@@ -14,7 +14,7 @@ export interface RequestModel extends Resource {
   deviceTypeName?: string | null;
   date?: string;
   time?: string;
-  listEvidence?: string[] | null;
+  listEvidence?: string[];
 }
 
 export interface RequestStatus {
