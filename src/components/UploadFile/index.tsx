@@ -1,7 +1,7 @@
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal, Upload, UploadFile } from 'antd';
 import { RcFile, UploadProps } from 'antd/lib/upload';
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction } from 'react';
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -12,15 +12,15 @@ const getBase64 = (file: RcFile): Promise<string> =>
   });
 
 interface IProps {
-  label?: string;
+  fileUpload?: any;
+  setFileUpload: Dispatch<SetStateAction<any>>;
 }
-export default function UploadFilePictureWall({ label }: IProps) {
+export default function UploadFilePictureWall({ setFileUpload }: IProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const handleCancel = () => setPreviewOpen(false);
-
+  const [fileList, setFileList] = useState<any>([]);
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile);
@@ -32,10 +32,12 @@ export default function UploadFilePictureWall({ label }: IProps) {
       file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1),
     );
   };
-
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
-
+  const handleChange: UploadProps['onChange'] = ({ file, fileList, event }) => {
+    setFileUpload((prev: any) => {
+      return [...prev, file];
+    });
+    setFileList(fileList);
+  };
   return (
     <>
       <Upload.Dragger

@@ -1,4 +1,4 @@
-import { Col, Form, notification, Row } from 'antd';
+import { Col, Form, notification, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
@@ -6,6 +6,7 @@ import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
+
 import {
   DATE_TIME,
   MESSAGE_RES,
@@ -20,6 +21,7 @@ import {
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { MY_REQUEST_LIST } from 'constants/services';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import {
   useAddRequestModal,
   useChangeStatusRequest,
@@ -29,10 +31,14 @@ import {
 import { SelectBoxType } from 'models/common';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
-// import detailMock from './detailMock.json';
+
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import MultipleImagePreview from 'components/MultipleImagePreview';
+import { storageFirebase } from 'firebaseSetup';
+import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
@@ -56,6 +62,8 @@ export default function RequestDetailModal({
   const [actionModal, setActionModal] = useState(action);
   const [requestData, setRequestData] = useState<RequestModel>();
   const [requestType, setRequestType] = useState('');
+  const [imageFileList, setImageFileList] = useState<any>([]);
+  const evidenceSource = useRef<string[]>([]);
   const { mutate: createRequest } = useAddRequestModal({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -107,41 +115,43 @@ export default function RequestDetailModal({
     },
   });
   useEffect(() => {
-    if (detailRequest && detailRequest?.data) {
-      const {
-        metadata: { message },
-        data: { item },
-      } = detailRequest;
-      if (message === MESSAGE_RES.SUCCESS && item) {
-        requestForm.setFieldsValue(item);
-        requestForm.setFieldValue('date', [
-          moment(item.startTime),
-          moment(item.endTime),
-        ]);
-        requestForm.setFieldValue('time', [
-          moment(item.startTime),
-          moment(item.endTime),
-        ]);
-        const requestFixInfor: RequestModel = {
-          id: item.id,
-          receiver: item.receiver,
-          createdBy: item.personName,
-          createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
-          status: item.status,
-          approvalDate:
-            item.approvalDate !== null
-              ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
-              : undefined,
-        };
-        setRequestData(requestFixInfor);
-      }
+    // if (detailRequest && detailRequest?.data) {
+    const {
+      metadata: { message },
+      data: { item },
+    } = detailMock;
+    if (message === MESSAGE_RES.SUCCESS && item) {
+      requestForm.setFieldsValue(item);
+      requestForm.setFieldValue('date', [
+        moment(item.startTime),
+        moment(item.endTime),
+      ]);
+      requestForm.setFieldValue('time', [
+        moment(item.startTime),
+        moment(item.endTime),
+      ]);
+
+      evidenceSource.current = item?.listEvidence;
+      const requestFixInfor: RequestModel = {
+        id: item.id,
+        receiver: item.receiver,
+        createdBy: item.personName,
+        createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
+        status: item.status,
+        approvalDate:
+          item.approvalDate !== null
+            ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
+            : undefined,
+      };
+      setRequestData(requestFixInfor);
     }
+    // }
   }, [detailRequest]);
   const cancelHandler = () => {
     onCancel();
     requestForm.resetFields();
   };
-  const submitHandler = (formValues: RequestModel) => {
+  const submitHandler = async (formValues: RequestModel) => {
     formValues.startTime = TimeCombine(
       formValues.date && formValues.date[0],
       formValues.time && formValues.time[0],
@@ -152,6 +162,8 @@ export default function RequestDetailModal({
       formValues.time && formValues.time[1],
       DATE_TIME,
     );
+    const urlImage = uploadImage();
+    formValues.listEvidence = [...(await urlImage)];
     delete formValues.date;
     delete formValues.time;
     !formValues.reason && delete formValues.reason;
@@ -160,6 +172,30 @@ export default function RequestDetailModal({
     } else {
       createRequest(formValues);
     }
+  };
+
+  //* upload image to firebase and get the image url link
+  const uploadImage = async () => {
+    let imgUrl: string[] = [];
+    for (let i = 0; i < imageFileList.length; i++) {
+      const imageRef = ref(
+        storageFirebase,
+        `images/evidences/${imageFileList[i].name}`,
+      );
+      await uploadBytes(imageRef, imageFileList[i])
+        .then(() => {
+          getDownloadURL(imageRef).then((url) => {
+            imgUrl.push(url);
+          });
+        })
+        .catch((error) => console.log(error));
+    }
+    return imgUrl;
+  };
+
+  // * Remove image from firebase
+  const handleRemoveFile = (el: any) => {
+    console.log(3333, el);
   };
 
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
@@ -289,19 +325,47 @@ export default function RequestDetailModal({
               />
             </Col>
           </Row>
-          {requestType !== REQUEST_TYPE_KEY.DEVICE && (
-            <Row gutter={20}>
-              <Col span={24}>
-                <Form.Item
-                  label="Evidence"
-                  className={styles.form__upload}
-                  name="evidence"
-                >
-                  <UploadFilePictureWall />
-                </Form.Item>
-              </Col>
-            </Row>
-          )}
+          {requestType !== REQUEST_TYPE_KEY.DEVICE &&
+            actionModal !== ACTION_TYPE.VIEW_DETAIL && (
+              <Row gutter={20}>
+                <Col span={24}>
+                  <Form.Item
+                    label="Evidence"
+                    className={styles.form__upload}
+                    name="evidence"
+                  >
+                    <UploadFilePictureWall
+                      fileUpload={imageFileList}
+                      setFileUpload={setImageFileList}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            )}
+          {requestType !== REQUEST_TYPE_KEY.DEVICE &&
+            (actionModal === ACTION_TYPE.VIEW_DETAIL ||
+              actionModal === ACTION_TYPE.EDIT) && (
+              <MultipleImagePreview
+                src={evidenceSource.current}
+                preview={{
+                  mask: (
+                    <>
+                      <Tooltip title="Preview file">
+                        <EyeOutlined
+                          style={{ marginRight: '8px', fontSize: 16 }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Remove file">
+                        <DeleteOutlined
+                          style={{ fontSize: 16 }}
+                          onClick={(el) => handleRemoveFile(el)}
+                        />
+                      </Tooltip>
+                    </>
+                  ),
+                }}
+              />
+            )}
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
             <div className={styles['modal__footer']}>
               {(actionModal === ACTION_TYPE.CREATE ||
