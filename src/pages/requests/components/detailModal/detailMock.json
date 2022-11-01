@@ -9,14 +9,18 @@
     }
   },
   "data": {
-    "items": {
-      "requestId": 4,
+    "item": {
+      "id": 4,
       "personName": "Nguyen Van Binh",
       "requestTypeName": 4,
       "createDate": "2022-10-19T15:00:00.000+00:00",
       "startTime": "2022-10-22T10:00:00.000+00:00",
       "endTime": "2022-10-24T12:00:00.000+00:00",
-      "image": null,
+      "listEvidence": [
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FIMG_7261.JPG?alt=media&token=a811d149-ed36-476f-887b-1f8eb9dce093",
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FIMG_7266%20(2).JPG?alt=media&token=2c0c7c15-2281-4b31-b092-4d1d877838b8",
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FIMG_7290.JPG?alt=media&token=539e75d2-3976-4e48-bee0-f7bfea169b33"
+      ],
       "reason": "I don't have laptop to code",
       "status": "Pending",
       "receiver": "Nguyen Thi Huyen",
