@@ -31,13 +31,14 @@ import {
 import { SelectBoxType } from 'models/common';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
 
 import { storageFirebase } from 'firebaseSetup';
 import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
+import MultipleImagePreview from 'components/MultipleImagePreview';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -61,6 +62,7 @@ export default function RequestDetailModal({
   const [requestData, setRequestData] = useState<RequestModel>();
   const [requestType, setRequestType] = useState('');
   const [imageFileList, setImageFileList] = useState<any>([]);
+  const evidenceSource = useRef<string[]>([]);
   const { mutate: createRequest } = useAddRequestModal({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -127,6 +129,8 @@ export default function RequestDetailModal({
         moment(item.startTime),
         moment(item.endTime),
       ]);
+
+      evidenceSource.current = item?.listEvidence;
       const requestFixInfor: RequestModel = {
         id: item.id,
         receiver: item.receiver,
@@ -331,6 +335,11 @@ export default function RequestDetailModal({
                   </Form.Item>
                 </Col>
               </Row>
+            )}
+          {requestType !== REQUEST_TYPE_KEY.DEVICE &&
+            (actionModal === ACTION_TYPE.VIEW_DETAIL ||
+              actionModal === ACTION_TYPE.EDIT) && (
+              <MultipleImagePreview src={evidenceSource.current} />
             )}
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
             <div className={styles['modal__footer']}>
