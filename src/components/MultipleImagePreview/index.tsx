@@ -1,4 +1,5 @@
-import { Card, Image } from 'antd';
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { Card, Image, Tooltip } from 'antd';
 import styles from './multiImagePreview.module.less';
 
 interface IProps {
@@ -7,6 +8,8 @@ interface IProps {
   alt?: string;
   preview?: any;
   height?: number;
+  allowRemove?: boolean;
+  handleRemoveFile?: (src: string) => void;
 }
 export default function MultipleImagePreview({
   src,
@@ -14,6 +17,8 @@ export default function MultipleImagePreview({
   height,
   alt,
   preview,
+  allowRemove,
+  handleRemoveFile,
 }: IProps) {
   return (
     <div className={styles.container}>
@@ -24,7 +29,30 @@ export default function MultipleImagePreview({
             width={width ? width : '120px'}
             height={height}
             alt={alt}
-            preview={preview}
+            preview={
+              allowRemove
+                ? {
+                    mask: (
+                      <>
+                        <Tooltip title="Preview file">
+                          <EyeOutlined
+                            style={{ marginRight: '8px', fontSize: 16 }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Remove file">
+                          <DeleteOutlined
+                            style={{ fontSize: 16 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveFile && handleRemoveFile(el);
+                            }}
+                          />
+                        </Tooltip>
+                      </>
+                    ),
+                  }
+                : preview
+            }
           />
         </Card>
       ))}
