@@ -373,7 +373,7 @@ export default function RequestDetailModal({
               actionModal === ACTION_TYPE.EDIT) && (
               <MultipleImagePreview
                 src={evidenceSource}
-                allowRemove
+                allowRemove={actionModal === ACTION_TYPE.EDIT}
                 handleRemoveFile={handleRemoveFile}
               />
             )}
