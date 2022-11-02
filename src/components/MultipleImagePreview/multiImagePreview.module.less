@@ -1,8 +1,31 @@
-.card__container {
-  margin-bottom: 20px;
+.container {
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
   :global {
-    .ant-image {
-      margin-right: 8px;
+    .ant-card-body {
+      padding: 12px;
+    }
+  }
+  .card__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    border-color: #ccc;
+    :global {
+      .ant-image {
+        width: 104px;
+        height: 104px;
+        .ant-image-img {
+          max-width: 100%;
+          height: auto;
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
   }
 }

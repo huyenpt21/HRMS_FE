@@ -28,7 +28,7 @@ import {
 } from 'utils/common';
 import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
-import MenuAction from '../components/menuAction';
+import MenuAction from '../components/menuTable';
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
