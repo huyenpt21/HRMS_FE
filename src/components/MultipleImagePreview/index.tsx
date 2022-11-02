@@ -26,7 +26,7 @@ export default function MultipleImagePreview({
         <Card key={index} className={styles.card__item}>
           <Image
             src={el}
-            width={width ? width : '120px'}
+            width={width}
             height={height}
             alt={alt}
             preview={
