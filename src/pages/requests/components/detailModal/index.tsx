@@ -42,7 +42,7 @@ import RequestStatus from '../statusRequest';
 
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import { storageFirebase } from 'firebaseSetup';
-import detailMock from './detailMock.json';
+// import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
@@ -116,37 +116,38 @@ export default function RequestDetailModal({
     },
   });
   useEffect(() => {
-    // if (detailRequest && detailRequest?.data) {
-    const {
-      metadata: { message },
-      data: { item },
-    } = detailMock;
-    if (message === MESSAGE_RES.SUCCESS && item) {
-      requestForm.setFieldsValue(item);
-      requestForm.setFieldValue('date', [
-        moment(item.startTime),
-        moment(item.endTime),
-      ]);
-      requestForm.setFieldValue('time', [
-        moment(item.startTime),
-        moment(item.endTime),
-      ]);
-
-      setEvidenceSource(item?.listEvidence);
-      const requestFixInfor: RequestModel = {
-        id: item.id,
-        receiver: item.receiver,
-        createdBy: item.personName,
-        createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
-        status: item.status,
-        approvalDate:
-          item.approvalDate !== null
-            ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
-            : undefined,
-      };
-      setRequestData(requestFixInfor);
+    if (detailRequest && detailRequest?.data) {
+      const {
+        metadata: { message },
+        data: { item },
+      } = detailRequest;
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        requestForm.setFieldsValue(item);
+        requestForm.setFieldValue('date', [
+          moment(item.startTime),
+          moment(item.endTime),
+        ]);
+        requestForm.setFieldValue('time', [
+          moment(item.startTime),
+          moment(item.endTime),
+        ]);
+        if (item?.listEvidence) {
+          setEvidenceSource(item?.listEvidence);
+        }
+        const requestFixInfor: RequestModel = {
+          id: item.id,
+          receiver: item.receiver,
+          createdBy: item.personName,
+          createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
+          status: item.status,
+          approvalDate:
+            item.approvalDate !== null
+              ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
+              : undefined,
+        };
+        setRequestData(requestFixInfor);
+      }
     }
-    // }
   }, [detailRequest]);
   const cancelHandler = () => {
     onCancel();
@@ -429,7 +430,7 @@ export default function RequestDetailModal({
                   <>
                     <BasicButton
                       title="Approve"
-                      type="filled"
+                      type="outline"
                       className={styles['btn--approve']}
                       onClick={() => {
                         handleQickActionRequest(STATUS.APPROVED);
@@ -437,8 +438,8 @@ export default function RequestDetailModal({
                     />
                     <BasicButton
                       title="Reject"
-                      type="filled"
-                      className={styles['btn--save']}
+                      type="outline"
+                      className={`${styles['btn--reject']} ${styles['btn--save']}`}
                       danger
                       onClick={() => {
                         handleQickActionRequest(STATUS.REJECTED);
