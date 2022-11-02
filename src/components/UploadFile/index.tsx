@@ -12,10 +12,13 @@ const getBase64 = (file: RcFile): Promise<string> =>
   });
 
 interface IProps {
-  fileUpload?: any;
+  fileUpload: any;
   setFileUpload: Dispatch<SetStateAction<any>>;
 }
-export default function UploadFilePictureWall({ setFileUpload }: IProps) {
+export default function UploadFilePictureWall({
+  fileUpload,
+  setFileUpload,
+}: IProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
@@ -33,9 +36,16 @@ export default function UploadFilePictureWall({ setFileUpload }: IProps) {
     );
   };
   const handleChange: UploadProps['onChange'] = ({ file, fileList, event }) => {
-    setFileUpload((prev: any) => {
-      return [...prev, file];
-    });
+    if (file.status === 'removed') {
+      const newFileList = fileUpload.filter((el: any) => {
+        return el.name !== file.name;
+      });
+      setFileUpload(newFileList);
+    } else {
+      setFileUpload((prev: any) => {
+        return [...prev, file];
+      });
+    }
     setFileList(fileList);
   };
   return (

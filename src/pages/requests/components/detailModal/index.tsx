@@ -1,4 +1,4 @@
-import { Col, Form, notification, Row, Tooltip } from 'antd';
+import { Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
@@ -21,7 +21,12 @@ import {
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
 import { MY_REQUEST_LIST } from 'constants/services';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import {
   useAddRequestModal,
   useChangeStatusRequest,
@@ -31,11 +36,10 @@ import {
 import { SelectBoxType } from 'models/common';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
 
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import { storageFirebase } from 'firebaseSetup';
 import detailMock from './detailMock.json';
@@ -63,7 +67,7 @@ export default function RequestDetailModal({
   const [requestData, setRequestData] = useState<RequestModel>();
   const [requestType, setRequestType] = useState('');
   const [imageFileList, setImageFileList] = useState<any>([]);
-  const evidenceSource = useRef<string[]>([]);
+  const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
   const { mutate: createRequest } = useAddRequestModal({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -97,10 +101,7 @@ export default function RequestDetailModal({
     },
     `${MY_REQUEST_LIST.service}/edit`,
   );
-  const { data: detailRequest } = useRequestDetail(
-    requestIdRef || 0,
-    `${MY_REQUEST_LIST.service}/detail`,
-  );
+  const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -131,7 +132,7 @@ export default function RequestDetailModal({
         moment(item.endTime),
       ]);
 
-      evidenceSource.current = item?.listEvidence;
+      setEvidenceSource(item?.listEvidence);
       const requestFixInfor: RequestModel = {
         id: item.id,
         receiver: item.receiver,
@@ -162,8 +163,8 @@ export default function RequestDetailModal({
       formValues.time && formValues.time[1],
       DATE_TIME,
     );
-    const urlImage = uploadImage();
-    formValues.listEvidence = [...(await urlImage)];
+    const urlImage = await uploadImage();
+    formValues.listEvidence = [...urlImage, ...evidenceSource];
     delete formValues.date;
     delete formValues.time;
     !formValues.reason && delete formValues.reason;
@@ -183,19 +184,44 @@ export default function RequestDetailModal({
         `images/evidences/${imageFileList[i].name}`,
       );
       await uploadBytes(imageRef, imageFileList[i])
-        .then(() => {
-          getDownloadURL(imageRef).then((url) => {
-            imgUrl.push(url);
-          });
+        .then(async () => {
+          await getDownloadURL(imageRef)
+            .then((url) => {
+              imgUrl.push(url);
+            })
+            .catch((error) => {
+              notification.error({
+                message: 'Get download link error',
+              });
+              console.error(error);
+            });
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          notification.error({
+            message: 'Upload file error',
+          });
+          console.error(error);
+        });
     }
     return imgUrl;
   };
 
   // * Remove image from firebase
-  const handleRemoveFile = (el: any) => {
-    console.log(3333, el);
+  const handleRemoveFile = async (url: string) => {
+    const fileRef = ref(storageFirebase, url);
+    await deleteObject(fileRef)
+      .then(() => {
+        const newEvidenceSource = evidenceSource.filter((el: string) => {
+          return el !== url;
+        });
+        setEvidenceSource(newEvidenceSource);
+      })
+      .catch((error) => {
+        notification.error({
+          message: 'Delete file error',
+        });
+        console.error(error);
+      });
   };
 
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
@@ -346,24 +372,9 @@ export default function RequestDetailModal({
             (actionModal === ACTION_TYPE.VIEW_DETAIL ||
               actionModal === ACTION_TYPE.EDIT) && (
               <MultipleImagePreview
-                src={evidenceSource.current}
-                preview={{
-                  mask: (
-                    <>
-                      <Tooltip title="Preview file">
-                        <EyeOutlined
-                          style={{ marginRight: '8px', fontSize: 16 }}
-                        />
-                      </Tooltip>
-                      <Tooltip title="Remove file">
-                        <DeleteOutlined
-                          style={{ fontSize: 16 }}
-                          onClick={(el) => handleRemoveFile(el)}
-                        />
-                      </Tooltip>
-                    </>
-                  ),
-                }}
+                src={evidenceSource}
+                allowRemove
+                handleRemoveFile={handleRemoveFile}
               />
             )}
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
