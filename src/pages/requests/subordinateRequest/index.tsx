@@ -113,8 +113,8 @@ export default function SubordinateRequestList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 60,
-      align: 'left',
+      width: 80,
+      align: 'center',
       render: (_, record: RequestModel) => {
         if (record?.status === STATUS.PENDING) {
           return (
@@ -124,6 +124,8 @@ export default function SubordinateRequestList() {
               refetchList={refetchList}
             />
           );
+        } else {
+          return '-';
         }
       },
     });
