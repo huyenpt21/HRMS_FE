@@ -110,8 +110,8 @@ export default function MyRequestList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 60,
-      align: 'left',
+      width: 80,
+      align: 'center',
       render: (data: any, record: RequestModel) => {
         if (record?.status === STATUS.PENDING) {
           return (
@@ -125,6 +125,8 @@ export default function MyRequestList() {
               refetchList={refetchList}
             />
           );
+        } else {
+          return '-';
         }
       },
     });
