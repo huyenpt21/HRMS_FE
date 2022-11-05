@@ -207,9 +207,9 @@ export default function RequestDetailModal({
   };
 
   // * Remove image from firebase
-  const handleRemoveFile = async (url: string) => {
+  const handleRemoveFile = (url: string) => {
     const fileRef = ref(storageFirebase, url);
-    await deleteObject(fileRef)
+    return deleteObject(fileRef)
       .then(() => {
         const newEvidenceSource = evidenceSource.filter((el: string) => {
           return el !== url;
