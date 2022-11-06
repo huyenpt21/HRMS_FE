@@ -4,18 +4,18 @@ export interface EmployeeModel extends Resource {
   rollNumber?: string;
   fullName?: string;
   email?: string;
-  departmentName?: string;
-  dob?: string;
+  departmenId?: string;
+  dateOfBirth?: string;
   gender?: number;
   phoneNumber?: string;
   citizenIdentification?: string;
   address?: string;
-  managerID?: string;
-  positionName?: string;
-  ranking?: string;
+  managerId?: string;
+  positionId?: string;
+  rankId?: string;
   onBoardDate?: string;
   isManager?: boolean;
-  isActive?: boolean;
+  isActive?: number;
 }
 
 export interface EmployeeListFilter {

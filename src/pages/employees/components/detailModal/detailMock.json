@@ -9,10 +9,10 @@
     }
   },
   "data": {
-    "employee": {
+    "item": {
       "id": "716383626ss6d7f",
-      "name": "Nguyen Van A",
-      "dob": "2000/05/23",
+      "fullName": "Nguyen Van A",
+      "dateOfBirth": "1998-10-02",
       "gender": "male",
       "phoneNumber": "012345556788",
       "citizenIdentification": "02665454565650",
