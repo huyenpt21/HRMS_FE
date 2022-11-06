@@ -19,7 +19,7 @@
         "startTime": "2022-10-25 01:30:00",
         "endTime": "2022-10-26 01:30:00",
         "reason": "Don't know",
-        "status": "Approved",
+        "status": "Rejected",
         "receiver": null,
         "deviceTypeName": null,
         "approvalDate": "2022-10-06 00:00:00"

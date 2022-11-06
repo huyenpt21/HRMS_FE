@@ -75,17 +75,33 @@ export default function ExtraTableTimeCheck({
     navigate('/time-check/all');
   };
 
+  const handleTitle = () => {
+    let title = '';
+    switch (menuType) {
+      case MENU_TYPE.MIME: {
+        title = 'My Time Check';
+        break;
+      }
+      case MENU_TYPE.ALL: {
+        title = 'All Time Check';
+        break;
+      }
+      case MENU_TYPE.SUBORDINATE: {
+        title = 'Subordinate Time Check';
+        break;
+      }
+      case MENU_TYPE.DETAIL: {
+        title = 'Detail Time Check';
+      }
+    }
+    return title;
+  };
+
   return (
     <>
       <div className={`header__section ${styles.header}`}>
         <div className={styles.header__top}>
-          <div className="header__title">
-            {menuType === MENU_TYPE.MIME
-              ? 'My Time Check'
-              : menuType === MENU_TYPE.ALL
-              ? 'All Time Check'
-              : 'Subordinate Time Check'}
-          </div>
+          <div className="header__title">{handleTitle()}</div>
           {menuType === MENU_TYPE.DETAIL && (
             <BasicButton
               title="Back"
@@ -98,13 +114,13 @@ export default function ExtraTableTimeCheck({
         {menuType === MENU_TYPE.DETAIL && (
           <>
             <div>
-              <span>Full Name:</span>
+              <span className={styles.employee__info}>Full Name:</span>
               <span className={styles['text--bold']}>
                 {employeeInfor?.name}
               </span>
             </div>
             <div>
-              <span>Roll Number:</span>
+              <span className={styles.employee__info}>Roll Number:</span>
               <span className={styles['text--bold']}>
                 {employeeInfor?.rollNumber}
               </span>

@@ -1,5 +1,4 @@
-import { ConfigProvider, DatePicker, Form } from 'antd';
-import locale from 'antd/es/locale/vi_VN';
+import { DatePicker, Form } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
@@ -43,11 +42,6 @@ const BasicDatePicker = ({
   defaultPickerValue,
   value,
 }: Props) => {
-  moment.updateLocale('vi', {
-    week: {
-      dow: 1,
-    },
-  });
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
     : false;
@@ -62,24 +56,22 @@ const BasicDatePicker = ({
       className={classNameFormItem}
       initialValue={defaultValue ? defaultValue : undefined}
     >
-      <ConfigProvider locale={locale}>
-        <DatePicker
-          className={styles.date__picker}
-          size={'large'}
-          defaultValue={defaultValue ? defaultValue : undefined}
-          format={format ?? US_DATE_FORMAT}
-          onChange={onChange}
-          disabled={disabled}
-          disabledDate={disabledDate}
-          picker={picker}
-          placeholder={placeholder ? placeholder : US_DATE_FORMAT}
-          suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
-          allowClear={allowClear ?? true}
-          renderExtraFooter={renderExtraFooter}
-          defaultPickerValue={defaultPickerValue}
-          value={value}
-        />
-      </ConfigProvider>
+      <DatePicker
+        className={styles.date__picker}
+        size={'large'}
+        defaultValue={defaultValue ? defaultValue : undefined}
+        format={format ?? US_DATE_FORMAT}
+        onChange={onChange}
+        disabled={disabled}
+        disabledDate={disabledDate}
+        picker={picker}
+        placeholder={placeholder ? placeholder : US_DATE_FORMAT}
+        suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
+        allowClear={allowClear ?? true}
+        renderExtraFooter={renderExtraFooter}
+        defaultPickerValue={defaultPickerValue}
+        value={value}
+      />
     </Form.Item>
   );
 };

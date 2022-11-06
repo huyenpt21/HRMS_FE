@@ -54,7 +54,7 @@ export default function MyRequestList() {
   let header: HeaderTableFields[] = MyRequestListHeader;
   // * get data table from API
   const {
-    // isLoading,
+    isLoading,
     isError,
     data: dataTable,
     refetch: refetchList,
@@ -110,8 +110,8 @@ export default function MyRequestList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 60,
-      align: 'left',
+      width: 80,
+      align: 'center',
       render: (data: any, record: RequestModel) => {
         if (record?.status === STATUS.PENDING) {
           return (
@@ -125,6 +125,8 @@ export default function MyRequestList() {
               refetchList={refetchList}
             />
           );
+        } else {
+          return '-';
         }
       },
     });
@@ -221,7 +223,7 @@ export default function MyRequestList() {
         onRow={(record: RequestModel) => {
           return rowClickHandler(record);
         }}
-        // loading={isLoading}
+        loading={isLoading}
       />
       {isShowDetailModal && (
         <RequestDetailModal

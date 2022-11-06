@@ -36,7 +36,7 @@ export default function AllEmployeeList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const employeeId = useRef<number>();
+  const employeeRollNumber = useRef<string | undefined>();
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
     page: searchParams.get('page')
@@ -123,8 +123,8 @@ export default function AllEmployeeList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 60,
-      align: 'left',
+      width: 80,
+      align: 'center',
       render: (_, record: EmployeeModel) => {
         return <MenuAction record={record} onClickMenu={menuActionHandler} />;
       },
@@ -160,20 +160,20 @@ export default function AllEmployeeList() {
       case MENU_OPTION_KEY.EDIT: {
         setIsShowDetailModal(true);
         modalAction.current = ACTION_TYPE.EDIT;
-        employeeId.current = itemSelected.id;
+        employeeRollNumber.current = itemSelected.rollNumber;
         break;
       }
       case MENU_OPTION_KEY.ACTIVE: {
         updateEmployee({
-          uid: itemSelected.id,
-          body: { id: itemSelected.id, isActive: true },
+          uid: itemSelected.rollNumber,
+          body: { id: itemSelected.id, isActive: 1 },
         });
         break;
       }
       case MENU_OPTION_KEY.DEACTIVE: {
         updateEmployee({
-          uid: itemSelected.id,
-          body: { id: itemSelected.id, isActive: false },
+          uid: itemSelected.rollNumber,
+          body: { id: itemSelected.id, isActive: 0 },
         });
         break;
       }
@@ -217,10 +217,10 @@ export default function AllEmployeeList() {
     setIsShowDetailModal(false);
   };
 
-  const rowClickHandler = (id: number) => {
+  const rowClickHandler = (rollNumber?: string) => {
     return {
       onClick: () => {
-        employeeId.current = id;
+        employeeRollNumber.current = rollNumber;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
       },
@@ -247,7 +247,7 @@ export default function AllEmployeeList() {
         loading={isLoading}
         isShowScroll
         onRow={(record: EmployeeModel) => {
-          return rowClickHandler(record.id);
+          return rowClickHandler(record.rollNumber);
         }}
         className={'cursor-pointer'}
       />
@@ -256,7 +256,7 @@ export default function AllEmployeeList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          employeeId={employeeId.current}
+          employeeRollNumber={employeeRollNumber.current}
           refetchList={refetch}
           viewType={EMPLOYEE_MENU.ALL}
         />

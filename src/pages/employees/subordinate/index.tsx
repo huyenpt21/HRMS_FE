@@ -35,7 +35,7 @@ export default function SubordinateList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const employeeId = useRef<number>();
+  const employeeRollNumber = useRef<string | undefined>();
 
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
@@ -166,10 +166,10 @@ export default function SubordinateList() {
     setIsShowDetailModal(false);
   };
 
-  const rowClickHandler = (id: number) => {
+  const rowClickHandler = (rollNumber?: string) => {
     return {
       onClick: () => {
-        employeeId.current = id;
+        employeeRollNumber.current = rollNumber;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
       },
@@ -196,7 +196,7 @@ export default function SubordinateList() {
         loading={isLoading}
         isShowScroll
         onRow={(record: EmployeeModel) => {
-          return rowClickHandler(record.id);
+          return rowClickHandler(record?.rollNumber);
         }}
         className={'cursor-pointer'}
       />
@@ -205,7 +205,7 @@ export default function SubordinateList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          employeeId={employeeId.current}
+          employeeRollNumber={employeeRollNumber.current}
           refetchList={refetch}
           viewType={EMPLOYEE_MENU.SUBORDINATE}
         />

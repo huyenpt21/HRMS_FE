@@ -25,7 +25,7 @@ interface UpdateProps<T> extends ParamsProps {
 }
 
 interface DeleteProps extends ParamsProps {
-  uid: number;
+  uid: any;
 }
 
 const fetchItem = <T>({
