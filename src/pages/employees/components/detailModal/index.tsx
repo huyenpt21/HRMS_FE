@@ -8,6 +8,7 @@ import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import {
   COMMON_STATUS,
+  // DATE_REQUEST,
   DATE_TIME,
   MESSAGE_RES,
   validateMessages,
@@ -29,13 +30,13 @@ import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { getDateFormat } from 'utils/common';
 import styles from './addEmployee.module.less';
-
+// import detailMock from './detailMock.json';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  employeeId?: number;
+  employeeRollNumber?: string;
   viewType?: string;
 }
 export default function EmployeeDetailModal({
@@ -43,13 +44,13 @@ export default function EmployeeDetailModal({
   onCancel,
   refetchList,
   action,
-  employeeId,
+  employeeRollNumber,
   viewType,
 }: IProps) {
   const [employeeForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
 
-  const { data: detailEmployee } = useEmployeeDetail(employeeId || 0);
+  const { data: detailEmployee } = useEmployeeDetail(employeeRollNumber);
   const { mutate: updateEmployee } = useUpdateEmployee({
     onSuccess: (response: ResEmployeeModify) => {
       const {
@@ -85,8 +86,10 @@ export default function EmployeeDetailModal({
       } = detailEmployee;
       if (message === MESSAGE_RES.SUCCESS && employee) {
         employeeForm.setFieldsValue(employee);
-        employeeForm.setFieldValue('dob', moment(employee.dob));
-        employeeForm.setFieldValue('onBoardDate', moment(employee.onBoardDate));
+        employeeForm.setFieldsValue({
+          dateOfBirth: moment(employee.dateOfBirth),
+          onBoardDate: moment(employee.onBoardDate),
+        });
       }
     }
   }, [detailEmployee]);
@@ -98,7 +101,7 @@ export default function EmployeeDetailModal({
 
   const submitHandler = (formValues: EmployeeModel) => {
     formValues.onBoardDate = getDateFormat(formValues.onBoardDate, DATE_TIME);
-    formValues.dob = getDateFormat(formValues.dob, DATE_TIME);
+    formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
 
     switch (actionModal) {
       case ACTION_TYPE.CREATE: {
@@ -106,8 +109,8 @@ export default function EmployeeDetailModal({
         break;
       }
       case ACTION_TYPE.EDIT: {
-        if (employeeId) {
-          updateEmployee({ uid: employeeId, body: formValues });
+        if (employeeRollNumber) {
+          updateEmployee({ uid: employeeRollNumber, body: formValues });
           break;
         }
       }
@@ -136,7 +139,7 @@ export default function EmployeeDetailModal({
               <Row gutter={12}>
                 <Col span={12}>
                   <BasicInput
-                    name="name"
+                    name="fullName"
                     label="Full Name"
                     rules={[{ required: true }]}
                     allowClear
@@ -145,10 +148,17 @@ export default function EmployeeDetailModal({
                 </Col>
                 <Col span={12}>
                   <BasicDatePicker
-                    name="dob"
+                    name="dateOfBirth"
                     label="Date Of Birth"
                     rules={[{ required: true }]}
                   />
+                  {/* <Form.Item
+                    name="dateOfBirth"
+                    label="Date Of Birth"
+                    rules={[{ required: true }]}
+                  >
+                    <DatePicker />
+                  </Form.Item> */}
                 </Col>
               </Row>
               <Row gutter={12}>
@@ -216,7 +226,7 @@ export default function EmployeeDetailModal({
                 </Col>
                 <Col span={12}>
                   <BasicInput
-                    name="companyEmail"
+                    name="email"
                     label="Company Email"
                     rules={[
                       { required: true },
@@ -234,7 +244,7 @@ export default function EmployeeDetailModal({
               <Row gutter={12}>
                 <Col span={12}>
                   <BasicInput
-                    name="manager"
+                    name="managerId"
                     label="Manager"
                     allowClear
                     placeholder="Choose manager"
@@ -242,7 +252,7 @@ export default function EmployeeDetailModal({
                 </Col>
                 <Col span={12}>
                   <BasicInput
-                    name="department"
+                    name="departmenId"
                     label="Department"
                     rules={[{ required: true }]}
                     allowClear
@@ -254,7 +264,7 @@ export default function EmployeeDetailModal({
                 <Col span={12}>
                   <BasicSelect
                     options={POSITION_WORKING}
-                    name="position"
+                    name="positionId"
                     label="Position"
                     rules={[{ required: true }]}
                     allowClear
@@ -264,7 +274,7 @@ export default function EmployeeDetailModal({
                 <Col span={12}>
                   <BasicSelect
                     options={RANKING_LIST}
-                    name="ranking"
+                    name="rankId"
                     label="Ranking"
                     rules={[{ required: true }]}
                     allowClear
@@ -283,11 +293,7 @@ export default function EmployeeDetailModal({
               </Row>
               <Row gutter={32}>
                 <Col span={8}>
-                  <BasicCheckbox
-                    label="Role"
-                    name="isManager"
-                    value="Manager"
-                  />
+                  <BasicCheckbox label="Role" name="role" value="Manager" />
                 </Col>
                 <Col span={8}>
                   <BasicRadioGroup

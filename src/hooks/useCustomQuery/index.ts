@@ -32,7 +32,7 @@ export interface MultiProps<T> {
 }
 
 export interface UpdateProps<T> {
-  uid: number;
+  uid: any;
   body: T;
   endPoint?: string;
 }
@@ -76,7 +76,7 @@ const initialCustomQuery = <
   feature: Feature<X>,
 ) => {
   const useItem = (
-    uid: number,
+    uid: any,
     endPoint?: string,
     payload?: any,
     reactQueryOtps?: QueryObserverOptions,
