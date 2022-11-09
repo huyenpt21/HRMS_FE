@@ -133,7 +133,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Over Time',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OT,
     value: 7,
   },
   {

@@ -1,6 +1,7 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface RequestModel extends Resource {
+  requestTypeId?: number;
   requestTypeName?: string;
   createDate?: string;
   startTime?: string;
@@ -9,12 +10,13 @@ export interface RequestModel extends Resource {
   status?: string;
   approvalDate?: string;
   personName?: string;
-  receiver?: string | null;
+  receiver?: string;
   createdBy?: string;
-  deviceTypeName?: string | null;
+  deviceTypeId?: string;
   date?: string;
   time?: string;
   listEvidence?: string[];
+  timeRemaining?: number;
 }
 
 export interface RequestStatus {

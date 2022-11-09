@@ -9,6 +9,7 @@ import UploadFilePictureWall from 'components/UploadFile';
 
 import {
   DATE_TIME,
+  DATE_TIME_US,
   MESSAGE_RES,
   US_DATE_FORMAT,
   validateMessages,
@@ -42,7 +43,7 @@ import RequestStatus from '../statusRequest';
 
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import { storageFirebase } from 'firebaseSetup';
-// import detailMock from './detailMock.json';
+import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
@@ -116,58 +117,64 @@ export default function RequestDetailModal({
     },
   });
   useEffect(() => {
-    if (detailRequest && detailRequest?.data) {
-      const {
-        metadata: { message },
-        data: { item },
-      } = detailRequest;
-      if (message === MESSAGE_RES.SUCCESS && item) {
-        requestForm.setFieldsValue(item);
-        requestForm.setFieldValue('date', [
-          moment(item.startTime),
-          moment(item.endTime),
-        ]);
-        requestForm.setFieldValue('time', [
-          moment(item.startTime),
-          moment(item.endTime),
-        ]);
-        if (item?.listEvidence) {
-          setEvidenceSource(item?.listEvidence);
-        }
-        const requestFixInfor: RequestModel = {
-          id: item.id,
-          receiver: item.receiver,
-          createdBy: item.personName,
-          createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
-          status: item.status,
-          approvalDate:
-            item.approvalDate !== null
-              ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
-              : undefined,
-        };
-        setRequestData(requestFixInfor);
+    // if (detailRequest && detailRequest?.data) {
+    const {
+      metadata: { message },
+      data: { item },
+    } = detailMock;
+    if (message === MESSAGE_RES.SUCCESS && item) {
+      requestForm.setFieldsValue(item);
+      requestForm.setFieldsValue({
+        timeRemaining: item?.timeRemaining?.toFixed(2),
+        date: [moment(item.startTime), moment(item.endTime)],
+        time: [moment(item.startTime), moment(item.endTime)],
+      });
+      if (item?.listEvidence) {
+        setEvidenceSource(item?.listEvidence);
       }
+      const requestFixInfor: RequestModel = {
+        id: item.id,
+        receiver: item.receiver,
+        createdBy: item.personName,
+        createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
+        status: item.status,
+        approvalDate:
+          item.approvalDate !== null
+            ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
+            : undefined,
+      };
+      setRequestData(requestFixInfor);
+      setRequestType(item?.requestTypeName);
     }
+    // }
   }, [detailRequest]);
   const cancelHandler = () => {
     onCancel();
     requestForm.resetFields();
   };
   const submitHandler = async (formValues: RequestModel) => {
-    formValues.startTime = TimeCombine(
-      formValues.date && formValues.date[0],
-      formValues.time && formValues.time[0],
-      DATE_TIME,
-    );
-    formValues.endTime = TimeCombine(
-      formValues.date && formValues.date[1],
-      formValues.time && formValues.time[1],
-      DATE_TIME,
-    );
+    console.log(formValues.date);
+    if (requestType === REQUEST_TYPE_KEY.LEAVE) {
+      formValues.startTime = TimeCombine(
+        formValues.date && formValues.date[0],
+        formValues.time && formValues.time[0],
+        DATE_TIME,
+      );
+      formValues.endTime = TimeCombine(
+        formValues.date && formValues.date[1],
+        formValues.time && formValues.time[1],
+        DATE_TIME,
+      );
+    }
+    if (requestType === REQUEST_TYPE_KEY.OT && formValues.date) {
+      formValues.startTime = getDateFormat(formValues.date[0], DATE_TIME);
+      formValues.endTime = getDateFormat(formValues.date[1], DATE_TIME);
+    }
     const urlImage = await uploadImage();
     formValues.listEvidence = [...urlImage, ...evidenceSource];
     delete formValues.date;
     delete formValues.time;
+    delete formValues.timeRemaining;
     !formValues.reason && delete formValues.reason;
     if (requestIdRef) {
       updateRequest({ uid: requestIdRef, body: formValues });
@@ -300,7 +307,7 @@ export default function RequestDetailModal({
                 label="Request Type"
                 rules={[{ required: true }]}
                 placeholder="Choose request type"
-                name="requestTypeName"
+                name="requestTypeId"
                 allowClear
                 showSearch
                 optionFilterProp="label"
@@ -309,17 +316,35 @@ export default function RequestDetailModal({
               />
             </Col>
             {requestType !== REQUEST_TYPE_KEY.DEVICE &&
-              actionModal !== ACTION_TYPE.CREATE && (
-                <Col span="4">
+              requestStatus === STATUS.PENDING && (
+                <Col span="5">
                   <BasicInput
                     label="Remaining Time"
-                    name="reaminingTimeOff"
+                    name="timeRemaining"
                     disabled
+                    suffix={
+                      requestType === REQUEST_TYPE_KEY.LEAVE ? 'days' : 'hours'
+                    }
                   />
                 </Col>
               )}
+            {requestType === REQUEST_TYPE_KEY.DEVICE && (
+              <Col span="12">
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  label="Device Type"
+                  rules={[{ required: true }]}
+                  placeholder="Choose device type"
+                  name="deviceTypeId"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  disabled={actionModal === ACTION_TYPE.EDIT}
+                />
+              </Col>
+            )}
           </Row>
-          {requestType !== REQUEST_TYPE_KEY.DEVICE && (
+          {requestType === REQUEST_TYPE_KEY.LEAVE && (
             <Row gutter={20}>
               <Col span="12">
                 <BasicDateRangePicker
@@ -340,6 +365,20 @@ export default function RequestDetailModal({
               </Col>
             </Row>
           )}
+          {requestType === REQUEST_TYPE_KEY.OT && (
+            <Row gutter={20}>
+              <Col span="16">
+                <BasicDateRangePicker
+                  name="date"
+                  label="Applicable Date"
+                  rules={[{ required: true }]}
+                  placeholder={['From', 'To']}
+                  showTime
+                  format={DATE_TIME_US}
+                />
+              </Col>
+            </Row>
+          )}
           <Row gutter={20}>
             <Col span={24}>
               <BasicInput
@@ -352,7 +391,7 @@ export default function RequestDetailModal({
               />
             </Col>
           </Row>
-          {requestType !== REQUEST_TYPE_KEY.DEVICE &&
+          {requestType === REQUEST_TYPE_KEY.LEAVE &&
             actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>

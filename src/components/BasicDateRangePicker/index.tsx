@@ -17,8 +17,9 @@ interface IProps {
   className?: string;
   disabled?: boolean;
   disabledDate?: (currentDate: moment.Moment) => boolean;
-  isConvertToUTC?: boolean;
   placeholder?: [string, string];
+  showTime?: boolean;
+  format?: string;
 }
 
 const { RangePicker } = DatePicker;
@@ -43,7 +44,7 @@ const BasicDateRangePicker = (props: IProps) => {
       >
         <RangePicker
           className={`${styles['header__time']} ${props.className}`}
-          format={US_DATE_FORMAT}
+          format={props.format ? props.format : US_DATE_FORMAT}
           defaultValue={
             props.isUseDefaultValue
               ? [moment(props.defaultStartDate), moment(props.defaultEndDate)]
@@ -55,6 +56,7 @@ const BasicDateRangePicker = (props: IProps) => {
           disabled={props.disabled}
           disabledDate={props.disabledDate}
           placeholder={props.placeholder}
+          showTime={props.showTime}
         />
       </Form.Item>
     </span>

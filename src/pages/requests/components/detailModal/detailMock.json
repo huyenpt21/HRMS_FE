@@ -12,10 +12,11 @@
     "item": {
       "id": 4,
       "personName": "Nguyen Van Binh",
-      "requestTypeName": 4,
-      "createDate": "2022-10-19T15:00:00.000+00:00",
-      "startTime": "2022-10-22T10:00:00.000+00:00",
-      "endTime": "2022-10-24T12:00:00.000+00:00",
+      "requestTypeId": 3,
+      "requestTypeName": "leave",
+      "createDate": "2022-10-19 15:00:00",
+      "startTime": "2022-10-22 10:00:00",
+      "endTime": "2022-10-24 12:00:00",
       "listEvidence": [
         "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F26153706115_a6e93366f7_k.jpg?alt=media&token=1f19c928-1c8c-4ab7-8668-607b3423a2bd",
         "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FSapaJS-130.jpg?alt=media&token=b2e2fc9e-93fd-459a-aeec-b65a691d45f8",
@@ -25,9 +26,9 @@
       "reason": "I don't have laptop to code",
       "status": "Approved",
       "receiver": "Nguyen Thi Huyen",
-      "deviceTypeName": "Laptop",
-      "approvalDate": "2022-10-24T12:00:00.000+00:00",
-      "reaminingTimeOff": "2 / 4 hours"
+      "deviceTypeId": 2,
+      "approvalDate": "2022-10-24 12:00:00",
+      "timeRemaining": 2.49746464
     }
   }
 }
