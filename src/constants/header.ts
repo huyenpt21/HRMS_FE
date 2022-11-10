@@ -66,6 +66,11 @@ export const MyRequestListHeader = [
 
 export const SubordinateRequestListHeader = [
   {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
     title: 'Employee Name',
     key: 'personName',
     dataIndex: 'personName',
