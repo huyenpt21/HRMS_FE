@@ -25,7 +25,7 @@ import {
 } from 'utils/common';
 import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
-import dataMock from '../dataMock.json';
+// import dataMock from '../dataMock.json';
 import { useEmployeeList } from 'hooks/useEmployee';
 import { SUBORDINATE_LIST } from 'constants/services';
 export default function SubordinateList() {
@@ -111,11 +111,11 @@ export default function SubordinateList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataMock && dataMock.data) {
+    if (dataTable && dataTable.data) {
       const {
         metadata: { pagination },
-        data: { employeeList: recordsTable },
-      } = dataMock;
+        data: { items: recordsTable },
+      } = dataTable;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API

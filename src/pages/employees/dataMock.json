@@ -9,7 +9,7 @@
     }
   },
   "data": {
-    "employeeList": [
+    "items": [
       {
         "id": 1,
         "rollNumber": "HE00001",
