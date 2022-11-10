@@ -12,23 +12,23 @@
     "item": {
       "id": 4,
       "personName": "Nguyen Van Binh",
-      "requestTypeName": 4,
-      "createDate": "2022-10-19T15:00:00.000+00:00",
-      "startTime": "2022-10-22T10:00:00.000+00:00",
-      "endTime": "2022-10-24T12:00:00.000+00:00",
+      "requestTypeId": 3,
+      "requestTypeName": "leave",
+      "createDate": "2022-10-19 15:00:00",
+      "startTime": "2022-10-22 10:00:00",
+      "endTime": "2022-10-24 12:00:00",
       "listEvidence": [
-        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F1A151D76-8974-4ADD-AB95-8AC469B19F24.jpg?alt=media&token=387cf435-db33-42e2-9465-13f554e05df7",
-        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FIMG_3539.JPG?alt=media&token=1b899147-14eb-4297-8ee3-e8b8776a4f9c",
         "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F26153706115_a6e93366f7_k.jpg?alt=media&token=1f19c928-1c8c-4ab7-8668-607b3423a2bd",
-        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FWIN_20210605_20_25_09_Pro.jpg?alt=media&token=f7ea2f94-84df-4c96-9985-06afde01ee8d",
-        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F791c68132990479.61b3b38a177d0.jpg?alt=media&token=8c238d75-fba6-471c-8d2d-cb1e3a125083"
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FSapaJS-130.jpg?alt=media&token=b2e2fc9e-93fd-459a-aeec-b65a691d45f8",
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FIMG_4954.jpg?alt=media&token=a9cc3a62-8635-4220-bb45-eaf781592963",
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F53262036_1188116314698149_1116890731902926848_n.jpg?alt=media&token=2c1607f4-8248-4736-a20b-8d5f3beeee9e"
       ],
       "reason": "I don't have laptop to code",
-      "status": "Pending",
+      "status": "Approved",
       "receiver": "Nguyen Thi Huyen",
-      "deviceTypeName": "Laptop",
-      "approvalDate": "2022-10-24T12:00:00.000+00:00",
-      "reaminingTimeOff": "2 / 4 hours"
+      "deviceTypeId": 2,
+      "approvalDate": "2022-10-24 12:00:00",
+      "timeRemaining": 2.49746464
     }
   }
 }

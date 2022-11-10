@@ -32,7 +32,7 @@ export interface MultiProps<T> {
 }
 
 export interface UpdateProps<T> {
-  uid: any;
+  uid?: any;
   body: T;
   endPoint?: string;
 }

@@ -108,17 +108,17 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Business Trip',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 2,
   },
   {
     label: 'Sickness Of Children',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 3,
   },
   {
     label: 'Forgot Check In/Out',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 4,
   },
   {
@@ -133,7 +133,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Over Time',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OT,
     value: 7,
   },
   {
@@ -143,7 +143,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Work from home',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 9,
   },
   {

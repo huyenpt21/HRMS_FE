@@ -9,6 +9,7 @@ import UploadFilePictureWall from 'components/UploadFile';
 
 import {
   DATE_TIME,
+  DATE_TIME_US,
   MESSAGE_RES,
   US_DATE_FORMAT,
   validateMessages,
@@ -20,7 +21,6 @@ import {
   STATUS,
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
-import { MY_REQUEST_LIST } from 'constants/services';
 import {
   deleteObject,
   getDownloadURL,
@@ -30,13 +30,18 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
+  useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
 } from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
-import { RequestModel, ResRequestModify } from 'models/request';
+import {
+  RequestModel,
+  RequestRemainingTime,
+  ResRequestModify,
+} from 'models/request';
 import moment from 'moment-timezone';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
 
@@ -65,9 +70,14 @@ export default function RequestDetailModal({
   const [requestForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
   const [requestData, setRequestData] = useState<RequestModel>();
-  const [requestType, setRequestType] = useState('');
+  const [requestType, setRequestType] = useState<string | undefined>('');
   const [imageFileList, setImageFileList] = useState<any>([]);
   const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
+  const requestRemainingTime = useRef<RequestRemainingTime>({
+    requestTypeId: requestIdRef,
+    month: moment().get('month'),
+    year: moment().get('year'),
+  });
   const { mutate: createRequest } = useAddRequestModal({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -79,28 +89,25 @@ export default function RequestDetailModal({
           message: 'Send request successfully',
         });
         refetchList();
-        onCancel();
+        cancelHandler();
       }
     },
   });
-  const { mutate: updateRequest } = useUpdateRequest(
-    {
-      onSuccess: (response: ResRequestModify) => {
-        const {
-          metadata: { message },
-        } = response;
+  const { mutate: updateRequest } = useUpdateRequest({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
 
-        if (message === 'Success') {
-          notification.success({
-            message: 'Send request successfully',
-          });
-          refetchList();
-          onCancel();
-        }
-      },
+      if (message === 'Success') {
+        notification.success({
+          message: 'Send request successfully',
+        });
+        refetchList();
+        cancelHandler();
+      }
     },
-    `${MY_REQUEST_LIST.service}/edit`,
-  );
+  });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
@@ -115,6 +122,18 @@ export default function RequestDetailModal({
       }
     },
   });
+  const { mutate: remainingTimeRequest } = useGetRemainingTime({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+        data: { items: remainingTime },
+      } = response;
+      if (message === 'Success') {
+        requestRemainingTime.current = remainingTime;
+      }
+    },
+  });
+
   useEffect(() => {
     if (detailRequest && detailRequest?.data) {
       const {
@@ -123,14 +142,11 @@ export default function RequestDetailModal({
       } = detailRequest;
       if (message === MESSAGE_RES.SUCCESS && item) {
         requestForm.setFieldsValue(item);
-        requestForm.setFieldValue('date', [
-          moment(item.startTime),
-          moment(item.endTime),
-        ]);
-        requestForm.setFieldValue('time', [
-          moment(item.startTime),
-          moment(item.endTime),
-        ]);
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          date: [moment(item.startTime), moment(item.endTime)],
+          time: [moment(item.startTime), moment(item.endTime)],
+        });
         if (item?.listEvidence) {
           setEvidenceSource(item?.listEvidence);
         }
@@ -146,6 +162,7 @@ export default function RequestDetailModal({
               : undefined,
         };
         setRequestData(requestFixInfor);
+        setRequestType(item?.requestTypeName);
       }
     }
   }, [detailRequest]);
@@ -154,20 +171,27 @@ export default function RequestDetailModal({
     requestForm.resetFields();
   };
   const submitHandler = async (formValues: RequestModel) => {
-    formValues.startTime = TimeCombine(
-      formValues.date && formValues.date[0],
-      formValues.time && formValues.time[0],
-      DATE_TIME,
-    );
-    formValues.endTime = TimeCombine(
-      formValues.date && formValues.date[1],
-      formValues.time && formValues.time[1],
-      DATE_TIME,
-    );
+    if (requestType === REQUEST_TYPE_KEY.LEAVE) {
+      formValues.startTime = TimeCombine(
+        formValues.date && formValues.date[0],
+        formValues.time && formValues.time[0],
+        DATE_TIME,
+      );
+      formValues.endTime = TimeCombine(
+        formValues.date && formValues.date[1],
+        formValues.time && formValues.time[1],
+        DATE_TIME,
+      );
+    }
+    if (requestType === REQUEST_TYPE_KEY.OT && formValues.date) {
+      formValues.startTime = getDateFormat(formValues.date[0], DATE_TIME);
+      formValues.endTime = getDateFormat(formValues.date[1], DATE_TIME);
+    }
     const urlImage = await uploadImage();
     formValues.listEvidence = [...urlImage, ...evidenceSource];
     delete formValues.date;
     delete formValues.time;
+    delete formValues.timeRemaining;
     !formValues.reason && delete formValues.reason;
     if (requestIdRef) {
       updateRequest({ uid: requestIdRef, body: formValues });
@@ -208,9 +232,9 @@ export default function RequestDetailModal({
   };
 
   // * Remove image from firebase
-  const handleRemoveFile = async (url: string) => {
+  const handleRemoveFile = (url: string) => {
     const fileRef = ref(storageFirebase, url);
-    await deleteObject(fileRef)
+    return deleteObject(fileRef)
       .then(() => {
         const newEvidenceSource = evidenceSource.filter((el: string) => {
           return el !== url;
@@ -227,6 +251,12 @@ export default function RequestDetailModal({
 
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
     options?.type && setRequestType(options?.type);
+    const data: RequestRemainingTime = {
+      requestTypeId: options.value,
+      month: moment().get('month') + 1,
+      year: moment().get('year'),
+    };
+    remainingTimeRequest(data);
   };
 
   const handleQickActionRequest = (statusValue: string) => {
@@ -300,7 +330,7 @@ export default function RequestDetailModal({
                 label="Request Type"
                 rules={[{ required: true }]}
                 placeholder="Choose request type"
-                name="requestTypeName"
+                name="requestTypeId"
                 allowClear
                 showSearch
                 optionFilterProp="label"
@@ -308,18 +338,38 @@ export default function RequestDetailModal({
                 disabled={actionModal === ACTION_TYPE.EDIT}
               />
             </Col>
-            {requestType !== REQUEST_TYPE_KEY.DEVICE &&
-              actionModal !== ACTION_TYPE.CREATE && (
-                <Col span="4">
+            {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+              requestType === REQUEST_TYPE_KEY.OT) &&
+              requestStatus === STATUS.PENDING && (
+                <Col span="5">
                   <BasicInput
                     label="Remaining Time"
-                    name="reaminingTimeOff"
+                    name="timeRemaining"
                     disabled
+                    suffix={
+                      requestType === REQUEST_TYPE_KEY.LEAVE ? 'days' : 'hours'
+                    }
                   />
                 </Col>
               )}
+            {requestType === REQUEST_TYPE_KEY.DEVICE && (
+              <Col span="12">
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  label="Device Type"
+                  rules={[{ required: true }]}
+                  placeholder="Choose device type"
+                  name="deviceTypeId"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  disabled={actionModal === ACTION_TYPE.EDIT}
+                />
+              </Col>
+            )}
           </Row>
-          {requestType !== REQUEST_TYPE_KEY.DEVICE && (
+          {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+            requestType === REQUEST_TYPE_KEY.OTHER) && (
             <Row gutter={20}>
               <Col span="12">
                 <BasicDateRangePicker
@@ -340,6 +390,20 @@ export default function RequestDetailModal({
               </Col>
             </Row>
           )}
+          {requestType === REQUEST_TYPE_KEY.OT && (
+            <Row gutter={20}>
+              <Col span="16">
+                <BasicDateRangePicker
+                  name="date"
+                  label="Applicable Date"
+                  rules={[{ required: true }]}
+                  placeholder={['From', 'To']}
+                  showTime
+                  format={DATE_TIME_US}
+                />
+              </Col>
+            </Row>
+          )}
           <Row gutter={20}>
             <Col span={24}>
               <BasicInput
@@ -352,7 +416,8 @@ export default function RequestDetailModal({
               />
             </Col>
           </Row>
-          {requestType !== REQUEST_TYPE_KEY.DEVICE &&
+          {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+            requestType === REQUEST_TYPE_KEY.OTHER) &&
             actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>

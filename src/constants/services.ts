@@ -15,6 +15,7 @@ export const MY_REQUEST_LIST = {
   service: 'request',
   model: {
     status: 'status',
+    remainingTime: 'remaining-time',
   },
 };
 export const MANAGER_REQUEST_LIST = {

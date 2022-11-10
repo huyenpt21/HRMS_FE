@@ -70,10 +70,10 @@ export default function MyRequestList() {
         el.key === 'endTime'
       ) {
         el.width = 150;
+        el.sorter = !isError;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'requestTypeName') {
         el.width = 200;
-        el.sorter = isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'status') {
         el.width = 100;
         el.sorter = isError;

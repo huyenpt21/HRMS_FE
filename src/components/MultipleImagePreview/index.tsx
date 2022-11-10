@@ -1,4 +1,4 @@
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { Card, Image, Popconfirm, Tooltip } from 'antd';
 import { useState } from 'react';
 import styles from './multiImagePreview.module.less';
@@ -10,7 +10,7 @@ interface IProps {
   preview?: any;
   height?: number;
   allowRemove?: boolean;
-  handleRemoveFile: (src: any) => void;
+  handleRemoveFile: (url: string) => Promise<void>;
 }
 export default function MultipleImagePreview({
   src,
@@ -21,19 +21,13 @@ export default function MultipleImagePreview({
   allowRemove,
   handleRemoveFile,
 }: IProps) {
-  const [open, setOpen] = useState<number>(-1);
-  const [visibelPreview, setVisiblePreview] = useState(-1);
+  const [openConfirmPopup, setOpenConfirmPopup] = useState<number>(-1);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const showPopconfirm = (index: number) => {
-    setOpen(index);
-  };
   const handleOk = (el: string) => {
     setConfirmLoading(true);
-    handleRemoveFile(el);
+    // const resultPromise = handleRemoveFile(el);
   };
-  const handleCancel = () => {
-    setOpen(-1);
-  };
+
   return (
     <div className={styles.container}>
       {src.map((el: string, index: number) => (
@@ -46,39 +40,30 @@ export default function MultipleImagePreview({
             preview={
               allowRemove
                 ? {
-                    visible: visibelPreview === index,
                     mask: (
-                      <>
-                        <Tooltip title="Preview file">
-                          <EyeOutlined
-                            style={{ marginRight: '8px', fontSize: 16 }}
-                            onClick={() => {
-                              setVisiblePreview(index);
+                      <Popconfirm
+                        title="Are you sure?"
+                        open={openConfirmPopup === index}
+                        onConfirm={() => {
+                          handleOk(el);
+                        }}
+                        okButtonProps={{ loading: confirmLoading }}
+                        onCancel={(e) => {
+                          e?.stopPropagation();
+                          setOpenConfirmPopup(-1);
+                        }}
+                      >
+                        <Tooltip title="Remove file" placement="bottom">
+                          <DeleteOutlined
+                            style={{ fontSize: 16 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenConfirmPopup(index);
                             }}
                           />
                         </Tooltip>
-                        <Popconfirm
-                          title="Are you sure?"
-                          open={open === index}
-                          onConfirm={() => {
-                            handleOk(el);
-                          }}
-                          okButtonProps={{ loading: confirmLoading }}
-                          onCancel={handleCancel}
-                        >
-                          <Tooltip title="Remove file">
-                            <DeleteOutlined
-                              style={{ fontSize: 16 }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                showPopconfirm(index);
-                              }}
-                            />
-                          </Tooltip>
-                        </Popconfirm>
-                      </>
+                      </Popconfirm>
                     ),
-                    current: index,
                   }
                 : preview
             }
