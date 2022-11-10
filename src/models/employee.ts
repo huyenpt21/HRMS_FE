@@ -4,7 +4,7 @@ export interface EmployeeModel extends Resource {
   rollNumber?: string;
   fullName?: string;
   email?: string;
-  departmenId?: string;
+  departmentId?: string;
   dateOfBirth?: string;
   gender?: number;
   phoneNumber?: string;
@@ -14,7 +14,7 @@ export interface EmployeeModel extends Resource {
   positionId?: string;
   rankId?: string;
   onBoardDate?: string;
-  isManager?: boolean;
+  isManager?: number;
   isActive?: number;
 }
 

@@ -215,6 +215,7 @@ export default function AllEmployeeList() {
 
   const cancelModalHandler = () => {
     setIsShowDetailModal(false);
+    employeeRollNumber.current = undefined;
   };
 
   const rowClickHandler = (rollNumber?: string) => {
