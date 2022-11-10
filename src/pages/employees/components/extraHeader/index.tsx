@@ -64,7 +64,7 @@ export default function ExtraHeaderTable({
               allowClear
               placeholder="Choose department"
               onChangeHandle={(value) => {
-                handleChangeFilter(value, 'department');
+                handleChangeFilter(value, 'departmentId');
               }}
               apiName="department-master-data"
             />
@@ -77,7 +77,7 @@ export default function ExtraHeaderTable({
               showSearch
               optionFilterProp="label"
               onChange={(value) => {
-                handleChangeFilter(value, 'position');
+                handleChangeFilter(value, 'positionId');
               }}
             />
           </Col>
