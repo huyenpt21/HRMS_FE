@@ -4,6 +4,9 @@ export const EMPLOYEE_LIST_ALL = {
     list: 'all/list',
   },
 };
+export const EMPLOYEE_CHANGE_STATUS = {
+  service: 'hr/status/employee',
+};
 export const SUBORDINATE_LIST = {
   service: 'manager/employee',
   model: {

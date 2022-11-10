@@ -29,6 +29,7 @@ import {
 import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
 import MenuAction from '../components/menuTable';
+import { EMPLOYEE_CHANGE_STATUS } from 'constants/services';
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -61,20 +62,23 @@ export default function AllEmployeeList() {
     data: dataTable,
     refetch,
   } = useEmployeeList(stateQuery);
-  const { mutate: updateEmployee } = useUpdateEmployee({
-    onSuccess: (response: ResEmployeeModify) => {
-      const {
-        metadata: { message },
-      } = response;
+  const { mutate: updateEmployee } = useUpdateEmployee(
+    {
+      onSuccess: (response: ResEmployeeModify) => {
+        const {
+          metadata: { message },
+        } = response;
 
-      if (message === 'Success') {
-        notification.success({
-          message: 'Update status successfully',
-        });
-        refetch();
-      }
+        if (message === 'Success') {
+          notification.success({
+            message: 'Update status successfully',
+          });
+          refetch();
+        }
+      },
     },
-  });
+    EMPLOYEE_CHANGE_STATUS.service,
+  );
 
   // * render header and data in table
   useEffect(() => {
