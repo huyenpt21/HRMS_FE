@@ -106,6 +106,7 @@ export enum REQUEST_TYPE_KEY {
   LEAVE = 'leave',
   OT = 'ot',
   DEVICE = 'device',
+  OTHER = 'other',
 }
 
 export enum MENU_TYPE {

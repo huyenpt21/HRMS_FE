@@ -21,7 +21,6 @@ import {
   STATUS,
 } from 'constants/enums/common';
 import { REQUEST_TYPE_LIST } from 'constants/fixData';
-import { MY_REQUEST_LIST } from 'constants/services';
 import {
   deleteObject,
   getDownloadURL,
@@ -31,19 +30,24 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
+  useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
 } from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
-import { RequestModel, ResRequestModify } from 'models/request';
+import {
+  RequestModel,
+  RequestRemainingTime,
+  ResRequestModify,
+} from 'models/request';
 import moment from 'moment-timezone';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
 
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import { storageFirebase } from 'firebaseSetup';
-import detailMock from './detailMock.json';
+// import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
@@ -66,9 +70,14 @@ export default function RequestDetailModal({
   const [requestForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
   const [requestData, setRequestData] = useState<RequestModel>();
-  const [requestType, setRequestType] = useState('');
+  const [requestType, setRequestType] = useState<string | undefined>('');
   const [imageFileList, setImageFileList] = useState<any>([]);
   const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
+  const requestRemainingTime = useRef<RequestRemainingTime>({
+    requestTypeId: requestIdRef,
+    month: moment().get('month'),
+    year: moment().get('year'),
+  });
   const { mutate: createRequest } = useAddRequestModal({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -80,28 +89,25 @@ export default function RequestDetailModal({
           message: 'Send request successfully',
         });
         refetchList();
-        onCancel();
+        cancelHandler();
       }
     },
   });
-  const { mutate: updateRequest } = useUpdateRequest(
-    {
-      onSuccess: (response: ResRequestModify) => {
-        const {
-          metadata: { message },
-        } = response;
+  const { mutate: updateRequest } = useUpdateRequest({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
 
-        if (message === 'Success') {
-          notification.success({
-            message: 'Send request successfully',
-          });
-          refetchList();
-          onCancel();
-        }
-      },
+      if (message === 'Success') {
+        notification.success({
+          message: 'Send request successfully',
+        });
+        refetchList();
+        cancelHandler();
+      }
     },
-    `${MY_REQUEST_LIST.service}/edit`,
-  );
+  });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
@@ -116,44 +122,55 @@ export default function RequestDetailModal({
       }
     },
   });
-  useEffect(() => {
-    // if (detailRequest && detailRequest?.data) {
-    const {
-      metadata: { message },
-      data: { item },
-    } = detailMock;
-    if (message === MESSAGE_RES.SUCCESS && item) {
-      requestForm.setFieldsValue(item);
-      requestForm.setFieldsValue({
-        timeRemaining: item?.timeRemaining?.toFixed(2),
-        date: [moment(item.startTime), moment(item.endTime)],
-        time: [moment(item.startTime), moment(item.endTime)],
-      });
-      if (item?.listEvidence) {
-        setEvidenceSource(item?.listEvidence);
+  const { mutate: remainingTimeRequest } = useGetRemainingTime({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+        data: { items: remainingTime },
+      } = response;
+      if (message === 'Success') {
+        requestRemainingTime.current = remainingTime;
       }
-      const requestFixInfor: RequestModel = {
-        id: item.id,
-        receiver: item.receiver,
-        createdBy: item.personName,
-        createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
-        status: item.status,
-        approvalDate:
-          item.approvalDate !== null
-            ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
-            : undefined,
-      };
-      setRequestData(requestFixInfor);
-      setRequestType(item?.requestTypeName);
+    },
+  });
+
+  useEffect(() => {
+    if (detailRequest && detailRequest?.data) {
+      const {
+        metadata: { message },
+        data: { item },
+      } = detailRequest;
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        requestForm.setFieldsValue(item);
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          date: [moment(item.startTime), moment(item.endTime)],
+          time: [moment(item.startTime), moment(item.endTime)],
+        });
+        if (item?.listEvidence) {
+          setEvidenceSource(item?.listEvidence);
+        }
+        const requestFixInfor: RequestModel = {
+          id: item.id,
+          receiver: item.receiver,
+          createdBy: item.personName,
+          createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
+          status: item.status,
+          approvalDate:
+            item.approvalDate !== null
+              ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
+              : undefined,
+        };
+        setRequestData(requestFixInfor);
+        setRequestType(item?.requestTypeName);
+      }
     }
-    // }
   }, [detailRequest]);
   const cancelHandler = () => {
     onCancel();
     requestForm.resetFields();
   };
   const submitHandler = async (formValues: RequestModel) => {
-    console.log(formValues.date);
     if (requestType === REQUEST_TYPE_KEY.LEAVE) {
       formValues.startTime = TimeCombine(
         formValues.date && formValues.date[0],
@@ -234,6 +251,12 @@ export default function RequestDetailModal({
 
   const handleChangeRequestType = (_: number, options: SelectBoxType) => {
     options?.type && setRequestType(options?.type);
+    const data: RequestRemainingTime = {
+      requestTypeId: options.value,
+      month: moment().get('month') + 1,
+      year: moment().get('year'),
+    };
+    remainingTimeRequest(data);
   };
 
   const handleQickActionRequest = (statusValue: string) => {
@@ -315,7 +338,8 @@ export default function RequestDetailModal({
                 disabled={actionModal === ACTION_TYPE.EDIT}
               />
             </Col>
-            {requestType !== REQUEST_TYPE_KEY.DEVICE &&
+            {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+              requestType === REQUEST_TYPE_KEY.OT) &&
               requestStatus === STATUS.PENDING && (
                 <Col span="5">
                   <BasicInput
@@ -344,7 +368,8 @@ export default function RequestDetailModal({
               </Col>
             )}
           </Row>
-          {requestType === REQUEST_TYPE_KEY.LEAVE && (
+          {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+            requestType === REQUEST_TYPE_KEY.OTHER) && (
             <Row gutter={20}>
               <Col span="12">
                 <BasicDateRangePicker
@@ -391,7 +416,8 @@ export default function RequestDetailModal({
               />
             </Col>
           </Row>
-          {requestType === REQUEST_TYPE_KEY.LEAVE &&
+          {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+            requestType === REQUEST_TYPE_KEY.OTHER) &&
             actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>

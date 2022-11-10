@@ -23,6 +23,12 @@ export interface RequestStatus {
   status: string;
 }
 
+export interface RequestRemainingTime {
+  requestTypeId?: number;
+  month: number;
+  year: number;
+}
+
 export interface RequestListFilter {
   search?: string;
   startTime?: string;
@@ -47,4 +53,7 @@ export type ResRequestList = ResponseData<
 
 export type ResRequestDetail = ResponseData<{ item: RequestModel }, {}>;
 
-export type ResRequestModify = ResponseData<{}, {}>;
+export type ResRequestModify = ResponseData<
+  { items: RequestRemainingTime },
+  {}
+>;

@@ -9,6 +9,7 @@ import {
   RequestListQuery,
   RequestListSortFields,
   RequestModel,
+  RequestRemainingTime,
   RequestStatus,
   ResRequestDetail,
   ResRequestList,
@@ -68,6 +69,26 @@ export const useChangeStatusRequest = ({
       onSettled: () => {
         queryClient.invalidateQueries(['my-request-list']);
       },
+    },
+  );
+};
+
+export const useGetRemainingTime = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResRequestModify>) => {
+  return useMutation(
+    (payload: RequestRemainingTime) =>
+      fetchApi(
+        {
+          url: `${MY_REQUEST_LIST.service}/${MY_REQUEST_LIST.model.remainingTime}`,
+          payload,
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
     },
   );
 };
