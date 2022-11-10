@@ -1,13 +1,13 @@
 export const EmployeeListAllHeader = [
   {
-    title: 'Employee Name',
-    key: 'fullName',
-    dataIndex: 'fullName',
-  },
-  {
     title: 'Roll Number',
     key: 'rollNumber',
     dataIndex: 'rollNumber',
+  },
+  {
+    title: 'Employee Name',
+    key: 'fullName',
+    dataIndex: 'fullName',
   },
   {
     title: 'Email',

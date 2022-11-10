@@ -3,9 +3,11 @@ import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
+import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import { POSITION_WORKING } from 'constants/fixData';
+import { DEPARTMENT } from 'constants/services';
 import { EmployeeListQuery } from 'models/employee';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import styles from './extraHeaderEmployee.module.less';
@@ -25,10 +27,10 @@ export default function ExtraHeaderTable({
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
   };
-  const handleChangePosition = (value: number) => {
+  const handleChangeFilter = (value: number, fieldName: string) => {
     setStateQuery((prev: any) => ({
       ...prev,
-      position: value,
+      [fieldName]: value,
     }));
   };
   return (
@@ -56,7 +58,16 @@ export default function ExtraHeaderTable({
             />
           </Col>
           <Col span={4}>
-            <BasicSelect options={[]} placeholder="Department" />
+            <SelectCustomSearch
+              url={DEPARTMENT.service}
+              dataName="items"
+              allowClear
+              placeholder="Choose department"
+              onChangeHandle={(value) => {
+                handleChangeFilter(value, 'department');
+              }}
+              apiName="department-master-data"
+            />
           </Col>
           <Col span={4}>
             <BasicSelect
@@ -65,7 +76,9 @@ export default function ExtraHeaderTable({
               allowClear
               showSearch
               optionFilterProp="label"
-              onChange={handleChangePosition}
+              onChange={(value) => {
+                handleChangeFilter(value, 'position');
+              }}
             />
           </Col>
         </Row>

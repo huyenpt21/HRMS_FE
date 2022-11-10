@@ -31,3 +31,14 @@ export const TIME_CHECK = {
     allSubordinate: 'all-subordinate',
   },
 };
+
+export const MANAGER_LIST = {
+  service: 'all-manager-master-data',
+};
+
+export const POSITION_BY_DEPARTMENT = {
+  service: 'position-by-departmentId-master-data',
+};
+export const DEPARTMENT = {
+  service: 'department-master-data',
+};
