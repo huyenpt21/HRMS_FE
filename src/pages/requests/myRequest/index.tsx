@@ -77,14 +77,6 @@ export default function MyRequestList() {
         el.width = 200;
       } else if (el.key === 'status') {
         el.width = 100;
-        el.sorter = isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        el.filterMultiple = isError;
-        el.filters = [
-          { text: STATUS.PENDING, value: STATUS.PENDING },
-          { text: STATUS.APPROVED, value: STATUS.APPROVED },
-          { text: STATUS.REJECTED, value: STATUS.REJECTED },
-        ];
       } else if (el.key === 'reason') {
         el.width = 180;
       }

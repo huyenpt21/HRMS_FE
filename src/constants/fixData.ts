@@ -1,6 +1,11 @@
 import { MenuOptionsType, RadioButtonType, SelectBoxType } from 'models/common';
 import { COMMON_STATUS } from './common';
-import { GENDER_KEY, MENU_OPTION_KEY, REQUEST_TYPE_KEY } from './enums/common';
+import {
+  GENDER_KEY,
+  MENU_OPTION_KEY,
+  REQUEST_TYPE_KEY,
+  STATUS,
+} from './enums/common';
 
 export const URL_PATH = {
   employeeList: '/employee/all/list',
@@ -155,5 +160,20 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
     label: 'Borrow Device',
     type: REQUEST_TYPE_KEY.DEVICE,
     value: 11,
+  },
+];
+
+export const REQUEST_STATUS_LIST: SelectBoxType[] = [
+  {
+    label: STATUS.PENDING,
+    value: STATUS.PENDING,
+  },
+  {
+    label: STATUS.APPROVED,
+    value: STATUS.APPROVED,
+  },
+  {
+    label: STATUS.REJECTED,
+    value: STATUS.REJECTED,
   },
 ];
