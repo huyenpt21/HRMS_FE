@@ -42,14 +42,15 @@ import {
 } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
-import { getDateFormat, TimeCombine } from 'utils/common';
+import { getDateFormat, getRange, TimeCombine } from 'utils/common';
 import RequestStatus from '../statusRequest';
 
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import { storageFirebase } from 'firebaseSetup';
 // import detailMock from './detailMock.json';
-import styles from './requestDetailModal.module.less';
 import RollbackModal from '../rollbackModal';
+import styles from './requestDetailModal.module.less';
+import { RangePickerProps } from 'antd/lib/date-picker';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -76,12 +77,8 @@ export default function RequestDetailModal({
   const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
   const [isAllowRollback, setIsAllowRollback] = useState<number | undefined>(1);
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
-  const requestRemainingTime = useRef<RequestRemainingTime>({
-    requestTypeId: requestIdRef,
-    month: moment().get('month'),
-    year: moment().get('year'),
-  });
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
+  const requestIdRefInternal = useRef<number>();
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
       onSuccess: (response: ResRequestModify) => {
@@ -96,6 +93,14 @@ export default function RequestDetailModal({
           refetchList();
           cancelHandler();
         }
+      },
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({
+          message: message,
+        });
       },
     });
   const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
@@ -112,6 +117,14 @@ export default function RequestDetailModal({
         cancelHandler();
       }
     },
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
+    },
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { mutate: statusRequest } = useChangeStatusRequest({
@@ -126,16 +139,35 @@ export default function RequestDetailModal({
         refetchList();
       }
     },
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
+    },
   });
   const { mutate: remainingTimeRequest } = useGetRemainingTime({
     onSuccess: (response: ResRequestModify) => {
       const {
         metadata: { message },
-        data: { items: remainingTime },
+        data: { item },
       } = response;
       if (message === 'Success') {
-        requestRemainingTime.current = remainingTime;
+        requestForm.setFieldValue(
+          'timeRemaining',
+          item.timeRemaining?.toFixed(2),
+        );
       }
+    },
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
     },
   });
 
@@ -177,7 +209,10 @@ export default function RequestDetailModal({
     requestForm.resetFields();
   };
   const submitHandler = async (formValues: RequestModel) => {
-    if (requestType === REQUEST_TYPE_KEY.LEAVE) {
+    if (
+      requestType === REQUEST_TYPE_KEY.LEAVE ||
+      requestType === REQUEST_TYPE_KEY.OTHER
+    ) {
       formValues.startTime = TimeCombine(
         formValues.date && formValues.date[0],
         formValues.time && formValues.time[0],
@@ -258,14 +293,20 @@ export default function RequestDetailModal({
       });
   };
 
-  const handleChangeRequestType = (_: number, options: SelectBoxType) => {
+  const handleChangeRequestType = (value: number, options: SelectBoxType) => {
+    requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
-    const data: RequestRemainingTime = {
-      requestTypeId: options.value,
-      month: moment().get('month') + 1,
-      year: moment().get('year'),
-    };
-    remainingTimeRequest(data);
+    if (
+      options.type === REQUEST_TYPE_KEY.LEAVE ||
+      options.type === REQUEST_TYPE_KEY.OT
+    ) {
+      const data: RequestRemainingTime = {
+        requestTypeId: value,
+        month: moment().get('month') + 1,
+        year: moment().get('year'),
+      };
+      remainingTimeRequest(data);
+    }
   };
 
   const handleQickActionRequest = (statusValue: string) => {
@@ -277,6 +318,35 @@ export default function RequestDetailModal({
     setIsShowRollbackModal(false);
     onCancel();
   };
+
+  const handleChangeDate = (dates: [moment.Moment, moment.Moment]) => {
+    const data: RequestRemainingTime = {
+      requestTypeId: requestIdRefInternal.current,
+      month: moment(dates[0]).get('month') + 1,
+      year: moment(dates[0]).get('year'),
+    };
+    remainingTimeRequest(data);
+  };
+
+  const disabledDate = (current: moment.Moment) => {
+    return current && current < moment().startOf('day');
+  };
+
+  const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
+    const currentHour = moment().get('hour');
+    const currentMinute = moment().get('minute');
+    if (type === 'start') {
+      return {
+        disabledHours: () => getRange(0, currentHour),
+        disabledMinutes: () => getRange(0, currentMinute + 1),
+      };
+    }
+    return {
+      disabledHours: () => [],
+      disabledMinutes: () => [],
+    };
+  };
+
   return (
     <>
       <CommonModal
@@ -391,6 +461,9 @@ export default function RequestDetailModal({
                     label="Applicable Date"
                     rules={[{ required: true }]}
                     placeholder={['From', 'To']}
+                    allowClear
+                    onChange={handleChangeDate}
+                    disabledDate={disabledDate}
                   />
                 </Col>
                 <Col span="12">
@@ -400,6 +473,8 @@ export default function RequestDetailModal({
                     placeholder={['From', 'To']}
                     name="time"
                     disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+                    disableTime={disabledRangeTime}
+                    hideDisabledOptions
                   />
                 </Col>
               </Row>
@@ -532,7 +607,8 @@ export default function RequestDetailModal({
               )}
               {(requestStatus === STATUS.APPROVED ||
                 requestStatus === STATUS.REJECTED) &&
-                !!isAllowRollback && (
+                !!isAllowRollback &&
+                tabType === REQUEST_MENU.SUBORDINATE && (
                   <BasicButton
                     title="Roll back"
                     type="outline"

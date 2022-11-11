@@ -28,6 +28,7 @@ export interface RequestRemainingTime {
   requestTypeId?: number;
   month: number;
   year: number;
+  timeRemaining?: number;
 }
 
 export interface RequestListFilter {
@@ -54,7 +55,4 @@ export type ResRequestList = ResponseData<
 
 export type ResRequestDetail = ResponseData<{ item: RequestModel }, {}>;
 
-export type ResRequestModify = ResponseData<
-  { items: RequestRemainingTime },
-  {}
->;
+export type ResRequestModify = ResponseData<{ item: RequestRemainingTime }, {}>;
