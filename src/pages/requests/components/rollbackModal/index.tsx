@@ -6,7 +6,7 @@ import styles from './rollbackModal.module.less';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
-  handleQickActionRequest: (status: string) => void;
+  handleQickActionRequest: (status: string, requestId?: string) => void;
   requestStatus?: string;
 }
 export default function RollbackModal({
