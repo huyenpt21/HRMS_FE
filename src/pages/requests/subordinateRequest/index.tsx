@@ -112,17 +112,14 @@ export default function SubordinateRequestList() {
       width: 80,
       align: 'center',
       render: (_, record: RequestModel) => {
-        if (record?.status === STATUS.PENDING) {
-          return (
-            <RequestMenuAction
-              record={record}
-              tabType={REQUEST_MENU.SUBORDINATE}
-              refetchList={refetchList}
-            />
-          );
-        } else {
-          return '-';
-        }
+        return (
+          <RequestMenuAction
+            record={record}
+            tabType={REQUEST_MENU.SUBORDINATE}
+            refetchList={refetchList}
+            requestStatus={record?.status}
+          />
+        );
       },
     });
 
