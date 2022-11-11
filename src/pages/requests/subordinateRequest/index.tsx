@@ -24,7 +24,7 @@ import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
-import dataMock from '../dataMock.json';
+// import dataMock from '../dataMock.json';
 
 export default function SubordinateRequestList() {
   const [searchParams] = useSearchParams();
@@ -70,24 +70,20 @@ export default function SubordinateRequestList() {
         el.key === 'endTime'
       ) {
         el.width = 150;
-      } else if (el.key === 'requestType' || el.key === 'personName') {
-        el.width = 200;
-        el.sorter = isError;
+        el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
+      } else if (el.key === 'rollNumber') {
+        el.width = 120;
+        el.sorter = !isError;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+      } else if (
+        el.key === 'requestTypeName' ||
+        el.key === 'reason' ||
+        el.key === 'personName'
+      ) {
+        el.width = 200;
       } else if (el.key === 'status') {
         el.width = 100;
-        el.sorter = isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        el.filterMultiple = isError;
-        el.filters = [
-          { text: STATUS.PENDING, value: STATUS.PENDING },
-          { text: STATUS.APPROVED, value: STATUS.APPROVED },
-          { text: STATUS.REJECTED, value: STATUS.REJECTED },
-        ];
-      } else if (el.key === 'reason') {
-        el.width = 200;
-      } else {
-        el.width = 200;
       }
       return {
         ...el,
@@ -139,7 +135,7 @@ export default function SubordinateRequestList() {
       const {
         metadata: { pagination },
         data: { items: requestList },
-      } = dataMock;
+      } = dataTable;
       setRecords(requestList);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API

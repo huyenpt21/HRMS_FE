@@ -77,7 +77,6 @@ function DebounceSelect({
       ref={refSelect}
       options={options}
       showSearch
-      style={{ width: '100%', minWidth: 200 }}
       size="large"
       mode={mode}
       optionFilterProp={optionFilterProp}
