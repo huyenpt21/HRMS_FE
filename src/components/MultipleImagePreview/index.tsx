@@ -23,9 +23,10 @@ export default function MultipleImagePreview({
 }: IProps) {
   const [openConfirmPopup, setOpenConfirmPopup] = useState<number>(-1);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const handleOk = (el: string) => {
+  const handleOk = async (el: string) => {
     setConfirmLoading(true);
-    // const resultPromise = handleRemoveFile(el);
+    await handleRemoveFile(el);
+    setConfirmLoading(false);
   };
 
   return (
@@ -42,10 +43,12 @@ export default function MultipleImagePreview({
                 ? {
                     mask: (
                       <Popconfirm
-                        title="Are you sure?"
+                        title="Are you sure? It cannot be reverse?"
                         open={openConfirmPopup === index}
-                        onConfirm={() => {
+                        onConfirm={(e) => {
+                          e?.stopPropagation();
                           handleOk(el);
+                          setOpenConfirmPopup(-1);
                         }}
                         okButtonProps={{ loading: confirmLoading }}
                         onCancel={(e) => {

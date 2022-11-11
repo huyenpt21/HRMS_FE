@@ -78,22 +78,23 @@ export default function RequestDetailModal({
     month: moment().get('month'),
     year: moment().get('year'),
   });
-  const { mutate: createRequest } = useAddRequestModal({
-    onSuccess: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
+  const { mutate: createRequest, isLoading: loadingCreate } =
+    useAddRequestModal({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
 
-      if (message === 'Success') {
-        notification.success({
-          message: 'Send request successfully',
-        });
-        refetchList();
-        cancelHandler();
-      }
-    },
-  });
-  const { mutate: updateRequest } = useUpdateRequest({
+        if (message === 'Success') {
+          notification.success({
+            message: 'Send request successfully',
+          });
+          refetchList();
+          cancelHandler();
+        }
+      },
+    });
+  const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
         metadata: { message },
@@ -240,6 +241,9 @@ export default function RequestDetailModal({
           return el !== url;
         });
         setEvidenceSource(newEvidenceSource);
+        notification.success({
+          message: 'Delete file successfully',
+        });
       })
       .catch((error) => {
         notification.error({
@@ -460,6 +464,7 @@ export default function RequestDetailModal({
                   type="filled"
                   className={styles['btn--save']}
                   htmlType={'submit'}
+                  loading={loadingCreate}
                 />
               )}
               {actionModal === ACTION_TYPE.EDIT && (
@@ -468,6 +473,7 @@ export default function RequestDetailModal({
                   type="filled"
                   className={styles['btn--save']}
                   htmlType={'submit'}
+                  loading={loadingUpdate}
                 />
               )}
             </div>
