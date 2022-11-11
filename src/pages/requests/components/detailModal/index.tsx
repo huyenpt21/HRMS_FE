@@ -75,6 +75,7 @@ export default function RequestDetailModal({
   const [imageFileList, setImageFileList] = useState<any>([]);
   const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
   const [isAllowRollback, setIsAllowRollback] = useState<number | undefined>(1);
+  const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const requestRemainingTime = useRef<RequestRemainingTime>({
     requestTypeId: requestIdRef,
     month: moment().get('month'),
@@ -206,6 +207,7 @@ export default function RequestDetailModal({
 
   //* upload image to firebase and get the image url link
   const uploadImage = async () => {
+    setIsUploadingImage(true);
     let imgUrl: string[] = [];
     for (let i = 0; i < imageFileList.length; i++) {
       const imageRef = ref(
@@ -481,7 +483,7 @@ export default function RequestDetailModal({
                     type="filled"
                     className={styles['btn--save']}
                     htmlType={'submit'}
-                    loading={loadingUpdate}
+                    loading={loadingUpdate || isUploadingImage}
                   />
                 )}
               </div>
