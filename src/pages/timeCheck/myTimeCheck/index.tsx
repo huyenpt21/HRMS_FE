@@ -1,7 +1,12 @@
 import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
-import { DATE_TIME_US, paginationConfig, TIME_HOUR } from 'constants/common';
+import {
+  DATE_TIME,
+  DATE_TIME_US,
+  paginationConfig,
+  TIME_HOUR,
+} from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { MyTimeCheckHeader } from 'constants/header';
 import { useTimeCheckList } from 'hooks/useTimeCheck';
@@ -11,16 +16,19 @@ import {
   TimeCheckListSortFields,
   TimeCheckModel,
 } from 'models/timeCheck';
+import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
+  getEndOfWeek,
+  getStartOfWeek,
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 import styles from './myTimeCheck.module.less';
 
 export default function MyTimeCheck() {
@@ -38,20 +46,19 @@ export default function MyTimeCheck() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
-    startDate: searchParams.get('startDate') ?? undefined,
-    endDate: searchParams.get('endDate') ?? undefined,
+    startDate:
+      searchParams.get('startDate') ??
+      getStartOfWeek(moment(), DATE_TIME).toString(),
+    endDate:
+      searchParams.get('endDate') ??
+      getEndOfWeek(moment(), DATE_TIME).toString(),
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
     removeEmptyValueInObject(defaultFilter),
   );
   // * get data table from API
-  const {
-    isLoading,
-    isError,
-    data: dataTable,
-    // refetch: refetchList,
-  } = useTimeCheckList(stateQuery);
+  const { isLoading, isError, data: dataTable } = useTimeCheckList(stateQuery);
   // * get header
   let header: HeaderTableFields[] = MyTimeCheckHeader;
   // * render header and data in table
@@ -59,7 +66,7 @@ export default function MyTimeCheck() {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
       if (el.key === 'date') {
-        el.width = 250;
+        el.width = 200;
         el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
@@ -73,6 +80,9 @@ export default function MyTimeCheck() {
       ) {
         el.width = 150;
         el.align = 'center';
+      }
+      if (el.key === 'requestTypeName') {
+        el.width = 150;
       }
       return {
         ...el,
@@ -117,22 +127,22 @@ export default function MyTimeCheck() {
   }, [header, isError, stateQuery]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { timeCheckList },
-    } = dataMock;
-    setRecords(timeCheckList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      // setPagination((prevPagination: TablePaginationConfig) => ({
-      //   ...prevPagination,
-      //   current: pagination.page,
-      //   pageSize: pagination.limit,
-      //   total: pagination.totalRecords,
-      // }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { timeCheckList },
+      } = dataTable;
+      setRecords(timeCheckList);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
   }, [dataTable]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -149,13 +159,6 @@ export default function MyTimeCheck() {
       sort = `${sortField}`;
       dir = sortDirections;
     }
-
-    setPagination((prevPagination: TablePaginationConfig) => ({
-      ...prevPagination,
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    }));
-
     // * set changing of pagination to state query
     setStateQuery((prev: TimeCheckListQuery) => ({
       ...prev,

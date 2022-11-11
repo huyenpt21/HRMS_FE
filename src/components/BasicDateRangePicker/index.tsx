@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Dispatch, SetStateAction } from 'react';
 import styles from './index.module.less';
 
+export type RangeValue = [moment.Moment | null, moment.Moment | null] | null;
 interface IProps {
   label?: string;
   rules?: object[];
@@ -20,6 +21,12 @@ interface IProps {
   placeholder?: [string, string];
   showTime?: boolean;
   format?: string;
+  onCalendarChange?: (
+    values: RangeValue,
+    formatString: [string, string],
+    info: { range: string },
+  ) => void;
+  allowClear?: boolean;
 }
 
 const { RangePicker } = DatePicker;
@@ -57,6 +64,8 @@ const BasicDateRangePicker = (props: IProps) => {
           disabledDate={props.disabledDate}
           placeholder={props.placeholder}
           showTime={props.showTime}
+          onCalendarChange={props.onCalendarChange}
+          allowClear={props.allowClear}
         />
       </Form.Item>
     </span>
