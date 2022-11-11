@@ -12,7 +12,14 @@ import {
   RequestModel,
   ResRequestModify,
 } from 'models/request';
-import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useState,
+  useRef,
+} from 'react';
+import RollbackModal from '../rollbackModal';
 
 interface IProps {
   tabType: string;
@@ -22,6 +29,7 @@ interface IProps {
   requestIdRef?: MutableRefObject<number>;
   stateQuery?: RequestListQuery;
   refetchList: () => void;
+  requestStatus?: string;
 }
 export default function RequestMenuAction({
   tabType,
@@ -31,7 +39,11 @@ export default function RequestMenuAction({
   requestIdRef,
   stateQuery,
   refetchList,
+  requestStatus,
 }: IProps) {
+  const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
+  const requestIdRefInternal = useRef<number>();
+
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -84,6 +96,15 @@ export default function RequestMenuAction({
       }
     }
   };
+
+  const handleRollback = (status: string) => {
+    statusRequest({
+      uid: requestIdRefInternal.current,
+      body: { status: status },
+    });
+    setIsShowRollbackModal(false);
+  };
+
   return (
     <div
       className="menu-action"
@@ -93,26 +114,44 @@ export default function RequestMenuAction({
     >
       {tabType === REQUEST_MENU.SUBORDINATE && (
         <>
-          <Tooltip title="Approve">
-            <span
-              onClick={() =>
-                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.APPROVE)
-              }
-              className="cursor-pointer"
-            >
-              <SvgIcon icon="accept-circle" />
-            </span>
-          </Tooltip>
-          <Tooltip title="Reject">
-            <span
-              onClick={() =>
-                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.REJECT)
-              }
-              className="cursor-pointer"
-            >
-              <SvgIcon icon="close-circle" />
-            </span>
-          </Tooltip>
+          {requestStatus === STATUS.PENDING && (
+            <>
+              <Tooltip title="Approve">
+                <span
+                  onClick={() =>
+                    actionRequestHandler(record.id, REQUEST_ACTION_TYPE.APPROVE)
+                  }
+                  className="cursor-pointer"
+                >
+                  <SvgIcon icon="accept-circle" />
+                </span>
+              </Tooltip>
+              <Tooltip title="Reject">
+                <span
+                  onClick={() =>
+                    actionRequestHandler(record.id, REQUEST_ACTION_TYPE.REJECT)
+                  }
+                  className="cursor-pointer"
+                >
+                  <SvgIcon icon="close-circle" />
+                </span>
+              </Tooltip>
+            </>
+          )}
+          {requestStatus !== STATUS.PENDING && !!record.isAllowRollback && (
+            <Tooltip title="Rollback">
+              <span
+                onClick={() => {
+                  setIsShowRollbackModal(true);
+                  requestIdRefInternal.current = record.id;
+                }}
+                className="cursor-pointer"
+              >
+                <SvgIcon icon="reset" />
+              </span>
+            </Tooltip>
+          )}
+          {requestStatus !== STATUS.PENDING && !record.isAllowRollback && '-'}
         </>
       )}
       {tabType === REQUEST_MENU.MY_REQUEST && (
@@ -139,6 +178,12 @@ export default function RequestMenuAction({
           </Tooltip>
         </>
       )}
+      <RollbackModal
+        isVisible={isShowRollbackModal}
+        handleQickActionRequest={handleRollback}
+        onCancel={() => setIsShowRollbackModal(false)}
+        requestStatus={record?.status}
+      />
     </div>
   );
 }
