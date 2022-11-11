@@ -79,6 +79,7 @@ export default function RequestDetailModal({
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
   const requestIdRefInternal = useRef<number>();
+  const startDateSelected = useRef<moment.Moment | undefined>();
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
       onSuccess: (response: ResRequestModify) => {
@@ -320,12 +321,15 @@ export default function RequestDetailModal({
   };
 
   const handleChangeDate = (dates: [moment.Moment, moment.Moment]) => {
-    const data: RequestRemainingTime = {
-      requestTypeId: requestIdRefInternal.current,
-      month: moment(dates[0]).get('month') + 1,
-      year: moment(dates[0]).get('year'),
-    };
-    remainingTimeRequest(data);
+    if (dates) {
+      const data: RequestRemainingTime = {
+        requestTypeId: requestIdRefInternal.current,
+        month: moment(dates[0]).get('month') + 1,
+        year: moment(dates[0]).get('year'),
+      };
+      remainingTimeRequest(data);
+      startDateSelected.current = dates[0];
+    }
   };
 
   const disabledDate = (current: moment.Moment) => {
@@ -333,13 +337,17 @@ export default function RequestDetailModal({
   };
 
   const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
-    const currentHour = moment().get('hour');
-    const currentMinute = moment().get('minute');
-    if (type === 'start') {
-      return {
-        disabledHours: () => getRange(0, currentHour),
-        disabledMinutes: () => getRange(0, currentMinute + 1),
-      };
+    if (
+      startDateSelected.current?.diff(moment().startOf('day'), 'days') === 0
+    ) {
+      const currentHour = moment().get('hour');
+      const currentMinute = moment().get('minute');
+      if (type === 'start') {
+        return {
+          disabledHours: () => getRange(0, currentHour),
+          disabledMinutes: () => getRange(0, currentMinute + 1),
+        };
+      }
     }
     return {
       disabledHours: () => [],
