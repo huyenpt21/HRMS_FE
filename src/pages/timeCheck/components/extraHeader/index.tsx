@@ -1,14 +1,16 @@
 import { BackwardOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
-import BasicDateRangePicker from 'components/BasicDateRangePicker';
+import BasicDateRangePicker, {
+  RangeValue,
+} from 'components/BasicDateRangePicker';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { TimeCheckListQuery } from 'models/timeCheck';
 import moment from 'moment-timezone';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getDateFormat,
@@ -32,6 +34,7 @@ export default function ExtraTableTimeCheck({
   employeeInfor,
 }: IProps) {
   const navigate = useNavigate();
+  const [dates, setDates] = useState<RangeValue>(null);
 
   const handleChangeDate = (date: any, dateString: string[]) => {
     let startDate: string | undefined;
@@ -39,7 +42,7 @@ export default function ExtraTableTimeCheck({
     switch (menuType) {
       case MENU_TYPE.MIME: {
         startDate = getStartEndDateFormat(dateString[0], DATE_TIME);
-        endDate = getStartEndDateFormat(dateString[1], DATE_TIME);
+        endDate = getStartEndDateFormat(dateString[1], DATE_TIME, false);
         break;
       }
       case MENU_TYPE.ALL:
@@ -48,11 +51,13 @@ export default function ExtraTableTimeCheck({
         endDate = getEndOfWeek(date, DATE_TIME).toString();
       }
     }
-    setStateQuery((prev: any) => ({
-      ...prev,
-      startDate: startDate,
-      endDate: endDate,
-    }));
+    if (!!date) {
+      setStateQuery((prev: any) => ({
+        ...prev,
+        startDate: startDate,
+        endDate: endDate,
+      }));
+    }
   };
   const extraFooter = () => {
     return (
@@ -97,6 +102,15 @@ export default function ExtraTableTimeCheck({
     return title;
   };
 
+  const disableDate = (current: moment.Moment) => {
+    if (!dates) {
+      return false;
+    }
+    const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
+    const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
+    return !!tooLate || !!tooEarly;
+  };
+
   return (
     <>
       <div className={`header__section ${styles.header}`}>
@@ -138,6 +152,9 @@ export default function ExtraTableTimeCheck({
               defaultStartDate={stateQuery.startDate}
               defaultEndDate={stateQuery.endDate}
               isUseDefaultValue={!!stateQuery.startDate}
+              onCalendarChange={(values: RangeValue) => setDates(values)}
+              disabledDate={disableDate}
+              allowClear
             />
           </Col>
         )}

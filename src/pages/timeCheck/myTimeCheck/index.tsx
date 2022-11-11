@@ -21,8 +21,8 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
-  getEndOfMonth,
-  getStartOfMonth,
+  getEndOfWeek,
+  getStartOfWeek,
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
@@ -48,10 +48,10 @@ export default function MyTimeCheck() {
     dir: searchParams.get('dir') ?? undefined,
     startDate:
       searchParams.get('startDate') ??
-      getStartOfMonth(moment(), DATE_TIME).toString(),
+      getStartOfWeek(moment(), DATE_TIME).toString(),
     endDate:
       searchParams.get('endDate') ??
-      getEndOfMonth(moment(), DATE_TIME).toString(),
+      getEndOfWeek(moment(), DATE_TIME).toString(),
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -66,7 +66,7 @@ export default function MyTimeCheck() {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
       if (el.key === 'date') {
-        el.width = 250;
+        el.width = 200;
         el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
@@ -80,6 +80,9 @@ export default function MyTimeCheck() {
       ) {
         el.width = 150;
         el.align = 'center';
+      }
+      if (el.key === 'requestTypeName') {
+        el.width = 150;
       }
       return {
         ...el,
