@@ -17,6 +17,7 @@ export interface RequestModel extends Resource {
   time?: string;
   listEvidence?: string[];
   timeRemaining?: number;
+  isAllowRollback?: number;
 }
 
 export interface RequestStatus {

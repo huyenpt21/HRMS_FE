@@ -1,0 +1,70 @@
+@import 'styles/_variables.less';
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 24px;
+  &__icon {
+    width: 100%;
+    &--warning {
+      color: @warning-color !important;
+      svg {
+        height: 3em;
+        width: 3em;
+      }
+    }
+  }
+
+  &__title {
+    margin-top: 18px;
+    font-weight: 500;
+    font-size: 18px;
+    text-align: center;
+  }
+
+  &__button {
+    display: flex;
+    margin-top: 16px;
+    gap: 24px;
+
+    .btn {
+      &--approve {
+        padding: 0px 20px;
+        color: @success-color !important;
+        border-color: @success-color !important;
+        background-color: @success-background-color !important;
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: #e4ffc9 !important;
+          border-color: @success-color !important;
+        }
+      }
+      &--reject {
+        padding: 0px 25px;
+        color: @error-color !important;
+        border-color: @error-color !important;
+        background-color: @error-background-color !important;
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: #fbc6c1 !important;
+          border-color: @error-color !important;
+        }
+      }
+      &--pending {
+        padding: 0px 20px;
+        color: #faad14 !important;
+        background: #fffbe6 !important;
+        border-color: #faad14 !important;
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: #fbf7c5 !important;
+          border-color: @warning-color !important;
+        }
+      }
+    }
+  }
+}
