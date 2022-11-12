@@ -207,6 +207,7 @@ export default function RequestDetailModal({
         setRequestData(requestFixInfor);
         setRequestType(item?.requestTypeName);
         setIsAllowRollback(item?.isAllowRollback);
+        requestIdRefInternal.current = item?.id;
       }
     }
   }, [detailRequest]);
