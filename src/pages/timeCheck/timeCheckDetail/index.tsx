@@ -4,6 +4,8 @@ import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig, TIME_HOUR } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { MyTimeCheckHeader } from 'constants/header';
+import { TIME_CHECK } from 'constants/services';
+import { useTimeCheckList } from 'hooks/useTimeCheck';
 import { HeaderTableFields } from 'models/common';
 import {
   TimeCheckListQuery,
@@ -11,7 +13,7 @@ import {
   TimeCheckModel,
 } from 'models/timeCheck';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
   isEmptyPagination,
@@ -19,10 +21,11 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 import styles from './timeCheckDetail.module.less';
 
 export default function TimeCheckDetail() {
+  const { personId } = useParams();
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -40,6 +43,7 @@ export default function TimeCheckDetail() {
     dir: searchParams.get('dir') ?? undefined,
     startDate: searchParams.get('startDate') ?? undefined,
     endDate: searchParams.get('endDate') ?? undefined,
+    personId: Number(searchParams.get('personId')) ?? personId,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -48,13 +52,23 @@ export default function TimeCheckDetail() {
 
   // * get header
   let header: HeaderTableFields[] = MyTimeCheckHeader;
+  // * get data table from API
+
+  const {
+    isLoading,
+    isError,
+    data: dataTable,
+  } = useTimeCheckList(
+    stateQuery,
+    `${TIME_CHECK.model.manager}/${TIME_CHECK.service}/${TIME_CHECK.model.detail}`,
+  );
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
       if (el.key === 'date') {
         el.width = 200;
-        el.sorter = true;
+        el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
       if (
@@ -106,6 +120,14 @@ export default function TimeCheckDetail() {
             }
             return <span>{data}</span>;
           }
+          if (
+            (!data && el.key === 'ot') ||
+            el.key === 'workingTime' ||
+            el.key === 'inLate' ||
+            el.key === 'outEarly'
+          ) {
+            return <span>0</span>;
+          }
           return <span>-</span>;
         },
       };
@@ -115,23 +137,23 @@ export default function TimeCheckDetail() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { timeCheckList },
-    } = dataMock;
-    setRecords(timeCheckList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      // setPagination((prevPagination: TablePaginationConfig) => ({
-      //   ...prevPagination,
-      //   current: pagination.page,
-      //   pageSize: pagination.limit,
-      //   total: pagination.totalRecords,
-      // }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { timeCheckList },
+      } = dataTable;
+      setRecords(timeCheckList);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
-  }, []);
+  }, [stateQuery, isError, dataTable]);
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -148,12 +170,6 @@ export default function TimeCheckDetail() {
       sort = `${sortField}`;
       dir = sortDirections;
     }
-
-    setPagination((prevPagination: TablePaginationConfig) => ({
-      ...prevPagination,
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    }));
 
     // * set changing of pagination to state query
     setStateQuery((prev: TimeCheckListQuery) => ({
@@ -173,13 +189,17 @@ export default function TimeCheckDetail() {
           menuType={MENU_TYPE.DETAIL}
           setStateQuery={setStateQuery}
           stateQuery={stateQuery}
+          employeeInfor={{
+            personName: records[0]?.personName,
+            rollNumber: records[0]?.rollNumber,
+          }}
         />
       }
       onChange={handleTableChange}
       pagination={pagination}
       stateQuery={stateQuery}
       rowKey={(record: TimeCheckModel) => record.id}
-      scroll={{ y: 200 }}
+      loading={isLoading}
     />
   );
 }

@@ -67,7 +67,7 @@ export default function SubordinateTimeCheck() {
     // refetch: refetchList,
   } = useTimeCheckList(
     stateQuery,
-    `${TIME_CHECK.model.hr}/${TIME_CHECK.service}/${TIME_CHECK.model.allEmployee}`,
+    `${TIME_CHECK.model.manager}/${TIME_CHECK.service}/${TIME_CHECK.model.allSubordinate}`,
   );
   // * render header and data in table
   useEffect(() => {
@@ -211,10 +211,13 @@ export default function SubordinateTimeCheck() {
     return {
       onClick: () => {
         timeCheckIdRef.current = record.id;
-        navigate({
-          pathname: `/time-check/detail/${record.id}`,
-          search: `startDate=${stateQuery.startDate}&endDate=${stateQuery.endDate}`,
-        });
+        navigate(
+          {
+            pathname: `/time-check/subordinate/detail/${record.id}`,
+            search: `startDate=${stateQuery.startDate}&endDate=${stateQuery.endDate}`,
+          },
+          { replace: true },
+        );
       },
     };
   };
@@ -227,7 +230,7 @@ export default function SubordinateTimeCheck() {
         pagination={pagination}
         extra={
           <ExtraTableTimeCheck
-            menuType={MENU_TYPE.ALL}
+            menuType={MENU_TYPE.SUBORDINATE}
             setStateQuery={setStateQuery}
             stateQuery={stateQuery}
           />

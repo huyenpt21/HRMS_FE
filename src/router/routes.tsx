@@ -65,15 +65,23 @@ export default function RouterElement() {
             },
             {
               path: 'all',
-              element: <AllTimeCheck />,
+              children: [
+                { path: '', element: <AllTimeCheck /> },
+                {
+                  path: 'detail/:personId',
+                  element: <TimeCheckDetail />,
+                },
+              ],
             },
             {
               path: 'subordinate',
-              element: <SubordinateTimeCheck />,
-            },
-            {
-              path: 'detail/:rollNumber',
-              element: <TimeCheckDetail />,
+              children: [
+                { path: '', element: <SubordinateTimeCheck /> },
+                {
+                  path: 'detail/:personId',
+                  element: <TimeCheckDetail />,
+                },
+              ],
             },
           ],
         },
