@@ -79,6 +79,11 @@ export const menus: MenuItemType[] = [
         path: '/time-check/my-time-check',
       },
       {
+        title: 'Subordinate Time Check',
+        key: 'subordinateTimeCheckList',
+        path: '/time-check/subordinate',
+      },
+      {
         title: 'All Time Check List',
         key: 'allTimeCheckList',
         path: '/time-check/all',

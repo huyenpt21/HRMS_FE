@@ -11,6 +11,7 @@ import MyRequestList from 'pages/requests/myRequest';
 import SubordinateRequestList from 'pages/requests/subordinateRequest';
 import AllTimeCheck from 'pages/timeCheck/allTimeCheck';
 import MyTimeCheck from 'pages/timeCheck/myTimeCheck';
+import SubordinateTimeCheck from 'pages/timeCheck/subordinateTimeCheck';
 import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
@@ -65,6 +66,10 @@ export default function RouterElement() {
             {
               path: 'all',
               element: <AllTimeCheck />,
+            },
+            {
+              path: 'subordinate',
+              element: <SubordinateTimeCheck />,
             },
             {
               path: 'detail/:rollNumber',
