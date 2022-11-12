@@ -144,7 +144,7 @@ export default function ExtraTableTimeCheck({
       </div>
       <Row gutter={20}>
         {(menuType === MENU_TYPE.MIME || menuType === MENU_TYPE.DETAIL) && (
-          <Col span={6}>
+          <Col xs={24} sm={20} md={10} xl={8} xxl={6}>
             <BasicDateRangePicker
               label="Filter date"
               onChange={handleChangeDate}
@@ -160,7 +160,7 @@ export default function ExtraTableTimeCheck({
         )}
         {(menuType === MENU_TYPE.SUBORDINATE || menuType === MENU_TYPE.ALL) && (
           <>
-            <Col span={6}>
+            <Col xs={24} sm={18} md={8} xl={8} xxl={6}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
                 placeholder="Search..."
@@ -170,7 +170,7 @@ export default function ExtraTableTimeCheck({
                 label="Employee Name"
               />
             </Col>
-            <Col span={5}>
+            <Col xs={24} sm={18} md={10} xl={8} xxl={6}>
               <BasicDatePicker
                 label="Date"
                 picker="week"

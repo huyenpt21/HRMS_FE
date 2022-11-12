@@ -32,6 +32,8 @@ export const TIME_CHECK = {
   service: 'time-check',
   model: {
     manager: 'manager',
+    hr: 'HR',
+    allEmployee: 'all-employee',
     allSubordinate: 'all-subordinate',
   },
 };

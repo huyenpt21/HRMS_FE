@@ -24,10 +24,10 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
-import styles from './allTimeCheck.module.less';
-import dataMock from './dataMock.json';
+import styles from './subordinateTimeCheck.module.less';
+import dataMock from '../allTimeCheck/dataMock.json';
 
-export default function AllTimeCheck() {
+export default function SubordinateTimeCheck() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const navigate = useNavigate();

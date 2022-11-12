@@ -96,7 +96,7 @@ const MainLayout = () => {
           closeIcon={null}
           placement="left"
           width={siderWidth}
-          visible={visible}
+          open={visible}
           onClose={() => onVisible(false)}
           drawerStyle={{
             padding: 0,

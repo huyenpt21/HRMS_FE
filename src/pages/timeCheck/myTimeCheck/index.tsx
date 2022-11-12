@@ -87,7 +87,7 @@ export default function MyTimeCheck() {
       return {
         ...el,
         render: (data: any, record: TimeCheckModel) => {
-          if (data !== null) {
+          if (data) {
             if (el.key === 'date') {
               return <span>{getDateFormat(data, DATE_TIME_US)}</span>;
             }
@@ -118,6 +118,14 @@ export default function MyTimeCheck() {
               );
             }
             return <span>{data}</span>;
+          }
+          if (
+            (!data && el.key === 'ot') ||
+            el.key === 'workingTime' ||
+            el.key === 'inLate' ||
+            el.key === 'outEarly'
+          ) {
+            return <span>0</span>;
           }
           return <span>-</span>;
         },
