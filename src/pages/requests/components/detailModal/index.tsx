@@ -82,7 +82,7 @@ export default function RequestDetailModal({
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
   const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
-  const remainingTimeRef = useRef<number>();
+  const remainingTimeRef = useRef<number | undefined>();
 
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
@@ -208,6 +208,7 @@ export default function RequestDetailModal({
         setRequestType(item?.requestTypeName);
         setIsAllowRollback(item?.isAllowRollback);
         requestIdRefInternal.current = item?.id;
+        remainingTimeRef.current = item?.timeRemaining;
       }
     }
   }, [detailRequest]);
@@ -465,7 +466,11 @@ export default function RequestDetailModal({
                     <Col>
                       {remainingTimeRef.current === 0 && (
                         <div className={styles.notice}>
-                          * Notice: You have used up all the{' '}
+                          * Notice:{' '}
+                          {tabType === REQUEST_MENU.MY_REQUEST
+                            ? 'You'
+                            : 'This person'}{' '}
+                          have used up all the{' '}
                           {requestType === REQUEST_TYPE_KEY.LEAVE
                             ? 'holidays this year'
                             : 'over time this month'}
@@ -607,6 +612,7 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingUpdate || isUploadingImage}
+                    disabled={remainingTimeRef.current === 0}
                   />
                 )}
               </div>
@@ -632,14 +638,16 @@ export default function RequestDetailModal({
                   )}
                   {tabType === REQUEST_MENU.SUBORDINATE && (
                     <>
-                      <BasicButton
-                        title="Approve"
-                        type="outline"
-                        className={styles['btn--approve']}
-                        onClick={() => {
-                          handleQickActionRequest(STATUS.APPROVED);
-                        }}
-                      />
+                      {!(remainingTimeRef.current === 0) && (
+                        <BasicButton
+                          title="Approve"
+                          type="outline"
+                          className={styles['btn--approve']}
+                          onClick={() => {
+                            handleQickActionRequest(STATUS.APPROVED);
+                          }}
+                        />
+                      )}
                       <BasicButton
                         title="Reject"
                         type="outline"
