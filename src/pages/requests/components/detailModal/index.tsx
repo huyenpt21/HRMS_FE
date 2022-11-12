@@ -338,10 +338,14 @@ export default function RequestDetailModal({
     if (!dateSelected) {
       return current && current < moment().startOf('day');
     }
-    //disable next month
-    const tooLate = current > moment(dateSelected[0]).endOf('years');
-    //disable previous month
-    const tooEarly = current < moment(dateSelected[1]).startOf('years');
+    let disableType: moment.unitOfTime.StartOf = 'years';
+    if (requestType === REQUEST_TYPE_KEY.OT) {
+      disableType = 'months';
+    }
+    //disable next month/years
+    const tooLate = current > moment(dateSelected[0]).endOf(disableType);
+    //disable previous month/years
+    const tooEarly = current < moment().startOf('days');
     return !!tooLate || !!tooEarly;
   };
 
@@ -510,6 +514,12 @@ export default function RequestDetailModal({
                     placeholder={['From', 'To']}
                     showTime
                     format={DATE_TIME_US}
+                    disabledDate={disabledDate}
+                    disabledTime={disabledRangeTime}
+                    onCalendarChange={(values: RangeValue) => {
+                      setDateSelected(values);
+                    }}
+                    allowClear
                   />
                 </Col>
               </Row>
