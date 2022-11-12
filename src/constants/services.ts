@@ -35,6 +35,7 @@ export const TIME_CHECK = {
     hr: 'HR',
     allEmployee: 'all-employee',
     allSubordinate: 'all-subordinate',
+    detail: 'detail-subordinate',
   },
 };
 

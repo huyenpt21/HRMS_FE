@@ -8,10 +8,10 @@ import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
-import { TimeCheckListQuery } from 'models/timeCheck';
+import { TimeCheckEmployeeInfo, TimeCheckListQuery } from 'models/timeCheck';
 import moment from 'moment-timezone';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   getDateFormat,
   getEndOfWeek,
@@ -25,7 +25,7 @@ interface IProps {
   menuType: MENU_TYPE;
   setStateQuery: Dispatch<SetStateAction<TimeCheckListQuery>>;
   stateQuery: TimeCheckListQuery;
-  employeeInfor?: any;
+  employeeInfor?: TimeCheckEmployeeInfo;
 }
 export default function ExtraTableTimeCheck({
   menuType,
@@ -34,6 +34,7 @@ export default function ExtraTableTimeCheck({
   employeeInfor,
 }: IProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [dates, setDates] = useState<RangeValue>(null);
 
   const handleChangeDate = (date: any, dateString: string[]) => {
@@ -77,7 +78,9 @@ export default function ExtraTableTimeCheck({
   };
 
   const handleBackButton = () => {
-    navigate('/time-check/all');
+    const type = location.pathname.split('/')[2];
+    if (type === 'subordinate') navigate('/time-check/subordinate');
+    if (type === 'all') navigate('/time-check/all');
   };
 
   const handleTitle = () => {
@@ -130,7 +133,7 @@ export default function ExtraTableTimeCheck({
             <div>
               <span className={styles.employee__info}>Full Name:</span>
               <span className={styles['text--bold']}>
-                {employeeInfor?.name}
+                {employeeInfor?.personName}
               </span>
             </div>
             <div>

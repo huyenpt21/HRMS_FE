@@ -17,6 +17,12 @@ export interface TimeCheckListFilter {
   search?: string;
   startDate?: string;
   endDate?: string;
+  personId?: number;
+}
+
+export interface TimeCheckEmployeeInfo {
+  personName?: string;
+  rollNumber?: string;
 }
 
 export type TimeCheckListSortFields = 'personName';
