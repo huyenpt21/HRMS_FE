@@ -1,6 +1,8 @@
 import { Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
-import BasicDateRangePicker from 'components/BasicDateRangePicker';
+import BasicDateRangePicker, {
+  RangeValue,
+} from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
@@ -78,8 +80,8 @@ export default function RequestDetailModal({
   const [isAllowRollback, setIsAllowRollback] = useState<number | undefined>(1);
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
+  const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
-  const startDateSelected = useRef<moment.Moment | undefined>();
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
       onSuccess: (response: ResRequestModify) => {
@@ -328,17 +330,25 @@ export default function RequestDetailModal({
         year: moment(dates[0]).get('year'),
       };
       remainingTimeRequest(data);
-      startDateSelected.current = dates[0];
     }
   };
 
   const disabledDate = (current: moment.Moment) => {
-    return current && current < moment().startOf('day');
+    // if start date haven't selected -> disable past days
+    if (!dateSelected) {
+      return current && current < moment().startOf('day');
+    }
+    //disable next month
+    const tooLate = current > moment(dateSelected[0]).endOf('years');
+    //disable previous month
+    const tooEarly = current < moment(dateSelected[1]).startOf('years');
+    return !!tooLate || !!tooEarly;
   };
 
   const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
     if (
-      startDateSelected.current?.diff(moment().startOf('day'), 'days') === 0
+      dateSelected &&
+      dateSelected[0]?.diff(moment().startOf('day'), 'days') === 0
     ) {
       const currentHour = moment().get('hour');
       const currentMinute = moment().get('minute');
@@ -472,6 +482,9 @@ export default function RequestDetailModal({
                     allowClear
                     onChange={handleChangeDate}
                     disabledDate={disabledDate}
+                    onCalendarChange={(values: RangeValue) => {
+                      setDateSelected(values);
+                    }}
                   />
                 </Col>
                 <Col span="12">
