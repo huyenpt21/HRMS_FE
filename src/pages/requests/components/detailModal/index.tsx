@@ -82,6 +82,8 @@ export default function RequestDetailModal({
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
   const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
+  const remainingTimeRef = useRef<number>();
+
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
       onSuccess: (response: ResRequestModify) => {
@@ -162,6 +164,7 @@ export default function RequestDetailModal({
           'timeRemaining',
           item.timeRemaining?.toFixed(2),
         );
+        remainingTimeRef.current = item.timeRemaining;
       }
     },
     onError: (response: ResRequestModify) => {
@@ -204,6 +207,7 @@ export default function RequestDetailModal({
         setRequestData(requestFixInfor);
         setRequestType(item?.requestTypeName);
         setIsAllowRollback(item?.isAllowRollback);
+        requestIdRefInternal.current = item?.id;
       }
     }
   }, [detailRequest]);
@@ -445,18 +449,30 @@ export default function RequestDetailModal({
               {(requestType === REQUEST_TYPE_KEY.LEAVE ||
                 requestType === REQUEST_TYPE_KEY.OT) &&
                 requestStatus === STATUS.PENDING && (
-                  <Col span="5">
-                    <BasicInput
-                      label="Remaining Time"
-                      name="timeRemaining"
-                      disabled
-                      suffix={
-                        requestType === REQUEST_TYPE_KEY.LEAVE
-                          ? 'days'
-                          : 'hours'
-                      }
-                    />
-                  </Col>
+                  <>
+                    <Col span="4">
+                      <BasicInput
+                        label="Remaining Time"
+                        name="timeRemaining"
+                        disabled
+                        suffix={
+                          requestType === REQUEST_TYPE_KEY.LEAVE
+                            ? 'days'
+                            : 'hours'
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      {remainingTimeRef.current === 0 && (
+                        <div className={styles.notice}>
+                          * Notice: You have used up all the{' '}
+                          {requestType === REQUEST_TYPE_KEY.LEAVE
+                            ? 'holidays this year'
+                            : 'over time this month'}
+                        </div>
+                      )}
+                    </Col>
+                  </>
                 )}
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
@@ -581,6 +597,7 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingCreate}
+                    disabled={remainingTimeRef.current === 0}
                   />
                 )}
                 {actionModal === ACTION_TYPE.EDIT && (
