@@ -6,6 +6,7 @@ RUN npm i -g corepack
 WORKDIR /app
 
 COPY package.json /app
+COPY yarn.lock /app
 RUN yarn install
 COPY . /app
 COPY .env /app/.env
