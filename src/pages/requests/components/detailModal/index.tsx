@@ -53,6 +53,8 @@ import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../rollbackModal';
 import styles from './requestDetailModal.module.less';
 import { RangePickerProps } from 'antd/lib/date-picker';
+import SelectCustomSearch from 'components/SelectCustomSearch';
+import { DEVICE_TYPE } from 'constants/services';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -481,15 +483,15 @@ export default function RequestDetailModal({
                 )}
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
-                  <BasicSelect
-                    options={REQUEST_TYPE_LIST}
+                  <SelectCustomSearch
+                    url={DEVICE_TYPE.service}
+                    dataName="items"
+                    apiName="device-type-master-data"
                     label="Device Type"
                     rules={[{ required: true }]}
                     placeholder="Choose device type"
                     name="deviceTypeId"
                     allowClear
-                    showSearch
-                    optionFilterProp="label"
                     disabled={actionModal === ACTION_TYPE.EDIT}
                   />
                 </Col>
