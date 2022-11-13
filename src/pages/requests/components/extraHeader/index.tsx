@@ -66,7 +66,7 @@ const ExtraTableHeader = ({
       <div className={styles.header__container}>
         <Row gutter={20} className={styles.filter__section}>
           {tabType !== REQUEST_MENU.MY_REQUEST && (
-            <Col span={6}>
+            <Col xs={24} sm={10} md={6} lg={6} xl={6} xxl={4}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
                 placeholder="Search..."
@@ -77,14 +77,14 @@ const ExtraTableHeader = ({
               />
             </Col>
           )}
-          <Col span={6}>
+          <Col xs={24} sm={14} md={12} lg={8} xl={8} xxl={6}>
             <BasicDateRangePicker
               placeholder={['From', 'To']}
               label="Create Date"
               onChange={handleChangeCreateDate}
             />
           </Col>
-          <Col span={4}>
+          <Col xs={24} sm={12} md={6} lg={6} xl={6} xxl={4}>
             <BasicSelect
               options={REQUEST_TYPE_LIST}
               placeholder="Request Type"
