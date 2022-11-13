@@ -49,3 +49,7 @@ export const POSITION_BY_DEPARTMENT = {
 export const DEPARTMENT = {
   service: 'department-master-data',
 };
+
+export const DEVICE_TYPE = {
+  service: 'device-type-master-data',
+};
