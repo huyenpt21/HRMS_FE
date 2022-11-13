@@ -57,19 +57,9 @@ export const menus: MenuItemType[] = [
         path: '/device/my-device',
       },
       {
-        title: 'My Request History',
-        key: 'myDeviceRequest',
-        path: '/device/my-request',
-      },
-      {
         title: 'Subodinate Device List',
         key: 'subordinateDeviceList',
         path: '/device/subordinate-device',
-      },
-      {
-        title: 'Subodinate Request List',
-        key: 'subordinateDeviceRequestList',
-        path: '/device/subordinate-request',
       },
       {
         title: 'All Request List',
@@ -80,13 +70,18 @@ export const menus: MenuItemType[] = [
   },
   {
     title: 'Time Check',
-    key: 'timeCheck',
+    key: 'time-check',
     icon: 'deadline',
     children: [
       {
         title: 'My Time Check',
         key: 'myTimeCheck',
-        path: '/time-check/my-request',
+        path: '/time-check/my-time-check',
+      },
+      {
+        title: 'Subordinate Time Check',
+        key: 'subordinateTimeCheckList',
+        path: '/time-check/subordinate',
       },
       {
         title: 'All Time Check List',

@@ -1,0 +1,147 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 15
+    }
+  },
+  "data": {
+    "timeCheckList": [
+      {
+        "id": 1,
+        "rollNumber": "MS00001",
+        "personName": "Trinh Kim Chi",
+        "mon": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 0,
+          "outEarly": 0
+        },
+        "tue": {
+          "timeIn": "2022-10-07 08:45:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 15,
+          "outEarly": 0
+        },
+        "wed": {
+          "timeIn": "2022-10-07 08:20:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 0,
+          "outEarly": 3.5
+        },
+        "fri": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 2.5,
+          "outEarly": 3.5
+        },
+        "sat": {
+          "timeIn": "2022-10-07 08:00:00",
+          "inLate": 2.5
+        }
+      },
+      {
+        "id": 2,
+        "rollNumber": "MS00002",
+        "personName": "Trinh Kim Chi",
+        "mon": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 0,
+          "outEarly": 0
+        },
+        "tue": {
+          "timeIn": "2022-10-07 08:45:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 15,
+          "outEarly": 0
+        },
+        "wed": {
+          "timeIn": "2022-10-07 08:20:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 0,
+          "outEarly": 3.5
+        },
+        "fri": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 2.5,
+          "outEarly": 3.5
+        },
+        "sat": {
+          "timeIn": "2022-10-07 08:00:00",
+          "inLate": 2.5
+        }
+      },
+      {
+        "id": 3,
+        "rollNumber": "MS00003",
+        "personName": "Trinh Kim Chi",
+        "mon": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 0,
+          "outEarly": 0
+        },
+        "tue": {
+          "timeIn": "2022-10-07 08:45:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 15,
+          "outEarly": 0
+        },
+        "wed": {
+          "timeIn": "2022-10-07 08:20:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 0,
+          "outEarly": 3.5
+        },
+        "fri": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 2.5,
+          "outEarly": 3.5
+        },
+        "sat": {
+          "timeIn": "2022-10-07 08:00:00",
+          "inLate": 2.5
+        }
+      },
+      {
+        "id": 4,
+        "rollNumber": "MS00004",
+        "personName": "Trinh Kim Chi",
+        "mon": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 0,
+          "outEarly": 0
+        },
+        "tue": {
+          "timeIn": "2022-10-07 08:45:00",
+          "timeOut": "2022-10-07 18:00:00",
+          "inLate": 15,
+          "outEarly": 0
+        },
+        "wed": {
+          "timeIn": "2022-10-07 08:20:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 0,
+          "outEarly": 3.5
+        },
+        "fri": {
+          "timeIn": "2022-10-07 08:00:00",
+          "timeOut": "2022-10-07 17:00:00",
+          "inLate": 2.5,
+          "outEarly": 3.5
+        },
+        "sat": {
+          "timeIn": "2022-10-07 08:00:00",
+          "inLate": 2.5
+        }
+      }
+    ]
+  }
+}

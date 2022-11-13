@@ -2,30 +2,29 @@ import { useQuery } from 'react-query';
 import fetchApi from 'utils/fetch-api';
 
 interface params {
-  label?: string;
-  url: string;
-  limit: number;
-  page: number;
-  apiUrl?: string;
+  search?: string;
 }
 
-export const useGetDataOptions = (payload: params) => {
+export const useGetDataOptions = (
+  payload: params,
+  url: string,
+  apiName: string,
+  isCallApi?: boolean,
+) => {
   return useQuery(
-    ['list-option', payload],
+    [apiName, payload],
     () => {
       return fetchApi(
         {
-          url: payload.url,
-          // options: { ...payload, ...param },
+          url: url,
           payload,
         },
         undefined,
-        payload.apiUrl,
       );
     },
     {
       refetchOnWindowFocus: false,
-      enabled: !!payload.url,
+      enabled: isCallApi,
     },
   );
 };

@@ -1,6 +1,11 @@
 import { MenuOptionsType, RadioButtonType, SelectBoxType } from 'models/common';
 import { COMMON_STATUS } from './common';
-import { GENDER_KEY, MENU_OPTION_KEY, REQUEST_TYPE_KEY } from './enums/common';
+import {
+  GENDER_KEY,
+  MENU_OPTION_KEY,
+  REQUEST_TYPE_KEY,
+  STATUS,
+} from './enums/common';
 
 export const URL_PATH = {
   employeeList: '/employee/all/list',
@@ -91,11 +96,11 @@ export const GENDER_LIST: SelectBoxType[] = [
 
 export const STATUS_RADIO_LIST: RadioButtonType[] = [
   {
-    value: COMMON_STATUS.TRUE,
+    value: COMMON_STATUS.ACTIVE,
     label: 'Active',
   },
   {
-    value: COMMON_STATUS.FALSE,
+    value: COMMON_STATUS.INACTIVE,
     label: 'Inactive',
   },
 ];
@@ -108,17 +113,17 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Business Trip',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 2,
   },
   {
     label: 'Sickness Of Children',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 3,
   },
   {
     label: 'Forgot Check In/Out',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 4,
   },
   {
@@ -133,7 +138,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Over Time',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OT,
     value: 7,
   },
   {
@@ -143,7 +148,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Work from home',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.OTHER,
     value: 9,
   },
   {
@@ -155,5 +160,20 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
     label: 'Borrow Device',
     type: REQUEST_TYPE_KEY.DEVICE,
     value: 11,
+  },
+];
+
+export const REQUEST_STATUS_LIST: SelectBoxType[] = [
+  {
+    label: STATUS.PENDING,
+    value: STATUS.PENDING,
+  },
+  {
+    label: STATUS.APPROVED,
+    value: STATUS.APPROVED,
+  },
+  {
+    label: STATUS.REJECTED,
+    value: STATUS.REJECTED,
   },
 ];

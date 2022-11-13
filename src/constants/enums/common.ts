@@ -62,7 +62,7 @@ export enum SHAPE_TYPE {
 export enum GENDER_KEY {
   MALE = 1,
   FEMALE = 0,
-  OTHER = -1,
+  OTHER = 2,
 }
 
 export enum STATUS_COLORS {
@@ -106,4 +106,12 @@ export enum REQUEST_TYPE_KEY {
   LEAVE = 'leave',
   OT = 'ot',
   DEVICE = 'device',
+  OTHER = 'other',
+}
+
+export enum MENU_TYPE {
+  MIME,
+  SUBORDINATE,
+  ALL,
+  DETAIL,
 }

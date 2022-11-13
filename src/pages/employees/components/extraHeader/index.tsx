@@ -1,13 +1,13 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
-import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
+import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
-import { POSITION_WORKING } from 'constants/fixData';
+import { DEPARTMENT, POSITION_BY_DEPARTMENT } from 'constants/services';
 import { EmployeeListQuery } from 'models/employee';
-import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
 import styles from './extraHeaderEmployee.module.less';
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
@@ -21,14 +21,15 @@ export default function ExtraHeaderTable({
   menuType,
   setStateQuery,
 }: IProps) {
+  const departmentIdRef = useRef<string>('');
   const addEmployeeHandler = () => {
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
   };
-  const handleChangePosition = (value: number) => {
+  const handleChangeFilter = (value: number, fieldName: string) => {
     setStateQuery((prev: any) => ({
       ...prev,
-      position: value,
+      [fieldName]: value,
     }));
   };
   return (
@@ -46,7 +47,7 @@ export default function ExtraHeaderTable({
       </div>
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
-          <Col span={4}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <InputDebounce
               suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
               placeholder="Search..."
@@ -55,17 +56,32 @@ export default function ExtraHeaderTable({
               keyParam="search"
             />
           </Col>
-          <Col span={4}>
-            <BasicSelect options={[]} placeholder="Department" />
+          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+            <SelectCustomSearch
+              url={DEPARTMENT.service}
+              dataName="items"
+              allowClear
+              placeholder="Choose department"
+              onChangeHandle={(value) => {
+                handleChangeFilter(value, 'departmentId');
+                if (!value) departmentIdRef.current = '';
+                if (value) departmentIdRef.current = value;
+              }}
+              apiName="department-master-data"
+            />
           </Col>
-          <Col span={4}>
-            <BasicSelect
-              options={POSITION_WORKING}
+          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+            <SelectCustomSearch
+              url={`${POSITION_BY_DEPARTMENT.service}?departmentId=${departmentIdRef.current}`}
+              dataName="items"
               placeholder="Position"
               allowClear
-              showSearch
               optionFilterProp="label"
-              onChange={handleChangePosition}
+              apiName="position-master-data"
+              onChangeHandle={(value) => {
+                handleChangeFilter(value, 'positionId');
+              }}
+              refetchValue={departmentIdRef.current}
             />
           </Col>
         </Row>

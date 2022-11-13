@@ -7,10 +7,10 @@ import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME } from 'constants/common';
 import { ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
-import { REQUEST_TYPE_LIST } from 'constants/fixData';
+import { REQUEST_STATUS_LIST, REQUEST_TYPE_LIST } from 'constants/fixData';
 import { RequestListQuery } from 'models/request';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
-import { getDateFormat } from 'utils/common';
+import { getStartEndDateFormat } from 'utils/common';
 import styles from './extraHeaderRequest.module.less';
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
@@ -29,8 +29,8 @@ const ExtraTableHeader = ({
     modalAction.current = ACTION_TYPE.CREATE;
   };
   const handleChangeCreateDate = (_: any, dateString: string) => {
-    const fromDate = getDateFormat(dateString[0], DATE_TIME);
-    const toDate = getDateFormat(dateString[1], DATE_TIME);
+    const fromDate = getStartEndDateFormat(dateString[0], DATE_TIME);
+    const toDate = getStartEndDateFormat(dateString[1], DATE_TIME, false);
     setStateQuery((prev: any) => ({
       ...prev,
       createDateFrom: fromDate,
@@ -38,10 +38,10 @@ const ExtraTableHeader = ({
     }));
   };
 
-  const handleChangeRequestType = (value: number) => {
+  const handleChangeFilter = (value: number, fieldName: string) => {
     setStateQuery((prev: any) => ({
       ...prev,
-      requestTypeId: value,
+      [fieldName]: value,
     }));
   };
   return (
@@ -92,7 +92,22 @@ const ExtraTableHeader = ({
               allowClear
               showSearch
               optionFilterProp="label"
-              onChange={handleChangeRequestType}
+              onChange={(value) => {
+                handleChangeFilter(value, 'requestTypeId');
+              }}
+            />
+          </Col>
+          <Col span={4}>
+            <BasicSelect
+              options={REQUEST_STATUS_LIST}
+              placeholder="Request status"
+              label="Status"
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              onChange={(value) => {
+                handleChangeFilter(value, 'status');
+              }}
             />
           </Col>
         </Row>

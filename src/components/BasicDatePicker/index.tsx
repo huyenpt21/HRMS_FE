@@ -1,6 +1,6 @@
 import { DatePicker, Form } from 'antd';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_REQUEST, US_DATE_FORMAT } from 'constants/common';
+import { US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
 import styles from './index.module.less';
 
@@ -11,13 +11,17 @@ interface Props {
   className?: string;
   classNameFormItem?: string;
   rules?: object[];
-  defaultValue?: string;
+  defaultValue?: moment.Moment;
   disabled?: boolean;
   onChange?: any;
   disabledDate?: (currentDate: moment.Moment) => boolean;
   picker?: 'week' | 'month' | 'quarter' | 'year';
   placeholder?: string;
   allowClear?: boolean;
+  format?: string;
+  renderExtraFooter?: () => React.ReactNode;
+  defaultPickerValue?: moment.Moment;
+  value?: moment.Moment;
 }
 
 const BasicDatePicker = ({
@@ -33,6 +37,10 @@ const BasicDatePicker = ({
   picker,
   placeholder,
   allowClear,
+  format,
+  renderExtraFooter,
+  defaultPickerValue,
+  value,
 }: Props) => {
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
@@ -46,24 +54,23 @@ const BasicDatePicker = ({
       required={isRequired}
       rules={rules}
       className={classNameFormItem}
-      initialValue={
-        defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
-      }
+      initialValue={defaultValue ? defaultValue : undefined}
     >
       <DatePicker
         className={styles.date__picker}
         size={'large'}
-        defaultValue={
-          defaultValue ? moment(defaultValue, DATE_REQUEST) : undefined
-        }
-        format={US_DATE_FORMAT}
+        defaultValue={defaultValue ? defaultValue : undefined}
+        format={format ?? US_DATE_FORMAT}
         onChange={onChange}
         disabled={disabled}
         disabledDate={disabledDate}
         picker={picker}
         placeholder={placeholder ? placeholder : US_DATE_FORMAT}
         suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
-        allowClear={true}
+        allowClear={allowClear ?? true}
+        renderExtraFooter={renderExtraFooter}
+        defaultPickerValue={defaultPickerValue}
+        value={value}
       />
     </Form.Item>
   );

@@ -2,7 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
+import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { MyRequestListHeader } from 'constants/header';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
@@ -23,14 +23,14 @@ import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
-import dataMock from '../dataMock.json';
+// import dataMock from '../dataMock.json';
 
 export default function MyRequestList() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const requestId = useRef<number>();
+  const requestIdRef = useRef<number>(0);
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
@@ -70,24 +70,15 @@ export default function MyRequestList() {
         el.key === 'endTime'
       ) {
         el.width = 150;
-      } else if (el.key === 'requestType' || el.key === 'personName') {
-        el.width = 200;
-        el.sorter = isError;
+        el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
+        // el.align = 'center';
+      } else if (el.key === 'requestTypeName') {
+        el.width = 200;
       } else if (el.key === 'status') {
         el.width = 100;
-        el.sorter = isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        el.filterMultiple = isError;
-        el.filters = [
-          { text: STATUS.PENDING, value: STATUS.PENDING },
-          { text: STATUS.APPROVED, value: STATUS.APPROVED },
-          { text: STATUS.REJECTED, value: STATUS.REJECTED },
-        ];
       } else if (el.key === 'reason') {
-        el.width = 200;
-      } else {
-        el.width = 200;
+        el.width = 180;
       }
       return {
         ...el,
@@ -102,10 +93,9 @@ export default function MyRequestList() {
             } else if (el.key === 'status') {
               return <RequestStatus data={data} />;
             }
-            return data;
-          } else {
-            return '-';
+            return <span>{data}</span>;
           }
+          return '-';
         },
       };
     });
@@ -113,42 +103,48 @@ export default function MyRequestList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 60,
-      align: 'left',
-      render: (_, record: RequestModel) => {
+      width: 80,
+      align: 'center',
+      render: (data: any, record: RequestModel) => {
         if (record?.status === STATUS.PENDING) {
           return (
             <RequestMenuAction
               record={record}
               tabType={REQUEST_MENU.MY_REQUEST}
+              setIsShowDetailModal={setIsShowDetailModal}
+              modalAction={modalAction}
+              requestIdRef={requestIdRef}
+              stateQuery={stateQuery}
+              refetchList={refetchList}
             />
           );
+        } else {
+          return '-';
         }
       },
     });
-
     setColumnsHeader(columns);
-  }, [stateQuery]);
+  }, [stateQuery, isError]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { requestList },
-    } = dataMock;
-    setRecords(requestList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { items },
+      } = dataTable;
+      setRecords(items);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
-  }, [dataTable]);
+  }, [dataTable, stateQuery, isError]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -182,11 +178,10 @@ export default function MyRequestList() {
       [filterKey]: filterValues,
     }));
   };
-
   const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
-        requestId.current = record.id;
+        requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
         requestStatus.current = record.status;
@@ -195,7 +190,7 @@ export default function MyRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestId.current = -1;
+    requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
 
@@ -216,7 +211,7 @@ export default function MyRequestList() {
         }
         stateQuery={stateQuery}
         rowKey={(record: RequestModel) => record.id}
-        scroll={{ y: 240 }}
+        isShowScroll
         className={'cursor-pointer'}
         onRow={(record: RequestModel) => {
           return rowClickHandler(record);
@@ -228,7 +223,7 @@ export default function MyRequestList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          requestId={requestId.current}
+          requestIdRef={requestIdRef.current}
           requestStatus={requestStatus.current}
           tabType={REQUEST_MENU.MY_REQUEST}
           refetchList={refetchList}

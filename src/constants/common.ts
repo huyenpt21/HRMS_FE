@@ -15,8 +15,8 @@ export const paginationConfig: TablePaginationConfig = {
 };
 
 export const COMMON_STATUS = {
-  TRUE: true,
-  FALSE: false,
+  ACTIVE: 1,
+  INACTIVE: 0,
 };
 
 export const US_DATE_FORMAT = 'MM/DD/YYYY';

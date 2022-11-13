@@ -12,14 +12,25 @@
     }
     &--approve {
       padding: 0px 20px;
-      background-color: @success-color;
-      border-color: @success-color;
+      color: @success-color !important;
+      border-color: @success-color !important;
+      background-color: @success-background-color !important;
       &:hover,
       &:focus,
       &:active {
-        background-color: @success-color;
-        border-color: @success-color;
-        opacity: 0.8;
+        background-color: #e4ffc9 !important;
+        border-color: @success-color !important;
+      }
+    }
+    &--reject {
+      color: @error-color !important;
+      border-color: @error-color !important;
+      background-color: @error-background-color !important;
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: #fbc6c1 !important;
+        border-color: @error-color !important;
       }
     }
   }
@@ -41,4 +52,9 @@
   font-size: 16px;
   font-weight: 600;
   padding-left: 8px;
+}
+
+.notice {
+  color: @warning-color;
+  margin-bottom: 12px;
 }

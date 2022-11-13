@@ -3,6 +3,13 @@ import moment from 'moment';
 import { TIME_HOUR } from 'constants/common';
 import styles from './index.module.less';
 
+type EventValue<DateType> = DateType | null;
+type RangeType = 'start' | 'end';
+type DisabledTimes = {
+  disabledHours?: (() => number[]) | undefined;
+  disabledMinutes?: ((hour: number) => number[]) | undefined;
+  disabledSeconds?: ((hour: number, minute: number) => number[]) | undefined;
+};
 interface TimeComponentProps {
   name: string;
   label?: string;
@@ -14,8 +21,12 @@ interface TimeComponentProps {
   defaultStartTime?: string;
   defaultEndTime?: string;
   onChange?: (e: any) => void;
-  disableTime?: () => {};
+  disableTime?: (
+    date: EventValue<moment.Moment>,
+    type: RangeType,
+  ) => DisabledTimes;
   placeholder?: [string, string];
+  hideDisabledOptions?: boolean;
 }
 
 const TimeRangePicker = ({
@@ -31,6 +42,7 @@ const TimeRangePicker = ({
   onChange,
   disableTime,
   placeholder,
+  hideDisabledOptions,
 }: TimeComponentProps) => {
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
@@ -59,6 +71,7 @@ const TimeRangePicker = ({
           disabledTime={disableTime}
           suffixIcon={null}
           placeholder={placeholder}
+          hideDisabledOptions={hideDisabledOptions}
         />
       </Form.Item>
     </span>

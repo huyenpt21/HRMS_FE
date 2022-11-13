@@ -25,7 +25,7 @@ import {
 } from 'utils/common';
 import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
-import dataMock from '../dataMock.json';
+// import dataMock from '../dataMock.json';
 import { useEmployeeList } from 'hooks/useEmployee';
 import { SUBORDINATE_LIST } from 'constants/services';
 export default function SubordinateList() {
@@ -35,7 +35,7 @@ export default function SubordinateList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const employeeId = useRef<number>();
+  const employeeRollNumber = useRef<string | undefined>();
 
   // * defailt filters
   const defaultFilter: EmployeeListQuery = {
@@ -85,18 +85,24 @@ export default function SubordinateList() {
       }
       return {
         ...el,
-        render: (data: any, record: EmployeeModel) => {
-          if (el.key === 'status') {
-            if (record.isActive)
-              return (
-                <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
-              );
-            else
-              return (
-                <BasicTag statusColor={STATUS_COLORS.DEFAULT} text="Inactive" />
-              );
+        render: (data: any) => {
+          if (data !== null) {
+            if (el.key === 'isActive') {
+              if (data)
+                return (
+                  <BasicTag statusColor={STATUS_COLORS.SUCCESS} text="Active" />
+                );
+              else
+                return (
+                  <BasicTag
+                    statusColor={STATUS_COLORS.DEFAULT}
+                    text="Inactive"
+                  />
+                );
+            }
+            return <div>{data}</div>;
           }
-          return <div>{data}</div>;
+          return <span>-</span>;
         },
       };
     });
@@ -105,20 +111,20 @@ export default function SubordinateList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataMock && dataMock.data) {
+    if (dataTable && dataTable.data) {
       const {
         metadata: { pagination },
-        data: { employeeList: recordsTable },
-      } = dataMock;
+        data: { items: recordsTable },
+      } = dataTable;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API
-        // setPagination((prevPagination: TablePaginationConfig) => ({
-        //   ...prevPagination,
-        //   current: pagination.page,
-        //   pageSize: pagination.limit,
-        //   total: pagination.totalRecords,
-        // }));
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
       }
     }
   }, [dataTable, stateQuery, isError]);
@@ -138,14 +144,6 @@ export default function SubordinateList() {
       sort = `${sortField}`;
       dir = sortDirections;
     }
-
-    // ! Delete this function after setup API
-    setPagination((prevPagination: TablePaginationConfig) => ({
-      ...prevPagination,
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    }));
-
     // * set changing of pagination to state query
     setStateQuery((prev: EmployeeListQuery) => ({
       ...prev,
@@ -168,10 +166,10 @@ export default function SubordinateList() {
     setIsShowDetailModal(false);
   };
 
-  const rowClickHandler = (id: number) => {
+  const rowClickHandler = (rollNumber?: string) => {
     return {
       onClick: () => {
-        employeeId.current = id;
+        employeeRollNumber.current = rollNumber;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
       },
@@ -196,9 +194,9 @@ export default function SubordinateList() {
         stateQuery={stateQuery}
         rowKey={(record: EmployeeModel) => record.id}
         loading={isLoading}
-        scroll={{ y: 240 }}
+        isShowScroll
         onRow={(record: EmployeeModel) => {
-          return rowClickHandler(record.id);
+          return rowClickHandler(record?.rollNumber);
         }}
         className={'cursor-pointer'}
       />
@@ -207,7 +205,7 @@ export default function SubordinateList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          employeeId={employeeId.current}
+          employeeRollNumber={employeeRollNumber.current}
           refetchList={refetch}
           viewType={EMPLOYEE_MENU.SUBORDINATE}
         />

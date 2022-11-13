@@ -1,13 +1,14 @@
 import { Menu } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { menus } from './menu';
 
 export default function MenuSidebar({ collapsed }: IMenuCProps) {
   const [openKeys, setOpenKeys] = useState<any>([]);
-  const [activeMenu, setActiveMenu] = useState<any>(undefined);
+  // const [activeMenu, setActiveMenu] = useState<any>(undefined);
+  const activeMenu = useRef<any>();
   const router = useLocation();
   const menuList: MenuItemType[] = menus;
 
@@ -17,22 +18,14 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
         ? getItem(
             menu.title,
             menu.key,
-            menu?.icon && (
-              <div>
-                <SvgIcon icon={menu.icon} color="#000" />
-              </div>
-            ),
+            menu?.icon && <SvgIcon icon={menu.icon} color="#000" />,
             menu?.children.map((subMenu: MenuItemType) => {
               return getItem(
                 subMenu?.path && (
                   <NavLink to={subMenu.path}>
                     {({ isActive }) => {
-                      isActive && setActiveMenu(subMenu.key);
-                      return (
-                        <span className={isActive ? 'active-link' : undefined}>
-                          {subMenu.title}{' '}
-                        </span>
-                      );
+                      if (isActive) activeMenu.current = subMenu.key;
+                      return <span>{subMenu.title}</span>;
                     }}
                   </NavLink>
                 ),
@@ -44,12 +37,8 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
             menu?.path && (
               <NavLink to={menu.path}>
                 {({ isActive }) => {
-                  isActive && setActiveMenu(menu.key);
-                  return (
-                    <span className={isActive ? 'active-link' : undefined}>
-                      {menu.title}
-                    </span>
-                  );
+                  if (isActive) activeMenu.current = menu.key;
+                  return <span>{menu.title}</span>;
                 }}
               </NavLink>
             ),
@@ -69,22 +58,20 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
     if (keys.length >= 2) {
       keys.splice(0, 1);
     }
-
     setOpenKeys(keys);
   };
-
   useEffect(() => {
     const { pathname } = router;
 
     if (menus && menus.length) {
       menuActive(pathname);
     }
-  }, [menus, router.pathname, collapsed]);
+  }, [menus, router.pathname, collapsed, activeMenu.current]);
   return (
     <Menu
       theme="light"
       openKeys={openKeys}
-      selectedKeys={[activeMenu]}
+      selectedKeys={[activeMenu.current]}
       mode="inline"
       onOpenChange={onOpenChange}
       triggerSubMenuAction="click"

@@ -4,6 +4,14 @@ import moment from 'moment';
 import { Dispatch, SetStateAction } from 'react';
 import styles from './index.module.less';
 
+export type RangeValue = [moment.Moment | null, moment.Moment | null] | null;
+type EventValue<DateType> = DateType | null;
+type RangeType = 'start' | 'end';
+type DisabledTimes = {
+  disabledHours?: (() => number[]) | undefined;
+  disabledMinutes?: ((hour: number) => number[]) | undefined;
+  disabledSeconds?: ((hour: number, minute: number) => number[]) | undefined;
+};
 interface IProps {
   label?: string;
   rules?: object[];
@@ -17,8 +25,19 @@ interface IProps {
   className?: string;
   disabled?: boolean;
   disabledDate?: (currentDate: moment.Moment) => boolean;
-  isConvertToUTC?: boolean;
   placeholder?: [string, string];
+  showTime?: boolean;
+  format?: string;
+  onCalendarChange?: (
+    values: RangeValue,
+    formatString: [string, string],
+    info: { range: string },
+  ) => void;
+  allowClear?: boolean;
+  disabledTime?: (
+    date: EventValue<moment.Moment>,
+    type: RangeType,
+  ) => DisabledTimes;
 }
 
 const { RangePicker } = DatePicker;
@@ -43,7 +62,7 @@ const BasicDateRangePicker = (props: IProps) => {
       >
         <RangePicker
           className={`${styles['header__time']} ${props.className}`}
-          format={US_DATE_FORMAT}
+          format={props.format ? props.format : US_DATE_FORMAT}
           defaultValue={
             props.isUseDefaultValue
               ? [moment(props.defaultStartDate), moment(props.defaultEndDate)]
@@ -55,6 +74,10 @@ const BasicDateRangePicker = (props: IProps) => {
           disabled={props.disabled}
           disabledDate={props.disabledDate}
           placeholder={props.placeholder}
+          showTime={props.showTime}
+          onCalendarChange={props.onCalendarChange}
+          allowClear={props.allowClear}
+          disabledTime={props.disabledTime}
         />
       </Form.Item>
     </span>

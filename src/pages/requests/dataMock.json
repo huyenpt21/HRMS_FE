@@ -2,43 +2,47 @@
   "metadata": {
     "code": 200,
     "message": "Success",
+    "service_id": "HRMS",
     "pagination": {
       "page": 1,
       "limit": 10,
-      "totalRecords": 15
+      "totalRecords": 1
     }
   },
   "data": {
-    "requestList": [
+    "items": [
       {
-        "id": 4,
-        "requestTypeName": "Borrow Device",
-        "personName": "Nguyen Van Binh",
-        "startTime": "2022-10-05 10:00:00",
-        "endTime": "2022-10-07 19:00:00",
-        "reason": "I don't have laptop to code",
-        "createDate": "2022-10-03 15:00:00",
-        "status": "Approved"
+        "id": 1,
+        "personName": "Trinh Kim Chi",
+        "requestTypeName": "Business Trip",
+        "createDate": "2022-10-06 00:00:00",
+        "startTime": "2022-10-25 01:30:00",
+        "endTime": "2022-10-26 01:30:00",
+        "reason": "Don't know",
+        "status": "Rejected",
+        "approvalDate": "2022-10-06 00:00:00"
       },
       {
         "id": 2,
-        "personName": "Nguyen Van Binh",
-        "requestTypeName": "OverTime",
-        "createDate": "2022-10-05 12:00:00",
-        "startTime": "2022-10-08 08:00:00",
-        "endTime": "2022-10-09 19:00:00",
-        "reason": "Lack of screen",
-        "status": "Rejected"
+        "personName": "Trinh Kim Chi",
+        "requestTypeName": "Business Trip",
+        "createDate": "2022-10-06 00:00:00",
+        "startTime": "2022-10-25 01:30:00",
+        "endTime": "2022-10-26 01:30:00",
+        "reason": "Don't know",
+        "status": "Approved",
+        "approvalDate": "2022-10-06 00:00:00"
       },
       {
-        "id": 3,
-        "personName": "Nguyen Van Binh",
-        "requestTypeName": "đơn mượn thiết bị",
-        "createDate": "2022-10-04 12:00:00",
-        "startTime": "2022-10-21 08:00:00",
-        "endTime": "2022-10-22 19:00:00",
-        "reason": "Lack of screen",
-        "status": "Pending"
+        "id": 4,
+        "personName": "Trinh Kim Chi",
+        "requestTypeName": "Business Trip",
+        "createDate": "2022-10-06 00:00:00",
+        "startTime": "2022-10-25 01:30:00",
+        "endTime": "2022-10-26 01:30:00",
+        "reason": "Don't know",
+        "status": "Pending",
+        "approvalDate": "2022-10-06 00:00:00"
       }
     ]
   }

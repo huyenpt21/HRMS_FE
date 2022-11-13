@@ -42,7 +42,7 @@ interface FilterTable {
 
 export interface HeaderTableFields {
   key: string;
-  title: string;
+  title: any;
   dataIndex: string;
   fixed?: string;
   width?: number;

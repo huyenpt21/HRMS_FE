@@ -24,14 +24,12 @@ import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestStatus from '../components/statusRequest';
 
-import dataMock from '../dataMock.json';
-
 export default function AllRequestList() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
-  const requestId = useRef<number>();
+  const requestIdRef = useRef<number>();
   const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
@@ -70,23 +68,19 @@ export default function AllRequestList() {
         el.key === 'endTime'
       ) {
         el.width = 150;
-      } else if (el.key === 'requestType' || el.key === 'personName') {
-        el.width = 200;
-        el.sorter = isError;
+        el.sorter = !isError;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+      } else if (el.key === 'rollNumber') {
+        el.width = 120;
+        el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'status') {
         el.width = 100;
-        el.sorter = isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        el.filterMultiple = isError;
-        el.filters = [
-          { text: STATUS.PENDING, value: STATUS.PENDING },
-          { text: STATUS.APPROVED, value: STATUS.APPROVED },
-          { text: STATUS.REJECTED, value: STATUS.REJECTED },
-        ];
-      } else if (el.key === 'reason') {
-        el.width = 200;
-      } else {
+      } else if (
+        el.key === 'requestTypeName' ||
+        el.key === 'reason' ||
+        el.key === 'personName'
+      ) {
         el.width = 200;
       }
       return {
@@ -114,22 +108,22 @@ export default function AllRequestList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { requestList },
-    } = dataMock;
-    setRecords(requestList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { items: requestList },
+      } = dataTable;
+      setRecords(requestList);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
   }, [dataTable]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -168,7 +162,7 @@ export default function AllRequestList() {
   const rowClickHandler = (record: RequestModel) => {
     return {
       onClick: () => {
-        requestId.current = record.id;
+        requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
         requestStatus.current = record.status;
@@ -177,7 +171,7 @@ export default function AllRequestList() {
   };
   const cancelModalHandler = () => {
     requestStatus.current = STATUS.PENDING;
-    requestId.current = -1;
+    requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
 
@@ -198,7 +192,7 @@ export default function AllRequestList() {
         }
         stateQuery={stateQuery}
         rowKey={(record: RequestModel) => record.id}
-        scroll={{ y: 240 }}
+        isShowScroll
         className={'cursor-pointer'}
         onRow={(record: RequestModel) => {
           return rowClickHandler(record);
@@ -210,7 +204,7 @@ export default function AllRequestList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           action={modalAction.current}
-          requestId={requestId.current}
+          requestIdRef={requestIdRef.current}
           requestStatus={requestStatus.current}
           tabType={REQUEST_MENU.ALL}
           refetchList={refetchList}

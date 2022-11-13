@@ -6,27 +6,41 @@ import BasicInput from 'components/BasicInput';
 import BasicRadioGroup from 'components/BasicRadioGroup';
 import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
-import { COMMON_STATUS, MESSAGE_RES, validateMessages } from 'constants/common';
+import SelectCustomSearch from 'components/SelectCustomSearch';
+import {
+  COMMON_STATUS,
+  DATE_TIME,
+  MESSAGE_RES,
+  validateMessages,
+} from 'constants/common';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import {
   GENDER_LIST,
-  POSITION_WORKING,
   RANKING_LIST,
   STATUS_RADIO_LIST,
 } from 'constants/fixData';
-import { useAddEmployeeModal } from 'hooks/useEmployee';
+import {
+  DEPARTMENT,
+  MANAGER_LIST,
+  POSITION_BY_DEPARTMENT,
+} from 'constants/services';
+import {
+  useAddEmployeeModal,
+  useEmployeeDetail,
+  useUpdateEmployee,
+} from 'hooks/useEmployee';
 import { EmployeeModel, ResEmployeeModify } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
+import { getDateFormat } from 'utils/common';
 import styles from './addEmployee.module.less';
-import detailMock from './detailMock.json';
-
+// import detailMock from './detailMock.json';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  employeeId?: number;
+  employeeRollNumber?: string;
   viewType?: string;
 }
 export default function EmployeeDetailModal({
@@ -34,15 +48,28 @@ export default function EmployeeDetailModal({
   onCancel,
   refetchList,
   action,
-  employeeId,
+  employeeRollNumber,
   viewType,
 }: IProps) {
   const [employeeForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
-  // const [detailEmployeeData, setDetailEmployeeData] =
-  //   useState<EmployeeListItem>();
+  const [departmentId, setDepartmentId] = useState<string | undefined>();
 
-  // const { data: detailEmployee } = useEmployeeDetail(rollNumber || '');
+  const { data: detailEmployee } = useEmployeeDetail(employeeRollNumber);
+  const { mutate: updateEmployee } = useUpdateEmployee({
+    onSuccess: (response: ResEmployeeModify) => {
+      const {
+        metadata: { message },
+      } = response;
+
+      if (message === 'Success') {
+        notification.success({
+          message: 'Update information successfully',
+        });
+        cancelHandler();
+      }
+    },
+  });
 
   const { mutate: createEmployee } = useAddEmployeeModal({
     onSuccess: (response: ResEmployeeModify) => {
@@ -54,23 +81,23 @@ export default function EmployeeDetailModal({
         notification.success({
           message: 'Create employee successfully',
         });
-        // refetchList();
+        cancelHandler();
       }
     },
   });
-
-  const detailEmployee = detailMock;
   useEffect(() => {
     if (detailEmployee && detailEmployee.data) {
       const {
         metadata: { message },
-        data: { employee },
+        data: { item: employee },
       } = detailEmployee;
       if (message === MESSAGE_RES.SUCCESS && employee) {
-        // setDetailEmployeeData(employee);
+        setDepartmentId(employee?.departmentId);
         employeeForm.setFieldsValue(employee);
-        employeeForm.setFieldValue('dob', moment(employee.dob));
-        employeeForm.setFieldValue('onBoardDate', moment(employee.onBoardDate));
+        employeeForm.setFieldsValue({
+          dateOfBirth: moment(employee.dateOfBirth),
+          onBoardDate: moment(employee.onBoardDate),
+        });
       }
     }
   }, [detailEmployee]);
@@ -81,8 +108,22 @@ export default function EmployeeDetailModal({
   };
 
   const submitHandler = (formValues: EmployeeModel) => {
-    console.log(1111, formValues);
-    createEmployee(formValues);
+    formValues.onBoardDate = getDateFormat(formValues.onBoardDate, DATE_TIME);
+    formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
+    formValues.isManager = formValues.isManager ? 1 : 0;
+
+    switch (actionModal) {
+      case ACTION_TYPE.CREATE: {
+        createEmployee(formValues);
+        break;
+      }
+      case ACTION_TYPE.EDIT: {
+        if (employeeRollNumber) {
+          updateEmployee({ uid: employeeRollNumber, body: formValues });
+          break;
+        }
+      }
+    }
   };
   return (
     <CommonModal
@@ -107,7 +148,7 @@ export default function EmployeeDetailModal({
               <Row gutter={12}>
                 <Col span={12}>
                   <BasicInput
-                    name="name"
+                    name="fullName"
                     label="Full Name"
                     rules={[{ required: true }]}
                     allowClear
@@ -116,7 +157,7 @@ export default function EmployeeDetailModal({
                 </Col>
                 <Col span={12}>
                   <BasicDatePicker
-                    name="dob"
+                    name="dateOfBirth"
                     label="Date Of Birth"
                     rules={[{ required: true }]}
                   />
@@ -159,21 +200,6 @@ export default function EmployeeDetailModal({
                     placeholder="Enter Citizen Identification"
                   />
                 </Col>
-                <Col span={12}>
-                  <BasicInput
-                    name="individualEmail"
-                    label="Individual Email"
-                    allowClear
-                    rules={[
-                      { required: true },
-                      {
-                        pattern: '[a-z0-9]+@[a-z]+.[a-z]{2,3}',
-                        message: 'Please enter a valid email address',
-                      },
-                    ]}
-                    placeholder="Enter address"
-                  />
-                </Col>
               </Row>
               <Row gutter={12}>
                 <Col span={24}>
@@ -192,65 +218,54 @@ export default function EmployeeDetailModal({
               <h2>Working Information</h2>
               <Row gutter={12}>
                 <Col span={12}>
-                  <BasicInput
-                    name="rollNumber"
-                    label="Roll Number"
+                  <SelectCustomSearch
+                    url={MANAGER_LIST.service}
+                    dataName="items"
+                    name="managerId"
+                    label="Manager"
                     rules={[{ required: true }]}
                     allowClear
-                    placeholder="Enter roll number"
-                  />
-                </Col>
-                <Col span={12}>
-                  <BasicInput
-                    name="companyEmail"
-                    label="Company Email"
-                    rules={[
-                      { required: true },
-                      {
-                        pattern: '^[A-Za-z0-9._%+-]+@minswap.com$',
-                        message:
-                          'Please enter a valid email with correct domain @minswap.com',
-                      },
-                    ]}
-                    allowClear
-                    placeholder="nguyenvan@minswap.com"
-                  />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col span={12}>
-                  <BasicInput
-                    name="manager"
-                    label="Manager"
-                    allowClear
                     placeholder="Choose manager"
+                    apiName="manager-master-data"
                   />
                 </Col>
                 <Col span={12}>
-                  <BasicInput
-                    name="department"
+                  <SelectCustomSearch
+                    url={DEPARTMENT.service}
+                    dataName="items"
+                    name="departmentId"
                     label="Department"
                     rules={[{ required: true }]}
                     allowClear
                     placeholder="Choose department"
+                    onChangeHandle={(value) => {
+                      setDepartmentId(value);
+                      employeeForm.setFieldValue('positionId', undefined);
+                    }}
+                    apiName="department-master-data"
                   />
                 </Col>
               </Row>
               <Row gutter={12}>
                 <Col span={12}>
-                  <BasicSelect
-                    options={POSITION_WORKING}
-                    name="position"
+                  <SelectCustomSearch
+                    url={`${POSITION_BY_DEPARTMENT.service}?departmentId=${departmentId}`}
+                    dataName="items"
+                    name="positionId"
                     label="Position"
                     rules={[{ required: true }]}
                     allowClear
                     placeholder="Choose position"
+                    apiName="position-master-data"
+                    isCallApi={!!departmentId}
+                    refetchValue={departmentId}
+                    disabled={!departmentId}
                   />
                 </Col>
                 <Col span={12}>
                   <BasicSelect
                     options={RANKING_LIST}
-                    name="ranking"
+                    name="rankId"
                     label="Ranking"
                     rules={[{ required: true }]}
                     allowClear
@@ -279,7 +294,7 @@ export default function EmployeeDetailModal({
                   <BasicRadioGroup
                     label="Status"
                     name="isActive"
-                    initialValue={COMMON_STATUS.TRUE}
+                    initialValue={COMMON_STATUS.ACTIVE}
                     listRadio={STATUS_RADIO_LIST}
                   />
                 </Col>

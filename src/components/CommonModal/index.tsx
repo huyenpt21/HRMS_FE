@@ -14,6 +14,7 @@ interface Props {
   onCancel?: () => void;
   onOk?: () => void;
   afterClose?: () => void;
+  centered?: boolean;
 }
 
 const CommonModal = ({
@@ -28,6 +29,7 @@ const CommonModal = ({
   className,
   closable,
   title,
+  centered,
 }: Props) => {
   return (
     <Modal
@@ -35,12 +37,13 @@ const CommonModal = ({
       closeIcon={closeIcon ? closeIcon : <CloseOutlined />}
       width={width}
       open={open}
-      className={`mainModal ${className}`}
+      className={className}
       footer={footer}
       closable={closable}
       onCancel={onCancel}
       onOk={onOk}
       afterClose={afterClose}
+      centered={centered}
     >
       {children}
     </Modal>
