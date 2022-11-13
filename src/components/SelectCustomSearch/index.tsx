@@ -62,7 +62,8 @@ function DebounceSelect({
   const debounceFetcher = useMemo(() => {
     const loadOptions = (value: string) => {
       refSearch.current = true;
-      setValueSearch(value);
+      value && setValueSearch(value);
+      !value && setValueSearch(undefined);
     };
 
     return debounce(loadOptions, debounceTimeout);
@@ -111,7 +112,7 @@ const SelectCustomSearch = ({
   refetchValue,
 }: Props) => {
   const [value, setValue] = useState<string | undefined | string[]>();
-  const [valueSearch, setValueSearch] = useState<string>('');
+  const [valueSearch, setValueSearch] = useState<string | undefined>(undefined);
 
   const { data, isFetching, refetch } = useGetDataOptions(
     {
@@ -128,7 +129,7 @@ const SelectCustomSearch = ({
     }
   }, []);
   useEffect(() => {
-    refetchValue && refetch();
+    refetch();
   }, [refetchValue]);
 
   const handleChangeOpt = (value: any, options: any) => {
