@@ -48,6 +48,9 @@ export const POSITION_BY_DEPARTMENT = {
 };
 export const DEPARTMENT = {
   service: 'department-master-data',
+  model: {
+    masterData: 'department-master-data',
+  },
 };
 
 export const DEVICE_TYPE = {
