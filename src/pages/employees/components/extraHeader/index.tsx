@@ -48,7 +48,7 @@ export default function ExtraHeaderTable({
       </div>
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
-          <Col span={4}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <InputDebounce
               suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
               placeholder="Search..."
@@ -57,7 +57,7 @@ export default function ExtraHeaderTable({
               keyParam="search"
             />
           </Col>
-          <Col span={4}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <SelectCustomSearch
               url={DEPARTMENT.service}
               dataName="items"
@@ -69,7 +69,7 @@ export default function ExtraHeaderTable({
               apiName="department-master-data"
             />
           </Col>
-          <Col span={4}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <BasicSelect
               options={POSITION_WORKING}
               placeholder="Position"
