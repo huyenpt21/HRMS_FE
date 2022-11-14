@@ -2,6 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
+import { ACTION_TYPE } from 'constants/enums/common';
 import { DepartmentHeader } from 'constants/header';
 import { useDepartmentList } from 'hooks/useDepartment';
 import { HeaderTableFields } from 'models/common';
@@ -10,19 +11,22 @@ import {
   DepartmentListSortFields,
   DepartmentModel,
 } from 'models/department';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
+import ExtraHeaderDepartment from '../components/extraHeader';
 
 export default function DepartmentList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<DepartmentModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
+  const modalAction = useRef(ACTION_TYPE.CREATE);
+  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
 
   // * defailt filters
   const defaultFilter: DepartmentListQuery = {
@@ -110,6 +114,7 @@ export default function DepartmentList() {
       dir,
     }));
   };
+  console.log(2222, isShowDetailModal);
   return (
     <>
       <CommonTable
@@ -117,7 +122,13 @@ export default function DepartmentList() {
         data={records}
         onChange={handleTableChange}
         pagination={pagination}
-        extra={<></>}
+        extra={
+          <ExtraHeaderDepartment
+            modalAction={modalAction}
+            setIsShowDetailModal={setIsShowDetailModal}
+            setStateQuery={setStateQuery}
+          />
+        }
         stateQuery={stateQuery}
         rowKey={(record: DepartmentModel) => record.id}
         loading={isLoading}
