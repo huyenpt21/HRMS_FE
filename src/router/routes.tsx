@@ -1,5 +1,6 @@
 // import { pathNameLocalStorage } from 'constants/common';
 import MainLayout from 'layouts/MainLayout';
+import DepartmentList from 'pages/department/departmentList';
 import AllEmployeeList from 'pages/employees/allEmployee';
 import SubordinateList from 'pages/employees/subordinate';
 
@@ -84,6 +85,10 @@ export default function RouterElement() {
               ],
             },
           ],
+        },
+        {
+          path: 'department',
+          element: <DepartmentList />,
         },
       ],
     },

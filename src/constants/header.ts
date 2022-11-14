@@ -197,3 +197,16 @@ export const AllTimeCheckHeader = [
     dataIndex: 'sun',
   },
 ];
+
+export const DepartmentHeader = [
+  {
+    title: 'Department Name',
+    key: 'departmentName',
+    dataIndex: 'departmentName',
+  },
+  {
+    title: 'Total members',
+    key: 'total',
+    dataIndex: 'total',
+  },
+];

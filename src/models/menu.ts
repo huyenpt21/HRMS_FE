@@ -7,7 +7,7 @@ export interface IMenuCProps {
 export interface MenuItemType {
   title: string;
   key: string;
-  icon?: string;
+  icon?: string | React.ReactNode;
   path?: string;
   children?: MenuItemType[];
 }
