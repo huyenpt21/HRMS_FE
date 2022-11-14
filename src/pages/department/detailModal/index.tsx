@@ -2,14 +2,13 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
-import BasicRadioGroup from 'components/BasicRadioGroup';
 import CommonModal from 'components/CommonModal';
 import SvgIcon from 'components/SvgIcon';
-import { COMMON_STATUS, validateMessages } from 'constants/common';
+import { MESSAGE_RES, validateMessages } from 'constants/common';
 import { ACTION_TYPE } from 'constants/enums/common';
-import { COMMON_STATUS_LIST } from 'constants/fixData';
+import { useDepartmentDetail } from 'hooks/useDepartment';
 import { DepartmentModel } from 'models/department';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './detailDepartment.module.less';
 interface IProps {
   isVisible: boolean;
@@ -29,6 +28,25 @@ export default function DepartmentDetailModal({
 }: IProps) {
   const [departmentForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
+  const [positionList, setPositionList] = useState<string[] | undefined>([
+    'ssssss',
+    'aaaaa',
+    'bbbbb',
+  ]);
+
+  const { data: detailDepartment } = useDepartmentDetail(departmentId);
+  useEffect(() => {
+    if (detailDepartment && detailDepartment.data) {
+      const {
+        metadata: { message },
+        data: { item: department },
+      } = detailDepartment;
+      if (message === MESSAGE_RES.SUCCESS && department) {
+        departmentForm.setFieldsValue(department);
+        setPositionList(department?.listPosition);
+      }
+    }
+  }, [detailDepartment]);
 
   const cancelHandler = () => {
     onCancel();
@@ -68,67 +86,69 @@ export default function DepartmentDetailModal({
               <h4>Position in department</h4>
             </Col>
           </Row>
-          <Form.List name="listPosition">
-            {(fields, { add, remove }, { errors }) => {
-              if (fields.length === 0) {
-                add();
-              }
-              return (
-                <>
-                  {fields.map(({ key, name, ...restFields }) => (
-                    <Row key={key} className={styles.position__container}>
-                      <Col span={22}>
-                        <BasicInput
-                          {...restFields}
-                          key={key}
-                          name={[name]}
-                          className={styles.input}
-                          allowClear
-                          placeholder="Enter position name"
-                        />
-                      </Col>
-                      {fields.length > 1 && (
-                        <span
-                          onClick={() => remove(name)}
-                          className={styles['icon--delete']}
-                        >
-                          <SvgIcon
-                            icon="approve-waitting"
-                            size={24}
-                            color="#3c6d73"
-                            className={styles['cursor-pointer']}
+          {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
+            <Form.List name="listPosition">
+              {(fields, { add, remove }, { errors }) => {
+                if (fields.length === 0) {
+                  add();
+                }
+                return (
+                  <>
+                    {fields.map(({ key, name, ...restFields }) => (
+                      <Row key={key} className={styles.position__container}>
+                        <Col span={22}>
+                          <BasicInput
+                            {...restFields}
+                            key={key}
+                            name={[name]}
+                            className={styles.input}
+                            allowClear
+                            placeholder="Enter position name"
                           />
-                        </span>
-                      )}
-                    </Row>
-                  ))}
-                  <div className={styles.btn__add}>
-                    <Col span={24}>
-                      <Form.Item>
-                        <Button
-                          type="dashed"
-                          onClick={() => add()}
-                          style={{ width: '100%' }}
-                          icon={<PlusOutlined />}
-                        >
-                          Add field
-                        </Button>
-                        <Form.ErrorList errors={errors} />
-                      </Form.Item>
-                    </Col>
-                  </div>
-                </>
-              );
-            }}
-          </Form.List>
-          <Col span={8}>
-            <BasicRadioGroup
-              label="Status"
-              name="isActive"
-              initialValue={COMMON_STATUS.ACTIVE}
-              listRadio={COMMON_STATUS_LIST}
-            />
-          </Col>
+                        </Col>
+                        {fields.length > 1 && (
+                          <span
+                            onClick={() => remove(name)}
+                            className={styles['icon--delete']}
+                          >
+                            <SvgIcon
+                              icon="approve-waitting"
+                              size={24}
+                              color="#3c6d73"
+                              className={styles['cursor-pointer']}
+                            />
+                          </span>
+                        )}
+                      </Row>
+                    ))}
+                    <div className={styles.btn__add}>
+                      <Col span={24}>
+                        <Form.Item>
+                          <Button
+                            type="dashed"
+                            onClick={() => add()}
+                            style={{ width: '100%' }}
+                            icon={<PlusOutlined />}
+                          >
+                            Add field
+                          </Button>
+                          <Form.ErrorList errors={errors} />
+                        </Form.Item>
+                      </Col>
+                    </div>
+                  </>
+                );
+              }}
+            </Form.List>
+          )}
+          {actionModal === ACTION_TYPE.VIEW_DETAIL && (
+            <ul>
+              {positionList &&
+                positionList.map((el: string, index: number) => (
+                  <li key={index}>{el}</li>
+                ))}
+            </ul>
+          )}
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
             <div className={styles['modal__footer']}>
               {(actionModal === ACTION_TYPE.CREATE ||

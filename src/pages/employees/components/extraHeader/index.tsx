@@ -21,7 +21,7 @@ export default function ExtraHeaderTable({
   menuType,
   setStateQuery,
 }: IProps) {
-  const departmentIdRef = useRef<string>('');
+  const departmentIdRef = useRef<number>(-1);
   const addEmployeeHandler = () => {
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
@@ -64,7 +64,7 @@ export default function ExtraHeaderTable({
               placeholder="Choose department"
               onChangeHandle={(value) => {
                 handleChangeFilter(value, 'departmentId');
-                if (!value) departmentIdRef.current = '';
+                if (!value) departmentIdRef.current = -1;
                 if (value) departmentIdRef.current = value;
               }}
               apiName="department-master-data"
