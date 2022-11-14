@@ -2,7 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
-import { ACTION_TYPE } from 'constants/enums/common';
+import { ACTION_TYPE, MENU_OPTION_KEY } from 'constants/enums/common';
 import { DepartmentHeader } from 'constants/header';
 import { useDepartmentList } from 'hooks/useDepartment';
 import { HeaderTableFields } from 'models/common';
@@ -19,7 +19,9 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import ExtraHeaderDepartment from '../components/extraHeader';
+import MenuTableDepartment from '../components/menuTable';
 import DepartmentDetailModal from '../detailModal';
+import dataMock from './dataMock.json';
 
 export default function DepartmentList() {
   const [searchParams] = useSearchParams();
@@ -67,7 +69,21 @@ export default function DepartmentList() {
         },
       };
     });
-
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 80,
+      align: 'center',
+      render: (_, record: DepartmentModel) => {
+        return (
+          <MenuTableDepartment
+            record={record}
+            onClickMenu={menuActionHandler}
+          />
+        );
+      },
+    });
     setColumnsHeader(columns);
   }, [stateQuery, isError]);
 
@@ -77,7 +93,7 @@ export default function DepartmentList() {
       const {
         metadata: { pagination },
         data: { listDepartment: recordsTable },
-      } = dataTable;
+      } = dataMock;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API
@@ -90,6 +106,23 @@ export default function DepartmentList() {
       }
     }
   }, [dataTable, stateQuery, isError]);
+
+  const menuActionHandler = (
+    itemSelected: DepartmentModel,
+    actionType: MENU_OPTION_KEY,
+  ) => {
+    switch (actionType) {
+      case MENU_OPTION_KEY.EDIT: {
+        setIsShowDetailModal(true);
+        modalAction.current = ACTION_TYPE.EDIT;
+        departmentId.current = itemSelected.id;
+        break;
+      }
+      case MENU_OPTION_KEY.DELETE: {
+        break;
+      }
+    }
+  };
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -139,12 +172,24 @@ export default function DepartmentList() {
         loading={isLoading}
         isShowScroll
         className={'cursor-pointer'}
+        onRow={(record: DepartmentModel) => {
+          return {
+            onClick: () => {
+              departmentId.current = record.id;
+              modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+              setIsShowDetailModal(true);
+            },
+          };
+        }}
       />
-      <DepartmentDetailModal
-        action={ACTION_TYPE.CREATE}
-        isVisible={isShowDetailModal}
-        onCancel={cancelModalHandler}
-      />
+      {isShowDetailModal && (
+        <DepartmentDetailModal
+          action={modalAction.current}
+          isVisible={isShowDetailModal}
+          onCancel={cancelModalHandler}
+          departmentId={departmentId.current}
+        />
+      )}
     </>
   );
 }

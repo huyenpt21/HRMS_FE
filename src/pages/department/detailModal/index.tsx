@@ -8,14 +8,15 @@ import { MESSAGE_RES, validateMessages } from 'constants/common';
 import { ACTION_TYPE } from 'constants/enums/common';
 import { useDepartmentDetail } from 'hooks/useDepartment';
 import { DepartmentModel } from 'models/department';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './detailDepartment.module.less';
+import detailMock from './detailMock.json';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
   refetchList?: () => void;
   action: ACTION_TYPE;
-  departmentId?: string;
+  departmentId?: number;
   viewType?: string;
 }
 export default function DepartmentDetailModal({
@@ -33,19 +34,24 @@ export default function DepartmentDetailModal({
     'aaaaa',
     'bbbbb',
   ]);
+  const totalMembers = useRef(0);
+
+  console.log(departmentId);
 
   const { data: detailDepartment } = useDepartmentDetail(departmentId);
+
   useEffect(() => {
-    if (detailDepartment && detailDepartment.data) {
-      const {
-        metadata: { message },
-        data: { item: department },
-      } = detailDepartment;
-      if (message === MESSAGE_RES.SUCCESS && department) {
-        departmentForm.setFieldsValue(department);
-        setPositionList(department?.listPosition);
-      }
+    // if (detailDepartment && detailDepartment.data) {
+    const {
+      metadata: { message },
+      data: { item: department },
+    } = detailMock;
+    if (message === MESSAGE_RES.SUCCESS && department) {
+      departmentForm.setFieldsValue(department);
+      setPositionList(department?.listPosition);
+      totalMembers.current = department?.total;
     }
+    // }
   }, [detailDepartment]);
 
   const cancelHandler = () => {
@@ -72,6 +78,7 @@ export default function DepartmentDetailModal({
           validateMessages={validateMessages()}
           onFinish={submitHandler}
           disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+          initialValues={{ listPosition: [''] }}
         >
           <Col span={24}>
             <BasicInput
@@ -79,13 +86,18 @@ export default function DepartmentDetailModal({
               name="departmentName"
               rules={[{ required: true }]}
               placeholder="Enter department name"
+              allowClear
             />
           </Col>
-          <Row gutter={36}>
-            <Col>
-              <h4>Position in department</h4>
-            </Col>
-          </Row>
+          <Col>
+            <h4 className={styles.mb_24}>
+              Total members: {totalMembers.current}
+            </h4>
+          </Col>
+          <Col>
+            <h4>Position in department</h4>
+          </Col>
+
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
             <Form.List name="listPosition">
               {(fields, { add, remove }, { errors }) => {
@@ -142,7 +154,7 @@ export default function DepartmentDetailModal({
             </Form.List>
           )}
           {actionModal === ACTION_TYPE.VIEW_DETAIL && (
-            <ul>
+            <ul className={styles.position__list}>
               {positionList &&
                 positionList.map((el: string, index: number) => (
                   <li key={index}>{el}</li>

@@ -3,11 +3,9 @@ import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
-import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
 import { ACTION_TYPE } from 'constants/enums/common';
 import { COMMON_STATUS_LIST } from 'constants/fixData';
-import { DEPARTMENT } from 'constants/services';
 import { DepartmentListQuery } from 'models/department';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import styles from './extraHeaderDepartment.module.less';
@@ -50,22 +48,10 @@ export default function ExtraHeaderDepartment({
               keyParam="search"
             />
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
-            <SelectCustomSearch
-              url={DEPARTMENT.model.masterData}
-              dataName="items"
-              allowClear
-              placeholder="Choose department"
-              onChangeHandle={(value) => {
-                handleChangeFilter(value, 'departmentId');
-              }}
-              apiName="department-master-data"
-            />
-          </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={4}>
             <BasicSelect
               options={COMMON_STATUS_LIST}
-              placeholder="Choose Status"
+              placeholder="Status"
               allowClear
               showSearch
               optionFilterProp="label"

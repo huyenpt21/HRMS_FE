@@ -209,9 +209,4 @@ export const DepartmentHeader = [
     key: 'total',
     dataIndex: 'total',
   },
-  {
-    title: 'Status',
-    key: 'isActive',
-    dataIndex: 'isActive',
-  },
 ];

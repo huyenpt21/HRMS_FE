@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 3
+    }
+  },
+  "data": {
+    "listDepartment": [
+      {
+        "id": 1,
+        "departmentName": "DEV",
+        "total": 4
+      },
+      {
+        "id": 2,
+        "departmentName": "DEV",
+        "total": 4
+      },
+      {
+        "id": 3,
+        "departmentName": "DEV",
+        "total": 4
+      }
+    ]
+  }
+}
