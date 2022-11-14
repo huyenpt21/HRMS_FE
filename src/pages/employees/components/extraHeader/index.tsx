@@ -21,7 +21,7 @@ export default function ExtraHeaderTable({
   menuType,
   setStateQuery,
 }: IProps) {
-  const departmentIdRef = useRef<string>('');
+  const departmentIdRef = useRef<number>(-1);
   const addEmployeeHandler = () => {
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
@@ -58,13 +58,13 @@ export default function ExtraHeaderTable({
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <SelectCustomSearch
-              url={DEPARTMENT.service}
+              url={DEPARTMENT.model.masterData}
               dataName="items"
               allowClear
               placeholder="Choose department"
               onChangeHandle={(value) => {
                 handleChangeFilter(value, 'departmentId');
-                if (!value) departmentIdRef.current = '';
+                if (!value) departmentIdRef.current = -1;
                 if (value) departmentIdRef.current = value;
               }}
               apiName="department-master-data"

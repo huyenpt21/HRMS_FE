@@ -1,4 +1,4 @@
-import { MenuOptionsType, RadioButtonType, SelectBoxType } from 'models/common';
+import { MenuOptionsType, SelectBoxType } from 'models/common';
 import { COMMON_STATUS } from './common';
 import {
   GENDER_KEY,
@@ -94,7 +94,7 @@ export const GENDER_LIST: SelectBoxType[] = [
   },
 ];
 
-export const STATUS_RADIO_LIST: RadioButtonType[] = [
+export const COMMON_STATUS_LIST: SelectBoxType[] = [
   {
     value: COMMON_STATUS.ACTIVE,
     label: 'Active',

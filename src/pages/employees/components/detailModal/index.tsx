@@ -17,7 +17,7 @@ import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import {
   GENDER_LIST,
   RANKING_LIST,
-  STATUS_RADIO_LIST,
+  COMMON_STATUS_LIST,
 } from 'constants/fixData';
 import {
   DEPARTMENT,
@@ -231,7 +231,7 @@ export default function EmployeeDetailModal({
                 </Col>
                 <Col span={12}>
                   <SelectCustomSearch
-                    url={DEPARTMENT.service}
+                    url={DEPARTMENT.model.masterData}
                     dataName="items"
                     name="departmentId"
                     label="Department"
@@ -295,7 +295,7 @@ export default function EmployeeDetailModal({
                     label="Status"
                     name="isActive"
                     initialValue={COMMON_STATUS.ACTIVE}
-                    listRadio={STATUS_RADIO_LIST}
+                    listRadio={COMMON_STATUS_LIST}
                   />
                 </Col>
               </Row>

@@ -47,7 +47,10 @@ export const POSITION_BY_DEPARTMENT = {
   service: 'position-by-departmentId-master-data',
 };
 export const DEPARTMENT = {
-  service: 'department-master-data',
+  service: 'hr/department',
+  model: {
+    masterData: 'department-master-data',
+  },
 };
 
 export const DEVICE_TYPE = {
