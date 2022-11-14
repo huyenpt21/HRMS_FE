@@ -19,6 +19,7 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import ExtraHeaderDepartment from '../components/extraHeader';
+import DepartmentDetailModal from '../detailModal';
 
 export default function DepartmentList() {
   const [searchParams] = useSearchParams();
@@ -27,7 +28,7 @@ export default function DepartmentList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
-
+  const departmentId = useRef<number | undefined>();
   // * defailt filters
   const defaultFilter: DepartmentListQuery = {
     page: searchParams.get('page')
@@ -114,7 +115,11 @@ export default function DepartmentList() {
       dir,
     }));
   };
-  console.log(2222, isShowDetailModal);
+  const cancelModalHandler = () => {
+    setIsShowDetailModal(false);
+    departmentId.current = undefined;
+  };
+
   return (
     <>
       <CommonTable
@@ -134,6 +139,11 @@ export default function DepartmentList() {
         loading={isLoading}
         isShowScroll
         className={'cursor-pointer'}
+      />
+      <DepartmentDetailModal
+        action={ACTION_TYPE.CREATE}
+        isVisible={isShowDetailModal}
+        onCancel={cancelModalHandler}
       />
     </>
   );

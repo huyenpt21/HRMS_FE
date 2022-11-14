@@ -2,11 +2,12 @@ import { Form, Input, InputNumber } from 'antd';
 import { CSSProperties, ReactNode } from 'react';
 import styles from './index.module.less';
 import { LabelTooltipType } from 'antd/lib/form/FormItemLabel';
+import { NamePath } from 'antd/lib/form/interface';
 
 export interface IInputProps {
   label?: string | ReactNode;
   rules?: object[];
-  name?: string;
+  name?: string | NamePath;
   colon?: boolean;
   placeholder?: string;
   value?: string | number;
