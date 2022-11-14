@@ -58,7 +58,7 @@ export default function ExtraHeaderTable({
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <SelectCustomSearch
-              url={DEPARTMENT.service}
+              url={DEPARTMENT.model.masterData}
               dataName="items"
               allowClear
               placeholder="Choose department"

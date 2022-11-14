@@ -204,4 +204,14 @@ export const DepartmentHeader = [
     key: 'departmentName',
     dataIndex: 'departmentName',
   },
+  {
+    title: 'Total members',
+    key: 'total',
+    dataIndex: 'total',
+  },
+  {
+    title: 'Status',
+    key: 'isActive',
+    dataIndex: 'isActive',
+  },
 ];

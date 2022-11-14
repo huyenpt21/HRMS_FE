@@ -231,7 +231,7 @@ export default function EmployeeDetailModal({
                 </Col>
                 <Col span={12}>
                   <SelectCustomSearch
-                    url={DEPARTMENT.service}
+                    url={DEPARTMENT.model.masterData}
                     dataName="items"
                     name="departmentId"
                     label="Department"

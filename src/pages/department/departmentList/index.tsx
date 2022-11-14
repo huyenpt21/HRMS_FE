@@ -71,7 +71,7 @@ export default function DepartmentList() {
     if (dataTable && dataTable.data) {
       const {
         metadata: { pagination },
-        data: { items: recordsTable },
+        data: { listDepartment: recordsTable },
       } = dataTable;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
@@ -108,14 +108,6 @@ export default function DepartmentList() {
       limit: pagination.pageSize,
       sort,
       dir,
-    }));
-
-    // * set filter to state query
-    const filterKey: any = Object.keys(filters)[0];
-    const filterValues: any = Object.values(filters)[0];
-    setStateQuery((prev: DepartmentListQuery) => ({
-      ...prev,
-      [filterKey]: filterValues,
     }));
   };
   return (
