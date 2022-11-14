@@ -1,3 +1,4 @@
+import { SolutionOutlined, TeamOutlined } from '@ant-design/icons';
 import { MenuItemType } from 'models/menu';
 
 export const menus: MenuItemType[] = [
@@ -10,7 +11,7 @@ export const menus: MenuItemType[] = [
   {
     title: 'Employee',
     key: 'employee',
-    icon: 'user',
+    icon: <TeamOutlined style={{ fontSize: '22px' }} />,
     children: [
       {
         title: 'Employee List',
@@ -89,5 +90,11 @@ export const menus: MenuItemType[] = [
         path: '/time-check/all',
       },
     ],
+  },
+  {
+    title: 'Department',
+    key: 'department',
+    icon: <SolutionOutlined style={{ fontSize: '22px' }} />,
+    path: '/department',
   },
 ];
