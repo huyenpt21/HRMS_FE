@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 3
+    }
+  },
+  "data": {
+    "item": {
+      "id": 1,
+      "deviceTypeName": ["Keyboard1", "mouse", "monitor"]
+    }
+  }
+}

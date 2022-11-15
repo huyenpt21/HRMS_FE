@@ -8,7 +8,7 @@ import { Dispatch, SetStateAction } from 'react';
 import styles from './extraHeaderDepartment.module.less';
 
 interface IProps {
-  setIsShowDetailModal?: Dispatch<SetStateAction<boolean>>;
+  setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
   setStateQuery: Dispatch<SetStateAction<DeviceTypeListQuery>>;
 }
 export default function ExtraHeaderDeviceType({
@@ -23,7 +23,7 @@ export default function ExtraHeaderDeviceType({
           title="Add Device Type"
           type="filled"
           icon={<PlusOutlined />}
-          // onClick={() => setIsShowDetailModal(true)}
+          onClick={() => setIsShowDetailModal(true)}
         />
       </div>
       <div className={styles.header__container}>

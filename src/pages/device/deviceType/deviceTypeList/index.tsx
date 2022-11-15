@@ -10,9 +10,10 @@ import {
   DeviceTypeListSortFields,
   DeviceTypeModel,
 } from 'models/device';
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
+import DeviceTypeDetailModal from '../components/detailModal';
 import ExtraHeaderDeviceType from '../components/extraHeader';
 
 export default function DeviceTypeList() {
@@ -20,6 +21,8 @@ export default function DeviceTypeList() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<DeviceTypeModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
+  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
+  const deviceTypeId = useRef<number | undefined>();
 
   // * defailt filters
   const defaultFilter: DeviceTypeListQuery = {
@@ -102,6 +105,10 @@ export default function DeviceTypeList() {
       dir,
     }));
   };
+  const cancelModalHandler = () => {
+    setIsShowDetailModal(false);
+    deviceTypeId.current = undefined;
+  };
 
   return (
     <>
@@ -110,13 +117,24 @@ export default function DeviceTypeList() {
         data={records}
         onChange={handleTableChange}
         pagination={pagination}
-        extra={<ExtraHeaderDeviceType setStateQuery={setStateQuery} />}
+        extra={
+          <ExtraHeaderDeviceType
+            setStateQuery={setStateQuery}
+            setIsShowDetailModal={setIsShowDetailModal}
+          />
+        }
         stateQuery={stateQuery}
         rowKey={(record: DeviceTypeModel) => record.id}
         loading={isLoading}
         isShowScroll
         className={'cursor-pointer'}
       />
+      {isShowDetailModal && (
+        <DeviceTypeDetailModal
+          isVisible={isShowDetailModal}
+          onCancel={cancelModalHandler}
+        />
+      )}
     </>
   );
 }
