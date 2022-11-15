@@ -53,6 +53,7 @@ export interface HeaderTableFields {
   filters?: FilterTable[];
   filterMultiple?: boolean;
   sortOrder?: 'ascend' | 'descend' | false;
+  editable?: boolean;
 }
 
 export interface MenuOptionsType {
@@ -73,4 +74,14 @@ export interface RadioButtonType {
 export interface StatusTag {
   statusColor: STATUS_COLORS;
   text: string;
+}
+
+export interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+  editing: boolean;
+  dataIndex: string;
+  title: any;
+  inputType: 'number' | 'text';
+  record: any;
+  index: number;
+  children: React.ReactNode;
 }
