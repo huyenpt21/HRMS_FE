@@ -1,13 +1,17 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Row } from 'antd';
+import { Button, Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import CommonModal from 'components/CommonModal';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES, validateMessages } from 'constants/common';
 import { ACTION_TYPE } from 'constants/enums/common';
-import { useDepartmentDetail } from 'hooks/useDepartment';
-import { DepartmentModel } from 'models/department';
+import {
+  useAddDepartmentModal,
+  useDepartmentDetail,
+  useUpdateDepartment,
+} from 'hooks/useDepartment';
+import { DepartmentModel, ResDepartmentModify } from 'models/department';
 import { useEffect, useRef, useState } from 'react';
 import styles from './detailDepartment.module.less';
 import detailMock from './detailMock.json';
@@ -36,9 +40,41 @@ export default function DepartmentDetailModal({
   ]);
   const totalMembers = useRef(0);
 
-  console.log(departmentId);
-
   const { data: detailDepartment } = useDepartmentDetail(departmentId);
+
+  const { mutate: createDepartment } = useAddDepartmentModal({
+    onSuccess: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS) {
+        notification.success({ message: 'Create department successfully' });
+      }
+    },
+    onError: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
+
+  const { mutate: updateDepartment } = useUpdateDepartment({
+    onSuccess: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS) {
+        notification.success({ message: 'Update department successfully' });
+      }
+    },
+    onError: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
 
   useEffect(() => {
     // if (detailDepartment && detailDepartment.data) {
@@ -60,7 +96,12 @@ export default function DepartmentDetailModal({
   };
 
   const submitHandler = (formValues: DepartmentModel) => {
-    console.log(1111, formValues);
+    if (actionModal === ACTION_TYPE.CREATE) {
+      createDepartment(formValues);
+    }
+    if (actionModal === ACTION_TYPE.EDIT) {
+      updateDepartment({ uid: departmentId, body: formValues });
+    }
   };
   return (
     <CommonModal
