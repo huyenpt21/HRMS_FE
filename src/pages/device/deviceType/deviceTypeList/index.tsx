@@ -70,6 +70,7 @@ export default function DeviceTypeList() {
             form={deviceTypeForm}
             editingKey={editingKey}
             setEditingKey={setEditingKey}
+            stateQuery={stateQuery}
           />
         );
       },
