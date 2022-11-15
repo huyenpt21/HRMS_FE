@@ -1,4 +1,5 @@
-import { notification, Tooltip } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { notification, Tooltip, Typography } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
@@ -47,32 +48,44 @@ export default function MenuTableDeviceType({
   return (
     <div className="menu-action">
       {record.id === editingKey && (
-        <Tooltip title="Save">
-          <span
-            onClick={async () => {
-              handleSave(record.id);
-            }}
-            className="cursor-pointer"
-          >
-            <SvgIcon icon="check-square" />
-          </span>
-        </Tooltip>
+        <>
+          <Tooltip title="Save">
+            <span
+              onClick={async () => {
+                handleSave(record.id);
+              }}
+              className="cursor-pointer"
+            >
+              <SvgIcon icon="check-square" />
+            </span>
+          </Tooltip>
+          <Tooltip title="Cancel">
+            <span
+              onClick={() => {
+                setEditingKey(-1);
+              }}
+              className="cursor-pointer"
+              style={{ textAlign: 'center' }}
+            >
+              <CloseOutlined />
+            </span>
+          </Tooltip>
+        </>
       )}
       {record.id !== editingKey && (
         <>
           <Tooltip title="Edit">
-            <span
+            <Typography.Link
+              disabled={editingKey !== -1}
               onClick={() => handleEdit(record)}
-              className="cursor-pointer"
-              style={{ border: 0 }}
             >
               <SvgIcon icon="edit-border" />
-            </span>
+            </Typography.Link>
           </Tooltip>
           <Tooltip title="Delete">
-            <span onClick={() => {}} className="cursor-pointer">
+            <Typography.Link onClick={() => {}} disabled={editingKey !== -1}>
               <SvgIcon icon="close-circle" />
-            </span>
+            </Typography.Link>
           </Tooltip>
         </>
       )}
