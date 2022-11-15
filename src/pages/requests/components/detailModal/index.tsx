@@ -484,7 +484,7 @@ export default function RequestDetailModal({
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
                   <SelectCustomSearch
-                    url={DEVICE_TYPE.service}
+                    url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
                     dataName="items"
                     apiName="device-type-master-data"
                     label="Device Type"

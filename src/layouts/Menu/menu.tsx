@@ -53,6 +53,11 @@ export const menus: MenuItemType[] = [
     icon: 'mouse',
     children: [
       {
+        title: 'Device Type',
+        key: 'deviceType',
+        path: '/device/device-type',
+      },
+      {
         title: 'My Device List',
         key: 'myDeviceList',
         path: '/device/my-device',

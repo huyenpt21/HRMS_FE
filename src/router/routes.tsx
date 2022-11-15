@@ -1,9 +1,9 @@
 // import { pathNameLocalStorage } from 'constants/common';
 import MainLayout from 'layouts/MainLayout';
 import DepartmentList from 'pages/department/departmentList';
+import DeviceTypeList from 'pages/device/deviceType/deviceTypeList';
 import AllEmployeeList from 'pages/employees/allEmployee';
 import SubordinateList from 'pages/employees/subordinate';
-
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
 import NotFound from 'pages/notFound';
@@ -85,6 +85,10 @@ export default function RouterElement() {
               ],
             },
           ],
+        },
+        {
+          path: 'device',
+          children: [{ path: 'device-type', element: <DeviceTypeList /> }],
         },
         {
           path: 'department',

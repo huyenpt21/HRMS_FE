@@ -222,30 +222,15 @@ const initialCustomQuery = <
     const queryClient = useQueryClient();
 
     return useMutation(
-      ({ uid, currentFilter }: DeleteProps<T>) =>
+      ({ uid }: DeleteProps<T>) =>
         deleteItem<W>({
           uid,
           service: endPoint ? endPoint : feature.service,
           api_url: feature.api_url,
         }),
       {
-        onMutate: async ({ uid, currentFilter }: any) => {
+        onMutate: async ({ currentFilter }: any) => {
           await queryClient.cancelQueries([feature.key, currentFilter]);
-
-          // const prev = queryClient.getQueryData([
-          //   feature.key,
-          //   currentFilter,
-          // ]) as Y;
-          // queryClient.setQueryData(
-          //   [feature.key, currentFilter],
-          //   (old: Y = prev) => {
-          //     return {
-          //       ...old,
-          //       data: feature.getFilterList(old, uid),
-          //     };
-          //   },
-          // );
-          // return prev;
         },
         onError: (
           error: any,

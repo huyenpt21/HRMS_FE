@@ -14,7 +14,7 @@ interface TableProps {
   columns: object[];
   data: object[];
   pagination: any;
-  onChange: (pagination: any, filters: any, sorter: any) => void;
+  onChange?: (pagination: any, filters: any, sorter: any) => void;
   id?: string;
   extra?: ReactNode;
   onRow?: any;

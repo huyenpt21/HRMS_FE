@@ -1,15 +1,16 @@
-import { TablePaginationConfig } from 'antd';
+import { notification, TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
-import { paginationConfig } from 'constants/common';
+import { MESSAGE_RES, paginationConfig } from 'constants/common';
 import { ACTION_TYPE, MENU_OPTION_KEY } from 'constants/enums/common';
 import { DepartmentHeader } from 'constants/header';
-import { useDepartmentList } from 'hooks/useDepartment';
+import { useDeleteDepartment, useDepartmentList } from 'hooks/useDepartment';
 import { HeaderTableFields } from 'models/common';
 import {
   DepartmentListQuery,
   DepartmentListSortFields,
   DepartmentModel,
+  ResDepartmentModify,
 } from 'models/department';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -50,6 +51,22 @@ export default function DepartmentList() {
   //  * get data header and content table
   const header: HeaderTableFields[] = DepartmentHeader;
   const { isLoading, isError, data: dataTable } = useDepartmentList(stateQuery);
+  const { mutate: deleteDepartment } = useDeleteDepartment({
+    onSuccess: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS) {
+        notification.success({ message: 'Delete department successfully' });
+      }
+    },
+    onError: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
 
   // * render header and data in table
   useEffect(() => {
@@ -119,6 +136,7 @@ export default function DepartmentList() {
         break;
       }
       case MENU_OPTION_KEY.DELETE: {
+        deleteDepartment({ uid: itemSelected.id, currentFilter: stateQuery });
         break;
       }
     }

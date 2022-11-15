@@ -54,5 +54,8 @@ export const DEPARTMENT = {
 };
 
 export const DEVICE_TYPE = {
-  service: 'device-type-master-data',
+  service: 'device-type',
+  model: {
+    masterData: 'master-data',
+  },
 };
