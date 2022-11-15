@@ -38,6 +38,12 @@ export default function MenuTableDeviceType({
         });
       }
     },
+    onError: (res: ResDeviceTypeModify) => {
+      const {
+        metadata: { message },
+      } = res;
+      notification.error({ message: message });
+    },
   });
   const { mutate: deleteDeviceType } = useDeleteDeviceType({
     onSuccess: (res: ResDeviceTypeModify) => {
