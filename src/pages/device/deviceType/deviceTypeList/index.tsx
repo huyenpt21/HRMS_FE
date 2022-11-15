@@ -1,27 +1,27 @@
-import { TablePaginationConfig } from 'antd';
-import { SorterResult } from 'antd/lib/table/interface';
+import { Form, TablePaginationConfig } from 'antd';
+import BasicInput from 'components/BasicInput';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
 import { DeviceTypeHeader } from 'constants/header';
-import { useDeviceTypeList } from 'hooks/useDeviceType';
-import { HeaderTableFields } from 'models/common';
-import {
-  DeviceTypeListQuery,
-  DeviceTypeListSortFields,
-  DeviceTypeModel,
-} from 'models/device';
+// import { useDeviceTypeList } from 'hooks/useDeviceType';
+import { EditableCellProps, HeaderTableFields } from 'models/common';
+import { DeviceTypeListQuery, DeviceTypeModel } from 'models/device';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
 import DeviceTypeDetailModal from '../components/detailModal';
 import ExtraHeaderDeviceType from '../components/extraHeader';
+import MenuTableDeviceType from '../components/menuTable';
+import dataMock from './dataMock.json';
 
 export default function DeviceTypeList() {
+  const [deviceTypeForm] = Form.useForm();
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<DeviceTypeModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
+  const [editingKey, setEditingKey] = useState<number>(-1);
   const deviceTypeId = useRef<number | undefined>();
 
   // * defailt filters
@@ -42,7 +42,7 @@ export default function DeviceTypeList() {
 
   //  * get data header and content table
   const header: HeaderTableFields[] = DeviceTypeHeader;
-  const { isLoading, isError, data: dataTable } = useDeviceTypeList(stateQuery);
+  // const { isError, data: dataTable } = useDeviceTypeList(stateQuery);
 
   // * render header and data in table
   useEffect(() => {
@@ -57,78 +57,119 @@ export default function DeviceTypeList() {
         },
       };
     });
-
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 100,
+      align: 'center',
+      render: (_, record: DeviceTypeModel) => {
+        return (
+          <MenuTableDeviceType
+            record={record}
+            form={deviceTypeForm}
+            editingKey={editingKey}
+            setEditingKey={setEditingKey}
+          />
+        );
+      },
+    });
     setColumnsHeader(columns);
-  }, [stateQuery, isError]);
-
+  }, [stateQuery, editingKey]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable.data) {
-      const {
-        metadata: { pagination },
-        data: { items: recordsTable },
-      } = dataTable;
-      setRecords(recordsTable);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable.data) {
+    const {
+      metadata: { pagination },
+      data: { items: recordsTable },
+    } = dataMock;
+    setRecords(recordsTable);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
-  }, [dataTable, stateQuery, isError]);
-
-  const handleTableChange = (
-    pagination: TablePaginationConfig,
-    filters: any,
-    sorter: SorterResult<object>,
-  ) => {
-    let sort = stateQuery.sort;
-    let dir = stateQuery.dir;
-
-    if (sorter.order) {
-      const sortField = sorter.field as DeviceTypeListSortFields;
-      const sortDirections = sorter.order === 'ascend' ? 'asc' : 'desc';
-
-      sort = `${sortField}`;
-      dir = sortDirections;
-    }
-    // * set changing of pagination to state query
-    setStateQuery((prev: DeviceTypeListQuery) => ({
-      ...prev,
-      page: pagination.current,
-      limit: pagination.pageSize,
-      sort,
-      dir,
-    }));
-  };
+    // }
+    // }, [dataTable, stateQuery, isError]);
+  }, [stateQuery]);
   const cancelModalHandler = () => {
     setIsShowDetailModal(false);
     deviceTypeId.current = undefined;
   };
 
+  const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    children,
+    ...restProps
+  }) => {
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <BasicInput
+            name={dataIndex}
+            classNameFormItem="mr-0"
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`,
+              },
+            ]}
+            allowClear
+          />
+        ) : (
+          children
+        )}
+      </td>
+    );
+  };
+  const mergedColumns = columnsHeader.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: DeviceTypeModel) => ({
+        record,
+        inputType: 'text',
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: record.id === editingKey,
+      }),
+    };
+  });
   return (
     <>
-      <CommonTable
-        columns={columnsHeader}
-        data={records}
-        onChange={handleTableChange}
-        pagination={pagination}
-        extra={
-          <ExtraHeaderDeviceType
-            setStateQuery={setStateQuery}
-            setIsShowDetailModal={setIsShowDetailModal}
-          />
-        }
-        stateQuery={stateQuery}
-        rowKey={(record: DeviceTypeModel) => record.id}
-        loading={isLoading}
-        isShowScroll
-        className={'cursor-pointer'}
-      />
+      <Form form={deviceTypeForm} component={false}>
+        <CommonTable
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          columns={mergedColumns}
+          data={records}
+          pagination={pagination}
+          extra={
+            <ExtraHeaderDeviceType
+              setStateQuery={setStateQuery}
+              setIsShowDetailModal={setIsShowDetailModal}
+            />
+          }
+          stateQuery={stateQuery}
+          rowKey={(record: DeviceTypeModel) => record.id}
+          // loading={isLoading}
+          isShowScroll
+        />
+      </Form>
       {isShowDetailModal && (
         <DeviceTypeDetailModal
           isVisible={isShowDetailModal}

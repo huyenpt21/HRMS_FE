@@ -216,5 +216,6 @@ export const DeviceTypeHeader = [
     title: 'Department Type Name',
     key: 'deviceTypeName',
     dataIndex: 'deviceTypeName',
+    editable: true,
   },
 ];
