@@ -3,30 +3,27 @@ import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { ACTION_TYPE } from 'constants/enums/common';
-import { DepartmentListQuery } from 'models/department';
-import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { DeviceTypeListQuery } from 'models/device';
+import { Dispatch, SetStateAction } from 'react';
 import styles from './extraHeaderDepartment.module.less';
 
 interface IProps {
-  setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
-  modalAction: MutableRefObject<ACTION_TYPE>;
-  setStateQuery: Dispatch<SetStateAction<DepartmentListQuery>>;
+  setIsShowDetailModal?: Dispatch<SetStateAction<boolean>>;
+  setStateQuery: Dispatch<SetStateAction<DeviceTypeListQuery>>;
 }
-export default function ExtraHeaderDepartment({
+export default function ExtraHeaderDeviceType({
   setIsShowDetailModal,
-  modalAction,
   setStateQuery,
 }: IProps) {
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Department List</div>
+        <div className={styles.header__title}>Device Type List</div>
         <BasicButton
-          title="Add Department"
+          title="Add Device Type"
           type="filled"
           icon={<PlusOutlined />}
-          onClick={() => setIsShowDetailModal(true)}
+          // onClick={() => setIsShowDetailModal(true)}
         />
       </div>
       <div className={styles.header__container}>
