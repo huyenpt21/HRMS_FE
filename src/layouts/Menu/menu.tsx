@@ -102,4 +102,10 @@ export const menus: MenuItemType[] = [
     icon: <SolutionOutlined style={{ fontSize: '22px' }} />,
     path: '/department',
   },
+  {
+    title: 'Leave Budget',
+    key: 'leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget',
+  },
 ];
