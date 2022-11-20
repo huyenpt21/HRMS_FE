@@ -12,7 +12,7 @@ export interface LeaveBudgetListFilter {
   search?: string;
 }
 
-export type LeaveBudgetListSortFields = 'requestType';
+export type LeaveBudgetListSortFields = 'fullName';
 
 export type LeaveBudgetListQuery = QueryParams<LeaveBudgetListSortFields> &
   LeaveBudgetListFilter;
