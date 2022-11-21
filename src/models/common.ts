@@ -45,7 +45,7 @@ export interface HeaderTableFields {
   title: any;
   dataIndex: string;
   fixed?: string;
-  width?: number;
+  width?: string | number;
   sorter?: boolean;
   align?: 'left' | 'right' | 'center';
   render?: any;

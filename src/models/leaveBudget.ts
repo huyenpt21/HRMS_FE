@@ -10,9 +10,9 @@ export interface LeaveBudgetModel extends Resource {
 
 export interface LeaveBudgetListFilter {
   search?: string;
-  month?: number;
+  month?: number | string;
   year?: number;
-  requestTypeId?: string;
+  requestTypeId?: number;
 }
 
 export type LeaveBudgetListSortFields = 'fullName';

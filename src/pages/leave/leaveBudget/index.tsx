@@ -10,10 +10,15 @@ import {
   LeaveBudgetListSortFields,
   LeaveBudgetModel,
 } from 'models/leaveBudget';
+import { MenuItem } from 'models/menu';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
+import {
+  isEmptyPagination,
+  removeEmptyValueInObject,
+  sortInforWithDir,
+} from 'utils/common';
 import ExtraHeaderLeaveBudget from './components/extraHeader';
 import dataMock from './dataMock.json';
 import styles from './leaveBudget.module.less';
@@ -22,8 +27,19 @@ export default function LeaveBudgetList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<LeaveBudgetModel[]>([]);
+  // const requestTypeId =
   // * default feilters
   const defaultFilter: LeaveBudgetListQuery = {
+    requestTypeId: searchParams.get('requestTypeId')
+      ? Number(searchParams.get('requestTypeId'))
+      : 1,
+    search: searchParams.get('search') ?? undefined,
+    month: searchParams.get('month')
+      ? Number(searchParams.get('month'))
+      : undefined,
+    year: searchParams.get('year')
+      ? Number(searchParams.get('year'))
+      : moment().get('year'),
     page: searchParams.get('page')
       ? Number(searchParams.get('page'))
       : paginationConfig.current,
@@ -32,14 +48,6 @@ export default function LeaveBudgetList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
-    search: searchParams.get('search') ?? undefined,
-    month: searchParams.get('month')
-      ? Number(searchParams.get('month'))
-      : moment().get('month') + 1,
-    year: searchParams.get('year')
-      ? Number(searchParams.get('year'))
-      : moment().get('year'),
-    requestTypeId: searchParams.get('requestTypeId') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -54,6 +62,15 @@ export default function LeaveBudgetList() {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
+      if (el.key === 'fullName') {
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+        el.width = '40%';
+      }
+      if (el.key === 'used') {
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+      }
       return {
         ...el,
         render: (data: any) => {
@@ -121,14 +138,22 @@ export default function LeaveBudgetList() {
           theme="light"
           mode="vertical"
           triggerSubMenuAction="click"
+          defaultSelectedKeys={['1']}
           items={[
-            { label: 'Annual Leave', key: 'anual-leave' },
-            { label: 'Annual Leave', key: 'anual-leave2' },
-            { label: 'Annual Leave', key: 'anual-leave3' },
-            { label: 'Annual Leave', key: 'anual-leave4' },
-            { label: 'Annual Leave', key: 'anual-leave5' },
-            { label: 'Annual Leave', key: 'anual-leave6' },
+            { label: 'Annual Leave', key: 1 },
+            // eslint-disable-next-line quotes
+            { label: "Children's Sickness", key: 3 },
+            { label: 'Unpaid Leave', key: 6 },
+            { label: 'Sick Leave', key: 8 },
+            { label: 'Bereavement Leave', key: 10 },
+            { label: 'Over time', key: 7 },
           ]}
+          onClick={(value: MenuItem) => {
+            setStateQuery((prev: any) => ({
+              ...prev,
+              requestTypeId: value?.key,
+            }));
+          }}
         />
       </div>
       <CommonTable
@@ -136,7 +161,12 @@ export default function LeaveBudgetList() {
         data={records}
         onChange={handleTableChange}
         pagination={pagination}
-        extra={<ExtraHeaderLeaveBudget setStateQuery={setStateQuery} />}
+        extra={
+          <ExtraHeaderLeaveBudget
+            stateQuery={stateQuery}
+            setStateQuery={setStateQuery}
+          />
+        }
         stateQuery={stateQuery}
         rowKey={(record: LeaveBudgetModel) => record.id}
         isShowScroll

@@ -232,12 +232,12 @@ export const LeaveBudgetListHeader = [
   },
   {
     title: 'Number Of Day Off',
-    key: 'numberOfDayOff',
-    dataIndex: 'numberOfDayOff',
+    key: 'used',
+    dataIndex: 'used',
   },
   {
     title: 'Remain Day Off',
-    key: 'remainDayOff',
-    dataIndex: 'remainDayOff',
+    key: 'remaining',
+    dataIndex: 'remaining',
   },
 ];
