@@ -10,11 +10,13 @@ import {
   LeaveBudgetListSortFields,
   LeaveBudgetModel,
 } from 'models/leaveBudget';
+import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
+import ExtraHeaderLeaveBudget from './components/extraHeader';
+import dataMock from './dataMock.json';
 import styles from './leaveBudget.module.less';
-
 export default function LeaveBudgetList() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
@@ -30,6 +32,14 @@ export default function LeaveBudgetList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    search: searchParams.get('search') ?? undefined,
+    month: searchParams.get('month')
+      ? Number(searchParams.get('month'))
+      : moment().get('month') + 1,
+    year: searchParams.get('year')
+      ? Number(searchParams.get('year'))
+      : moment().get('year'),
+    requestTypeId: searchParams.get('requestTypeId') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -59,22 +69,22 @@ export default function LeaveBudgetList() {
   }, [stateQuery]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable?.data) {
-      const {
-        metadata: { pagination },
-        data: { items: requestList },
-      } = dataTable;
-      setRecords(requestList);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable?.data) {
+    const {
+      metadata: { pagination },
+      data: { items },
+    } = dataMock;
+    setRecords(items);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
+    // }
   }, [dataTable]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -103,11 +113,13 @@ export default function LeaveBudgetList() {
   };
   return (
     <>
+      <div className={styles.header__section}>
+        <div className={styles.header__title}>Leave Budget</div>
+      </div>
       <div className={styles.menu}>
         <Menu
           theme="light"
-          // selectedKeys={[activeMenu.current]}
-          mode="inline"
+          mode="vertical"
           triggerSubMenuAction="click"
           items={[
             { label: 'Annual Leave', key: 'anual-leave' },
@@ -124,15 +136,11 @@ export default function LeaveBudgetList() {
         data={records}
         onChange={handleTableChange}
         pagination={pagination}
-        extra={<></>}
+        extra={<ExtraHeaderLeaveBudget setStateQuery={setStateQuery} />}
         stateQuery={stateQuery}
         rowKey={(record: LeaveBudgetModel) => record.id}
         isShowScroll
         className={`cursor-pointer ${styles.table}`}
-        // onRow={(record: LeaveBudgetModel) => {
-        //   return rowClickHandler(record);
-        // }}
-        // loading={isLoading}
       />
     </>
   );
