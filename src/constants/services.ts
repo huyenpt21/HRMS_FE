@@ -59,3 +59,10 @@ export const DEVICE_TYPE = {
     masterData: 'master-data',
   },
 };
+
+export const LEAVE_BUDGET = {
+  service: 'leave-budget',
+  model: {
+    hr: 'hr',
+  },
+};

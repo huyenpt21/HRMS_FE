@@ -6,6 +6,7 @@ import AllEmployeeList from 'pages/employees/allEmployee';
 import SubordinateList from 'pages/employees/subordinate';
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
+import LeaveBudgetList from 'pages/leave/leaveBudget';
 import NotFound from 'pages/notFound';
 import AllRequestList from 'pages/requests/allRequest';
 import MyRequestList from 'pages/requests/myRequest';
@@ -93,6 +94,10 @@ export default function RouterElement() {
         {
           path: 'department',
           element: <DepartmentList />,
+        },
+        {
+          path: 'leave-budget',
+          element: <LeaveBudgetList />,
         },
       ],
     },

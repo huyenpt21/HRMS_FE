@@ -219,3 +219,25 @@ export const DeviceTypeHeader = [
     editable: true,
   },
 ];
+export const LeaveBudgetListHeader = [
+  {
+    title: 'Full name',
+    key: 'fullName',
+    dataIndex: 'fullName',
+  },
+  {
+    title: 'Leave Budget',
+    key: 'leaveBudget',
+    dataIndex: 'leaveBudget',
+  },
+  {
+    title: 'Number Of Day Off',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Remain Day Off',
+    key: 'remaining',
+    dataIndex: 'remaining',
+  },
+];
