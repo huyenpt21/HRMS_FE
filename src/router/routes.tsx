@@ -6,7 +6,8 @@ import AllEmployeeList from 'pages/employees/allEmployee';
 import SubordinateList from 'pages/employees/subordinate';
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
-import LeaveBudgetList from 'pages/leave/leaveBudget';
+import SubordinateLeaveBudget from 'pages/leave/leaveBudget';
+import MyLeaveBudget from 'pages/leave/myLeaveBudget';
 import NotFound from 'pages/notFound';
 import AllRequestList from 'pages/requests/allRequest';
 import MyRequestList from 'pages/requests/myRequest';
@@ -97,7 +98,10 @@ export default function RouterElement() {
         },
         {
           path: 'leave-budget',
-          element: <LeaveBudgetList />,
+          children: [
+            { path: 'subordinate', element: <SubordinateLeaveBudget /> },
+            { path: 'my-leave-budget', element: <MyLeaveBudget /> },
+          ],
         },
       ],
     },
