@@ -22,12 +22,11 @@ import {
 import ExtraHeaderLeaveBudget from './components/extraHeader';
 import dataMock from './dataMock.json';
 import styles from './leaveBudget.module.less';
-export default function LeaveBudgetList() {
+export default function SubordinateLeaveBudget() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<LeaveBudgetModel[]>([]);
-  // const requestTypeId =
   // * default feilters
   const defaultFilter: LeaveBudgetListQuery = {
     requestTypeId: searchParams.get('requestTypeId')
