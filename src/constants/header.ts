@@ -241,3 +241,25 @@ export const LeaveBudgetListHeader = [
     dataIndex: 'remaining',
   },
 ];
+export const MyLeaveBudgetListHeader = [
+  {
+    title: 'Leave Type',
+    key: 'leaveType',
+    dataIndex: 'leaveType',
+  },
+  {
+    title: 'Leave Budget',
+    key: 'leaveBudget',
+    dataIndex: 'leaveBudget',
+  },
+  {
+    title: 'Number Of Day Off',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Remain Day Off',
+    key: 'remaining',
+    dataIndex: 'remaining',
+  },
+];

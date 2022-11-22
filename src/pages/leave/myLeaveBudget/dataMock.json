@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "service_id": "HRMS",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 3
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "leaveType": "Annual leave",
+        "leaveBudget": 15.0,
+        "numberOfDayOff": 5.0,
+        "remainDayOff": 10.0
+      },
+      {
+        "id": 2,
+        "leaveType": "Children's Sickness",
+        "leaveBudget": 15.0,
+        "numberOfDayOff": 5.0,
+        "remainDayOff": 10.0
+      },
+      {
+        "id": 3,
+        "leaveType": "Unpaid Leave",
+        "leaveBudget": 15.0,
+        "numberOfDayOff": 5.0,
+        "remainDayOff": 10.0
+      }
+    ]
+  }
+}

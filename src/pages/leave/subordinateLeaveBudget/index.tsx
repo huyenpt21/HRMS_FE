@@ -19,15 +19,14 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import ExtraHeaderLeaveBudget from './components/extraHeader';
+import ExtraHeaderLeaveBudget from '../components/extraHeader';
 import dataMock from './dataMock.json';
-import styles from './leaveBudget.module.less';
-export default function LeaveBudgetList() {
+import styles from './subordinateLeaveBudget.module.less';
+export default function SubordinateLeaveBudget() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<LeaveBudgetModel[]>([]);
-  // const requestTypeId =
   // * default feilters
   const defaultFilter: LeaveBudgetListQuery = {
     requestTypeId: searchParams.get('requestTypeId')
@@ -131,7 +130,7 @@ export default function LeaveBudgetList() {
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Leave Budget</div>
+        <div className={styles.header__title}>Subordinate Leave Budget</div>
       </div>
       <div className={styles.menu}>
         <Menu
