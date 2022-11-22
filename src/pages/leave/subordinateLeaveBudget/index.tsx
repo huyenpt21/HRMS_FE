@@ -19,9 +19,9 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import ExtraHeaderLeaveBudget from './components/extraHeader';
+import ExtraHeaderLeaveBudget from '../components/extraHeader';
 import dataMock from './dataMock.json';
-import styles from './leaveBudget.module.less';
+import styles from './subordinateLeaveBudget.module.less';
 export default function SubordinateLeaveBudget() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
@@ -130,7 +130,7 @@ export default function SubordinateLeaveBudget() {
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Leave Budget</div>
+        <div className={styles.header__title}>Subordinate Leave Budget</div>
       </div>
       <div className={styles.menu}>
         <Menu
