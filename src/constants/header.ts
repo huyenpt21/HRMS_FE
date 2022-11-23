@@ -227,8 +227,8 @@ export const LeaveBudgetListHeader = [
   },
   {
     title: 'Leave Budget',
-    key: 'leaveBudget',
-    dataIndex: 'leaveBudget',
+    key: 'budget',
+    dataIndex: 'budget',
   },
   {
     title: 'Number Of Day Off',
@@ -237,20 +237,20 @@ export const LeaveBudgetListHeader = [
   },
   {
     title: 'Remain Day Off',
-    key: 'remaining',
-    dataIndex: 'remaining',
+    key: 'remain',
+    dataIndex: 'remain',
   },
 ];
 export const MyLeaveBudgetListHeader = [
   {
     title: 'Leave Type',
-    key: 'leaveType',
-    dataIndex: 'leaveType',
+    key: 'requestTypeName',
+    dataIndex: 'requestTypeName',
   },
   {
     title: 'Leave Budget',
-    key: 'leaveBudget',
-    dataIndex: 'leaveBudget',
+    key: 'budget',
+    dataIndex: 'budget',
   },
   {
     title: 'Number Of Day Off',
@@ -259,7 +259,7 @@ export const MyLeaveBudgetListHeader = [
   },
   {
     title: 'Remain Day Off',
-    key: 'remaining',
-    dataIndex: 'remaining',
+    key: 'remain',
+    dataIndex: 'remain',
   },
 ];

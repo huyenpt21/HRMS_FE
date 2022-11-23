@@ -14,9 +14,9 @@
       {
         "id": 1,
         "fullName": "Trinh Kim Chi",
-        "leaveBudget": 15.0,
-        "numberOfDayOff": 5.0,
-        "remainDayOff": 10.0,
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0,
         "requestTypeName": "Annual Leave"
       }
     ]
