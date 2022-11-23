@@ -64,5 +64,6 @@ export const LEAVE_BUDGET = {
   service: 'leave-budget',
   model: {
     hr: 'hr',
+    manager: 'manager',
   },
 };

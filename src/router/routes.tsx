@@ -1,4 +1,5 @@
 // import { pathNameLocalStorage } from 'constants/common';
+import { MENU_TYPE } from 'constants/enums/common';
 import MainLayout from 'layouts/MainLayout';
 import DepartmentList from 'pages/department/departmentList';
 import DeviceTypeList from 'pages/device/deviceType/deviceTypeList';
@@ -7,7 +8,7 @@ import SubordinateList from 'pages/employees/subordinate';
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
 import MyLeaveBudget from 'pages/leave/myLeaveBudget';
-import SubordinateLeaveBudget from 'pages/leave/subordinateLeaveBudget';
+import SubordinateLeaveBudget from 'pages/leave/allLeaveBudget';
 import NotFound from 'pages/notFound';
 import AllRequestList from 'pages/requests/allRequest';
 import MyRequestList from 'pages/requests/myRequest';
@@ -99,7 +100,16 @@ export default function RouterElement() {
         {
           path: 'leave-budget',
           children: [
-            { path: 'subordinate', element: <SubordinateLeaveBudget /> },
+            {
+              path: 'subordinate',
+              element: (
+                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
+              ),
+            },
+            {
+              path: 'all',
+              element: <SubordinateLeaveBudget menuType={MENU_TYPE.ALL} />,
+            },
             { path: 'my-leave-budget', element: <MyLeaveBudget /> },
           ],
         },

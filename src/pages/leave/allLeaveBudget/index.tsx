@@ -4,6 +4,7 @@ import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { LeaveBudgetListHeader } from 'constants/header';
+import { LEAVE_BUDGET } from 'constants/services';
 import { useLeaveBudgetList } from 'hooks/useLeaveBudget';
 import { HeaderTableFields } from 'models/common';
 import {
@@ -23,7 +24,10 @@ import ExtraHeaderLeaveBudget from '../components/extraHeader';
 import MenuRequestType from '../components/menuRequestType';
 import dataMock from './dataMock.json';
 import styles from './subordinateLeaveBudget.module.less';
-export default function SubordinateLeaveBudget() {
+interface IProps {
+  menuType: MENU_TYPE;
+}
+export default function SubordinateLeaveBudget({ menuType }: IProps) {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -57,7 +61,13 @@ export default function SubordinateLeaveBudget() {
   // * get header
   let header: HeaderTableFields[] = LeaveBudgetListHeader;
   // * get data table from API
-  const { data: dataTable } = useLeaveBudgetList(stateQuery);
+  const { data: dataTable } = useLeaveBudgetList(
+    stateQuery,
+    menuType === MENU_TYPE.SUBORDINATE
+      ? `${LEAVE_BUDGET.model.manager}/${LEAVE_BUDGET.service}`
+      : `${LEAVE_BUDGET.model.hr}/${LEAVE_BUDGET.service}`,
+    menuType === MENU_TYPE.SUBORDINATE ? 'subordinate-budget' : 'all-budget',
+  );
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
