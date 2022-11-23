@@ -103,6 +103,12 @@ export const menus: MenuItemType[] = [
     path: '/department',
   },
   {
+    title: 'All Leave Budget',
+    key: 'all-leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget/all',
+  },
+  {
     title: 'Subordinate Leave Budget',
     key: 'subordinate-leave-budget',
     icon: 'calendar',

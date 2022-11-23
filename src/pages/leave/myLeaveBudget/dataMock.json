@@ -13,24 +13,24 @@
     "items": [
       {
         "id": 1,
-        "leaveType": "Annual leave",
-        "leaveBudget": 15.0,
-        "numberOfDayOff": 5.0,
-        "remainDayOff": 10.0
+        "requestTypeName": "Annual leave",
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0
       },
       {
         "id": 2,
-        "leaveType": "Children's Sickness",
-        "leaveBudget": 15.0,
-        "numberOfDayOff": 5.0,
-        "remainDayOff": 10.0
+        "requestTypeName": "Children's Sickness",
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0
       },
       {
         "id": 3,
-        "leaveType": "Unpaid Leave",
-        "leaveBudget": 15.0,
-        "numberOfDayOff": 5.0,
-        "remainDayOff": 10.0
+        "requestTypeName": "Unpaid Leave",
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0
       }
     ]
   }

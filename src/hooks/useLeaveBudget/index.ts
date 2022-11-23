@@ -20,7 +20,7 @@ class LeaveBudgetList implements Feature<LeaveBudgetListSortFields> {
 const LeaveBudgetListInstance = new LeaveBudgetList(
   `${LEAVE_BUDGET.model.hr}/${LEAVE_BUDGET.service}`,
   undefined,
-  'department-list',
+  'budget-list',
 );
 export const {
   useList: useLeaveBudgetList,
