@@ -28,7 +28,8 @@
       "receiver": "Nguyen Thi Huyen",
       "deviceTypeId": 2,
       "approvalDate": "2022-10-24 12:00:00",
-      "timeRemaining": 2.49746464
+      "timeRemaining": 2.49746464,
+      "isAllowRollback": 1
     }
   }
 }

@@ -8,7 +8,6 @@ import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
-
 import {
   DATE_TIME,
   DATE_TIME_US,
@@ -339,20 +338,30 @@ export default function RequestDetailModal({
       remainingTimeRequest(data);
     }
   };
-
   const disabledDate = (current: moment.Moment) => {
-    // if start date haven't selected -> disable past days
+    // if start date haven't selected -> disable past date to curent date
+    //disable weekend
+    const weekend = moment(current).day() === 0 || moment(current).day() === 6;
     if (!dateSelected) {
-      return current && current < moment().startOf('day');
+      return (current && current < moment().endOf('day')) || !!weekend;
     }
-    let disableType: moment.unitOfTime.StartOf = 'years';
-    if (requestType === REQUEST_TYPE_KEY.OT) {
-      disableType = 'months';
+    //disable next years
+    const tooLate = current > moment(dateSelected[0]).endOf('years');
+    //disable previous years and past dates and current dates
+    const tooEarly =
+      current < moment(dateSelected[1]).startOf('years') ||
+      current < moment().endOf('days');
+    return !!tooLate || !!tooEarly || !!weekend;
+  };
+
+  const disableDateOT = (current: moment.Moment) => {
+    if (!dateSelected) {
+      return false;
     }
-    //disable next month/years
-    const tooLate = current > moment(dateSelected[0]).endOf(disableType);
-    //disable previous month/years
-    const tooEarly = current < moment().startOf('days');
+    //disable next month
+    const tooLate = current > moment(dateSelected[0]).endOf('months');
+    //disable previous month
+    const tooEarly = current < moment(dateSelected[1]).startOf('months');
     return !!tooLate || !!tooEarly;
   };
 
@@ -537,7 +546,7 @@ export default function RequestDetailModal({
                     placeholder={['From', 'To']}
                     showTime
                     format={DATE_TIME_US}
-                    disabledDate={disabledDate}
+                    disabledDate={disableDateOT}
                     disabledTime={disabledRangeTime}
                     onCalendarChange={(values: RangeValue) => {
                       setDateSelected(values);

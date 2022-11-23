@@ -23,7 +23,7 @@ import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
-// import dataMock from '../dataMock.json';
+import dataMock from '../dataMock.json';
 
 export default function MyRequestList() {
   const [searchParams] = useSearchParams();
@@ -72,7 +72,6 @@ export default function MyRequestList() {
         el.width = 150;
         el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        // el.align = 'center';
       } else if (el.key === 'requestTypeName') {
         el.width = 200;
       } else if (el.key === 'status') {
@@ -128,22 +127,22 @@ export default function MyRequestList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable?.data) {
-      const {
-        metadata: { pagination },
-        data: { items },
-      } = dataTable;
-      setRecords(items);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable?.data) {
+    const {
+      metadata: { pagination },
+      data: { items },
+    } = dataMock;
+    setRecords(items);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
+    // }
   }, [dataTable, stateQuery, isError]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
