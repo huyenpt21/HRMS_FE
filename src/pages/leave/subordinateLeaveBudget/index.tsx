@@ -1,7 +1,8 @@
-import { Menu, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
+import { MENU_TYPE } from 'constants/enums/common';
 import { LeaveBudgetListHeader } from 'constants/header';
 import { useLeaveBudgetList } from 'hooks/useLeaveBudget';
 import { HeaderTableFields } from 'models/common';
@@ -10,7 +11,6 @@ import {
   LeaveBudgetListSortFields,
   LeaveBudgetModel,
 } from 'models/leaveBudget';
-import { MenuItem } from 'models/menu';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -20,6 +20,7 @@ import {
   sortInforWithDir,
 } from 'utils/common';
 import ExtraHeaderLeaveBudget from '../components/extraHeader';
+import MenuRequestType from '../components/menuRequestType';
 import dataMock from './dataMock.json';
 import styles from './subordinateLeaveBudget.module.less';
 export default function SubordinateLeaveBudget() {
@@ -133,26 +134,9 @@ export default function SubordinateLeaveBudget() {
         <div className={styles.header__title}>Subordinate Leave Budget</div>
       </div>
       <div className={styles.menu}>
-        <Menu
-          theme="light"
-          mode="vertical"
-          triggerSubMenuAction="click"
-          defaultSelectedKeys={['1']}
-          items={[
-            { label: 'Annual Leave', key: 1 },
-            // eslint-disable-next-line quotes
-            { label: "Children's Sickness", key: 3 },
-            { label: 'Unpaid Leave', key: 6 },
-            { label: 'Sick Leave', key: 8 },
-            { label: 'Bereavement Leave', key: 10 },
-            { label: 'Over time', key: 7 },
-          ]}
-          onClick={(value: MenuItem) => {
-            setStateQuery((prev: any) => ({
-              ...prev,
-              requestTypeId: value?.key,
-            }));
-          }}
+        <MenuRequestType
+          menuType={MENU_TYPE.SUBORDINATE}
+          setStateQuery={setStateQuery}
         />
       </div>
       <CommonTable

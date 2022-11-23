@@ -1,7 +1,8 @@
-import { Menu, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
+import { MENU_TYPE } from 'constants/enums/common';
 import { MyLeaveBudgetListHeader } from 'constants/header';
 import { useLeaveBudgetList } from 'hooks/useLeaveBudget';
 import { HeaderTableFields } from 'models/common';
@@ -10,22 +11,17 @@ import {
   LeaveBudgetListSortFields,
   LeaveBudgetModel,
 } from 'models/leaveBudget';
-import { MenuItem } from 'models/menu';
 import moment from 'moment-timezone';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  isEmptyPagination,
-  removeEmptyValueInObject,
-  sortInforWithDir,
-} from 'utils/common';
-import styles from './myLeaveBudget.module.less';
-import dataMock from './dataMock.json';
+import { removeEmptyValueInObject, sortInforWithDir } from 'utils/common';
 import ExtraHeaderLeaveBudget from '../components/extraHeader';
+import MenuRequestType from '../components/menuRequestType';
+import dataMock from './dataMock.json';
+import styles from './myLeaveBudget.module.less';
 
 export default function MyLeaveBudget() {
   const [searchParams] = useSearchParams();
-  const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<LeaveBudgetModel[]>([]);
   // * default feilters
@@ -60,7 +56,7 @@ export default function MyLeaveBudget() {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
-      if (el.key === 'leaveType') {
+      if (el.key === 'requestTypeName') {
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = '40%';
@@ -86,19 +82,9 @@ export default function MyLeaveBudget() {
   useEffect(() => {
     // if (dataTable && dataTable?.data) {
     const {
-      metadata: { pagination },
       data: { items },
     } = dataMock;
     setRecords(items);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
-    }
     // }
   }, [dataTable]);
   const handleTableChange = (
@@ -132,28 +118,16 @@ export default function MyLeaveBudget() {
         <div className={styles.header__title}>My Leave Budget</div>
       </div>
       <div className={styles.menu}>
-        <Menu
-          theme="light"
-          mode="vertical"
-          triggerSubMenuAction="click"
-          defaultSelectedKeys={['1']}
-          items={[
-            { label: 'Leave Budget', key: 1 },
-            { label: 'OT Budget', key: 7 },
-          ]}
-          onClick={(value: MenuItem) => {
-            setStateQuery((prev: any) => ({
-              ...prev,
-              requestTypeId: value?.key,
-            }));
-          }}
+        <MenuRequestType
+          menuType={MENU_TYPE.MIME}
+          setStateQuery={setStateQuery}
         />
       </div>
       <CommonTable
         columns={columnsHeader}
         data={records}
         onChange={handleTableChange}
-        pagination={pagination}
+        pagination={false}
         extra={
           <ExtraHeaderLeaveBudget
             stateQuery={stateQuery}
@@ -162,7 +136,6 @@ export default function MyLeaveBudget() {
         }
         stateQuery={stateQuery}
         rowKey={(record: LeaveBudgetModel) => record.id}
-        isShowScroll
         className={`cursor-pointer ${styles.table}`}
       />
     </>
