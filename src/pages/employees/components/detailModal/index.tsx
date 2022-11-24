@@ -31,7 +31,7 @@ import {
 } from 'hooks/useEmployee';
 import { EmployeeModel, ResEmployeeModify } from 'models/employee';
 import moment from 'moment-timezone';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getDateFormat } from 'utils/common';
 import styles from './addEmployee.module.less';
 // import detailMock from './detailMock.json';
@@ -53,7 +53,8 @@ export default function EmployeeDetailModal({
 }: IProps) {
   const [employeeForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
-  const [departmentId, setDepartmentId] = useState<string | undefined>();
+  const [departmentId, setDepartmentId] = useState<number | undefined>(0);
+  const personInforRef = useRef<EmployeeModel>();
 
   const { data: detailEmployee } = useEmployeeDetail(employeeRollNumber);
   const { mutate: updateEmployee } = useUpdateEmployee({
@@ -93,6 +94,7 @@ export default function EmployeeDetailModal({
       } = detailEmployee;
       if (message === MESSAGE_RES.SUCCESS && employee) {
         setDepartmentId(employee?.departmentId);
+        personInforRef.current = employee;
         employeeForm.setFieldsValue(employee);
         employeeForm.setFieldsValue({
           dateOfBirth: moment(employee.dateOfBirth),
@@ -143,14 +145,14 @@ export default function EmployeeDetailModal({
           disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
         >
           <Row gutter={36}>
-            <Col span={12} className={styles.column}>
+            <Col span={11} className={styles.column}>
               <h2>Personnal Information</h2>
               <Row gutter={12}>
                 <Col span={12}>
                   <BasicInput
                     name="fullName"
                     label="Full Name"
-                    rules={[{ required: true }]}
+                    rules={[{ required: true, whitespace: true }]}
                     allowClear
                     placeholder="Enter full name "
                   />
@@ -181,8 +183,8 @@ export default function EmployeeDetailModal({
                     rules={[
                       { required: true },
                       {
-                        pattern: '^[0-9 ]*$',
-                        message: 'Please enter a valid phone number',
+                        pattern: '^(\\+84|84|0)+([0-9]{9,10})\\b',
+                        message: 'Phone Number is invalid',
                       },
                     ]}
                     allowClear
@@ -196,7 +198,7 @@ export default function EmployeeDetailModal({
                     name="citizenIdentification"
                     label="Citizen Identification"
                     allowClear
-                    rules={[{ required: true }]}
+                    rules={[{ required: true, whitespace: true }]}
                     placeholder="Enter Citizen Identification"
                   />
                 </Col>
@@ -214,8 +216,54 @@ export default function EmployeeDetailModal({
                 </Col>
               </Row>
             </Col>
-            <Col span={12}>
+            <Col span={13}>
               <h2>Working Information</h2>
+              <Row gutter={12} className={styles['infor--header']}>
+                <Col span={12}>
+                  <span>Roll Number: </span>
+                  <span className={styles['text--bold']}>
+                    {personInforRef.current?.rollNumber}
+                  </span>
+                </Col>
+                <Col span={12}>
+                  <span>Email: </span>
+                  <span className={styles['text--bold']}>
+                    {personInforRef.current?.email}
+                  </span>
+                </Col>
+              </Row>
+              <Row gutter={12}>
+                <Col span={12}>
+                  <BasicInput
+                    label="Basic Salary"
+                    name="salaryBasic"
+                    rules={[
+                      { required: true },
+                      {
+                        pattern: '\\d',
+                        message: 'Basic Salary is invalid',
+                      },
+                    ]}
+                    allowClear
+                    placeholder="Enter basic salary"
+                  />
+                </Col>
+                <Col span={12}>
+                  <BasicInput
+                    label="Basic Bonus"
+                    name="salaryBonus"
+                    rules={[
+                      { required: true },
+                      {
+                        pattern: '\\d',
+                        message: 'Basic Bonus is invalid',
+                      },
+                    ]}
+                    allowClear
+                    placeholder="Enter bonus salary"
+                  />
+                </Col>
+              </Row>
               <Row gutter={12}>
                 <Col span={12}>
                   <SelectCustomSearch
@@ -256,8 +304,8 @@ export default function EmployeeDetailModal({
                     rules={[{ required: true }]}
                     allowClear
                     placeholder="Choose position"
-                    apiName="position-master-data"
-                    isCallApi={!!departmentId}
+                    apiName="position-master-data-detail"
+                    isCallApi={false}
                     refetchValue={departmentId}
                     disabled={!departmentId}
                   />

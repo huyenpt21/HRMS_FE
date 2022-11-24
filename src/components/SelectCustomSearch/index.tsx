@@ -129,7 +129,7 @@ const SelectCustomSearch = ({
     }
   }, []);
   useEffect(() => {
-    refetch();
+    !!refetchValue && refetch();
   }, [refetchValue]);
 
   const handleChangeOpt = (value: any, options: any) => {
