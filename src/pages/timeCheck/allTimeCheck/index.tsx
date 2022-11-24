@@ -25,7 +25,7 @@ import {
 } from 'utils/common';
 import ExtraTableTimeCheck from '../components/extraHeader';
 import styles from './allTimeCheck.module.less';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 
 export default function AllTimeCheck() {
   const [searchParams] = useSearchParams();
@@ -163,22 +163,22 @@ export default function AllTimeCheck() {
   }, [stateQuery, isError]);
 
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { timeCheckList },
-    } = dataMock;
-    setRecords(timeCheckList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { timeCheckList },
+      } = dataTable;
+      setRecords(timeCheckList);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
   }, [dataTable]);
 
   const handleTableChange = (
