@@ -22,7 +22,7 @@ import {
 } from 'utils/common';
 import ExtraHeaderLeaveBudget from '../components/extraHeader';
 import MenuRequestType from '../components/menuRequestType';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 import styles from './subordinateLeaveBudget.module.less';
 interface IProps {
   menuType: MENU_TYPE;
@@ -75,7 +75,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
       if (el.key === 'fullName') {
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        el.width = '40%';
+        el.width = 250;
       }
       if (el.key === 'used') {
         el.sorter = true;
@@ -96,23 +96,23 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
   }, [stateQuery]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { items },
-    } = dataMock;
-    setRecords(items);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { items },
+      } = dataTable;
+      setRecords(items);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
-  }, [dataTable]);
+  }, [dataTable, stateQuery]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,

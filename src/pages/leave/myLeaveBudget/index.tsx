@@ -1,7 +1,6 @@
 import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
-import { paginationConfig } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { MyLeaveBudgetListHeader } from 'constants/header';
 import { useLeaveBudgetList } from 'hooks/useLeaveBudget';
@@ -17,7 +16,7 @@ import { useSearchParams } from 'react-router-dom';
 import { removeEmptyValueInObject, sortInforWithDir } from 'utils/common';
 import ExtraHeaderLeaveBudget from '../components/extraHeader';
 import MenuRequestType from '../components/menuRequestType';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 import styles from './myLeaveBudget.module.less';
 
 export default function MyLeaveBudget() {
@@ -36,12 +35,6 @@ export default function MyLeaveBudget() {
     year: searchParams.get('year')
       ? Number(searchParams.get('year'))
       : moment().get('year'),
-    page: searchParams.get('page')
-      ? Number(searchParams.get('page'))
-      : paginationConfig.current,
-    limit: searchParams.get('limit')
-      ? Number(searchParams.get('limit'))
-      : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
   };
@@ -80,13 +73,13 @@ export default function MyLeaveBudget() {
   }, [stateQuery]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      data: { items },
-    } = dataMock;
-    setRecords(items);
-    // }
-  }, [dataTable]);
+    if (dataTable && dataTable?.data) {
+      const {
+        data: { items },
+      } = dataTable;
+      setRecords(items);
+    }
+  }, [dataTable, stateQuery]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
