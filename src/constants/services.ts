@@ -62,7 +62,7 @@ export const DEVICE_TYPE = {
 };
 
 export const LEAVE_BUDGET = {
-  service: 'leave-budget',
+  service: 'benefit-budget',
   model: {
     hr: 'hr',
     manager: 'manager',
