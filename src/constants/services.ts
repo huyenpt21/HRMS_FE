@@ -19,6 +19,7 @@ export const MY_REQUEST_LIST = {
   model: {
     status: 'status',
     remainingTime: 'remaining-time',
+    officeTime: 'office-time',
   },
 };
 export const MANAGER_REQUEST_LIST = {
