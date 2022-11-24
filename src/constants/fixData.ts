@@ -124,7 +124,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Forgot Check In/Out',
-    type: REQUEST_TYPE_KEY.OTHER,
+    type: REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT,
     value: 4,
   },
   {

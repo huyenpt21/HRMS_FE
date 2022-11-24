@@ -56,6 +56,7 @@ import styles from './requestDetailModal.module.less';
 import { RangePickerProps } from 'antd/lib/date-picker';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import { DEVICE_TYPE } from 'constants/services';
+import BasicDatePicker from 'components/BasicDatePicker';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -245,6 +246,18 @@ export default function RequestDetailModal({
         DATE_TIME,
       );
     }
+    if (requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) {
+      formValues.startTime = TimeCombine(
+        formValues.date,
+        formValues.time && formValues.time[0],
+        DATE_TIME,
+      );
+      formValues.endTime = TimeCombine(
+        formValues.date,
+        formValues.time && formValues.time[1],
+        DATE_TIME,
+      );
+    }
     if (requestType === REQUEST_TYPE_KEY.OT && formValues.date) {
       formValues.startTime = getDateFormat(formValues.date[0], DATE_TIME);
       formValues.endTime = getDateFormat(formValues.date[1], DATE_TIME);
@@ -396,6 +409,10 @@ export default function RequestDetailModal({
       !!onlyOneDaynext ||
       !!onlyOneDayPrev
     );
+  };
+
+  const disabledDateForgotCheckInOut = (current: moment.Moment) => {
+    return current >= moment().startOf('days');
   };
 
   const disabledRangeTime: RangePickerProps['disabledTime'] = (value, type) => {
@@ -565,21 +582,33 @@ export default function RequestDetailModal({
               )}
             </Row>
             {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-              requestType === REQUEST_TYPE_KEY.OTHER) && (
+              requestType === REQUEST_TYPE_KEY.OTHER ||
+              requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) && (
               <Row gutter={20}>
                 <Col span="12">
-                  <BasicDateRangePicker
-                    name="date"
-                    label="Applicable Date"
-                    rules={[{ required: true }]}
-                    placeholder={['From', 'To']}
-                    allowClear
-                    onChange={handleChangeDate}
-                    disabledDate={disabledDate}
-                    onCalendarChange={(values: RangeValue) => {
-                      setDateSelected(values);
-                    }}
-                  />
+                  {requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
+                    <BasicDatePicker
+                      name="date"
+                      label="Applicable Date"
+                      rules={[{ required: true }]}
+                      allowClear
+                      disabledDate={disabledDateForgotCheckInOut}
+                    />
+                  )}
+                  {requestType === REQUEST_TYPE_KEY.LEAVE && (
+                    <BasicDateRangePicker
+                      name="date"
+                      label="Applicable Date"
+                      rules={[{ required: true }]}
+                      placeholder={['From', 'To']}
+                      allowClear
+                      onChange={handleChangeDate}
+                      disabledDate={disabledDate}
+                      onCalendarChange={(values: RangeValue) => {
+                        setDateSelected(values);
+                      }}
+                    />
+                  )}
                 </Col>
                 <Col span="12">
                   <TimeRangePicker

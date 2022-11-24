@@ -107,6 +107,7 @@ export enum REQUEST_TYPE_KEY {
   OT = 'ot',
   DEVICE = 'device',
   OTHER = 'other',
+  FORGOT_CHECK_IN_OUT = 'forgotCheckInOut',
 }
 
 export enum MENU_TYPE {
