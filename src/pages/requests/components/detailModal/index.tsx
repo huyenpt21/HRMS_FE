@@ -31,12 +31,14 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
+  useGetOfficeTime,
   useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
 } from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
 import {
+  OfficeTime,
   RequestModel,
   RequestRemainingTime,
   ResRequestModify,
@@ -84,6 +86,7 @@ export default function RequestDetailModal({
   const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
   const remainingTimeRef = useRef<number | undefined>();
+  const officeTimeRef = useRef<OfficeTime>();
 
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
@@ -133,6 +136,7 @@ export default function RequestDetailModal({
     },
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
+  const { data: officeTimeData } = useGetOfficeTime();
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -213,6 +217,15 @@ export default function RequestDetailModal({
       }
     }
   }, [detailRequest]);
+  useEffect(() => {
+    if (officeTimeData && officeTimeData?.data) {
+      const {
+        data: { item },
+      } = officeTimeData;
+      officeTimeRef.current = item;
+    }
+    officeTimeRef.current = { timeStart: '08:30:00', timeFinish: '18:30:00' };
+  }, []);
   const cancelHandler = () => {
     onCancel();
     requestForm.resetFields();
@@ -358,30 +371,49 @@ export default function RequestDetailModal({
     if (!dateSelected) {
       return false;
     }
+    const hourSelected = moment(dateSelected[0]).get('hours');
     //disable next month
     const tooLate = current > moment(dateSelected[0]).endOf('months');
     //disable previous month
     const tooEarly = current < moment(dateSelected[1]).startOf('months');
-    return !!tooLate || !!tooEarly;
+    const onlyTwoDays =
+      current > moment(dateSelected[0]).add(1, 'days') && hourSelected >= 22;
+    const onlyOneDay =
+      current >= moment(dateSelected[0]).endOf('days') && hourSelected <= 4;
+    return !!tooLate || !!tooEarly || !!onlyTwoDays || !!onlyOneDay;
   };
 
-  const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
-    if (
-      dateSelected &&
-      dateSelected[0]?.diff(moment().startOf('day'), 'days') === 0
-    ) {
-      const currentHour = moment().get('hour');
-      const currentMinute = moment().get('minute');
-      if (type === 'start') {
-        return {
-          disabledHours: () => getRange(0, currentHour),
-          disabledMinutes: () => getRange(0, currentMinute + 1),
-        };
-      }
+  const disabledRangeTime: RangePickerProps['disabledTime'] = (value, type) => {
+    const hourStart = Number(officeTimeRef.current?.timeStart?.split(':')[0]);
+    const hourEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[0]);
+    const minuteStart = Number(officeTimeRef.current?.timeStart?.split(':')[1]);
+    const minuteEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[1]);
+    if (requestType === REQUEST_TYPE_KEY.OT) {
+      return {
+        disabledHours: () => {
+          if (dateSelected) {
+            if (value?.get('dates') === moment(dateSelected[0]).get('dates')) {
+              if (moment(dateSelected[0]).get('hours') >= 22)
+                return getRange(0, 22);
+              if (moment(dateSelected[0]).get('hours') >= 0)
+                return getRange(5, 24);
+            }
+            return getRange(5, 24);
+          }
+          return getRange(5, 22);
+        },
+      };
     }
     return {
-      disabledHours: () => [],
-      disabledMinutes: () => [],
+      disabledHours: () => [
+        ...getRange(0, hourStart),
+        ...getRange(hourEnd + 1, 24),
+      ],
+      disabledMinutes: (selectedHour) => {
+        if (selectedHour === hourStart) return getRange(0, minuteStart);
+        if (selectedHour === hourEnd) return getRange(minuteEnd + 1, 60);
+        return [];
+      },
     };
   };
 
@@ -544,7 +576,12 @@ export default function RequestDetailModal({
                     label="Applicable Date"
                     rules={[{ required: true }]}
                     placeholder={['From', 'To']}
-                    showTime
+                    showTime={{
+                      defaultValue: [
+                        moment('00:00', 'HH:mm'),
+                        moment('00:00', 'HH:mm'),
+                      ],
+                    }}
                     format={DATE_TIME_US}
                     disabledDate={disableDateOT}
                     disabledTime={disabledRangeTime}
@@ -552,6 +589,7 @@ export default function RequestDetailModal({
                       setDateSelected(values);
                     }}
                     allowClear
+                    hideDisabledOptions
                   />
                 </Col>
               </Row>

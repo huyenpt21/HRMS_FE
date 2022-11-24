@@ -26,7 +26,7 @@ interface IProps {
   disabled?: boolean;
   disabledDate?: (currentDate: moment.Moment) => boolean;
   placeholder?: [string, string];
-  showTime?: boolean;
+  showTime?: any;
   format?: string;
   onCalendarChange?: (
     values: RangeValue,
@@ -38,6 +38,7 @@ interface IProps {
     date: EventValue<moment.Moment>,
     type: RangeType,
   ) => DisabledTimes;
+  hideDisabledOptions?: boolean;
 }
 
 const { RangePicker } = DatePicker;
@@ -78,6 +79,7 @@ const BasicDateRangePicker = (props: IProps) => {
           onCalendarChange={props.onCalendarChange}
           allowClear={props.allowClear}
           disabledTime={props.disabledTime}
+          hideDisabledOptions={props.hideDisabledOptions}
         />
       </Form.Item>
     </span>
