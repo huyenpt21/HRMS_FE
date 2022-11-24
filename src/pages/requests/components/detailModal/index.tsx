@@ -224,7 +224,6 @@ export default function RequestDetailModal({
       } = officeTimeData;
       officeTimeRef.current = item;
     }
-    officeTimeRef.current = { timeStart: '08:30:00', timeFinish: '18:30:00' };
   }, []);
   const cancelHandler = () => {
     onCancel();
@@ -371,16 +370,32 @@ export default function RequestDetailModal({
     if (!dateSelected) {
       return false;
     }
-    const hourSelected = moment(dateSelected[0]).get('hours');
+    const hourStartSelected = moment(dateSelected[0]).get('hours');
+    const hourEndSelected = moment(dateSelected[1]).get('hours');
     //disable next month
     const tooLate = current > moment(dateSelected[0]).endOf('months');
     //disable previous month
     const tooEarly = current < moment(dateSelected[1]).startOf('months');
-    const onlyTwoDays =
-      current > moment(dateSelected[0]).add(1, 'days') && hourSelected >= 22;
-    const onlyOneDay =
-      current >= moment(dateSelected[0]).endOf('days') && hourSelected <= 4;
-    return !!tooLate || !!tooEarly || !!onlyTwoDays || !!onlyOneDay;
+    const onlyTwoDaysNext =
+      current > moment(dateSelected[0]).add(1, 'days') &&
+      hourStartSelected >= 22;
+    const onlyTwoDaysPrev =
+      current < moment(dateSelected[1]).subtract(1, 'days').startOf('days') &&
+      hourEndSelected <= 4;
+    const onlyOneDaynext =
+      current >= moment(dateSelected[0]).endOf('days') &&
+      hourStartSelected <= 4;
+    const onlyOneDayPrev =
+      current <= moment(dateSelected[1]).startOf('days') &&
+      hourEndSelected >= 22;
+    return (
+      !!tooLate ||
+      !!tooEarly ||
+      !!onlyTwoDaysNext ||
+      !!onlyTwoDaysPrev ||
+      !!onlyOneDaynext ||
+      !!onlyOneDayPrev
+    );
   };
 
   const disabledRangeTime: RangePickerProps['disabledTime'] = (value, type) => {
@@ -392,13 +407,24 @@ export default function RequestDetailModal({
       return {
         disabledHours: () => {
           if (dateSelected) {
-            if (value?.get('dates') === moment(dateSelected[0]).get('dates')) {
-              if (moment(dateSelected[0]).get('hours') >= 22)
+            if (type === 'end') {
+              if (
+                value?.get('dates') === moment(dateSelected[0]).get('dates') &&
+                moment(dateSelected[0]).get('hours') >= 22
+              ) {
                 return getRange(0, 22);
-              if (moment(dateSelected[0]).get('hours') >= 0)
-                return getRange(5, 24);
+              }
+              return getRange(5, 24);
             }
-            return getRange(5, 24);
+            if (type === 'start') {
+              if (
+                value?.get('dates') === moment(dateSelected[1]).get('dates') &&
+                moment(dateSelected[1]).get('hours') <= 4
+              ) {
+                return getRange(5, 24);
+              }
+              return getRange(0, 22);
+            }
           }
           return getRange(5, 22);
         },
