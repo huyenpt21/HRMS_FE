@@ -4,6 +4,10 @@ export const EMPLOYEE_LIST_ALL = {
     list: 'all/list',
   },
 };
+
+export const USER_INFO = {
+  service: 'user-info',
+};
 export const EMPLOYEE_CHANGE_STATUS = {
   service: 'hr/status/employee',
 };

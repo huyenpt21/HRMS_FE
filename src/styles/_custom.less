@@ -77,6 +77,17 @@ code {
   }
 }
 
+.ant-col,
+.ant-form-item-label > label,
+.ant-picker,
+.ant-picker-input,
+.ant-picker-input > input,
+.ant-input-affix-wrapper,
+.ant-input,
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  position: inherit !important;
+}
+
 //Custom table antd
 thead.ant-table-thead {
   > tr > th {
@@ -201,6 +212,7 @@ nav.ant-breadcrumb {
 
 .ant-card {
   border-radius: 8px !important;
+  position: inherit !important;
 }
 
 .ant-modal-content {
@@ -236,6 +248,10 @@ nav.ant-breadcrumb {
 
 .mb-0 {
   margin-bottom: 0 !important;
+}
+
+.ant-btn {
+  position: inherit !important;
 }
 
 //Custom sorter antd

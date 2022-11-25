@@ -19,6 +19,7 @@ import SubordinateTimeCheck from 'pages/timeCheck/subordinateTimeCheck';
 import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
+import UserProfile from 'pages/userProfile';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -112,6 +113,10 @@ export default function RouterElement() {
             },
             { path: 'my-leave-budget', element: <MyLeaveBudget /> },
           ],
+        },
+        {
+          path: 'profile',
+          element: <UserProfile />,
         },
       ],
     },

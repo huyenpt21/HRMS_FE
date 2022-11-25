@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success"
+  },
+  "data": {
+    "item": {
+      "id": 1,
+      "fullName": "Nguyen Van A",
+      "dateOfBirth": "1998-10-02",
+      "gender": 1,
+      "phoneNumber": "0123455567",
+      "citizenIdentification": "02665454565650",
+      "address": "Ha Noi - Viet Nam",
+      "rollNumber": "MS0001",
+      "email": "anvms0001@minswap.com",
+      "managerName": "MS0003",
+      "departmentName": "DEV",
+      "positionName": "Tester",
+      "rankingName": "Fresher",
+      "onBoardDate": "2021/05/21"
+    }
+  }
+}
