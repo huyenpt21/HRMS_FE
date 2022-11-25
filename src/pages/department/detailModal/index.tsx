@@ -14,7 +14,7 @@ import {
 import { DepartmentModel, ResDepartmentModify } from 'models/department';
 import { useEffect, useRef, useState } from 'react';
 import styles from './detailDepartment.module.less';
-import detailMock from './detailMock.json';
+// import detailMock from './detailMock.json';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -38,7 +38,7 @@ export default function DepartmentDetailModal({
     'aaaaa',
     'bbbbb',
   ]);
-  const totalMembers = useRef(0);
+  const totalMembers = useRef<number | undefined>(0);
 
   const { data: detailDepartment } = useDepartmentDetail(departmentId);
 
@@ -77,17 +77,17 @@ export default function DepartmentDetailModal({
   });
 
   useEffect(() => {
-    // if (detailDepartment && detailDepartment.data) {
-    const {
-      metadata: { message },
-      data: { item: department },
-    } = detailMock;
-    if (message === MESSAGE_RES.SUCCESS && department) {
-      departmentForm.setFieldsValue(department);
-      setPositionList(department?.listPosition);
-      totalMembers.current = department?.total;
+    if (detailDepartment && detailDepartment.data) {
+      const {
+        metadata: { message },
+        data: { item: department },
+      } = detailDepartment;
+      if (message === MESSAGE_RES.SUCCESS && department) {
+        departmentForm.setFieldsValue(department);
+        setPositionList(department?.listPosition);
+        totalMembers.current = department?.total;
+      }
     }
-    // }
   }, [detailDepartment]);
 
   const cancelHandler = () => {
