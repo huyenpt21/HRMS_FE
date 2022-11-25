@@ -1,14 +1,15 @@
-import { Col, Divider, Form, Row } from 'antd';
+import { Col, Divider, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
-import { MESSAGE_RES, validateMessages } from 'constants/common';
+import { DATE_TIME, MESSAGE_RES, validateMessages } from 'constants/common';
 import { GENDER_LIST } from 'constants/fixData';
-import { useGetUserInfor } from 'hooks/useEmployee';
+import { useGetUserInfor, useUpdateUserInfor } from 'hooks/useEmployee';
 import { EmployeeModel } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useRef } from 'react';
+import { getDateFormat } from 'utils/common';
 import dataMock from './detailMock.json';
 import UploadAvatar from './uploadAvatar';
 import styles from './userProfile.module.less';
@@ -17,6 +18,16 @@ export default function UserProfile() {
   const [userProfileForm] = Form.useForm();
   const personInforRef = useRef<EmployeeModel>();
   const { data: detailUserInfo } = useGetUserInfor();
+  const { mutate: updateUserInfo } = useUpdateUserInfor({
+    onSuccess: (res) => {
+      const {
+        metadata: { message },
+      } = res;
+      if (message === MESSAGE_RES.SUCCESS) {
+        notification.success({ message: 'Update information successfully' });
+      }
+    },
+  });
   useEffect(() => {
     // if (detailUserInfo && detailUserInfo.data) {
     const {
@@ -32,13 +43,17 @@ export default function UserProfile() {
     }
     // }
   }, [detailUserInfo]);
+  const submitHandler = (formValues: EmployeeModel) => {
+    formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
+    updateUserInfo(formValues);
+  };
   return (
     <Form
       form={userProfileForm}
       layout="vertical"
       requiredMark
       validateMessages={validateMessages()}
-      // onFinish={submitHandler}
+      onFinish={submitHandler}
       className={styles.container}
     >
       <Row gutter={32} className={styles.content}>
@@ -55,7 +70,7 @@ export default function UserProfile() {
             </Row>
           </div>
         </Col>
-        <Col xs={14} sm={14} md={14} lg={14} xl={16} xxl={14}>
+        <Col xs={14} sm={14} md={14} lg={14} xl={16} xxl={12}>
           <div className={styles.personal__info}>
             <h2>Personnal Information</h2>
             <Row gutter={12}>

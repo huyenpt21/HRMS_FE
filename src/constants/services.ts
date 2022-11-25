@@ -6,7 +6,7 @@ export const EMPLOYEE_LIST_ALL = {
 };
 
 export const USER_INFO = {
-  service: 'user-infor',
+  service: 'user-info',
 };
 export const EMPLOYEE_CHANGE_STATUS = {
   service: 'hr/status/employee',

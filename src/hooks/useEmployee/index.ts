@@ -1,14 +1,18 @@
 import { EMPLOYEE_LIST_ALL, USER_INFO } from 'constants/services';
-import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
+import initialCustomQuery, {
+  Feature,
+  MutationProps,
+  successHandler,
+} from 'hooks/useCustomQuery';
 import {
   EmployeeListFields,
-  EmployeeModel,
   EmployeeListQuery,
+  EmployeeModel,
   ResEmployeeDetail,
   ResEmployeeList,
   ResEmployeeModify,
 } from 'models/employee';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import fetchApi from 'utils/fetch-api';
 
 class EmployeeList implements Feature<EmployeeListFields> {
@@ -48,3 +52,26 @@ export const useGetUserInfor = () =>
       undefined,
     ),
   );
+
+export const useUpdateUserInfor = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResEmployeeModify>) => {
+  return useMutation(
+    (body: EmployeeModel) =>
+      fetchApi(
+        {
+          url: USER_INFO.service,
+          options: {
+            method: 'PUT',
+            body: JSON.stringify(body),
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+    },
+  );
+};
