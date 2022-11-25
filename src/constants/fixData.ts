@@ -117,13 +117,14 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
     value: 2,
   },
   {
-    label: 'Sickness Of Children',
+    // eslint-disable-next-line quotes
+    label: "Children's Sickness",
     type: REQUEST_TYPE_KEY.OTHER,
     value: 3,
   },
   {
     label: 'Forgot Check In/Out',
-    type: REQUEST_TYPE_KEY.OTHER,
+    type: REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT,
     value: 4,
   },
   {

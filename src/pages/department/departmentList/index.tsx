@@ -22,7 +22,7 @@ import {
 import ExtraHeaderDepartment from '../components/extraHeader';
 import MenuTableDepartment from '../components/menuTable';
 import DepartmentDetailModal from '../detailModal';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 
 export default function DepartmentList() {
   const [searchParams] = useSearchParams();
@@ -109,8 +109,8 @@ export default function DepartmentList() {
     if (dataTable && dataTable.data) {
       const {
         metadata: { pagination },
-        data: { listDepartment: recordsTable },
-      } = dataMock;
+        data: { items: recordsTable },
+      } = dataTable;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API

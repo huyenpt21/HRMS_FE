@@ -67,7 +67,7 @@ const BasicDatePicker = ({
         picker={picker}
         placeholder={placeholder ? placeholder : US_DATE_FORMAT}
         suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
-        allowClear={allowClear ?? true}
+        allowClear={allowClear}
         renderExtraFooter={renderExtraFooter}
         defaultPickerValue={defaultPickerValue}
         value={value}

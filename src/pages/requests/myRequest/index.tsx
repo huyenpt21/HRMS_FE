@@ -72,7 +72,6 @@ export default function MyRequestList() {
         el.width = 150;
         el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-        // el.align = 'center';
       } else if (el.key === 'requestTypeName') {
         el.width = 200;
       } else if (el.key === 'status') {

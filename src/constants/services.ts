@@ -19,6 +19,7 @@ export const MY_REQUEST_LIST = {
   model: {
     status: 'status',
     remainingTime: 'remaining-time',
+    officeTime: 'office-time',
   },
 };
 export const MANAGER_REQUEST_LIST = {
@@ -57,5 +58,13 @@ export const DEVICE_TYPE = {
   service: 'device-type',
   model: {
     masterData: 'master-data',
+  },
+};
+
+export const LEAVE_BUDGET = {
+  service: 'benefit-budget',
+  model: {
+    hr: 'hr',
+    manager: 'manager',
   },
 };

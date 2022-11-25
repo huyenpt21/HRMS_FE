@@ -102,4 +102,22 @@ export const menus: MenuItemType[] = [
     icon: <SolutionOutlined style={{ fontSize: '22px' }} />,
     path: '/department',
   },
+  {
+    title: 'All Leave Budget',
+    key: 'all-leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget/all',
+  },
+  {
+    title: 'Subordinate Leave Budget',
+    key: 'subordinate-leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget/subordinate',
+  },
+  {
+    title: 'My Leave Budget',
+    key: 'my-leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget/my-leave-budget',
+  },
 ];

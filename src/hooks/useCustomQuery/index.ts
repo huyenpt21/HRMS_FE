@@ -105,6 +105,7 @@ const initialCustomQuery = <
   const useList = (
     payload: T,
     endPoint?: string,
+    apiKey?: string,
     reactQueryOtps?: QueryObserverOptions,
     root_url?: string,
   ) => {
@@ -115,7 +116,7 @@ const initialCustomQuery = <
       ? { ...reactQueryOtps, ...defaultOptions }
       : defaultOptions;
     return useQuery<Y>(
-      [feature.key, payload],
+      [apiKey ? apiKey : feature.key, payload],
       () =>
         fetchList<T, Y>({
           payload,

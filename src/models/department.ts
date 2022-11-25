@@ -17,7 +17,7 @@ export type DepartmentListQuery = QueryParams<DepartmentListSortFields> &
   DepartmentListFilter;
 
 export type ResDepartmentList = ResponseData<
-  { listDepartment: DepartmentModel[] },
+  { items: DepartmentModel[] },
   Pagination
 >;
 

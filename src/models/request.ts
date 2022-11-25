@@ -20,6 +20,11 @@ export interface RequestModel extends Resource {
   isAllowRollback?: number;
 }
 
+export interface OfficeTime {
+  timeStart?: string;
+  timeFinish?: string;
+}
+
 export interface RequestStatus {
   status: string;
 }
