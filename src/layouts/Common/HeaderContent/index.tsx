@@ -24,12 +24,14 @@ export default function HeaderContent({ marginLeft }: IProps) {
           <div className={styles['user__avt']}>
             <Avatar
               size={42}
-              src={<Image src="https://joeschmoe.io/api/v1/random" />}
+              src={
+                <Image src="https://i.pinimg.com/736x/ed/c9/cb/edc9cb773659891ba03594a3a180887a.jpg" />
+              }
             />
           </div>
           <div className={styles['user__infor']}>
-            <div className={styles.user__name}>Cậu Vàng</div>
-            <div className={styles.user__role}>Nhân viên bán khô gà</div>
+            <div className={styles.user__name}>Meow</div>
+            <div className={styles.user__role}>True love not choose love</div>
           </div>
           <div className={styles.user__noti}>
             <Badge count={notiNum} size={notiNum >= 10 ? 'small' : 'default'}>

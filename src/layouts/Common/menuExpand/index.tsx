@@ -1,11 +1,13 @@
 import SvgIcon from 'components/SvgIcon';
+import { useNavigate } from 'react-router-dom';
 import styles from './menuExpand.module.less';
 
 export default function MenuExpand() {
+  const navigate = useNavigate();
   return (
     <div className={styles.container}>
       <div className={styles.item}>
-        <div className={styles.content}>
+        <div className={styles.content} onClick={() => navigate('profile')}>
           <span className={styles.wrapper}>
             <SvgIcon icon="user" color="#000" />
           </span>

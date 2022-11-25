@@ -1,4 +1,4 @@
-import { EMPLOYEE_LIST_ALL } from 'constants/services';
+import { EMPLOYEE_LIST_ALL, USER_INFO } from 'constants/services';
 import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
 import {
   EmployeeListFields,
@@ -8,6 +8,8 @@ import {
   ResEmployeeList,
   ResEmployeeModify,
 } from 'models/employee';
+import { useQuery } from 'react-query';
+import fetchApi from 'utils/fetch-api';
 
 class EmployeeList implements Feature<EmployeeListFields> {
   constructor(
@@ -36,3 +38,13 @@ export const {
   ResEmployeeModify,
   EmployeeListQuery
 >(EmployeeListInstance);
+
+export const useGetUserInfor = () =>
+  useQuery(['user-infor'], () =>
+    fetchApi(
+      {
+        url: USER_INFO.service,
+      },
+      undefined,
+    ),
+  );

@@ -16,6 +16,10 @@ export interface EmployeeModel extends Resource {
   onBoardDate?: string;
   isManager?: number;
   isActive?: number;
+  managerName?: string;
+  departmentName?: string;
+  positionName?: string;
+  rankingName?: string;
 }
 
 export interface EmployeeListFilter {
