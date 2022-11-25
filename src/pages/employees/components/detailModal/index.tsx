@@ -218,20 +218,23 @@ export default function EmployeeDetailModal({
             </Col>
             <Col span={13}>
               <h2>Working Information</h2>
-              <Row gutter={12} className={styles['infor--header']}>
-                <Col span={12}>
-                  <span>Roll Number: </span>
-                  <span className={styles['text--bold']}>
-                    {personInforRef.current?.rollNumber}
-                  </span>
-                </Col>
-                <Col span={12}>
-                  <span>Email: </span>
-                  <span className={styles['text--bold']}>
-                    {personInforRef.current?.email}
-                  </span>
-                </Col>
-              </Row>
+              {(actionModal === ACTION_TYPE.EDIT ||
+                actionModal === ACTION_TYPE.VIEW_DETAIL) && (
+                <Row gutter={12} className={styles['infor--header']}>
+                  <Col span={12}>
+                    <span>Roll Number: </span>
+                    <span className={styles['text--bold']}>
+                      {personInforRef.current?.rollNumber}
+                    </span>
+                  </Col>
+                  <Col span={12}>
+                    <span>Email: </span>
+                    <span className={styles['text--bold']}>
+                      {personInforRef.current?.email}
+                    </span>
+                  </Col>
+                </Row>
+              )}
               <Row gutter={12}>
                 <Col span={12}>
                   <BasicInput
