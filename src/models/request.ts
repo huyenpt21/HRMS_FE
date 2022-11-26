@@ -18,6 +18,8 @@ export interface RequestModel extends Resource {
   listEvidence?: string[];
   timeRemaining?: number;
   isAllowRollback?: number;
+  isAssigned?: number;
+  deviceTypeName?: string;
 }
 
 export interface OfficeTime {

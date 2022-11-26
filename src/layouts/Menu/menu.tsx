@@ -31,19 +31,24 @@ export const menus: MenuItemType[] = [
     icon: 'delivery',
     children: [
       {
-        title: 'My Request History',
+        title: 'My Request',
         key: 'myRequest',
         path: '/request/my-request',
       },
       {
-        title: 'Subordinate Request List',
+        title: 'Subordinate Request',
         key: 'subordinateRequestList',
         path: '/request/subordinate',
       },
       {
-        title: 'All Request List',
+        title: 'All Request',
         key: 'allRequestList',
         path: '/request/all',
+      },
+      {
+        title: 'Borrow Device Request',
+        key: 'borrowDeviceRequestList',
+        path: '/request/borrow-device',
       },
     ],
   },

@@ -20,6 +20,7 @@ import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
 import UserProfile from 'pages/userProfile';
+import BorrowDeviceRequest from 'pages/requests/borrowDeviceReuqest';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -58,6 +59,10 @@ export default function RouterElement() {
             {
               path: 'all',
               element: <AllRequestList />,
+            },
+            {
+              path: 'borrow-device',
+              element: <BorrowDeviceRequest />,
             },
           ],
         },

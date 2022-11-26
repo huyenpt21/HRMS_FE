@@ -168,14 +168,6 @@ export default function MyRequestList() {
       sort,
       dir,
     }));
-
-    // * set filter to state query
-    const filterKey: any = Object.keys(filters)[0];
-    const filterValues: any = Object.values(filters)[0];
-    setStateQuery((prev: RequestListQuery) => ({
-      ...prev,
-      [filterKey]: filterValues,
-    }));
   };
   const rowClickHandler = (record: RequestModel) => {
     return {

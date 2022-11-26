@@ -18,12 +18,13 @@ export const SUBORDINATE_LIST = {
   },
 };
 
-export const MY_REQUEST_LIST = {
+export const REQUEST = {
   service: 'request',
   model: {
     status: 'status',
     remainingTime: 'remaining-time',
     officeTime: 'office-time',
+    itSupport: 'it-support',
   },
 };
 export const MANAGER_REQUEST_LIST = {
@@ -31,6 +32,10 @@ export const MANAGER_REQUEST_LIST = {
 };
 export const HR_REQUEST_LIST = {
   service: 'hr/request',
+};
+
+export const IT_SUPPORT = {
+  service: 'it-support',
 };
 
 export const TIME_CHECK = {

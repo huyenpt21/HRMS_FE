@@ -2,9 +2,9 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
-import { SubordinateRequestListHeader } from 'constants/header';
-import { HR_REQUEST_LIST } from 'constants/services';
+import { ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
+import { BorrowDeviceListHeader } from 'constants/header';
+import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
 import {
@@ -23,14 +23,14 @@ import {
 import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestStatus from '../components/statusRequest';
+import dataMock from './dataMock.json';
 
-export default function AllRequestList() {
+export default function BorrowDeviceRequest() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const requestIdRef = useRef<number>();
-  const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
   // * default feilters
@@ -50,48 +50,40 @@ export default function AllRequestList() {
   );
 
   // * get header
-  let header: HeaderTableFields[] = SubordinateRequestListHeader;
+  let header: HeaderTableFields[] = BorrowDeviceListHeader;
   // * get data table from API
   const {
     isLoading,
-    isError,
     data: dataTable,
     refetch: refetchList,
-  } = useRequestList(stateQuery, HR_REQUEST_LIST.service);
+  } = useRequestList(
+    stateQuery,
+    `${REQUEST.model.itSupport}/${REQUEST.service}`,
+  );
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
-      if (
-        el.key === 'createDate' ||
-        el.key === 'startTime' ||
-        el.key === 'endTime'
-      ) {
+      if (el.key === 'rollNumber') {
         el.width = 150;
-        el.sorter = !isError;
+        el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-      } else if (el.key === 'rollNumber') {
-        el.width = 120;
-        el.sorter = !isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
-      } else if (el.key === 'status') {
+      } else if (el.key === 'isAssigned') {
         el.width = 100;
       } else if (
-        el.key === 'requestTypeName' ||
-        el.key === 'reason' ||
-        el.key === 'personName'
+        el.key === 'deviceTypeName' ||
+        el.key === 'approvalDate' ||
+        el.key === 'createDate'
       ) {
+        el.width = 200;
+      } else if (el.key === 'reason' || el.key === 'personName') {
         el.width = 200;
       }
       return {
         ...el,
         render: (data: any) => {
           if (data) {
-            if (
-              el.key === 'createDate' ||
-              el.key === 'startTime' ||
-              el.key === 'endTime'
-            ) {
+            if (el.key === 'createDate' || el.key === 'approvalDate') {
               return convertDate(data, DATE_TIME_US);
             } else if (el.key === 'status') {
               return <RequestStatus data={data} />;
@@ -108,22 +100,22 @@ export default function AllRequestList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable?.data) {
-      const {
-        metadata: { pagination },
-        data: { items: requestList },
-      } = dataTable;
-      setRecords(requestList);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable?.data) {
+    const {
+      metadata: { pagination },
+      data: { items: requestList },
+    } = dataMock;
+    setRecords(requestList);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
+    // }
   }, [dataTable]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -157,12 +149,10 @@ export default function AllRequestList() {
         requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
-        requestStatus.current = record.status;
       },
     };
   };
   const cancelModalHandler = () => {
-    requestStatus.current = STATUS.PENDING;
     requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
@@ -197,7 +187,6 @@ export default function AllRequestList() {
           onCancel={cancelModalHandler}
           action={modalAction.current}
           requestIdRef={requestIdRef.current}
-          requestStatus={requestStatus.current}
           tabType={REQUEST_MENU.ALL}
           refetchList={refetchList}
         />
