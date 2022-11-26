@@ -6,7 +6,7 @@ import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
-import { STATUS_RADIO_LIST } from 'constants/fixData';
+import { COMMON_STATUS_LIST } from 'constants/fixData';
 import { DEPARTMENT, POSITION_BY_DEPARTMENT } from 'constants/services';
 import { EmployeeListQuery } from 'models/employee';
 import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
@@ -93,7 +93,7 @@ export default function ExtraHeaderTable({
           </Col>
           <Col span={4}>
             <BasicSelect
-              options={STATUS_RADIO_LIST}
+              options={COMMON_STATUS_LIST}
               placeholder="Request status"
               allowClear
               showSearch
