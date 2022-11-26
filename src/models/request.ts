@@ -51,7 +51,7 @@ export interface RequestListFilter {
   approvalDateFrom?: string;
   approvalDateTo?: string;
   isAssigned?: number;
-  deviceTypeName?: string;
+  deviceTypeId?: string;
 }
 
 export type RequestListSortFields = 'requestType';

@@ -21,12 +21,14 @@ interface IProps {
   modalAction: MutableRefObject<ACTION_TYPE>;
   tabType: string;
   setStateQuery: Dispatch<SetStateAction<RequestListQuery>>;
+  stateQuery: RequestListQuery;
 }
 const ExtraTableHeader = ({
   setIsShowDetailModal,
   modalAction,
   tabType,
   setStateQuery,
+  stateQuery,
 }: IProps) => {
   const addRequestHandler = () => {
     setIsShowDetailModal(true);
@@ -96,6 +98,7 @@ const ExtraTableHeader = ({
                 setStateQuery={setStateQuery}
                 keyParam="search"
                 label="Employee Name"
+                defaultValue={stateQuery?.search}
               />
             </Col>
           )}
@@ -108,6 +111,19 @@ const ExtraTableHeader = ({
                   : 'Create Date'
               }
               onChange={handleChangeCreateDate}
+              defaultStartDate={
+                tabType === REQUEST_MENU.DEVICE
+                  ? stateQuery?.approvalDateFrom
+                  : stateQuery?.createDateFrom
+              }
+              defaultEndDate={
+                tabType === REQUEST_MENU.DEVICE
+                  ? stateQuery?.approvalDateTo
+                  : stateQuery?.createDateTo
+              }
+              isUseDefaultValue={
+                !!stateQuery?.createDateFrom || !!stateQuery?.approvalDateFrom
+              }
             />
           </Col>
           {tabType !== REQUEST_MENU.DEVICE && (
@@ -123,6 +139,7 @@ const ExtraTableHeader = ({
                   onChange={(value) => {
                     handleChangeFilter(value, 'requestTypeId');
                   }}
+                  defaultValue={stateQuery?.requestTypeId ?? undefined}
                 />
               </Col>
               <Col xs={24} sm={12} md={12} lg={4} xl={4} xxl={4}>
@@ -136,6 +153,7 @@ const ExtraTableHeader = ({
                   onChange={(value) => {
                     handleChangeFilter(value, 'status');
                   }}
+                  defaultValue={stateQuery?.status ?? undefined}
                 />
               </Col>
             </>
@@ -153,6 +171,11 @@ const ExtraTableHeader = ({
                   onChange={(value) => {
                     handleChangeFilter(value, 'requestTypeId');
                   }}
+                  defaultValue={
+                    stateQuery?.deviceTypeId
+                      ? stateQuery?.deviceTypeId.toString()
+                      : undefined
+                  }
                 />
               </Col>
               <Col xs={24} sm={12} md={12} lg={4} xl={4} xxl={4}>
@@ -166,6 +189,7 @@ const ExtraTableHeader = ({
                   onChange={(value) => {
                     handleChangeFilter(value, 'isAssigned');
                   }}
+                  defaultValue={stateQuery?.isAssigned ?? undefined}
                 />
               </Col>
             </>

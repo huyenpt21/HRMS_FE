@@ -204,6 +204,7 @@ export default function MyRequestList() {
             modalAction={modalAction}
             setStateQuery={setStateQuery}
             tabType={REQUEST_MENU.MY_REQUEST}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}

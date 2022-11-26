@@ -44,12 +44,13 @@ export default function BorrowDeviceRequest() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    search: searchParams.get('search') ?? undefined,
     approvalDateFrom: searchParams.get('approvalDateFrom') ?? undefined,
     approvalDateTo: searchParams.get('approvalDateTo') ?? undefined,
     isAssigned: searchParams.get('isAssigned')
       ? Number(searchParams.get('isAssigned'))
       : undefined,
-    deviceTypeName: searchParams.get('deviceTypeName') ?? undefined,
+    deviceTypeId: searchParams.get('deviceTypeId') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -205,6 +206,7 @@ export default function BorrowDeviceRequest() {
             modalAction={modalAction}
             setStateQuery={setStateQuery}
             tabType={REQUEST_MENU.DEVICE}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}

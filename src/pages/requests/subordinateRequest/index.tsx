@@ -207,6 +207,7 @@ export default function SubordinateRequestList() {
             modalAction={modalAction}
             setStateQuery={setStateQuery}
             tabType={REQUEST_MENU.SUBORDINATE}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}

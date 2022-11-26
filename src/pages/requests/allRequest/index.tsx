@@ -187,6 +187,7 @@ export default function AllRequestList() {
             modalAction={modalAction}
             setStateQuery={setStateQuery}
             tabType={REQUEST_MENU.ALL}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}
