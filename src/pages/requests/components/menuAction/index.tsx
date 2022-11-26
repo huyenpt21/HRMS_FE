@@ -189,9 +189,11 @@ export default function RequestMenuAction({
       {tabType === REQUEST_MENU.DEVICE && (
         <Tooltip title="Assign device">
           <span
-            onClick={() =>
-              actionRequestHandler(record.id, REQUEST_ACTION_TYPE.DELETE)
-            }
+            onClick={() => {
+              if (requestIdRef) requestIdRef.current = record.id;
+              if (modalAction) modalAction.current = ACTION_TYPE.ASSIGN;
+              setIsShowDetailModal && setIsShowDetailModal(true);
+            }}
             className="cursor-pointer"
           >
             <SvgIcon icon="tag" />
