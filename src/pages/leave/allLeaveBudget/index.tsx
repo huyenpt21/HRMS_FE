@@ -3,7 +3,7 @@ import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
-import { LeaveBudgetListHeader } from 'constants/header';
+import { LeaveBudgetListHeader, OTBudgetListHeader } from 'constants/header';
 import { LEAVE_BUDGET } from 'constants/services';
 import { useLeaveBudgetList } from 'hooks/useLeaveBudget';
 import { HeaderTableFields } from 'models/common';
@@ -57,9 +57,12 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
   const [stateQuery, setStateQuery] = useState(
     removeEmptyValueInObject(defaultFilter),
   );
-
   // * get header
-  let header: HeaderTableFields[] = LeaveBudgetListHeader;
+  const header: HeaderTableFields[] =
+    Number(stateQuery?.requestTypeId) !== 7
+      ? LeaveBudgetListHeader
+      : OTBudgetListHeader;
+
   // * get data table from API
   const { data: dataTable } = useLeaveBudgetList(
     stateQuery,
@@ -84,7 +87,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
       return {
         ...el,
         render: (data: any) => {
-          if (data) {
+          if (data !== undefined && data !== null) {
             return data;
           } else {
             return '-';
@@ -93,7 +96,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
       };
     });
     setColumnsHeader(columns);
-  }, [stateQuery]);
+  }, [stateQuery, header]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
     if (dataTable && dataTable?.data) {

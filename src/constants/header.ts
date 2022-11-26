@@ -250,8 +250,8 @@ export const DepartmentHeader = [
   },
   {
     title: 'Total members',
-    key: 'total',
-    dataIndex: 'total',
+    key: 'totalEmployee',
+    dataIndex: 'totalEmployee',
   },
 ];
 
@@ -265,26 +265,54 @@ export const DeviceTypeHeader = [
 ];
 export const LeaveBudgetListHeader = [
   {
-    title: 'Full name',
+    title: 'Employee Name',
     key: 'fullName',
     dataIndex: 'fullName',
   },
   {
-    title: 'Leave Budget',
+    title: 'Budget',
     key: 'budget',
     dataIndex: 'budget',
   },
   {
-    title: 'Number Of Day Off',
+    title: 'Used',
     key: 'used',
     dataIndex: 'used',
   },
   {
-    title: 'Remain Day Off',
-    key: 'remain',
-    dataIndex: 'remain',
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
   },
 ];
+export const OTBudgetListHeader = [
+  {
+    title: 'Employee Name',
+    key: 'fullName',
+    dataIndex: 'fullName',
+  },
+  {
+    title: 'Budget',
+    key: 'budget',
+    dataIndex: 'budget',
+  },
+  {
+    title: 'Used',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Month Remaining',
+    key: 'remainOfMonth',
+    dataIndex: 'remainOfMonth',
+  },
+  {
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
+  },
+];
+
 export const MyLeaveBudgetListHeader = [
   {
     title: 'Leave Type',
@@ -292,18 +320,40 @@ export const MyLeaveBudgetListHeader = [
     dataIndex: 'requestTypeName',
   },
   {
-    title: 'Leave Budget',
+    title: 'Budget',
     key: 'budget',
     dataIndex: 'budget',
   },
   {
-    title: 'Number Of Day Off',
+    title: 'Used',
     key: 'used',
     dataIndex: 'used',
   },
   {
-    title: 'Remain Day Off',
-    key: 'remain',
-    dataIndex: 'remain',
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
+  },
+];
+export const MyOTBudgetListHeader = [
+  {
+    title: 'Budget',
+    key: 'budget',
+    dataIndex: 'budget',
+  },
+  {
+    title: 'Used',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Month Remaining',
+    key: 'remainOfMonth',
+    dataIndex: 'remainOfMonth',
+  },
+  {
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
   },
 ];
