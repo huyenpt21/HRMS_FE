@@ -25,8 +25,9 @@ export interface EmployeeModel extends Resource {
 
 export interface EmployeeListFilter {
   search?: string;
-  department?: string;
-  positon?: string;
+  departmentId?: number;
+  positionId?: number;
+  isActive?: number;
 }
 
 export type EmployeeListFields = 'code' | 'email' | 'position' | 'department';

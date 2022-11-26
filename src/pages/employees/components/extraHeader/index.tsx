@@ -1,10 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
+import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
+import { STATUS_RADIO_LIST } from 'constants/fixData';
 import { DEPARTMENT, POSITION_BY_DEPARTMENT } from 'constants/services';
 import { EmployeeListQuery } from 'models/employee';
 import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
@@ -14,12 +16,14 @@ interface IProps {
   modalAction: MutableRefObject<ACTION_TYPE>;
   menuType: string;
   setStateQuery: Dispatch<SetStateAction<EmployeeListQuery>>;
+  stateQuery: EmployeeListQuery;
 }
 export default function ExtraHeaderTable({
   setIsShowDetailModal,
   modalAction,
   menuType,
   setStateQuery,
+  stateQuery,
 }: IProps) {
   const departmentIdRef = useRef<number>(-1);
   const addEmployeeHandler = () => {
@@ -54,6 +58,7 @@ export default function ExtraHeaderTable({
               allowClear
               setStateQuery={setStateQuery}
               keyParam="search"
+              defaultValue={stateQuery?.search}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
@@ -68,13 +73,14 @@ export default function ExtraHeaderTable({
                 if (value) departmentIdRef.current = value;
               }}
               apiName="department-master-data"
+              defaultValue={stateQuery?.departmentId ?? undefined}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <SelectCustomSearch
               url={`${POSITION_BY_DEPARTMENT.service}?departmentId=${departmentIdRef.current}`}
               dataName="items"
-              placeholder="Position"
+              placeholder="Choose position"
               allowClear
               optionFilterProp="label"
               apiName="position-master-data"
@@ -82,6 +88,20 @@ export default function ExtraHeaderTable({
                 handleChangeFilter(value, 'positionId');
               }}
               refetchValue={departmentIdRef.current}
+              defaultValue={stateQuery?.positionId ?? undefined}
+            />
+          </Col>
+          <Col span={4}>
+            <BasicSelect
+              options={STATUS_RADIO_LIST}
+              placeholder="Request status"
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              onChange={(value) => {
+                handleChangeFilter(value, 'isActive');
+              }}
+              defaultValue={stateQuery?.isActive ?? undefined}
             />
           </Col>
         </Row>
