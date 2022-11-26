@@ -14,12 +14,14 @@ interface IProps {
   modalAction: MutableRefObject<ACTION_TYPE>;
   menuType: string;
   setStateQuery: Dispatch<SetStateAction<EmployeeListQuery>>;
+  stateQuery: EmployeeListQuery;
 }
 export default function ExtraHeaderTable({
   setIsShowDetailModal,
   modalAction,
   menuType,
   setStateQuery,
+  stateQuery,
 }: IProps) {
   const departmentIdRef = useRef<string>('');
   const addEmployeeHandler = () => {
@@ -54,6 +56,7 @@ export default function ExtraHeaderTable({
               allowClear
               setStateQuery={setStateQuery}
               keyParam="search"
+              defaultValue={stateQuery?.search}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
@@ -68,6 +71,7 @@ export default function ExtraHeaderTable({
                 if (value) departmentIdRef.current = value;
               }}
               apiName="department-master-data"
+              defaultValue={stateQuery?.departmentId ?? undefined}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
@@ -82,6 +86,7 @@ export default function ExtraHeaderTable({
                 handleChangeFilter(value, 'positionId');
               }}
               refetchValue={departmentIdRef.current}
+              defaultValue={stateQuery?.positionId ?? undefined}
             />
           </Col>
         </Row>

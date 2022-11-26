@@ -48,6 +48,13 @@ export default function AllEmployeeList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    search: searchParams.get('search') ?? undefined,
+    departmentId: searchParams.get('departmentId')
+      ? Number(searchParams.get('departmentId'))
+      : undefined,
+    positionId: searchParams.get('positionId')
+      ? Number(searchParams.get('positionId'))
+      : undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -245,6 +252,7 @@ export default function AllEmployeeList() {
             setIsShowDetailModal={setIsShowDetailModal}
             setStateQuery={setStateQuery}
             menuType={EMPLOYEE_MENU.ALL}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}

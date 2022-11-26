@@ -47,6 +47,13 @@ export default function SubordinateList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    search: searchParams.get('search') ?? undefined,
+    departmentId: searchParams.get('departmentId')
+      ? Number(searchParams.get('departmentId'))
+      : undefined,
+    positionId: searchParams.get('positionId')
+      ? Number(searchParams.get('positionId'))
+      : undefined,
   };
 
   // * state query
@@ -189,6 +196,7 @@ export default function SubordinateList() {
             setIsShowDetailModal={setIsShowDetailModal}
             setStateQuery={setStateQuery}
             menuType={EMPLOYEE_MENU.SUBORDINATE}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}
