@@ -48,6 +48,10 @@ export interface RequestListFilter {
   aprovalDate?: string;
   createDateFrom?: string;
   createDateTo?: string;
+  approvalDateFrom?: string;
+  approvalDateTo?: string;
+  isAssigned?: number;
+  deviceTypeName?: string;
 }
 
 export type RequestListSortFields = 'requestType';

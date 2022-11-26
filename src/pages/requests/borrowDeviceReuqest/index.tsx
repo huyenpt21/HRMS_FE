@@ -44,6 +44,12 @@ export default function BorrowDeviceRequest() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    approvalDateFrom: searchParams.get('approvalDateFrom') ?? undefined,
+    approvalDateTo: searchParams.get('approvalDateTo') ?? undefined,
+    isAssigned: searchParams.get('isAssigned')
+      ? Number(searchParams.get('isAssigned'))
+      : undefined,
+    deviceTypeName: searchParams.get('deviceTypeName') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -71,12 +77,12 @@ export default function BorrowDeviceRequest() {
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'isAssigned') {
         el.width = 100;
-      } else if (
-        el.key === 'deviceTypeName' ||
-        el.key === 'approvalDate' ||
-        el.key === 'createDate'
-      ) {
+      } else if (el.key === 'deviceTypeName' || el.key === 'approvalDate') {
         el.width = 200;
+      } else if (el.key === 'createDate') {
+        el.width = 200;
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'reason' || el.key === 'personName') {
         el.width = 200;
       }
@@ -198,7 +204,7 @@ export default function BorrowDeviceRequest() {
             setIsShowDetailModal={setIsShowDetailModal}
             modalAction={modalAction}
             setStateQuery={setStateQuery}
-            tabType={REQUEST_MENU.ALL}
+            tabType={REQUEST_MENU.DEVICE}
           />
         }
         stateQuery={stateQuery}
