@@ -4,7 +4,7 @@ import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { SubordinateRequestListHeader } from 'constants/header';
-import { MANAGER_REQUEST_LIST } from 'constants/services';
+import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
 import {
@@ -59,7 +59,7 @@ export default function SubordinateRequestList() {
     isError,
     data: dataTable,
     refetch: refetchList,
-  } = useRequestList(stateQuery, MANAGER_REQUEST_LIST.service);
+  } = useRequestList(stateQuery, `${REQUEST.model.manager}/${REQUEST.service}`);
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {

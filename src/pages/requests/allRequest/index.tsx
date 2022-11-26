@@ -2,9 +2,9 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
+import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { SubordinateRequestListHeader } from 'constants/header';
-import { HR_REQUEST_LIST } from 'constants/services';
+import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
 import {
@@ -57,7 +57,7 @@ export default function AllRequestList() {
     isError,
     data: dataTable,
     refetch: refetchList,
-  } = useRequestList(stateQuery, HR_REQUEST_LIST.service);
+  } = useRequestList(stateQuery, `${REQUEST.model.hr}/${REQUEST.service}`);
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
