@@ -20,8 +20,9 @@ export default function UserProfile() {
   const [userProfileForm] = Form.useForm();
   const [imageFile, setImageFile] = useState<any>(undefined);
   const personInforRef = useRef<EmployeeModel>();
+  const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const { data: detailUserInfo } = useGetUserInfor();
-  const { mutate: updateUserInfo } = useUpdateUserInfor({
+  const { mutate: updateUserInfo, isLoading } = useUpdateUserInfor({
     onSuccess: (res) => {
       const {
         metadata: { message },
@@ -53,6 +54,7 @@ export default function UserProfile() {
   };
 
   const uploadImage = async () => {
+    setIsUploadingImage(true);
     let imgUrlDownload: string | undefined = undefined;
     const imageRef = ref(
       storageFirebase,
@@ -174,7 +176,12 @@ export default function UserProfile() {
               </Col>
             </Row>
             <Row className={styles.btn__submit}>
-              <BasicButton title="Save" type="filled" htmlType="submit" />
+              <BasicButton
+                title="Save"
+                type="filled"
+                htmlType="submit"
+                loading={isLoading || isUploadingImage}
+              />
             </Row>
           </div>
           <div className={styles.personal__info}>

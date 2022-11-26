@@ -705,7 +705,7 @@ export default function RequestDetailModal({
                     type="filled"
                     className={styles['btn--save']}
                     htmlType={'submit'}
-                    loading={loadingCreate}
+                    loading={loadingCreate || isUploadingImage}
                     disabled={remainingTimeRef.current === 0}
                   />
                 )}
