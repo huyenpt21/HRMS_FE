@@ -1,10 +1,13 @@
 import { Col, Image, Row, Upload } from 'antd';
 import { RcFile } from 'antd/lib/upload';
-import { useState } from 'react';
 import BasicButton from 'components/BasicButton';
+import { Dispatch, memo, SetStateAction, useState } from 'react';
 import styles from '../userProfile.module.less';
 
-export default function UploadAvatar() {
+interface IProps {
+  setImageFile: Dispatch<SetStateAction<any>>;
+}
+export const UploadAvatar = memo(({ setImageFile }: IProps) => {
   const [previewImage, setPreviewImage] = useState('');
 
   const getBase64 = (file: RcFile): Promise<string> =>
@@ -17,6 +20,7 @@ export default function UploadAvatar() {
   const handleUpload = async (info: any) => {
     const fileUpload = await getBase64(info.file.originFileObj as RcFile);
     setPreviewImage(fileUpload as string);
+    setImageFile(info.file.originFileObj);
   };
   return (
     <Row className={styles.header}>
@@ -39,15 +43,10 @@ export default function UploadAvatar() {
         className={styles.upload__section}
       >
         <div className={styles.upload__text}>Upload your photo</div>
-        <Upload
-          name="upload-avt"
-          action="http://localhost:3000/profile"
-          onChange={handleUpload}
-          fileList={undefined}
-        >
+        <Upload name="upload-avt" onChange={handleUpload}>
           <BasicButton title="Choose image" type="outline" />
         </Upload>
       </Col>
     </Row>
   );
-}
+});

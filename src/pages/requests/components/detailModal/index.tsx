@@ -281,7 +281,7 @@ export default function RequestDetailModal({
     for (let i = 0; i < imageFileList.length; i++) {
       const imageRef = ref(
         storageFirebase,
-        `images/evidences/${imageFileList[i].name}`,
+        `images/evidences/${imageFileList[i].name}-${Math.random()}`,
       );
       await uploadBytes(imageRef, imageFileList[i])
         .then(async () => {

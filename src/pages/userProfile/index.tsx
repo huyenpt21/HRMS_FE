@@ -5,17 +5,20 @@ import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
 import { DATE_TIME, MESSAGE_RES, validateMessages } from 'constants/common';
 import { GENDER_LIST } from 'constants/fixData';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { storageFirebase } from 'firebaseSetup';
 import { useGetUserInfor, useUpdateUserInfor } from 'hooks/useEmployee';
 import { EmployeeModel } from 'models/employee';
 import moment from 'moment-timezone';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getDateFormat } from 'utils/common';
 import dataMock from './detailMock.json';
-import UploadAvatar from './uploadAvatar';
+import { UploadAvatar } from './uploadAvatar';
 import styles from './userProfile.module.less';
 
 export default function UserProfile() {
   const [userProfileForm] = Form.useForm();
+  const [imageFile, setImageFile] = useState<any>(undefined);
   const personInforRef = useRef<EmployeeModel>();
   const { data: detailUserInfo } = useGetUserInfor();
   const { mutate: updateUserInfo } = useUpdateUserInfor({
@@ -43,9 +46,38 @@ export default function UserProfile() {
     }
     // }
   }, [detailUserInfo]);
-  const submitHandler = (formValues: EmployeeModel) => {
+  const submitHandler = async (formValues: EmployeeModel) => {
     formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
+    formValues.avatar = await uploadImage();
     updateUserInfo(formValues);
+  };
+
+  const uploadImage = async () => {
+    let imgUrlDownload: string | undefined = undefined;
+    const imageRef = ref(
+      storageFirebase,
+      `images/avatar/${imageFile.name}-${Math.random()}`,
+    );
+    await uploadBytes(imageRef, imageFile)
+      .then(async () => {
+        await getDownloadURL(imageRef)
+          .then((url) => {
+            imgUrlDownload = url;
+          })
+          .catch((error) => {
+            notification.error({
+              message: 'Get download link error',
+            });
+            console.error(error);
+          });
+      })
+      .catch((error) => {
+        notification.error({
+          message: 'Upload file error',
+        });
+        console.error(error);
+      });
+    return imgUrlDownload;
   };
   return (
     <Form
@@ -59,7 +91,7 @@ export default function UserProfile() {
       <Row gutter={32} className={styles.content}>
         <Col xs={12} sm={12} md={10} lg={10} xl={8} xxl={6}>
           <div className={styles.left__side}>
-            <UploadAvatar />
+            <UploadAvatar setImageFile={setImageFile} />
             <Divider />
             <Row className={styles.info}>
               <Col span={24}>
