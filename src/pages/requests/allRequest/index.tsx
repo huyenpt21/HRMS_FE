@@ -43,6 +43,13 @@ export default function AllRequestList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    search: searchParams.get('search') ?? undefined,
+    createDateFrom: searchParams.get('createDateFrom') ?? undefined,
+    createDateTo: searchParams.get('createDateTo') ?? undefined,
+    requestTypeId: searchParams.get('requestTypeId')
+      ? Number(searchParams.get('requestTypeId'))
+      : undefined,
+    status: searchParams.get('status') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(

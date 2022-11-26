@@ -43,7 +43,7 @@ export interface RequestListFilter {
   startTime?: string;
   endTime?: string;
   createDate?: string;
-  requestTypeId?: string;
+  requestTypeId?: number;
   status?: string;
   aprovalDate?: string;
   createDateFrom?: string;
