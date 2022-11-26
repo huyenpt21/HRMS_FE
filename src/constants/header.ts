@@ -107,6 +107,50 @@ export const SubordinateRequestListHeader = [
   },
 ];
 
+export const BorrowDeviceListHeader = [
+  {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
+    title: 'Employee Name',
+    key: 'personName',
+    dataIndex: 'personName',
+  },
+  {
+    title: 'Create Date',
+    key: 'createDate',
+    dataIndex: 'createDate',
+  },
+  {
+    title: 'Device Type',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+  },
+  {
+    title: 'Reason',
+    key: 'reason',
+    dataIndex: 'reason',
+  },
+  {
+    title: 'Approval Date',
+    key: 'approvalDate',
+    dataIndex: 'approvalDate',
+  },
+  {
+    title: 'Approval By',
+    key: 'receiver',
+    dataIndex: 'receiver',
+  },
+
+  {
+    title: 'Status',
+    key: 'isAssigned',
+    dataIndex: 'isAssigned',
+  },
+];
+
 export const MyTimeCheckHeader = [
   {
     title: 'Date',

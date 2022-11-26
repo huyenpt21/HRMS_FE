@@ -3,7 +3,7 @@ import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
-import { SubordinateRequestListHeader } from 'constants/header';
+import { BorrowDeviceListHeader } from 'constants/header';
 import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
@@ -24,15 +24,14 @@ import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
-// import dataMock from '../dataMock.json';
+import dataMock from './dataMock.json';
 
-export default function SubordinateRequestList() {
+export default function BorrowDeviceRequest() {
   const [searchParams] = useSearchParams();
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const requestIdRef = useRef<number>();
-  const requestStatus = useRef<string | undefined>(STATUS.PENDING);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<RequestModel[]>([]);
   // * default feilters
@@ -46,12 +45,12 @@ export default function SubordinateRequestList() {
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
     search: searchParams.get('search') ?? undefined,
-    createDateFrom: searchParams.get('createDateFrom') ?? undefined,
-    createDateTo: searchParams.get('createDateTo') ?? undefined,
-    requestTypeId: searchParams.get('requestTypeId')
-      ? Number(searchParams.get('requestTypeId'))
+    approvalDateFrom: searchParams.get('approvalDateFrom') ?? undefined,
+    approvalDateTo: searchParams.get('approvalDateTo') ?? undefined,
+    isAssigned: searchParams.get('isAssigned')
+      ? Number(searchParams.get('isAssigned'))
       : undefined,
-    status: searchParams.get('status') ?? undefined,
+    deviceTypeId: searchParams.get('deviceTypeId') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -59,52 +58,52 @@ export default function SubordinateRequestList() {
   );
 
   // * get header
-  let header: HeaderTableFields[] = SubordinateRequestListHeader;
+  let header: HeaderTableFields[] = BorrowDeviceListHeader;
   // * get data table from API
   const {
     isLoading,
-    isError,
     data: dataTable,
     refetch: refetchList,
-  } = useRequestList(stateQuery, `${REQUEST.model.manager}/${REQUEST.service}`);
+  } = useRequestList(
+    stateQuery,
+    `${REQUEST.model.itSupport}/${REQUEST.service}`,
+  );
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
-      if (
-        el.key === 'createDate' ||
-        el.key === 'startTime' ||
-        el.key === 'endTime'
-      ) {
+      if (el.key === 'rollNumber') {
         el.width = 150;
-        el.sorter = !isError;
+        el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-      } else if (el.key === 'rollNumber') {
-        el.width = 120;
-        el.sorter = !isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
-      } else if (
-        el.key === 'requestTypeName' ||
-        el.key === 'reason' ||
-        el.key === 'personName'
-      ) {
-        el.width = 200;
-      } else if (el.key === 'status') {
+      } else if (el.key === 'isAssigned') {
         el.width = 100;
+      } else if (el.key === 'deviceTypeName' || el.key === 'approvalDate') {
+        el.width = 200;
+      } else if (el.key === 'createDate') {
+        el.width = 200;
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+      } else if (el.key === 'reason' || el.key === 'personName') {
+        el.width = 200;
       }
       return {
         ...el,
-        render: (data: any, record: RequestModel) => {
-          if (data) {
+        render: (data: string | number, record: RequestModel) => {
+          if (data !== undefined) {
             if (
-              el.key === 'createDate' ||
-              el.key === 'startTime' ||
-              el.key === 'endTime'
+              (el.key === 'createDate' || el.key === 'approvalDate') &&
+              typeof data === 'string'
             ) {
               return convertDate(data, DATE_TIME_US);
-            } else if (el.key === 'status') {
-              return <RequestStatus data={data} />;
+            } else if (el.key === 'isAssigned') {
+              return (
+                <RequestStatus
+                  data={data === 0 ? STATUS.PENDING : STATUS.ASSIGNED}
+                />
+              );
             }
+
             return data;
           } else {
             return '-';
@@ -119,38 +118,40 @@ export default function SubordinateRequestList() {
       width: 80,
       align: 'center',
       render: (_, record: RequestModel) => {
-        return (
-          <RequestMenuAction
-            record={record}
-            tabType={REQUEST_MENU.SUBORDINATE}
-            refetchList={refetchList}
-            requestStatus={record?.status}
-          />
-        );
+        if (!record.isAssigned) {
+          return (
+            <RequestMenuAction
+              record={record}
+              tabType={REQUEST_MENU.DEVICE}
+              refetchList={refetchList}
+              requestStatus={record?.status}
+            />
+          );
+        }
+        return '-';
       },
     });
-
     setColumnsHeader(columns);
   }, [stateQuery]);
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable?.data) {
-      const {
-        metadata: { pagination },
-        data: { items: requestList },
-      } = dataTable;
-      setRecords(requestList);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable?.data) {
+    const {
+      metadata: { pagination },
+      data: { items: requestList },
+    } = dataMock;
+    setRecords(requestList);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
+    // }
   }, [dataTable]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -184,12 +185,10 @@ export default function SubordinateRequestList() {
         requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);
-        requestStatus.current = record.status;
       },
     };
   };
   const cancelModalHandler = () => {
-    requestStatus.current = STATUS.PENDING;
     requestIdRef.current = 0;
     setIsShowDetailModal(false);
   };
@@ -206,7 +205,7 @@ export default function SubordinateRequestList() {
             setIsShowDetailModal={setIsShowDetailModal}
             modalAction={modalAction}
             setStateQuery={setStateQuery}
-            tabType={REQUEST_MENU.SUBORDINATE}
+            tabType={REQUEST_MENU.DEVICE}
             stateQuery={stateQuery}
           />
         }
@@ -225,8 +224,7 @@ export default function SubordinateRequestList() {
           onCancel={cancelModalHandler}
           action={modalAction.current}
           requestIdRef={requestIdRef.current}
-          requestStatus={requestStatus.current}
-          tabType={REQUEST_MENU.SUBORDINATE}
+          tabType={REQUEST_MENU.ALL}
           refetchList={refetchList}
         />
       )}

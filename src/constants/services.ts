@@ -1,8 +1,5 @@
 export const EMPLOYEE_LIST_ALL = {
   service: 'hr/employee',
-  model: {
-    list: 'all/list',
-  },
 };
 
 export const USER_INFO = {
@@ -18,26 +15,22 @@ export const SUBORDINATE_LIST = {
   },
 };
 
-export const MY_REQUEST_LIST = {
+export const REQUEST = {
   service: 'request',
   model: {
     status: 'status',
     remainingTime: 'remaining-time',
     officeTime: 'office-time',
+    itSupport: 'it-support',
+    manager: 'manager',
+    hr: 'hr',
   },
 };
-export const MANAGER_REQUEST_LIST = {
-  service: 'manager/request',
-};
-export const HR_REQUEST_LIST = {
-  service: 'hr/request',
-};
-
 export const TIME_CHECK = {
   service: 'time-check',
   model: {
     manager: 'manager',
-    hr: 'HR',
+    hr: 'hr',
     allEmployee: 'all-employee',
     allSubordinate: 'all-subordinate',
     detail: 'detail-subordinate',

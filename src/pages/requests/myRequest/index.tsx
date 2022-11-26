@@ -44,6 +44,12 @@ export default function MyRequestList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    createDateFrom: searchParams.get('createDateFrom') ?? undefined,
+    createDateTo: searchParams.get('createDateTo') ?? undefined,
+    requestTypeId: searchParams.get('requestTypeId')
+      ? Number(searchParams.get('requestTypeId'))
+      : undefined,
+    status: searchParams.get('status') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -168,14 +174,6 @@ export default function MyRequestList() {
       sort,
       dir,
     }));
-
-    // * set filter to state query
-    const filterKey: any = Object.keys(filters)[0];
-    const filterValues: any = Object.values(filters)[0];
-    setStateQuery((prev: RequestListQuery) => ({
-      ...prev,
-      [filterKey]: filterValues,
-    }));
   };
   const rowClickHandler = (record: RequestModel) => {
     return {
@@ -206,6 +204,7 @@ export default function MyRequestList() {
             modalAction={modalAction}
             setStateQuery={setStateQuery}
             tabType={REQUEST_MENU.MY_REQUEST}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}
