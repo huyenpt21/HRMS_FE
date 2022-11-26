@@ -129,6 +129,8 @@ export default function BorrowDeviceRequest() {
               tabType={REQUEST_MENU.DEVICE}
               refetchList={refetchList}
               requestStatus={record?.status}
+              setIsShowDetailModal={setIsShowDetailModal}
+              modalAction={modalAction}
             />
           );
         }
