@@ -265,22 +265,22 @@ export const DeviceTypeHeader = [
 ];
 export const LeaveBudgetListHeader = [
   {
-    title: 'Full name',
+    title: 'Employee Name',
     key: 'fullName',
     dataIndex: 'fullName',
   },
   {
-    title: 'Leave Budget',
+    title: 'Budget',
     key: 'budget',
     dataIndex: 'budget',
   },
   {
-    title: 'Number Of Day Off',
+    title: 'Used',
     key: 'used',
     dataIndex: 'used',
   },
   {
-    title: 'Remain Day Off',
+    title: 'Remaining',
     key: 'remain',
     dataIndex: 'remain',
   },
