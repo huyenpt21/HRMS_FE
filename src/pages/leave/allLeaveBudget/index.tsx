@@ -144,7 +144,11 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Subordinate Leave Budget</div>
+        <div className={styles.header__title}>
+          {menuType === MENU_TYPE.SUBORDINATE
+            ? 'Subordinate Benefit Budget'
+            : 'All Benefit Budget'}
+        </div>
       </div>
       <div className={styles.menu}>
         <MenuRequestType

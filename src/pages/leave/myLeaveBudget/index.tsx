@@ -115,7 +115,7 @@ export default function MyLeaveBudget() {
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>My Leave Budget</div>
+        <div className={styles.header__title}>My Benefit Budget</div>
       </div>
       <div className={styles.menu}>
         <MenuRequestType
