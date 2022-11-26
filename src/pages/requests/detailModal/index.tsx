@@ -46,12 +46,12 @@ import {
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, getRange, TimeCombine } from 'utils/common';
-import RequestStatus from '../statusRequest';
+import RequestStatus from '../components/statusRequest';
 
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import { storageFirebase } from 'firebaseSetup';
 // import detailMock from './detailMock.json';
-import RollbackModal from '../rollbackModal';
+import RollbackModal from '../components/rollbackModal';
 import styles from './requestDetailModal.module.less';
 import { RangePickerProps } from 'antd/lib/date-picker';
 import SelectCustomSearch from 'components/SelectCustomSearch';

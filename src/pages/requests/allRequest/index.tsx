@@ -20,7 +20,7 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import RequestDetailModal from '../components/detailModal';
+import RequestDetailModal from '../detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestStatus from '../components/statusRequest';
 
