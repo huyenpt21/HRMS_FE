@@ -24,6 +24,7 @@ export const REQUEST = {
     itSupport: 'it-support',
     manager: 'manager',
     hr: 'hr',
+    assign: 'assign',
   },
 };
 export const TIME_CHECK = {
@@ -54,6 +55,7 @@ export const DEPARTMENT = {
 export const DEVICE_TYPE = {
   service: 'device-type',
   model: {
+    deviceName: 'device-by-deviceType',
     masterData: 'master-data',
   },
 };

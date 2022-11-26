@@ -1,6 +1,7 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface RequestModel extends Resource {
+  rollNumber?: string;
   requestTypeId?: number;
   requestTypeName?: string;
   createDate?: string;
@@ -11,8 +12,7 @@ export interface RequestModel extends Resource {
   approvalDate?: string;
   personName?: string;
   receiver?: string;
-  createdBy?: string;
-  deviceTypeId?: string;
+  deviceTypeId?: number;
   date?: string;
   time?: string;
   listEvidence?: string[];
@@ -20,6 +20,8 @@ export interface RequestModel extends Resource {
   isAllowRollback?: number;
   isAssigned?: number;
   deviceTypeName?: string;
+  deviceId?: number;
+  requestId?: number;
 }
 
 export interface OfficeTime {

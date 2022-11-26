@@ -1,7 +1,11 @@
 import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
-import { DATE_TIME_US, paginationConfig } from 'constants/common';
+import {
+  COMMON_STATUS,
+  DATE_TIME_US,
+  paginationConfig,
+} from 'constants/common';
 import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { BorrowDeviceListHeader } from 'constants/header';
 import { REQUEST } from 'constants/services';
@@ -20,7 +24,7 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import RequestDetailModal from '../components/detailModal';
+import RequestDetailModal from '../detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
@@ -183,7 +187,10 @@ export default function BorrowDeviceRequest() {
     return {
       onClick: () => {
         requestIdRef.current = record.id;
-        modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+        modalAction.current =
+          record?.isAssigned === COMMON_STATUS.ACTIVE
+            ? ACTION_TYPE.VIEW_DETAIL
+            : ACTION_TYPE.ASSIGN;
         setIsShowDetailModal(true);
       },
     };
@@ -224,7 +231,7 @@ export default function BorrowDeviceRequest() {
           onCancel={cancelModalHandler}
           action={modalAction.current}
           requestIdRef={requestIdRef.current}
-          tabType={REQUEST_MENU.ALL}
+          tabType={REQUEST_MENU.DEVICE}
           refetchList={refetchList}
         />
       )}

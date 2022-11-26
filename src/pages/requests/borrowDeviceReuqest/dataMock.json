@@ -12,7 +12,7 @@
   "data": {
     "items": [
       {
-        "id": 11,
+        "id": 25,
         "rollNumber": "NV005",
         "personName": "Trinh Kim Chi",
         "createDate": "2022-11-10 08:15:23",
@@ -22,10 +22,11 @@
         "approvalDate": "2022-11-11 11:34:49",
         "timeRemaining": 0.0,
         "isAllowRollback": 0,
-        "isAssigned": 0
+        "isAssigned": 0,
+        "requestTypeId": 11
       },
       {
-        "id": 24,
+        "id": 26,
         "rollNumber": "NV001",
         "personName": "Nguyen Van Binh",
         "createDate": "2022-11-10 08:15:23",
@@ -35,10 +36,11 @@
         "approvalDate": "2022-11-11 11:34:49",
         "timeRemaining": 0.0,
         "isAllowRollback": 0,
-        "isAssigned": 1
+        "isAssigned": 1,
+        "requestTypeId": 3
       },
       {
-        "id": 25,
+        "id": 27,
         "rollNumber": "MS009",
         "personName": "Nguyễn Văn Test1",
         "createDate": "2022-11-10 08:15:23",
@@ -48,7 +50,8 @@
         "approvalDate": "2022-11-11 11:34:49",
         "timeRemaining": 0.0,
         "isAllowRollback": 0,
-        "isAssigned": 1
+        "isAssigned": 1,
+        "requestTypeId": 11
       }
     ]
   }

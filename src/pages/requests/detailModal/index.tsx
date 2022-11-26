@@ -12,7 +12,6 @@ import {
   DATE_TIME,
   DATE_TIME_US,
   MESSAGE_RES,
-  US_DATE_FORMAT,
   validateMessages,
 } from 'constants/common';
 import {
@@ -46,17 +45,17 @@ import {
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, getRange, TimeCombine } from 'utils/common';
-import RequestStatus from '../statusRequest';
+import RequestStatus from '../components/statusRequest';
 
-import MultipleImagePreview from 'components/MultipleImagePreview';
-import { storageFirebase } from 'firebaseSetup';
-// import detailMock from './detailMock.json';
-import RollbackModal from '../rollbackModal';
-import styles from './requestDetailModal.module.less';
 import { RangePickerProps } from 'antd/lib/date-picker';
-import SelectCustomSearch from 'components/SelectCustomSearch';
-import { DEVICE_TYPE } from 'constants/services';
 import BasicDatePicker from 'components/BasicDatePicker';
+import MultipleImagePreview from 'components/MultipleImagePreview';
+import SelectCustomSearch from 'components/SelectCustomSearch';
+import { DEVICE_TYPE, REQUEST } from 'constants/services';
+import { storageFirebase } from 'firebaseSetup';
+import RollbackModal from '../components/rollbackModal';
+import detailMock from './detailMock.json';
+import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -90,29 +89,34 @@ export default function RequestDetailModal({
   const officeTimeRef = useRef<OfficeTime>();
 
   const { mutate: createRequest, isLoading: loadingCreate } =
-    useAddRequestModal({
-      onSuccess: (response: ResRequestModify) => {
-        const {
-          metadata: { message },
-        } = response;
+    useAddRequestModal(
+      {
+        onSuccess: (response: ResRequestModify) => {
+          const {
+            metadata: { message },
+          } = response;
 
-        if (message === 'Success') {
-          notification.success({
-            message: 'Send request successfully',
+          if (message === 'Success') {
+            notification.success({
+              message: 'Send request successfully',
+            });
+            refetchList();
+            cancelHandler();
+          }
+        },
+        onError: (response: ResRequestModify) => {
+          const {
+            metadata: { message },
+          } = response;
+          notification.error({
+            message: message,
           });
-          refetchList();
-          cancelHandler();
-        }
+        },
       },
-      onError: (response: ResRequestModify) => {
-        const {
-          metadata: { message },
-        } = response;
-        notification.error({
-          message: message,
-        });
-      },
-    });
+      actionModal === ACTION_TYPE.ASSIGN
+        ? `${REQUEST.model.itSupport}/${REQUEST.model.itSupport}/${REQUEST.model.assign}`
+        : undefined,
+    );
   const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -190,6 +194,7 @@ export default function RequestDetailModal({
         data: { item },
       } = detailRequest;
       if (message === MESSAGE_RES.SUCCESS && item) {
+        setRequestData(item);
         requestForm.setFieldsValue(item);
         requestForm.setFieldsValue({
           timeRemaining: item?.timeRemaining?.toFixed(2),
@@ -199,25 +204,13 @@ export default function RequestDetailModal({
         if (item?.listEvidence) {
           setEvidenceSource(item?.listEvidence);
         }
-        const requestFixInfor: RequestModel = {
-          id: item.id,
-          receiver: item.receiver,
-          createdBy: item.personName,
-          createDate: getDateFormat(item.createDate, US_DATE_FORMAT),
-          status: item.status,
-          approvalDate:
-            item.approvalDate !== null
-              ? getDateFormat(item?.approvalDate, US_DATE_FORMAT)
-              : undefined,
-        };
-        setRequestData(requestFixInfor);
         setRequestType(item?.requestTypeName);
         setIsAllowRollback(item?.isAllowRollback);
         requestIdRefInternal.current = item?.id;
         remainingTimeRef.current = item?.timeRemaining;
       }
     }
-  }, [detailRequest]);
+  }, [detailRequest, detailMock]);
   useEffect(() => {
     if (officeTimeData && officeTimeData?.data) {
       const {
@@ -231,43 +224,57 @@ export default function RequestDetailModal({
     requestForm.resetFields();
   };
   const submitHandler = async (formValues: RequestModel) => {
-    if (
-      requestType === REQUEST_TYPE_KEY.LEAVE ||
-      requestType === REQUEST_TYPE_KEY.OTHER
-    ) {
-      formValues.startTime = TimeCombine(
-        formValues.date && formValues.date[0],
-        formValues.time && formValues.time[0],
-        DATE_TIME,
-      );
-      formValues.endTime = TimeCombine(
-        formValues.date && formValues.date[1],
-        formValues.time && formValues.time[1],
-        DATE_TIME,
-      );
+    switch (requestType) {
+      case REQUEST_TYPE_KEY.LEAVE:
+      case REQUEST_TYPE_KEY.OTHER: {
+        formValues.startTime = TimeCombine(
+          formValues.date && formValues.date[0],
+          formValues.time && formValues.time[0],
+          DATE_TIME,
+        );
+        formValues.endTime = TimeCombine(
+          formValues.date && formValues.date[1],
+          formValues.time && formValues.time[1],
+          DATE_TIME,
+        );
+        break;
+      }
+      case REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT: {
+        formValues.startTime = TimeCombine(
+          formValues.date,
+          formValues.time && formValues.time[0],
+          DATE_TIME,
+        );
+        formValues.endTime = TimeCombine(
+          formValues.date,
+          formValues.time && formValues.time[1],
+          DATE_TIME,
+        );
+        break;
+      }
+      case REQUEST_TYPE_KEY.OT: {
+        if (formValues.date) {
+          formValues.startTime = getDateFormat(formValues.date[0], DATE_TIME);
+          formValues.endTime = getDateFormat(formValues.date[1], DATE_TIME);
+        }
+        break;
+      }
+      case REQUEST_TYPE_KEY.DEVICE: {
+        if (actionModal === ACTION_TYPE.ASSIGN) {
+          formValues.requestId = requestIdRef;
+          delete formValues.deviceTypeId;
+        }
+        break;
+      }
     }
-    if (requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) {
-      formValues.startTime = TimeCombine(
-        formValues.date,
-        formValues.time && formValues.time[0],
-        DATE_TIME,
-      );
-      formValues.endTime = TimeCombine(
-        formValues.date,
-        formValues.time && formValues.time[1],
-        DATE_TIME,
-      );
+    if (actionModal !== ACTION_TYPE.ASSIGN) {
+      const urlImage = await uploadImage();
+      formValues.listEvidence = [...urlImage, ...evidenceSource];
     }
-    if (requestType === REQUEST_TYPE_KEY.OT && formValues.date) {
-      formValues.startTime = getDateFormat(formValues.date[0], DATE_TIME);
-      formValues.endTime = getDateFormat(formValues.date[1], DATE_TIME);
-    }
-    const urlImage = await uploadImage();
-    formValues.listEvidence = [...urlImage, ...evidenceSource];
     delete formValues.date;
     delete formValues.time;
     delete formValues.timeRemaining;
-    if (requestIdRef) {
+    if (requestIdRef && actionModal !== ACTION_TYPE.ASSIGN) {
       updateRequest({ uid: requestIdRef, body: formValues });
     } else {
       createRequest(formValues);
@@ -328,6 +335,7 @@ export default function RequestDetailModal({
   };
 
   const handleChangeRequestType = (value: number, options: SelectBoxType) => {
+    remainingTimeRef.current = -1;
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
     if (
@@ -482,35 +490,45 @@ export default function RequestDetailModal({
             {actionModal !== ACTION_TYPE.CREATE && (
               <>
                 <Row gutter={20} className={styles['infor--header']}>
-                  <Col span={12}>
+                  <Col span={10}>
                     <span>Created By:</span>
                     <span className={styles['text--bold']}>
-                      {requestData?.createdBy}
+                      {requestData?.personName}
                     </span>
                   </Col>
-                  <Col span={12}>
-                    <span>Created Date:</span>
+                  <Col span={6}>
+                    <span>Roll Number:</span>
                     <span className={styles['text--bold']}>
-                      {requestData?.createDate}
+                      {requestData?.rollNumber}
+                    </span>
+                  </Col>
+                  <Col span={8}>
+                    <span>Created Time:</span>
+                    <span className={styles['text--bold']}>
+                      {getDateFormat(requestData?.createDate, DATE_TIME_US)}
                     </span>
                   </Col>
                 </Row>
                 <Row gutter={20} className={styles['infor--header']}>
-                  <Col span={12}>
-                    <span>Receiver:</span>
+                  <Col span={10}>
+                    <span>
+                      {requestData?.status === STATUS.APPROVED
+                        ? 'Appoval By:'
+                        : 'Receiver:'}
+                    </span>
                     <span className={styles['text--bold']}>
                       {requestData?.receiver}
                     </span>
                   </Col>
-                  <Col span={5}>
+                  <Col span={6}>
                     <span>Status:</span>{' '}
                     <RequestStatus data={requestData?.status ?? ''} />
                   </Col>
                   {requestData?.approvalDate && (
-                    <Col span={7}>
-                      <span>Approval Date:</span>
+                    <Col span={8}>
+                      <span>Approved Time:</span>
                       <span className={styles['text--bold']}>
-                        {requestData?.approvalDate}
+                        {getDateFormat(requestData?.createDate, DATE_TIME_US)}
                       </span>
                     </Col>
                   )}
@@ -519,20 +537,22 @@ export default function RequestDetailModal({
             )}
 
             <Row gutter={20}>
-              <Col span="12">
-                <BasicSelect
-                  options={REQUEST_TYPE_LIST}
-                  label="Request Type"
-                  rules={[{ required: true }]}
-                  placeholder="Choose request type"
-                  name="requestTypeId"
-                  allowClear
-                  showSearch
-                  optionFilterProp="label"
-                  onChange={handleChangeRequestType}
-                  disabled={actionModal === ACTION_TYPE.EDIT}
-                />
-              </Col>
+              {tabType !== REQUEST_MENU.DEVICE && (
+                <Col span="12">
+                  <BasicSelect
+                    options={REQUEST_TYPE_LIST}
+                    label="Request Type"
+                    rules={[{ required: true }]}
+                    placeholder="Choose request type"
+                    name="requestTypeId"
+                    allowClear
+                    showSearch
+                    optionFilterProp="label"
+                    onChange={handleChangeRequestType}
+                    disabled={actionModal === ACTION_TYPE.EDIT}
+                  />
+                </Col>
+              )}
               {(requestType === REQUEST_TYPE_KEY.LEAVE ||
                 requestType === REQUEST_TYPE_KEY.OT) &&
                 requestStatus === STATUS.PENDING && (
@@ -572,9 +592,29 @@ export default function RequestDetailModal({
                     dataName="items"
                     apiName="device-type-master-data"
                     label="Device Type"
-                    rules={[{ required: true }]}
+                    rules={[
+                      { required: true && tabType !== REQUEST_MENU.DEVICE },
+                    ]}
                     placeholder="Choose device type"
                     name="deviceTypeId"
+                    allowClear
+                    disabled={
+                      actionModal === ACTION_TYPE.EDIT ||
+                      tabType === REQUEST_MENU.DEVICE
+                    }
+                  />
+                </Col>
+              )}
+              {tabType === REQUEST_MENU.DEVICE && (
+                <Col span="12">
+                  <SelectCustomSearch
+                    url={`${DEVICE_TYPE.model.deviceName}-${DEVICE_TYPE.model.masterData}`}
+                    dataName="items"
+                    apiName="device-name-master-data"
+                    label="Device Name"
+                    rules={[{ required: true }]}
+                    placeholder="Choose device name"
+                    name="deviceId"
                     allowClear
                     disabled={actionModal === ACTION_TYPE.EDIT}
                   />
@@ -595,7 +635,8 @@ export default function RequestDetailModal({
                       disabledDate={disabledDateForgotCheckInOut}
                     />
                   )}
-                  {requestType === REQUEST_TYPE_KEY.LEAVE && (
+                  {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+                    requestType === REQUEST_TYPE_KEY.OTHER) && (
                     <BasicDateRangePicker
                       name="date"
                       label="Applicable Date"
@@ -649,21 +690,22 @@ export default function RequestDetailModal({
                 </Col>
               </Row>
             )}
-            <Row gutter={20}>
-              <Col span={24}>
-                <BasicInput
-                  type="textarea"
-                  rows={3}
-                  placeholder="Enter your reason . . ."
-                  label="Reason"
-                  name="reason"
-                  allowClear
-                />
-              </Col>
-            </Row>
-            {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-              requestType === REQUEST_TYPE_KEY.OTHER) &&
-              actionModal !== ACTION_TYPE.VIEW_DETAIL && (
+            {tabType !== REQUEST_MENU.DEVICE && (
+              <Row gutter={20}>
+                <Col span={24}>
+                  <BasicInput
+                    type="textarea"
+                    rows={3}
+                    placeholder="Enter your reason . . ."
+                    label="Reason"
+                    name="reason"
+                    allowClear
+                  />
+                </Col>
+              </Row>
+            )}
+            {actionModal !== ACTION_TYPE.VIEW_DETAIL &&
+              tabType !== REQUEST_MENU.DEVICE && (
                 <Row gutter={20}>
                   <Col span={24}>
                     <Form.Item
@@ -679,26 +721,22 @@ export default function RequestDetailModal({
                   </Col>
                 </Row>
               )}
-            {requestType !== REQUEST_TYPE_KEY.DEVICE &&
-              (actionModal === ACTION_TYPE.VIEW_DETAIL ||
-                actionModal === ACTION_TYPE.EDIT) && (
-                <MultipleImagePreview
-                  src={evidenceSource}
-                  allowRemove={actionModal === ACTION_TYPE.EDIT}
-                  handleRemoveFile={handleRemoveFile}
-                />
-              )}
+            {(actionModal === ACTION_TYPE.VIEW_DETAIL ||
+              actionModal === ACTION_TYPE.EDIT) && (
+              <MultipleImagePreview
+                src={evidenceSource}
+                allowRemove={actionModal === ACTION_TYPE.EDIT}
+                handleRemoveFile={handleRemoveFile}
+              />
+            )}
             {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <div className={styles['modal__footer']}>
-                {(actionModal === ACTION_TYPE.CREATE ||
-                  actionModal === ACTION_TYPE.EDIT) && (
-                  <BasicButton
-                    title="Cancel"
-                    type="outline"
-                    className={styles['btn--cancel']}
-                    onClick={cancelHandler}
-                  />
-                )}
+                <BasicButton
+                  title="Cancel"
+                  type="outline"
+                  className={styles['btn--cancel']}
+                  onClick={cancelHandler}
+                />
                 {actionModal === ACTION_TYPE.CREATE && (
                   <BasicButton
                     title="Send"
@@ -716,6 +754,16 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingUpdate || isUploadingImage}
+                    disabled={remainingTimeRef.current === 0}
+                  />
+                )}
+                {actionModal === ACTION_TYPE.ASSIGN && (
+                  <BasicButton
+                    title="Assign"
+                    type="filled"
+                    className={styles['btn--save']}
+                    htmlType={'submit'}
+                    loading={loadingCreate}
                     disabled={remainingTimeRef.current === 0}
                   />
                 )}
