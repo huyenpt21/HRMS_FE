@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "service_id": "HRMS",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 1
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "id": 11,
+        "rollNumber": "NV005",
+        "personName": "Trinh Kim Chi",
+        "createDate": "2022-11-10 08:15:23",
+        "reason": "reason",
+        "receiver": "Nguyen Van Binh",
+        "deviceTypeName": "Computer",
+        "approvalDate": "2022-11-11 11:34:49",
+        "timeRemaining": 0.0,
+        "isAllowRollback": 0,
+        "isAssigned": 0
+      },
+      {
+        "id": 24,
+        "rollNumber": "NV001",
+        "personName": "Nguyen Van Binh",
+        "createDate": "2022-11-10 08:15:23",
+        "reason": "reason",
+        "receiver": "Nguyen Thi Huyen",
+        "deviceTypeName": "Keyboard",
+        "approvalDate": "2022-11-11 11:34:49",
+        "timeRemaining": 0.0,
+        "isAllowRollback": 0,
+        "isAssigned": 1
+      },
+      {
+        "id": 25,
+        "rollNumber": "MS009",
+        "personName": "Nguyễn Văn Test1",
+        "createDate": "2022-11-10 08:15:23",
+        "reason": "reason",
+        "receiver": "Trinh Kim Chi",
+        "deviceTypeName": "Omputer3",
+        "approvalDate": "2022-11-11 11:34:49",
+        "timeRemaining": 0.0,
+        "isAllowRollback": 0,
+        "isAssigned": 1
+      }
+    ]
+  }
+}

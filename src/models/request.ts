@@ -18,6 +18,13 @@ export interface RequestModel extends Resource {
   listEvidence?: string[];
   timeRemaining?: number;
   isAllowRollback?: number;
+  isAssigned?: number;
+  deviceTypeName?: string;
+}
+
+export interface OfficeTime {
+  timeStart?: string;
+  timeFinish?: string;
 }
 
 export interface RequestStatus {
@@ -36,11 +43,15 @@ export interface RequestListFilter {
   startTime?: string;
   endTime?: string;
   createDate?: string;
-  requestTypeId?: string;
+  requestTypeId?: number;
   status?: string;
   aprovalDate?: string;
   createDateFrom?: string;
   createDateTo?: string;
+  approvalDateFrom?: string;
+  approvalDateTo?: string;
+  isAssigned?: number;
+  deviceTypeId?: string;
 }
 
 export type RequestListSortFields = 'requestType';

@@ -1,3 +1,4 @@
+import { SolutionOutlined, TeamOutlined } from '@ant-design/icons';
 import { MenuItemType } from 'models/menu';
 
 export const menus: MenuItemType[] = [
@@ -10,7 +11,7 @@ export const menus: MenuItemType[] = [
   {
     title: 'Employee',
     key: 'employee',
-    icon: 'user',
+    icon: <TeamOutlined style={{ fontSize: '22px' }} />,
     children: [
       {
         title: 'Employee List',
@@ -30,19 +31,24 @@ export const menus: MenuItemType[] = [
     icon: 'delivery',
     children: [
       {
-        title: 'My Request History',
+        title: 'My Request',
         key: 'myRequest',
         path: '/request/my-request',
       },
       {
-        title: 'Subordinate Request List',
+        title: 'Subordinate Request',
         key: 'subordinateRequestList',
         path: '/request/subordinate',
       },
       {
-        title: 'All Request List',
+        title: 'All Request',
         key: 'allRequestList',
         path: '/request/all',
+      },
+      {
+        title: 'Borrow Device Request',
+        key: 'borrowDeviceRequestList',
+        path: '/request/borrow-device',
       },
     ],
   },
@@ -51,6 +57,11 @@ export const menus: MenuItemType[] = [
     key: 'device',
     icon: 'mouse',
     children: [
+      {
+        title: 'Device Type',
+        key: 'deviceType',
+        path: '/device/device-type',
+      },
       {
         title: 'My Device List',
         key: 'myDeviceList',
@@ -89,5 +100,29 @@ export const menus: MenuItemType[] = [
         path: '/time-check/all',
       },
     ],
+  },
+  {
+    title: 'Department',
+    key: 'department',
+    icon: <SolutionOutlined style={{ fontSize: '22px' }} />,
+    path: '/department',
+  },
+  {
+    title: 'All Leave Budget',
+    key: 'all-leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget/all',
+  },
+  {
+    title: 'Subordinate Leave Budget',
+    key: 'subordinate-leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget/subordinate',
+  },
+  {
+    title: 'My Leave Budget',
+    key: 'my-leave-budget',
+    icon: 'calendar',
+    path: '/leave-budget/my-leave-budget',
   },
 ];

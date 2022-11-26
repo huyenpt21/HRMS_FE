@@ -1,4 +1,4 @@
-import { MY_REQUEST_LIST } from 'constants/services';
+import { REQUEST } from 'constants/services';
 import initialCustomQuery, {
   Feature,
   MutationProps,
@@ -15,7 +15,7 @@ import {
   ResRequestList,
   ResRequestModify,
 } from 'models/request';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import fetchApi from 'utils/fetch-api';
 
 class RequestList implements Feature<RequestListSortFields> {
@@ -27,7 +27,7 @@ class RequestList implements Feature<RequestListSortFields> {
 }
 
 const RequestListInstance = new RequestList(
-  MY_REQUEST_LIST.service,
+  REQUEST.service,
   undefined,
   'my-request-list',
 );
@@ -55,7 +55,7 @@ export const useChangeStatusRequest = ({
     ({ uid, body }: UpdateProps<RequestStatus>) =>
       fetchApi(
         {
-          url: `${MY_REQUEST_LIST.service}/${MY_REQUEST_LIST.model.status}/${uid}`,
+          url: `${REQUEST.service}/${REQUEST.model.status}/${uid}`,
           options: {
             method: 'PUT',
             body: JSON.stringify(body),
@@ -81,7 +81,7 @@ export const useGetRemainingTime = ({
     (payload: RequestRemainingTime) =>
       fetchApi(
         {
-          url: `${MY_REQUEST_LIST.service}/${MY_REQUEST_LIST.model.remainingTime}`,
+          url: `${REQUEST.service}/${REQUEST.model.remainingTime}`,
           payload,
         },
         undefined,
@@ -92,3 +92,12 @@ export const useGetRemainingTime = ({
     },
   );
 };
+export const useGetOfficeTime = () =>
+  useQuery([], () =>
+    fetchApi(
+      {
+        url: REQUEST.model.officeTime,
+      },
+      undefined,
+    ),
+  );

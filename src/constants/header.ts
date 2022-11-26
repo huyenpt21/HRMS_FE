@@ -107,6 +107,50 @@ export const SubordinateRequestListHeader = [
   },
 ];
 
+export const BorrowDeviceListHeader = [
+  {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
+    title: 'Employee Name',
+    key: 'personName',
+    dataIndex: 'personName',
+  },
+  {
+    title: 'Create Date',
+    key: 'createDate',
+    dataIndex: 'createDate',
+  },
+  {
+    title: 'Device Type',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+  },
+  {
+    title: 'Reason',
+    key: 'reason',
+    dataIndex: 'reason',
+  },
+  {
+    title: 'Approval Date',
+    key: 'approvalDate',
+    dataIndex: 'approvalDate',
+  },
+  {
+    title: 'Approval By',
+    key: 'receiver',
+    dataIndex: 'receiver',
+  },
+
+  {
+    title: 'Status',
+    key: 'isAssigned',
+    dataIndex: 'isAssigned',
+  },
+];
+
 export const MyTimeCheckHeader = [
   {
     title: 'Date',
@@ -195,5 +239,71 @@ export const AllTimeCheckHeader = [
     title: 'Sunday',
     key: 'sun',
     dataIndex: 'sun',
+  },
+];
+
+export const DepartmentHeader = [
+  {
+    title: 'Department Name',
+    key: 'departmentName',
+    dataIndex: 'departmentName',
+  },
+  {
+    title: 'Total members',
+    key: 'total',
+    dataIndex: 'total',
+  },
+];
+
+export const DeviceTypeHeader = [
+  {
+    title: 'Department Type Name',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+    editable: true,
+  },
+];
+export const LeaveBudgetListHeader = [
+  {
+    title: 'Full name',
+    key: 'fullName',
+    dataIndex: 'fullName',
+  },
+  {
+    title: 'Leave Budget',
+    key: 'budget',
+    dataIndex: 'budget',
+  },
+  {
+    title: 'Number Of Day Off',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Remain Day Off',
+    key: 'remain',
+    dataIndex: 'remain',
+  },
+];
+export const MyLeaveBudgetListHeader = [
+  {
+    title: 'Leave Type',
+    key: 'requestTypeName',
+    dataIndex: 'requestTypeName',
+  },
+  {
+    title: 'Leave Budget',
+    key: 'budget',
+    dataIndex: 'budget',
+  },
+  {
+    title: 'Number Of Day Off',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Remain Day Off',
+    key: 'remain',
+    dataIndex: 'remain',
   },
 ];

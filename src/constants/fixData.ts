@@ -1,4 +1,4 @@
-import { MenuOptionsType, RadioButtonType, SelectBoxType } from 'models/common';
+import { MenuOptionsType, SelectBoxType } from 'models/common';
 import { COMMON_STATUS } from './common';
 import {
   GENDER_KEY,
@@ -94,7 +94,7 @@ export const GENDER_LIST: SelectBoxType[] = [
   },
 ];
 
-export const STATUS_RADIO_LIST: RadioButtonType[] = [
+export const COMMON_STATUS_LIST: SelectBoxType[] = [
   {
     value: COMMON_STATUS.ACTIVE,
     label: 'Active',
@@ -117,13 +117,14 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
     value: 2,
   },
   {
-    label: 'Sickness Of Children',
+    // eslint-disable-next-line quotes
+    label: "Children's Sickness",
     type: REQUEST_TYPE_KEY.OTHER,
     value: 3,
   },
   {
     label: 'Forgot Check In/Out',
-    type: REQUEST_TYPE_KEY.OTHER,
+    type: REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT,
     value: 4,
   },
   {
@@ -175,5 +176,16 @@ export const REQUEST_STATUS_LIST: SelectBoxType[] = [
   {
     label: STATUS.REJECTED,
     value: STATUS.REJECTED,
+  },
+];
+
+export const REQUEST_DEVICE_LIST: SelectBoxType[] = [
+  {
+    label: STATUS.PENDING,
+    value: COMMON_STATUS.INACTIVE,
+  },
+  {
+    label: STATUS.ASSIGNED,
+    value: COMMON_STATUS.ACTIVE,
   },
 ];

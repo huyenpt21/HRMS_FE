@@ -1,10 +1,14 @@
 // import { pathNameLocalStorage } from 'constants/common';
+import { MENU_TYPE } from 'constants/enums/common';
 import MainLayout from 'layouts/MainLayout';
+import DepartmentList from 'pages/department/departmentList';
+import DeviceTypeList from 'pages/device/deviceType/deviceTypeList';
 import AllEmployeeList from 'pages/employees/allEmployee';
 import SubordinateList from 'pages/employees/subordinate';
-
 import ForbiddenPage from 'pages/forbidden';
 import HomePage from 'pages/homePage';
+import MyLeaveBudget from 'pages/leave/myLeaveBudget';
+import SubordinateLeaveBudget from 'pages/leave/allLeaveBudget';
 import NotFound from 'pages/notFound';
 import AllRequestList from 'pages/requests/allRequest';
 import MyRequestList from 'pages/requests/myRequest';
@@ -15,6 +19,8 @@ import SubordinateTimeCheck from 'pages/timeCheck/subordinateTimeCheck';
 import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
+import UserProfile from 'pages/userProfile';
+import BorrowDeviceRequest from 'pages/requests/borrowDeviceReuqest';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -54,6 +60,10 @@ export default function RouterElement() {
               path: 'all',
               element: <AllRequestList />,
             },
+            {
+              path: 'borrow-device',
+              element: <BorrowDeviceRequest />,
+            },
           ],
         },
         {
@@ -84,6 +94,34 @@ export default function RouterElement() {
               ],
             },
           ],
+        },
+        {
+          path: 'device',
+          children: [{ path: 'device-type', element: <DeviceTypeList /> }],
+        },
+        {
+          path: 'department',
+          element: <DepartmentList />,
+        },
+        {
+          path: 'leave-budget',
+          children: [
+            {
+              path: 'subordinate',
+              element: (
+                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
+              ),
+            },
+            {
+              path: 'all',
+              element: <SubordinateLeaveBudget menuType={MENU_TYPE.ALL} />,
+            },
+            { path: 'my-leave-budget', element: <MyLeaveBudget /> },
+          ],
+        },
+        {
+          path: 'profile',
+          element: <UserProfile />,
         },
       ],
     },

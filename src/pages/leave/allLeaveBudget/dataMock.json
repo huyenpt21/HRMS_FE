@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "service_id": "HRMS",
+    "pagination": {
+      "page": 1,
+      "limit": 2,
+      "totalRecords": 1
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "fullName": "Trinh Kim Chi",
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0,
+        "requestTypeName": "Annual Leave"
+      }
+    ]
+  }
+}

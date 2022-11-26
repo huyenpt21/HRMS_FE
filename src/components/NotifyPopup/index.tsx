@@ -4,13 +4,12 @@ import {
 } from '@ant-design/icons';
 import { Modal } from 'antd';
 import BasicButton from 'components/BasicButton';
-import { useTranslation } from 'react-i18next';
 import styles from './index.module.less';
 
 interface IProps {
   status: 'success' | 'warning' | 'error';
   title: string;
-  message: string;
+  message?: string;
   visible: boolean;
   className?: string;
   closable?: boolean;
@@ -37,11 +36,10 @@ const NotifyPopup = ({
   labelBtnDelete,
   loading,
 }: IProps) => {
-  const { t } = useTranslation();
   return (
     <Modal
       closeIcon={<></>}
-      width={width}
+      width={width ?? 350}
       visible={visible}
       className={`mainModal ${className}`}
       footer={false}
@@ -51,33 +49,27 @@ const NotifyPopup = ({
     >
       {status === 'success' && (
         <div className={styles.content}>
-          <CheckCircleOutlined className={styles['content__icon--success']} />
+          <CheckCircleOutlined
+            className={`${styles.icon} ${styles['icon--success']}`}
+          />
           <div className={styles.content__title}> {title} </div>
           <div className={styles.content__message}> {message} </div>
           <div className={styles.content__button}>
-            <BasicButton
-              title={t('closeText')}
-              type="outline"
-              onClick={onCancel}
-            />
+            <BasicButton title={'Close'} type="outline" onClick={onCancel} />
           </div>
         </div>
       )}
       {status === 'error' && (
         <div className={styles.content}>
           <ExclamationCircleOutlined
-            className={styles['content__icon--error']}
+            className={`${styles.icon} ${styles['icon--error']}`}
           />
           <div className={styles.content__title}> {title} </div>
           <div className={styles.content__message}> {message} </div>
           <div className={styles.content__button}>
+            <BasicButton title={'Cancel'} type="outline" onClick={onCancel} />
             <BasicButton
-              title={t('cancelText')}
-              type="outline"
-              onClick={onCancel}
-            />
-            <BasicButton
-              title={t('tryAgainText')}
+              title={'Try again'}
               type="filled"
               onClick={onTryAgain}
             />
@@ -87,21 +79,18 @@ const NotifyPopup = ({
       {status === 'warning' && (
         <div className={styles.content}>
           <ExclamationCircleOutlined
-            className={styles['content__icon--warning']}
+            className={`${styles.icon} ${styles['icon--warning']}`}
           />
           <div className={styles.content__title}> {title} </div>
           <div className={styles.content__message}> {message} </div>
           <div className={styles.content__button}>
+            <BasicButton title={'Cancel'} type="outline" onClick={onCancel} />
             <BasicButton
-              title={t('cancelText')}
-              type="outline"
-              onClick={onCancel}
-            />
-            <BasicButton
-              title={labelBtnDelete ?? t('confirmedDelete')}
+              title={labelBtnDelete ?? 'Delete'}
               type="filled"
               onClick={onDelete}
               loading={loading}
+              danger
             />
           </div>
         </div>

@@ -1,12 +1,13 @@
-import { Form, Input, InputNumber } from 'antd';
+import { Form, Input, InputNumber, InputRef } from 'antd';
 import { CSSProperties, ReactNode } from 'react';
 import styles from './index.module.less';
 import { LabelTooltipType } from 'antd/lib/form/FormItemLabel';
+import { NamePath } from 'antd/lib/form/interface';
 
 export interface IInputProps {
   label?: string | ReactNode;
   rules?: object[];
-  name?: string;
+  name?: string | NamePath;
   colon?: boolean;
   placeholder?: string;
   value?: string | number;
@@ -36,6 +37,7 @@ export interface IInputProps {
   min?: string;
   max?: string;
   rows?: number;
+  ref?: React.Ref<InputRef>;
 }
 const BasicInput = (props: IInputProps) => {
   const isRequired = props.rules
@@ -82,6 +84,7 @@ const BasicInput = (props: IInputProps) => {
           suffix={props.suffix}
           style={props.inputStyle}
           onChange={props.onChange}
+          ref={props.ref}
         />
       );
       break;
@@ -103,6 +106,7 @@ const BasicInput = (props: IInputProps) => {
           size="large"
           style={props.inputStyle}
           rows={props.rows}
+          ref={props.ref}
         />
       );
       break;
@@ -128,6 +132,7 @@ const BasicInput = (props: IInputProps) => {
           onChange={props.onChange}
           size="large"
           style={props.inputStyle}
+          ref={props.ref}
         />
       );
   }

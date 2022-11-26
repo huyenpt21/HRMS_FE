@@ -8,7 +8,6 @@ import BasicSelect from 'components/BasicSelect';
 import CommonModal from 'components/CommonModal';
 import TimeRangePicker from 'components/TimeRangePicker';
 import UploadFilePictureWall from 'components/UploadFile';
-
 import {
   DATE_TIME,
   DATE_TIME_US,
@@ -32,12 +31,14 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
+  useGetOfficeTime,
   useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
 } from 'hooks/useRequestList';
 import { SelectBoxType } from 'models/common';
 import {
+  OfficeTime,
   RequestModel,
   RequestRemainingTime,
   ResRequestModify,
@@ -53,6 +54,9 @@ import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../rollbackModal';
 import styles from './requestDetailModal.module.less';
 import { RangePickerProps } from 'antd/lib/date-picker';
+import SelectCustomSearch from 'components/SelectCustomSearch';
+import { DEVICE_TYPE } from 'constants/services';
+import BasicDatePicker from 'components/BasicDatePicker';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -83,6 +87,7 @@ export default function RequestDetailModal({
   const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
   const remainingTimeRef = useRef<number | undefined>();
+  const officeTimeRef = useRef<OfficeTime>();
 
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
@@ -132,6 +137,7 @@ export default function RequestDetailModal({
     },
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
+  const { data: officeTimeData } = useGetOfficeTime();
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -212,6 +218,14 @@ export default function RequestDetailModal({
       }
     }
   }, [detailRequest]);
+  useEffect(() => {
+    if (officeTimeData && officeTimeData?.data) {
+      const {
+        data: { item },
+      } = officeTimeData;
+      officeTimeRef.current = item;
+    }
+  }, []);
   const cancelHandler = () => {
     onCancel();
     requestForm.resetFields();
@@ -228,6 +242,18 @@ export default function RequestDetailModal({
       );
       formValues.endTime = TimeCombine(
         formValues.date && formValues.date[1],
+        formValues.time && formValues.time[1],
+        DATE_TIME,
+      );
+    }
+    if (requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) {
+      formValues.startTime = TimeCombine(
+        formValues.date,
+        formValues.time && formValues.time[0],
+        DATE_TIME,
+      );
+      formValues.endTime = TimeCombine(
+        formValues.date,
         formValues.time && formValues.time[1],
         DATE_TIME,
       );
@@ -255,7 +281,7 @@ export default function RequestDetailModal({
     for (let i = 0; i < imageFileList.length; i++) {
       const imageRef = ref(
         storageFirebase,
-        `images/evidences/${imageFileList[i].name}`,
+        `images/evidences/${imageFileList[i].name}-${Math.random()}`,
       );
       await uploadBytes(imageRef, imageFileList[i])
         .then(async () => {
@@ -337,40 +363,100 @@ export default function RequestDetailModal({
       remainingTimeRequest(data);
     }
   };
-
   const disabledDate = (current: moment.Moment) => {
-    // if start date haven't selected -> disable past days
+    // if start date haven't selected -> disable past date to curent date
+    //disable weekend
+    const weekend = moment(current).day() === 0 || moment(current).day() === 6;
     if (!dateSelected) {
-      return current && current < moment().startOf('day');
+      return (current && current < moment().endOf('day')) || !!weekend;
     }
-    let disableType: moment.unitOfTime.StartOf = 'years';
-    if (requestType === REQUEST_TYPE_KEY.OT) {
-      disableType = 'months';
-    }
-    //disable next month/years
-    const tooLate = current > moment(dateSelected[0]).endOf(disableType);
-    //disable previous month/years
-    const tooEarly = current < moment().startOf('days');
-    return !!tooLate || !!tooEarly;
+    //disable next years
+    const tooLate = current > moment(dateSelected[0]).endOf('years');
+    //disable previous years and past dates and current dates
+    const tooEarly =
+      current < moment(dateSelected[1]).startOf('years') ||
+      current < moment().endOf('days');
+    return !!tooLate || !!tooEarly || !!weekend;
   };
 
-  const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
-    if (
-      dateSelected &&
-      dateSelected[0]?.diff(moment().startOf('day'), 'days') === 0
-    ) {
-      const currentHour = moment().get('hour');
-      const currentMinute = moment().get('minute');
-      if (type === 'start') {
-        return {
-          disabledHours: () => getRange(0, currentHour),
-          disabledMinutes: () => getRange(0, currentMinute + 1),
-        };
-      }
+  const disableDateOT = (current: moment.Moment) => {
+    if (!dateSelected) {
+      return false;
+    }
+    const hourStartSelected = moment(dateSelected[0]).get('hours');
+    const hourEndSelected = moment(dateSelected[1]).get('hours');
+    //disable next month
+    const tooLate = current > moment(dateSelected[0]).endOf('months');
+    //disable previous month
+    const tooEarly = current < moment(dateSelected[1]).startOf('months');
+    const onlyTwoDaysNext =
+      current > moment(dateSelected[0]).add(1, 'days') &&
+      hourStartSelected >= 22;
+    const onlyTwoDaysPrev =
+      current < moment(dateSelected[1]).subtract(1, 'days').startOf('days') &&
+      hourEndSelected <= 4;
+    const onlyOneDaynext =
+      current >= moment(dateSelected[0]).endOf('days') &&
+      hourStartSelected <= 4;
+    const onlyOneDayPrev =
+      current <= moment(dateSelected[1]).startOf('days') &&
+      hourEndSelected >= 22;
+    return (
+      !!tooLate ||
+      !!tooEarly ||
+      !!onlyTwoDaysNext ||
+      !!onlyTwoDaysPrev ||
+      !!onlyOneDaynext ||
+      !!onlyOneDayPrev
+    );
+  };
+
+  const disabledDateForgotCheckInOut = (current: moment.Moment) => {
+    return current >= moment().startOf('days');
+  };
+
+  const disabledRangeTime: RangePickerProps['disabledTime'] = (value, type) => {
+    const hourStart = Number(officeTimeRef.current?.timeStart?.split(':')[0]);
+    const hourEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[0]);
+    const minuteStart = Number(officeTimeRef.current?.timeStart?.split(':')[1]);
+    const minuteEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[1]);
+    if (requestType === REQUEST_TYPE_KEY.OT) {
+      return {
+        disabledHours: () => {
+          if (dateSelected) {
+            if (type === 'end') {
+              if (
+                value?.get('dates') === moment(dateSelected[0]).get('dates') &&
+                moment(dateSelected[0]).get('hours') >= 22
+              ) {
+                return getRange(0, 22);
+              }
+              return getRange(5, 24);
+            }
+            if (type === 'start') {
+              if (
+                value?.get('dates') === moment(dateSelected[1]).get('dates') &&
+                moment(dateSelected[1]).get('hours') <= 4
+              ) {
+                return getRange(5, 24);
+              }
+              return getRange(0, 22);
+            }
+          }
+          return getRange(5, 22);
+        },
+      };
     }
     return {
-      disabledHours: () => [],
-      disabledMinutes: () => [],
+      disabledHours: () => [
+        ...getRange(0, hourStart),
+        ...getRange(hourEnd + 1, 24),
+      ],
+      disabledMinutes: (selectedHour) => {
+        if (selectedHour === hourStart) return getRange(0, minuteStart);
+        if (selectedHour === hourEnd) return getRange(minuteEnd + 1, 60);
+        return [];
+      },
     };
   };
 
@@ -481,36 +567,48 @@ export default function RequestDetailModal({
                 )}
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
-                  <BasicSelect
-                    options={REQUEST_TYPE_LIST}
+                  <SelectCustomSearch
+                    url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
+                    dataName="items"
+                    apiName="device-type-master-data"
                     label="Device Type"
                     rules={[{ required: true }]}
                     placeholder="Choose device type"
                     name="deviceTypeId"
                     allowClear
-                    showSearch
-                    optionFilterProp="label"
                     disabled={actionModal === ACTION_TYPE.EDIT}
                   />
                 </Col>
               )}
             </Row>
             {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-              requestType === REQUEST_TYPE_KEY.OTHER) && (
+              requestType === REQUEST_TYPE_KEY.OTHER ||
+              requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) && (
               <Row gutter={20}>
                 <Col span="12">
-                  <BasicDateRangePicker
-                    name="date"
-                    label="Applicable Date"
-                    rules={[{ required: true }]}
-                    placeholder={['From', 'To']}
-                    allowClear
-                    onChange={handleChangeDate}
-                    disabledDate={disabledDate}
-                    onCalendarChange={(values: RangeValue) => {
-                      setDateSelected(values);
-                    }}
-                  />
+                  {requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
+                    <BasicDatePicker
+                      name="date"
+                      label="Applicable Date"
+                      rules={[{ required: true }]}
+                      allowClear
+                      disabledDate={disabledDateForgotCheckInOut}
+                    />
+                  )}
+                  {requestType === REQUEST_TYPE_KEY.LEAVE && (
+                    <BasicDateRangePicker
+                      name="date"
+                      label="Applicable Date"
+                      rules={[{ required: true }]}
+                      placeholder={['From', 'To']}
+                      allowClear
+                      onChange={handleChangeDate}
+                      disabledDate={disabledDate}
+                      onCalendarChange={(values: RangeValue) => {
+                        setDateSelected(values);
+                      }}
+                    />
+                  )}
                 </Col>
                 <Col span="12">
                   <TimeRangePicker
@@ -533,14 +631,20 @@ export default function RequestDetailModal({
                     label="Applicable Date"
                     rules={[{ required: true }]}
                     placeholder={['From', 'To']}
-                    showTime
+                    showTime={{
+                      defaultValue: [
+                        moment('00:00', 'HH:mm'),
+                        moment('00:00', 'HH:mm'),
+                      ],
+                    }}
                     format={DATE_TIME_US}
-                    disabledDate={disabledDate}
+                    disabledDate={disableDateOT}
                     disabledTime={disabledRangeTime}
                     onCalendarChange={(values: RangeValue) => {
                       setDateSelected(values);
                     }}
                     allowClear
+                    hideDisabledOptions
                   />
                 </Col>
               </Row>
@@ -601,7 +705,7 @@ export default function RequestDetailModal({
                     type="filled"
                     className={styles['btn--save']}
                     htmlType={'submit'}
-                    loading={loadingCreate}
+                    loading={loadingCreate || isUploadingImage}
                     disabled={remainingTimeRef.current === 0}
                   />
                 )}

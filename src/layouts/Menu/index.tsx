@@ -18,7 +18,11 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
         ? getItem(
             menu.title,
             menu.key,
-            menu?.icon && <SvgIcon icon={menu.icon} color="#000" />,
+            menu?.icon && typeof menu.icon === 'string' ? (
+              <SvgIcon icon={menu.icon} color="#000" />
+            ) : (
+              menu.icon
+            ),
             menu?.children.map((subMenu: MenuItemType) => {
               return getItem(
                 subMenu?.path && (
@@ -43,7 +47,11 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
               </NavLink>
             ),
             menu.key,
-            menu?.icon && <SvgIcon icon={menu.icon} size={24} color="#000" />,
+            menu?.icon && typeof menu.icon === 'string' ? (
+              <SvgIcon icon={menu.icon} size={24} color="#000" />
+            ) : (
+              menu.icon
+            ),
           );
     });
   }, [menuList]);

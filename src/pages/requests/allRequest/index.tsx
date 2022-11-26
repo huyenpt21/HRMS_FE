@@ -2,9 +2,9 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS, REQUEST_MENU } from 'constants/enums/common';
+import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { SubordinateRequestListHeader } from 'constants/header';
-import { HR_REQUEST_LIST } from 'constants/services';
+import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
 import {
@@ -43,6 +43,13 @@ export default function AllRequestList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    search: searchParams.get('search') ?? undefined,
+    createDateFrom: searchParams.get('createDateFrom') ?? undefined,
+    createDateTo: searchParams.get('createDateTo') ?? undefined,
+    requestTypeId: searchParams.get('requestTypeId')
+      ? Number(searchParams.get('requestTypeId'))
+      : undefined,
+    status: searchParams.get('status') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -57,7 +64,7 @@ export default function AllRequestList() {
     isError,
     data: dataTable,
     refetch: refetchList,
-  } = useRequestList(stateQuery, HR_REQUEST_LIST.service);
+  } = useRequestList(stateQuery, `${REQUEST.model.hr}/${REQUEST.service}`);
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -149,14 +156,6 @@ export default function AllRequestList() {
       sort,
       dir,
     }));
-
-    // * set filter to state query
-    const filterKey: any = Object.keys(filters)[0];
-    const filterValues: any = Object.values(filters)[0];
-    setStateQuery((prev: RequestListQuery) => ({
-      ...prev,
-      [filterKey]: filterValues,
-    }));
   };
 
   const rowClickHandler = (record: RequestModel) => {
@@ -188,6 +187,7 @@ export default function AllRequestList() {
             modalAction={modalAction}
             setStateQuery={setStateQuery}
             tabType={REQUEST_MENU.ALL}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}

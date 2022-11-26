@@ -24,6 +24,13 @@ export default function RequestStatus({ data }: IProps) {
       };
       break;
     }
+    case STATUS.ASSIGNED: {
+      statusTag = {
+        statusColor: STATUS_COLORS.SUCCESS,
+        text: STATUS.ASSIGNED,
+      };
+      break;
+    }
     case STATUS.REJECTED: {
       statusTag = {
         statusColor: STATUS_COLORS.ERROR,

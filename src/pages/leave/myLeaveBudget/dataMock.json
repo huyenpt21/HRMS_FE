@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "service_id": "HRMS",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 3
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "requestTypeName": "Annual leave",
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0
+      },
+      {
+        "id": 2,
+        "requestTypeName": "Children's Sickness",
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0
+      },
+      {
+        "id": 3,
+        "requestTypeName": "Unpaid Leave",
+        "budget": 15.0,
+        "used": 5.0,
+        "remain": 10.0
+      }
+    ]
+  }
+}

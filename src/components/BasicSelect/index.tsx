@@ -17,7 +17,7 @@ interface Props {
   placeholder?: string;
   loading?: boolean;
   mode?: MODE_TYPE;
-  defaultValue?: string | boolean | number;
+  defaultValue?: string | number;
   onChange?: (value: any, options: any) => void;
   onSearch?: (value: string) => void;
   allowClear?: boolean;
