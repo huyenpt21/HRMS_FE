@@ -2,7 +2,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
+import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
 import { BorrowDeviceListHeader } from 'constants/header';
 import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
@@ -22,6 +22,7 @@ import {
 } from 'utils/common';
 import RequestDetailModal from '../components/detailModal';
 import ExtraTableHeader from '../components/extraHeader';
+import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
 import dataMock from './dataMock.json';
 
@@ -81,19 +82,47 @@ export default function BorrowDeviceRequest() {
       }
       return {
         ...el,
-        render: (data: any) => {
-          if (data) {
-            if (el.key === 'createDate' || el.key === 'approvalDate') {
+        render: (data: string | number, record: RequestModel) => {
+          if (data !== undefined) {
+            if (
+              (el.key === 'createDate' || el.key === 'approvalDate') &&
+              typeof data === 'string'
+            ) {
               return convertDate(data, DATE_TIME_US);
-            } else if (el.key === 'status') {
-              return <RequestStatus data={data} />;
+            } else if (el.key === 'isAssigned') {
+              return (
+                <RequestStatus
+                  data={data === 0 ? STATUS.PENDING : STATUS.ASSIGNED}
+                />
+              );
             }
+
             return data;
           } else {
             return '-';
           }
         },
       };
+    });
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 80,
+      align: 'center',
+      render: (_, record: RequestModel) => {
+        if (!record.isAssigned) {
+          return (
+            <RequestMenuAction
+              record={record}
+              tabType={REQUEST_MENU.DEVICE}
+              refetchList={refetchList}
+              requestStatus={record?.status}
+            />
+          );
+        }
+        return '-';
+      },
     });
     setColumnsHeader(columns);
   }, [stateQuery]);

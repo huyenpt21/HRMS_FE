@@ -9,6 +9,7 @@ export enum STATUS {
   SUCCESS = 'Success',
   ACTIVE = 'Active',
   INACTIVE = 'Inactive',
+  ASSIGNED = 'Assigned',
 }
 export enum MENU_OPTION_KEY {
   EDIT = 'edit',
@@ -100,6 +101,7 @@ export enum REQUEST_MENU {
   MY_REQUEST = 'my-request',
   SUBORDINATE = 'subordinate',
   ALL = 'all',
+  DEVICE = 'device',
 }
 
 export enum REQUEST_TYPE_KEY {
