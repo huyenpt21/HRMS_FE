@@ -83,6 +83,7 @@ export enum ACTION_TYPE {
   EDIT,
   VIEW_DETAIL,
   CREATE,
+  ASSIGN,
 }
 
 export enum REQUEST_ACTION_TYPE {

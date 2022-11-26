@@ -12,8 +12,8 @@
     "item": {
       "id": 4,
       "personName": "Nguyen Van Binh",
-      "requestTypeId": 3,
-      "requestTypeName": "leave",
+      "requestTypeId": 11,
+      "requestTypeName": "device",
       "createDate": "2022-10-19 15:00:00",
       "startTime": "2022-10-22 10:00:00",
       "endTime": "2022-10-24 12:00:00",
@@ -26,7 +26,7 @@
       "reason": "I don't have laptop to code",
       "status": "Approved",
       "receiver": "Nguyen Thi Huyen",
-      "deviceTypeId": 2,
+      "deviceTypeId": 11,
       "approvalDate": "2022-10-24 12:00:00",
       "timeRemaining": 2.49746464,
       "isAllowRollback": 1

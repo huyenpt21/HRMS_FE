@@ -14,7 +14,7 @@ type Props = {
   classNameFormItem?: string;
   rules?: object[];
   placeholder?: string;
-  initialValueForm?: string;
+  initialValueForm?: string | number;
   dataName: string;
   onChangeHandle?: (event: any) => void;
   allowClear?: boolean;
