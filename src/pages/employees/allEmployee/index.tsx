@@ -55,6 +55,9 @@ export default function AllEmployeeList() {
     positionId: searchParams.get('positionId')
       ? Number(searchParams.get('positionId'))
       : undefined,
+    isActive: searchParams.get('isActive')
+      ? Number(searchParams.get('isActive'))
+      : undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(

@@ -1,10 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
+import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
+import { STATUS_RADIO_LIST } from 'constants/fixData';
 import { DEPARTMENT, POSITION_BY_DEPARTMENT } from 'constants/services';
 import { EmployeeListQuery } from 'models/employee';
 import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
@@ -78,7 +80,7 @@ export default function ExtraHeaderTable({
             <SelectCustomSearch
               url={`${POSITION_BY_DEPARTMENT.service}?departmentId=${departmentIdRef.current}`}
               dataName="items"
-              placeholder="Position"
+              placeholder="Choose position"
               allowClear
               optionFilterProp="label"
               apiName="position-master-data"
@@ -87,6 +89,19 @@ export default function ExtraHeaderTable({
               }}
               refetchValue={departmentIdRef.current}
               defaultValue={stateQuery?.positionId ?? undefined}
+            />
+          </Col>
+          <Col span={4}>
+            <BasicSelect
+              options={STATUS_RADIO_LIST}
+              placeholder="Request status"
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              onChange={(value) => {
+                handleChangeFilter(value, 'isActive');
+              }}
+              defaultValue={stateQuery?.isActive ?? undefined}
             />
           </Col>
         </Row>

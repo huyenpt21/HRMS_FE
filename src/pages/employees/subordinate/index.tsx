@@ -54,6 +54,9 @@ export default function SubordinateList() {
     positionId: searchParams.get('positionId')
       ? Number(searchParams.get('positionId'))
       : undefined,
+    isActive: searchParams.get('isActive')
+      ? Number(searchParams.get('isActive'))
+      : undefined,
   };
 
   // * state query
@@ -74,21 +77,16 @@ export default function SubordinateList() {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
-      if (el.key === 'fullName' || el.key === 'rollNumber') {
+      if (el.key === 'rollNumber') {
         el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
-      if (el.key === 'rollNumber' || el.key === 'status') {
+      if (
+        el.key === 'rollNumber' ||
+        el.key === 'status' ||
+        el.key === 'department'
+      ) {
         el.width = 100;
-      } else if (el.key === 'department') {
-        el.width = 100;
-        el.filterMultiple = isError;
-        el.filters = [
-          { text: 'Dev', value: 'dev' },
-          { text: 'Sale', value: 'sale' },
-        ];
-      } else {
-        el.width = 200;
       }
       return {
         ...el,

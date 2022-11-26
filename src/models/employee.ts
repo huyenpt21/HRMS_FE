@@ -22,6 +22,7 @@ export interface EmployeeListFilter {
   search?: string;
   departmentId?: number;
   positionId?: number;
+  isActive?: number;
 }
 
 export type EmployeeListFields = 'code' | 'email' | 'position' | 'department';
