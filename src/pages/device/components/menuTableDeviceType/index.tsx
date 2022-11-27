@@ -15,7 +15,7 @@ interface IProps {
   setEditingKey: Dispatch<SetStateAction<number>>;
   stateQuery: DeviceListQuery;
 }
-export default function MenuTableDevice({
+export default function MenuTableDeviceType({
   record,
   form,
   editingKey,

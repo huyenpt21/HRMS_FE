@@ -1,26 +1,52 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
+import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
+import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
+import { DEVICE_MENU } from 'constants/enums/common';
+import { DEVICE_STATUS } from 'constants/fixData';
+import { DEVICE_TYPE } from 'constants/services';
 import { DeviceListQuery } from 'models/device';
 import { Dispatch, SetStateAction } from 'react';
-import styles from './extraHeaderDepartment.module.less';
+import styles from './extraHeaderDevice.module.less';
 
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
   setStateQuery: Dispatch<SetStateAction<DeviceListQuery>>;
+  menuType: string;
 }
 export default function ExtraHeaderDevice({
   setIsShowDetailModal,
   setStateQuery,
+  menuType,
 }: IProps) {
+  const getTitle = () => {
+    let returnObject = {
+      titlePage: '',
+      titleBtn: '',
+    };
+    switch (menuType) {
+      case DEVICE_MENU.DEVICE_TYPE: {
+        returnObject.titlePage = 'Device Type List';
+        returnObject.titleBtn = 'Add Device Type';
+        break;
+      }
+      case DEVICE_MENU.ALL: {
+        returnObject.titlePage = 'All Device List';
+        returnObject.titleBtn = 'Add Device';
+        break;
+      }
+    }
+    return returnObject;
+  };
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Device Type List</div>
+        <div className={styles.header__title}>{getTitle().titlePage}</div>
         <BasicButton
-          title="Add Device Type"
+          title={getTitle().titleBtn}
           type="filled"
           icon={<PlusOutlined />}
           onClick={() => setIsShowDetailModal(true)}
@@ -37,6 +63,38 @@ export default function ExtraHeaderDevice({
               keyParam="search"
             />
           </Col>
+          {menuType !== DEVICE_MENU.DEVICE_TYPE && (
+            <>
+              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                <SelectCustomSearch
+                  url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
+                  dataName="items"
+                  apiName="device-type-master-data"
+                  placeholder="Choose device type"
+                  allowClear
+                  onChangeHandle={(value) => {
+                    setStateQuery((prev: DeviceListQuery) => ({
+                      ...prev,
+                      deviceTypeId: value,
+                    }));
+                  }}
+                />
+              </Col>
+              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                <BasicSelect
+                  options={DEVICE_STATUS}
+                  placeholder="Choose status"
+                  allowClear
+                  onChange={(value) => {
+                    setStateQuery((prev: DeviceListQuery) => ({
+                      ...prev,
+                      isUsed: value,
+                    }));
+                  }}
+                />
+              </Col>
+            </>
+          )}
         </Row>
       </div>
     </>

@@ -2,11 +2,12 @@ import { Form, TablePaginationConfig } from 'antd';
 import BasicInput from 'components/BasicInput';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
+import { DEVICE_MENU } from 'constants/enums/common';
 import { DeviceTypeHeader } from 'constants/header';
 import { EditableCellProps, HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDeviceType from 'pages/device/components/extraHeader';
-import MenuTableDevice from 'pages/device/components/menuTable';
+import MenuTableDeviceType from 'pages/device/components/menuTableDeviceType';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
@@ -64,7 +65,7 @@ export default function DeviceTypeList() {
       align: 'center',
       render: (_, record: DeviceModel) => {
         return (
-          <MenuTableDevice
+          <MenuTableDeviceType
             record={record}
             form={deviceTypeForm}
             editingKey={editingKey}
@@ -162,6 +163,7 @@ export default function DeviceTypeList() {
             <ExtraHeaderDeviceType
               setStateQuery={setStateQuery}
               setIsShowDetailModal={setIsShowDetailModal}
+              menuType={DEVICE_MENU.DEVICE_TYPE}
             />
           }
           stateQuery={stateQuery}
