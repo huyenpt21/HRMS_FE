@@ -1,4 +1,8 @@
-import { SolutionOutlined, TeamOutlined } from '@ant-design/icons';
+import {
+  MoneyCollectOutlined,
+  SolutionOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
 import { MenuItemType } from 'models/menu';
 
 export const menus: MenuItemType[] = [
@@ -124,5 +128,11 @@ export const menus: MenuItemType[] = [
     key: 'my-leave-budget',
     icon: 'calendar',
     path: '/leave-budget/my-leave-budget',
+  },
+  {
+    title: 'Payslip',
+    key: 'payslip',
+    icon: <MoneyCollectOutlined style={{ fontSize: '23px' }} />,
+    path: '/payslip',
   },
 ];

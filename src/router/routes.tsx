@@ -21,6 +21,7 @@ import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 import { useRoutes } from 'react-router-dom';
 import UserProfile from 'pages/userProfile';
 import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
+import PayslipDetail from 'pages/payslip';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -122,6 +123,10 @@ export default function RouterElement() {
         {
           path: 'profile',
           element: <UserProfile />,
+        },
+        {
+          path: 'payslip',
+          element: <PayslipDetail />,
         },
       ],
     },
