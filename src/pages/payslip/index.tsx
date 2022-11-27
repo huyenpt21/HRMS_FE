@@ -2,7 +2,7 @@ import { Col, Divider, Form, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
-import { validateMessages, YEAR_MONTH_NUM } from 'constants/common';
+import { YEAR_MONTH_NUM } from 'constants/common';
 import moment from 'moment-timezone';
 import { useState } from 'react';
 import styles from './payrollDetail.module.less';
@@ -30,7 +30,6 @@ export default function PayslipDetail() {
               form={payslipForm}
               layout="vertical"
               requiredMark
-              validateMessages={validateMessages()}
               onFinish={submitHandler}
               className={styles.login__payslip}
             >
