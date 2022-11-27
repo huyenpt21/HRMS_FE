@@ -5,7 +5,7 @@ import BasicInput from 'components/BasicInput';
 import CommonModal from 'components/CommonModal';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES, validateMessages } from 'constants/common';
-import { useAddDeviceModal } from 'hooks/useDeviceType';
+import { useAddDeviceModal } from 'hooks/useDevice';
 import { DeviceModel, ResDeviceModify } from 'models/device';
 import styles from './detailDepartment.module.less';
 interface IProps {

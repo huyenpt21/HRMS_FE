@@ -98,17 +98,12 @@ export default function AllEmployeeList() {
         el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
-      if (el.key === 'rollNumber' || el.key === 'status') {
+      if (
+        el.key === 'rollNumber' ||
+        el.key === 'status' ||
+        el.key === 'department'
+      ) {
         el.width = 100;
-      } else if (el.key === 'department') {
-        el.width = 100;
-        el.filterMultiple = isError;
-        el.filters = [
-          { text: 'Dev', value: 'dev' },
-          { text: 'Sale', value: 'sale' },
-        ];
-      } else {
-        el.width = 200;
       }
       return {
         ...el,

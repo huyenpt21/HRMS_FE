@@ -4,12 +4,8 @@ import { FormInstance } from 'antd/es/form/Form';
 import NotifyPopup from 'components/NotifyPopup';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
-import { useDeleteDeviceType, useUpdateDeviceType } from 'hooks/useDeviceType';
-import {
-  DeviceTypeListQuery,
-  DeviceTypeModel,
-  ResDeviceTypeModify,
-} from 'models/device';
+import { useDeleteDevice, useUpdateDevice } from 'hooks/useDevice';
+import { DeviceListQuery, DeviceModel, ResDeviceModify } from 'models/device';
 import { EmployeeModel } from 'models/employee';
 import { Dispatch, SetStateAction, useState } from 'react';
 interface IProps {
@@ -17,9 +13,9 @@ interface IProps {
   form: FormInstance;
   editingKey: number;
   setEditingKey: Dispatch<SetStateAction<number>>;
-  stateQuery: DeviceTypeListQuery;
+  stateQuery: DeviceListQuery;
 }
-export default function MenuTableDeviceType({
+export default function MenuTableDevice({
   record,
   form,
   editingKey,
@@ -27,8 +23,8 @@ export default function MenuTableDeviceType({
   stateQuery,
 }: IProps) {
   const [isShowPopup, setIsShowPopup] = useState(false);
-  const { mutate: updateDeviceType } = useUpdateDeviceType({
-    onSuccess: (res: ResDeviceTypeModify) => {
+  const { mutate: updateDeviceType } = useUpdateDevice({
+    onSuccess: (res: ResDeviceModify) => {
       const {
         metadata: { message },
       } = res;
@@ -38,15 +34,15 @@ export default function MenuTableDeviceType({
         });
       }
     },
-    onError: (res: ResDeviceTypeModify) => {
+    onError: (res: ResDeviceModify) => {
       const {
         metadata: { message },
       } = res;
       notification.error({ message: message });
     },
   });
-  const { mutate: deleteDeviceType } = useDeleteDeviceType({
-    onSuccess: (res: ResDeviceTypeModify) => {
+  const { mutate: deleteDeviceType } = useDeleteDevice({
+    onSuccess: (res: ResDeviceModify) => {
       const {
         metadata: { message },
       } = res;
@@ -55,7 +51,7 @@ export default function MenuTableDeviceType({
         setIsShowPopup(false);
       }
     },
-    onError: (res: ResDeviceTypeModify) => {
+    onError: (res: ResDeviceModify) => {
       const {
         metadata: { message },
       } = res;
@@ -63,13 +59,13 @@ export default function MenuTableDeviceType({
       setIsShowPopup(false);
     },
   });
-  const handleEdit = (record: DeviceTypeModel & { id: React.Key }) => {
+  const handleEdit = (record: DeviceModel & { id: React.Key }) => {
     form.setFieldsValue({ ...record });
     setEditingKey(record.id);
   };
   const handleSave = async (id: number) => {
     try {
-      const row = (await form.validateFields()) as DeviceTypeModel;
+      const row = (await form.validateFields()) as DeviceModel;
       updateDeviceType({
         uid: id,
         body: { id: id, deviceTypeName: row.deviceTypeName },

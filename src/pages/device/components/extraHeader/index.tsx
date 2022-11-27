@@ -3,15 +3,15 @@ import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { DeviceTypeListQuery } from 'models/device';
+import { DeviceListQuery } from 'models/device';
 import { Dispatch, SetStateAction } from 'react';
 import styles from './extraHeaderDepartment.module.less';
 
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
-  setStateQuery: Dispatch<SetStateAction<DeviceTypeListQuery>>;
+  setStateQuery: Dispatch<SetStateAction<DeviceListQuery>>;
 }
-export default function ExtraHeaderDeviceType({
+export default function ExtraHeaderDevice({
   setIsShowDetailModal,
   setStateQuery,
 }: IProps) {

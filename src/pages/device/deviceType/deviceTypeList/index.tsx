@@ -6,7 +6,7 @@ import { DeviceTypeHeader } from 'constants/header';
 import { EditableCellProps, HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDeviceType from 'pages/device/components/extraHeader';
-import MenuTableDeviceType from 'pages/device/components/menuTable';
+import MenuTableDevice from 'pages/device/components/menuTable';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
@@ -64,7 +64,7 @@ export default function DeviceTypeList() {
       align: 'center',
       render: (_, record: DeviceModel) => {
         return (
-          <MenuTableDeviceType
+          <MenuTableDevice
             record={record}
             form={deviceTypeForm}
             editingKey={editingKey}
