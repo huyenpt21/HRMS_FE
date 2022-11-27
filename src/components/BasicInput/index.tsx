@@ -85,6 +85,7 @@ const BasicInput = (props: IInputProps) => {
           style={props.inputStyle}
           onChange={props.onChange}
           ref={props.ref}
+          allowClear={props.allowClear}
         />
       );
       break;

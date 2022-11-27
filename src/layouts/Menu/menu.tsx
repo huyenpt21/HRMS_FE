@@ -130,9 +130,9 @@ export const menus: MenuItemType[] = [
     path: '/leave-budget/my-leave-budget',
   },
   {
-    title: 'Payroll',
-    key: 'payroll',
+    title: 'Payslip',
+    key: 'payslip',
     icon: <MoneyCollectOutlined style={{ fontSize: '23px' }} />,
-    path: '/payroll',
+    path: '/payslip',
   },
 ];
