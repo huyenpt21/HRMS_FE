@@ -14,7 +14,17 @@ export default function MenuExpand() {
           <span className={styles.title}>View Profile</span>
         </div>
       </div>
-
+      <div
+        className={styles.item}
+        onClick={() => navigate('setting/security-code')}
+      >
+        <div className={styles.content}>
+          <span className={styles.wrapper}>
+            <SvgIcon icon="setting" color="#000" />
+          </span>
+          <span className={styles.title}>Setting Security Code</span>
+        </div>
+      </div>
       <div className={styles.item}>
         <div className={styles.content}>
           <span className={styles.wrapper}>
