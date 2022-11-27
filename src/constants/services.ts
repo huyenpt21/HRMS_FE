@@ -25,6 +25,7 @@ export const REQUEST = {
     manager: 'manager',
     hr: 'hr',
     assign: 'assign',
+    remainDevice: 'check-remaining-device',
   },
 };
 export const TIME_CHECK = {

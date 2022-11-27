@@ -101,3 +101,21 @@ export const useGetOfficeTime = () =>
       undefined,
     ),
   );
+export const useCheckRemainDevice = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResRequestModify>) => {
+  return useMutation(
+    (deviceTypeId?: number) =>
+      fetchApi(
+        {
+          url: `${REQUEST.model.remainDevice}?deviceTypeId=${deviceTypeId}`,
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+    },
+  );
+};
