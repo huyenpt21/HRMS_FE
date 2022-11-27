@@ -189,3 +189,14 @@ export const REQUEST_DEVICE_LIST: SelectBoxType[] = [
     value: COMMON_STATUS.ACTIVE,
   },
 ];
+
+export const DEVICE_STATUS: SelectBoxType[] = [
+  {
+    label: 'Used',
+    value: COMMON_STATUS.ACTIVE,
+  },
+  {
+    label: 'Available',
+    value: COMMON_STATUS.INACTIVE,
+  },
+];

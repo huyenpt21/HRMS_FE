@@ -1,22 +1,25 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
-export interface DeviceTypeModel extends Resource {
+export interface DeviceModel extends Resource {
+  deviceName?: string;
+  deviceCode?: string;
+  description?: string;
+  isUsed?: number;
   deviceTypeName?: string;
 }
 
-export interface DeviceTypeListFilter {
+export interface DeviceListFilter {
   search?: string;
+  isUsed?: number;
+  deviceTypeId?: number;
 }
 
-export type DeviceTypeListSortFields = 'deviceTypeName';
-export type DeviceTypeListQuery = QueryParams<DeviceTypeListSortFields> &
-  DeviceTypeListFilter;
+export type DeviceListSortFields = 'deviceTypeName';
+export type DeviceListQuery = QueryParams<DeviceListSortFields> &
+  DeviceListFilter;
 
-export type ResDeviceTypeList = ResponseData<
-  { items: DeviceTypeModel[] },
-  Pagination
->;
+export type ResDeviceList = ResponseData<{ items: DeviceModel[] }, Pagination>;
 
-export type ResDeviceTypeDetail = ResponseData<{ item: DeviceTypeModel }, {}>;
+export type ResDeviceDetail = ResponseData<{ item: DeviceModel }, {}>;
 
-export type ResDeviceTypeModify = ResponseData<{}, {}>;
+export type ResDeviceModify = ResponseData<{}, {}>;

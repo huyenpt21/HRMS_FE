@@ -104,7 +104,11 @@ export enum REQUEST_MENU {
   ALL = 'all',
   DEVICE = 'device',
 }
-
+export enum DEVICE_MENU {
+  DEVICE_TYPE = 'device-type',
+  ALL = 'all',
+  SUBORDINATE = 'suborder',
+}
 export enum REQUEST_TYPE_KEY {
   LEAVE = 'leave',
   OT = 'ot',

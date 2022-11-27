@@ -23,6 +23,7 @@ import UserProfile from 'pages/userProfile';
 import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
 import PayslipDetail from 'pages/payslip';
 import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
+import AllDiviceList from 'pages/device/device/allDeviceList';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -99,7 +100,10 @@ export default function RouterElement() {
         },
         {
           path: 'device',
-          children: [{ path: 'device-type', element: <DeviceTypeList /> }],
+          children: [
+            { path: 'device-type', element: <DeviceTypeList /> },
+            { path: 'all', element: <AllDiviceList /> },
+          ],
         },
         {
           path: 'department',

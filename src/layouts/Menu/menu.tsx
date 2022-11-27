@@ -77,7 +77,7 @@ export const menus: MenuItemType[] = [
         path: '/device/subordinate-device',
       },
       {
-        title: 'All Request List',
+        title: 'All Device List',
         key: 'allDeviceRequestList',
         path: '/device/all',
       },

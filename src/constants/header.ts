@@ -257,10 +257,37 @@ export const DepartmentHeader = [
 
 export const DeviceTypeHeader = [
   {
-    title: 'Department Type Name',
+    title: 'Divice Type Name',
     key: 'deviceTypeName',
     dataIndex: 'deviceTypeName',
     editable: true,
+  },
+];
+export const AllDeviceListHeader = [
+  {
+    title: 'Device Code',
+    key: 'deviceCode',
+    dataIndex: 'deviceCode',
+  },
+  {
+    title: 'Device Name',
+    key: 'deviceName',
+    dataIndex: 'deviceName',
+  },
+  {
+    title: 'Description',
+    key: 'description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Device Type Name',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+  },
+  {
+    title: 'Status',
+    key: 'isUsed',
+    dataIndex: 'isUsed',
   },
 ];
 export const LeaveBudgetListHeader = [
