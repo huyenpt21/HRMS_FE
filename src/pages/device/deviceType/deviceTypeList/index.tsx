@@ -3,29 +3,28 @@ import BasicInput from 'components/BasicInput';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
 import { DeviceTypeHeader } from 'constants/header';
-// import { useDeviceTypeList } from 'hooks/useDeviceType';
 import { EditableCellProps, HeaderTableFields } from 'models/common';
-import { DeviceTypeListQuery, DeviceTypeModel } from 'models/device';
+import { DeviceListQuery, DeviceModel } from 'models/device';
+import ExtraHeaderDeviceType from 'pages/device/components/extraHeader';
+import MenuTableDeviceType from 'pages/device/components/menuTable';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
-import DeviceTypeDetailModal from '../components/detailModal';
-import ExtraHeaderDeviceType from '../components/extraHeader';
-import MenuTableDeviceType from '../components/menuTable';
+import DeviceTypeDetailModal from '../detailModalDeviceType';
 import dataMock from './dataMock.json';
 
 export default function DeviceTypeList() {
   const [deviceTypeForm] = Form.useForm();
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
-  const [records, setRecords] = useState<DeviceTypeModel[]>([]);
+  const [records, setRecords] = useState<DeviceModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const [editingKey, setEditingKey] = useState<number>(-1);
   const deviceTypeId = useRef<number | undefined>();
 
   // * defailt filters
-  const defaultFilter: DeviceTypeListQuery = {
+  const defaultFilter: DeviceListQuery = {
     page: searchParams.get('page')
       ? Number(searchParams.get('page'))
       : paginationConfig.current,
@@ -49,7 +48,7 @@ export default function DeviceTypeList() {
     const columns = header.map((el: HeaderTableFields) => {
       return {
         ...el,
-        render: (data: any, record: DeviceTypeModel) => {
+        render: (data: any, record: DeviceModel) => {
           if (data) {
             return <div>{data}</div>;
           }
@@ -63,7 +62,7 @@ export default function DeviceTypeList() {
       dataIndex: 'action',
       width: 100,
       align: 'center',
-      render: (_, record: DeviceTypeModel) => {
+      render: (_, record: DeviceModel) => {
         return (
           <MenuTableDeviceType
             record={record}
@@ -138,7 +137,7 @@ export default function DeviceTypeList() {
     }
     return {
       ...col,
-      onCell: (record: DeviceTypeModel) => ({
+      onCell: (record: DeviceModel) => ({
         record,
         inputType: 'text',
         dataIndex: col.dataIndex,
@@ -166,7 +165,7 @@ export default function DeviceTypeList() {
             />
           }
           stateQuery={stateQuery}
-          rowKey={(record: DeviceTypeModel) => record.id}
+          rowKey={(record: DeviceModel) => record.id}
           // loading={isLoading}
           isShowScroll
         />

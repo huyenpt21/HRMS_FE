@@ -1,15 +1,15 @@
 import { DEVICE_TYPE } from 'constants/services';
 import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
 import {
-  DeviceTypeListQuery,
-  DeviceTypeListSortFields,
-  DeviceTypeModel,
-  ResDeviceTypeDetail,
-  ResDeviceTypeList,
-  ResDeviceTypeModify,
+  DeviceListQuery,
+  DeviceListSortFields,
+  DeviceModel,
+  ResDeviceDetail,
+  ResDeviceList,
+  ResDeviceModify,
 } from 'models/device';
 
-class DeviceTypeList implements Feature<DeviceTypeListSortFields> {
+class DeviceList implements Feature<DeviceListSortFields> {
   constructor(
     public readonly service: string,
     public readonly api_url: string | undefined,
@@ -17,22 +17,22 @@ class DeviceTypeList implements Feature<DeviceTypeListSortFields> {
   ) {}
 }
 
-const DeviceTypeListInstance = new DeviceTypeList(
+const DeviceListInstance = new DeviceList(
   DEVICE_TYPE.service,
   undefined,
   'department-list',
 );
 
 export const {
-  useList: useDeviceTypeList,
-  useItem: useDeviceTypeDetail,
-  useAddItemModal: useAddDeviceTypeModal,
-  useUpdateItem: useUpdateDeviceType,
-  useDeleteItem: useDeleteDeviceType,
+  useList: useDeviceList,
+  useItem: useDeviceDetail,
+  useAddItemModal: useAddDeviceModal,
+  useUpdateItem: useUpdateDevice,
+  useDeleteItem: useDeleteDevice,
 } = initialCustomQuery<
-  DeviceTypeModel,
-  ResDeviceTypeList,
-  ResDeviceTypeDetail,
-  ResDeviceTypeModify,
-  DeviceTypeListQuery
->(DeviceTypeListInstance);
+  DeviceModel,
+  ResDeviceList,
+  ResDeviceDetail,
+  ResDeviceModify,
+  DeviceListQuery
+>(DeviceListInstance);
