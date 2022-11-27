@@ -30,6 +30,7 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
+  useCheckRemainDevice,
   useGetOfficeTime,
   useGetRemainingTime,
   useRequestDetail,
@@ -142,6 +143,17 @@ export default function RequestDetailModal({
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { data: officeTimeData } = useGetOfficeTime();
+  const { mutate: checkRemainDivce } = useCheckRemainDevice({
+    onSuccess: () => {},
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
+    },
+  });
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -186,30 +198,32 @@ export default function RequestDetailModal({
       });
     },
   });
-
   useEffect(() => {
-    if (detailRequest && detailRequest?.data) {
-      const {
-        metadata: { message },
-        data: { item },
-      } = detailRequest;
-      if (message === MESSAGE_RES.SUCCESS && item) {
-        setRequestData(item);
-        requestForm.setFieldsValue(item);
-        requestForm.setFieldsValue({
-          timeRemaining: item?.timeRemaining?.toFixed(2),
-          date: [moment(item.startTime), moment(item.endTime)],
-          time: [moment(item.startTime), moment(item.endTime)],
-        });
-        if (item?.listEvidence) {
-          setEvidenceSource(item?.listEvidence);
-        }
-        setRequestType(item?.requestTypeName);
-        setIsAllowRollback(item?.isAllowRollback);
-        requestIdRefInternal.current = item?.id;
-        remainingTimeRef.current = item?.timeRemaining;
+    // if (detailRequest && detailRequest?.data) {
+    const {
+      metadata: { message },
+      data: { item },
+    } = detailMock;
+    if (message === MESSAGE_RES.SUCCESS && item) {
+      if (actionModal === ACTION_TYPE.ASSIGN) {
+        checkRemainDivce(item?.deviceTypeId);
       }
+      setRequestData(item);
+      requestForm.setFieldsValue(item);
+      requestForm.setFieldsValue({
+        timeRemaining: item?.timeRemaining?.toFixed(2),
+        date: [moment(item.startTime), moment(item.endTime)],
+        time: [moment(item.startTime), moment(item.endTime)],
+      });
+      if (item?.listEvidence) {
+        setEvidenceSource(item?.listEvidence);
+      }
+      setRequestType(item?.requestTypeName);
+      setIsAllowRollback(item?.isAllowRollback);
+      requestIdRefInternal.current = item?.id;
+      remainingTimeRef.current = item?.timeRemaining;
     }
+    // }
   }, [detailRequest, detailMock]);
   useEffect(() => {
     if (officeTimeData && officeTimeData?.data) {
