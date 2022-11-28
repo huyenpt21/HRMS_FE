@@ -1,17 +1,26 @@
+import { notification } from 'antd';
 import { SorterResult, TablePaginationConfig } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
-import { paginationConfig } from 'constants/common';
-import { DEVICE_MENU, STATUS_COLORS } from 'constants/enums/common';
+import { MESSAGE_RES, paginationConfig } from 'constants/common';
+import {
+  ACTION_TYPE,
+  DEVICE_MENU,
+  MENU_OPTION_KEY,
+  STATUS_COLORS,
+} from 'constants/enums/common';
 import { AllDeviceListHeader } from 'constants/header';
-import { useDeviceList } from 'hooks/useDevice';
+import { DEVICE } from 'constants/services';
+import { useDeleteDevice, useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
+import { ResDepartmentModify } from 'models/department';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
 import MenuTableDevice from 'pages/device/components/menuTableDevice';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
+import DetailModalDevice from '../detailModalDevice';
 import dataMock from './dataMock.json';
 
 export default function AllDiviceList() {
@@ -20,7 +29,8 @@ export default function AllDiviceList() {
   const [records, setRecords] = useState<DeviceModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
-  console.log(isShowDetailModal);
+  const deviceIdRef = useRef<number | undefined>();
+  const modalAction = useRef(ACTION_TYPE.CREATE);
   // * defailt filters
   const defaultFilter: DeviceListQuery = {
     page: searchParams.get('page')
@@ -38,10 +48,34 @@ export default function AllDiviceList() {
   const [stateQuery, setStateQuery] = useState(
     removeEmptyValueInObject(defaultFilter),
   );
-
   //  * get data header and content table
   const header: HeaderTableFields[] = AllDeviceListHeader;
-  const { isLoading, isError, data: dataTable } = useDeviceList(stateQuery);
+  const {
+    isLoading,
+    isError,
+    data: dataTable,
+  } = useDeviceList(stateQuery, `${DEVICE.model.itSupport}/${DEVICE.service}`);
+  const { mutate: deviceDelete } = useDeleteDevice({
+    onSuccess: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+
+      if (message === MESSAGE_RES.SUCCESS) {
+        notification.success({
+          message: 'Update information successfully',
+        });
+      }
+    },
+    onError: (response: ResDepartmentModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.success({
+        message: message,
+      });
+    },
+  });
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -62,7 +96,7 @@ export default function AllDiviceList() {
             if (el.key === 'isUsed') {
               if (data)
                 return (
-                  <BasicTag statusColor={STATUS_COLORS.WARING} text="Used" />
+                  <BasicTag statusColor={STATUS_COLORS.WARING} text="Using" />
                 );
               else
                 return (
@@ -85,9 +119,12 @@ export default function AllDiviceList() {
       width: 100,
       align: 'center',
       render: (_, record: DeviceModel) => {
-        return (
-          <MenuTableDevice record={record} onClickMenu={menuActionHandler} />
-        );
+        if (!record?.isUsed) {
+          return (
+            <MenuTableDevice record={record} onClickMenu={menuActionHandler} />
+          );
+        }
+        return <span>-</span>;
       },
     });
     setColumnsHeader(columns);
@@ -111,7 +148,19 @@ export default function AllDiviceList() {
     }
     // }
   }, [dataTable, stateQuery, isError]);
-  const menuActionHandler = () => {};
+  const menuActionHandler = (record: DeviceModel, action: MENU_OPTION_KEY) => {
+    switch (action) {
+      case MENU_OPTION_KEY.EDIT: {
+        setIsShowDetailModal(true);
+        deviceIdRef.current = record?.id;
+        modalAction.current = ACTION_TYPE.EDIT;
+        break;
+      }
+      case MENU_OPTION_KEY.DELETE: {
+        deviceDelete({ uid: record?.id, currentFilter: stateQuery });
+      }
+    }
+  };
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -123,6 +172,19 @@ export default function AllDiviceList() {
       page: pagination.current,
       limit: pagination.pageSize,
     }));
+  };
+  const cancelModalHandler = () => {
+    setIsShowDetailModal(false);
+    deviceIdRef.current = undefined;
+  };
+  const rowClickHandler = (deviceId: number) => {
+    return {
+      onClick: () => {
+        setIsShowDetailModal(true);
+        deviceIdRef.current = deviceId;
+        modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+      },
+    };
   };
   return (
     <>
@@ -136,17 +198,26 @@ export default function AllDiviceList() {
             setIsShowDetailModal={setIsShowDetailModal}
             setStateQuery={setStateQuery}
             menuType={DEVICE_MENU.ALL}
+            modalAction={modalAction}
           />
         }
         stateQuery={stateQuery}
         rowKey={(record: DeviceModel) => record.id}
         loading={isLoading}
         isShowScroll
-        // onRow={(record: DeviceModel) => {
-        //   return rowClickHandler(record.id);
-        // }}
+        onRow={(record: DeviceModel) => {
+          return rowClickHandler(record.id);
+        }}
         className={'cursor-pointer'}
       />
+      {isShowDetailModal && (
+        <DetailModalDevice
+          action={modalAction.current}
+          isVisible={isShowDetailModal}
+          onCancel={cancelModalHandler}
+          deviceIdRef={deviceIdRef.current}
+        />
+      )}
     </>
   );
 }

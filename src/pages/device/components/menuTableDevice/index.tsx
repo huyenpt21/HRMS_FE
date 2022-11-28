@@ -25,7 +25,7 @@ export default function MenuTableDevice({ record, onClickMenu }: IProps) {
       {!record.isUsed && (
         <Tooltip title="Delete">
           <span
-            onClick={() => onClickMenu(record, MENU_OPTION_KEY.DEACTIVE)}
+            onClick={() => onClickMenu(record, MENU_OPTION_KEY.DELETE)}
             className="cursor-pointer"
           >
             <SvgIcon icon="close-circle" />
