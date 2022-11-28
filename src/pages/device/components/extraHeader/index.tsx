@@ -5,22 +5,24 @@ import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
-import { DEVICE_MENU } from 'constants/enums/common';
+import { ACTION_TYPE, DEVICE_MENU } from 'constants/enums/common';
 import { DEVICE_STATUS } from 'constants/fixData';
 import { DEVICE_TYPE } from 'constants/services';
 import { DeviceListQuery } from 'models/device';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, MutableRefObject } from 'react';
 import styles from './extraHeaderDevice.module.less';
 
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
   setStateQuery: Dispatch<SetStateAction<DeviceListQuery>>;
+  modalAction?: MutableRefObject<ACTION_TYPE>;
   menuType: string;
 }
 export default function ExtraHeaderDevice({
   setIsShowDetailModal,
   setStateQuery,
   menuType,
+  modalAction,
 }: IProps) {
   const getTitle = () => {
     let returnObject = {
@@ -49,7 +51,10 @@ export default function ExtraHeaderDevice({
           title={getTitle().titleBtn}
           type="filled"
           icon={<PlusOutlined />}
-          onClick={() => setIsShowDetailModal(true)}
+          onClick={() => {
+            setIsShowDetailModal(true);
+            if (modalAction) modalAction.current = ACTION_TYPE.CREATE;
+          }}
         />
       </div>
       <div className={styles.header__container}>

@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 3
+    }
+  },
+  "data": {
+    "item": {
+      "id": 1,
+      "deviceName": "iphoneeOfHuy",
+      "deviceCode": "123335",
+      "description": "hihhihi",
+      "deviceTypeId": 6,
+      "isUsed": 0
+    }
+  }
+}

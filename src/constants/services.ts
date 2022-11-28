@@ -61,6 +61,13 @@ export const DEVICE_TYPE = {
   },
 };
 
+export const DEVICE = {
+  service: 'device',
+  model: {
+    itSupport: 'it-support',
+  },
+};
+
 export const LEAVE_BUDGET = {
   service: 'benefit-budget',
   model: {
