@@ -64,7 +64,6 @@ export default function AllTimeCheck() {
     isLoading,
     isError,
     data: dataTable,
-    // refetch: refetchList,
   } = useTimeCheckList(
     stateQuery,
     `${TIME_CHECK.model.hr}/${TIME_CHECK.service}/${TIME_CHECK.model.allEmployee}`,
@@ -74,12 +73,10 @@ export default function AllTimeCheck() {
     const columns = header.map((el: HeaderTableFields, index: number) => {
       // * eanble sort in column & custom width
       if (el.key === 'rollNumber') {
-        el.sorter = isError;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = 150;
       }
       if (el.key === 'personName') {
-        el.sorter = isError;
+        el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = 230;
       }

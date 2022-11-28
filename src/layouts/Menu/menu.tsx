@@ -130,8 +130,8 @@ export const menus: MenuItemType[] = [
         path: '/time-attendance/subordinate',
       },
       {
-        title: 'Employee Attendence',
-        key: 'employee-attendance',
+        title: 'All Employee Attendence',
+        key: 'all-employee-attendance',
         path: '/time-attendance/all',
       },
     ],
