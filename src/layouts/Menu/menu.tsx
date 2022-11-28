@@ -15,12 +15,12 @@ export const menus: MenuItemType[] = [
     children: [
       {
         title: 'My Request',
-        key: 'request',
+        key: 'my-request',
         path: '/emp-self-service/request',
       },
       {
         title: 'My Attendence',
-        key: 'time-attendance',
+        key: 'my-attendance',
         path: '/emp-self-service/time-attendance',
       },
       {
@@ -82,7 +82,7 @@ export const menus: MenuItemType[] = [
   },
   {
     title: 'Request Center',
-    key: 'request',
+    key: 'request-center',
     icon: 'delivery',
     children: [
       {
@@ -120,7 +120,7 @@ export const menus: MenuItemType[] = [
     ],
   },
   {
-    title: 'Time Attendence',
+    title: 'Time Attendance',
     key: 'time-attendance',
     icon: 'calendar-search',
     children: [

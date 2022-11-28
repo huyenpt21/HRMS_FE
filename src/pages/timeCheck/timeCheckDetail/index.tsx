@@ -30,7 +30,6 @@ export default function TimeCheckDetail() {
   const [pagination, setPagination] = useState(paginationConfig);
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<TimeCheckModel[]>([]);
-
   // * default feilters
   const defaultFilter: TimeCheckListQuery = {
     page: searchParams.get('page')
@@ -43,7 +42,7 @@ export default function TimeCheckDetail() {
     dir: searchParams.get('dir') ?? undefined,
     startDate: searchParams.get('startDate') ?? undefined,
     endDate: searchParams.get('endDate') ?? undefined,
-    personId: Number(searchParams.get('personId')) ?? personId,
+    personId: Number(personId),
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
