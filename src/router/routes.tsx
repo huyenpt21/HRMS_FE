@@ -75,7 +75,7 @@ export default function RouterElement() {
           ],
         },
         {
-          path: 'request',
+          path: 'request-center',
           children: [
             {
               path: 'my-request',
