@@ -292,6 +292,11 @@ export const AllDeviceListHeader = [
 ];
 export const LeaveBudgetListHeader = [
   {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
     title: 'Employee Name',
     key: 'fullName',
     dataIndex: 'fullName',
@@ -313,6 +318,11 @@ export const LeaveBudgetListHeader = [
   },
 ];
 export const OTBudgetListHeader = [
+  {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
   {
     title: 'Employee Name',
     key: 'fullName',
