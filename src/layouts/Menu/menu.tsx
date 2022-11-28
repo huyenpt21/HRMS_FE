@@ -88,17 +88,17 @@ export const menus: MenuItemType[] = [
       {
         title: 'Subordinate Requests',
         key: 'subordinate-requests',
-        path: '/request/subordinate',
+        path: '/request-center/subordinate',
       },
       {
         title: 'All Employee Requests',
         key: 'all-employee-requests',
-        path: '/request/all',
+        path: '/request-center/all',
       },
       {
         title: 'Borrow Device Request',
         key: 'borrow-device-requests',
-        path: '/request/borrow-device',
+        path: '/request-center/borrow-device',
       },
     ],
   },
