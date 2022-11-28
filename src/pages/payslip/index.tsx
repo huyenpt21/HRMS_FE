@@ -148,9 +148,18 @@ export default function PayslipDetail() {
                       0
                     </Col>
                   </Row>
+                  <Row gutter={32}>
+                    <Col span="12">Fine amount:</Col>
+                    <Col span="12" className={styles.text_right}>
+                      0
+                    </Col>
+                  </Row>
                 </div>
                 <Divider />
-                <Row gutter={32} className={styles.text__main}>
+                <Row
+                  gutter={32}
+                  className={`${styles.text__main} ${styles.net__income}`}
+                >
                   <Col span={12}>NET Income:</Col>
                   <Col span={12} className={styles.text_right}>
                     8200000
