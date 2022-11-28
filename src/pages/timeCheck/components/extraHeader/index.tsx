@@ -79,8 +79,8 @@ export default function ExtraTableTimeCheck({
 
   const handleBackButton = () => {
     const type = location.pathname.split('/')[2];
-    if (type === 'subordinate') navigate('/time-check/subordinate');
-    if (type === 'all') navigate('/time-check/all');
+    if (type === 'subordinate') navigate('/time-attendance/subordinate');
+    if (type === 'all') navigate('/time-attendance/all');
   };
 
   const handleTitle = () => {

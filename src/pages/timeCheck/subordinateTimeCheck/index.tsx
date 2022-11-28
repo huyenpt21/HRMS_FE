@@ -213,7 +213,7 @@ export default function SubordinateTimeCheck() {
         timeCheckIdRef.current = record.id;
         navigate(
           {
-            pathname: `/time-check/subordinate/detail/${record.id}`,
+            pathname: `/time-attendance/subordinate/detail/${record.id}`,
             search: `startDate=${stateQuery.startDate}&endDate=${stateQuery.endDate}`,
           },
           { replace: true },

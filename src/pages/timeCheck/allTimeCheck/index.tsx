@@ -212,7 +212,7 @@ export default function AllTimeCheck() {
       onClick: () => {
         timeCheckIdRef.current = record.id;
         navigate({
-          pathname: `/time-check/all/detail/${record.id}`,
+          pathname: `/time-attendance/all/detail/${record.id}`,
           search: `startDate=${stateQuery.startDate}&endDate=${stateQuery.endDate}`,
         });
       },
