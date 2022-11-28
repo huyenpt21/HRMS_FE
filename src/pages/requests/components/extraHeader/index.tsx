@@ -7,7 +7,11 @@ import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME } from 'constants/common';
 import { ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
-import { REQUEST_STATUS_LIST, REQUEST_TYPE_LIST } from 'constants/fixData';
+import {
+  REQUEST_DEVICE_LIST,
+  REQUEST_STATUS_LIST,
+  REQUEST_TYPE_LIST,
+} from 'constants/fixData';
 import { RequestListQuery } from 'models/request';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { getStartEndDateFormat } from 'utils/common';
@@ -17,12 +21,14 @@ interface IProps {
   modalAction: MutableRefObject<ACTION_TYPE>;
   tabType: string;
   setStateQuery: Dispatch<SetStateAction<RequestListQuery>>;
+  stateQuery: RequestListQuery;
 }
 const ExtraTableHeader = ({
   setIsShowDetailModal,
   modalAction,
   tabType,
   setStateQuery,
+  stateQuery,
 }: IProps) => {
   const addRequestHandler = () => {
     setIsShowDetailModal(true);
@@ -31,11 +37,19 @@ const ExtraTableHeader = ({
   const handleChangeCreateDate = (_: any, dateString: string) => {
     const fromDate = getStartEndDateFormat(dateString[0], DATE_TIME);
     const toDate = getStartEndDateFormat(dateString[1], DATE_TIME, false);
-    setStateQuery((prev: any) => ({
-      ...prev,
-      createDateFrom: fromDate,
-      createDateTo: toDate,
-    }));
+    if (tabType === REQUEST_MENU.DEVICE) {
+      setStateQuery((prev: any) => ({
+        ...prev,
+        approvalDateFrom: fromDate,
+        approvalDateTo: toDate,
+      }));
+    } else {
+      setStateQuery((prev: any) => ({
+        ...prev,
+        createDateFrom: fromDate,
+        createDateTo: toDate,
+      }));
+    }
   };
 
   const handleChangeFilter = (value: number, fieldName: string) => {
@@ -44,16 +58,26 @@ const ExtraTableHeader = ({
       [fieldName]: value,
     }));
   };
+  const getNamePage = () => {
+    switch (tabType) {
+      case REQUEST_MENU.MY_REQUEST: {
+        return 'My Request List';
+      }
+      case REQUEST_MENU.SUBORDINATE: {
+        return 'Subordinate Request List';
+      }
+      case REQUEST_MENU.ALL: {
+        return 'All Request List';
+      }
+      case REQUEST_MENU.DEVICE: {
+        return 'Device Request List';
+      }
+    }
+  };
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>
-          {tabType === REQUEST_MENU.MY_REQUEST
-            ? 'My Request List'
-            : tabType === REQUEST_MENU.SUBORDINATE
-            ? 'Subordinate Request List'
-            : 'All Request List'}
-        </div>
+        <div className={styles.header__title}>{getNamePage()}</div>
         {tabType === REQUEST_MENU.MY_REQUEST && (
           <BasicButton
             title="Add Request"
@@ -74,42 +98,102 @@ const ExtraTableHeader = ({
                 setStateQuery={setStateQuery}
                 keyParam="search"
                 label="Employee Name"
+                defaultValue={stateQuery?.search}
               />
             </Col>
           )}
           <Col xs={24} sm={14} md={12} lg={8} xl={6} xxl={6}>
             <BasicDateRangePicker
               placeholder={['From', 'To']}
-              label="Create Date"
+              label={
+                tabType === REQUEST_MENU.DEVICE
+                  ? 'Approval Date'
+                  : 'Create Date'
+              }
               onChange={handleChangeCreateDate}
+              defaultStartDate={
+                tabType === REQUEST_MENU.DEVICE
+                  ? stateQuery?.approvalDateFrom
+                  : stateQuery?.createDateFrom
+              }
+              defaultEndDate={
+                tabType === REQUEST_MENU.DEVICE
+                  ? stateQuery?.approvalDateTo
+                  : stateQuery?.createDateTo
+              }
+              isUseDefaultValue={
+                !!stateQuery?.createDateFrom || !!stateQuery?.approvalDateFrom
+              }
             />
           </Col>
-          <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={4}>
-            <BasicSelect
-              options={REQUEST_TYPE_LIST}
-              placeholder="Request Type"
-              label="Request Type"
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              onChange={(value) => {
-                handleChangeFilter(value, 'requestTypeId');
-              }}
-            />
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={4} xl={4} xxl={4}>
-            <BasicSelect
-              options={REQUEST_STATUS_LIST}
-              placeholder="Request status"
-              label="Status"
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              onChange={(value) => {
-                handleChangeFilter(value, 'status');
-              }}
-            />
-          </Col>
+          {tabType !== REQUEST_MENU.DEVICE && (
+            <>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={4}>
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  placeholder="Request Type"
+                  label="Request Type"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={(value) => {
+                    handleChangeFilter(value, 'requestTypeId');
+                  }}
+                  defaultValue={stateQuery?.requestTypeId ?? undefined}
+                />
+              </Col>
+              <Col xs={24} sm={12} md={12} lg={4} xl={4} xxl={4}>
+                <BasicSelect
+                  options={REQUEST_STATUS_LIST}
+                  placeholder="Choose status"
+                  label="Status"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={(value) => {
+                    handleChangeFilter(value, 'status');
+                  }}
+                  defaultValue={stateQuery?.status ?? undefined}
+                />
+              </Col>
+            </>
+          )}
+          {tabType === REQUEST_MENU.DEVICE && (
+            <>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={4}>
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  placeholder="Device Type Name"
+                  label="Device Type Name"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={(value) => {
+                    handleChangeFilter(value, 'requestTypeId');
+                  }}
+                  defaultValue={
+                    stateQuery?.deviceTypeId
+                      ? stateQuery?.deviceTypeId.toString()
+                      : undefined
+                  }
+                />
+              </Col>
+              <Col xs={24} sm={12} md={12} lg={4} xl={4} xxl={4}>
+                <BasicSelect
+                  options={REQUEST_DEVICE_LIST}
+                  placeholder="Choose status"
+                  label="Status"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={(value) => {
+                    handleChangeFilter(value, 'isAssigned');
+                  }}
+                  defaultValue={stateQuery?.isAssigned ?? undefined}
+                />
+              </Col>
+            </>
+          )}
         </Row>
       </div>
     </>

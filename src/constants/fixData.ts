@@ -178,3 +178,25 @@ export const REQUEST_STATUS_LIST: SelectBoxType[] = [
     value: STATUS.REJECTED,
   },
 ];
+
+export const REQUEST_DEVICE_LIST: SelectBoxType[] = [
+  {
+    label: STATUS.PENDING,
+    value: COMMON_STATUS.INACTIVE,
+  },
+  {
+    label: STATUS.ASSIGNED,
+    value: COMMON_STATUS.ACTIVE,
+  },
+];
+
+export const DEVICE_STATUS: SelectBoxType[] = [
+  {
+    label: 'Using',
+    value: COMMON_STATUS.ACTIVE,
+  },
+  {
+    label: 'Available',
+    value: COMMON_STATUS.INACTIVE,
+  },
+];

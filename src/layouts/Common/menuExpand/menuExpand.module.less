@@ -1,0 +1,41 @@
+@import 'styles/_variables.less';
+
+.container {
+  background-color: @white;
+  width: 260px;
+  position: absolute;
+  min-height: 100px;
+  box-shadow: @color-box-shadow;
+  top: 66px;
+  right: -3px;
+  border-radius: 8px;
+  display: block;
+  cursor: default;
+}
+
+.item {
+  cursor: pointer;
+  margin: 8px 12px;
+  .content {
+    margin: 0 8px;
+  }
+  .wrapper {
+    width: 60px;
+    height: 60px;
+    padding: 11px 9px 14px 9px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .title {
+    margin-left: 4px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .icon {
+    font-size: 15px;
+  }
+}
+.item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}

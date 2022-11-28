@@ -14,11 +14,11 @@ type Props = {
   classNameFormItem?: string;
   rules?: object[];
   placeholder?: string;
-  initialValueForm?: string;
+  initialValueForm?: string | number;
   dataName: string;
   onChangeHandle?: (event: any) => void;
   allowClear?: boolean;
-  defaultValue?: string | string[];
+  defaultValue?: string | string[] | number;
   mode?: 'multiple' | 'tags';
   key?: Key | null | undefined;
   optionFilterProp?: string;
@@ -111,7 +111,7 @@ const SelectCustomSearch = ({
   isCallApi,
   refetchValue,
 }: Props) => {
-  const [value, setValue] = useState<string | undefined | string[]>();
+  const [value, setValue] = useState<string | undefined | string[] | number>();
   const [valueSearch, setValueSearch] = useState<string | undefined>(undefined);
 
   const { data, isFetching, refetch } = useGetDataOptions(

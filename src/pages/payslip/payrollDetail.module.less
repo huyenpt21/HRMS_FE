@@ -1,0 +1,65 @@
+@import 'styles/_variables.less';
+
+.container {
+  background-color: #f0f2f5 !important;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  .main {
+    width: 40%;
+    height: fit-content;
+    margin-top: 30px;
+    background-color: @white;
+    padding: 12px 34px 34px;
+    border-radius: 8px;
+    .login {
+      &__payslip {
+        margin: 12px auto;
+        width: 50%;
+      }
+      &__title {
+        font-size: 18px;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+      &__btn {
+        justify-content: flex-end;
+      }
+    }
+    .text__bold {
+      font-weight: 600;
+    }
+    .text_right {
+      font-weight: 600;
+      text-align: right;
+    }
+    .header__section {
+      padding: 0 20px;
+      .header__title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 32px;
+      }
+      .left__side {
+        border-right: 1px solid #ddd;
+      }
+    }
+    .content__section {
+      padding: 0 50px;
+      .text__main {
+        padding-top: 12px;
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .pl__16 {
+        margin-left: 16px;
+      }
+    }
+    :global {
+      .ant-divider-horizontal {
+        margin: 10px 0 !important;
+      }
+    }
+  }
+}

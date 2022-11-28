@@ -1,8 +1,9 @@
 export const EMPLOYEE_LIST_ALL = {
   service: 'hr/employee',
-  model: {
-    list: 'all/list',
-  },
+};
+
+export const USER_INFO = {
+  service: 'user-info',
 };
 export const EMPLOYEE_CHANGE_STATUS = {
   service: 'hr/status/employee',
@@ -14,26 +15,24 @@ export const SUBORDINATE_LIST = {
   },
 };
 
-export const MY_REQUEST_LIST = {
+export const REQUEST = {
   service: 'request',
   model: {
     status: 'status',
     remainingTime: 'remaining-time',
     officeTime: 'office-time',
+    itSupport: 'it-support',
+    manager: 'manager',
+    hr: 'hr',
+    assign: 'assign',
+    remainDevice: 'check-remaining-device',
   },
 };
-export const MANAGER_REQUEST_LIST = {
-  service: 'manager/request',
-};
-export const HR_REQUEST_LIST = {
-  service: 'hr/request',
-};
-
 export const TIME_CHECK = {
   service: 'time-check',
   model: {
     manager: 'manager',
-    hr: 'HR',
+    hr: 'hr',
     allEmployee: 'all-employee',
     allSubordinate: 'all-subordinate',
     detail: 'detail-subordinate',
@@ -57,7 +56,15 @@ export const DEPARTMENT = {
 export const DEVICE_TYPE = {
   service: 'device-type',
   model: {
+    deviceName: 'device-by-deviceType',
     masterData: 'master-data',
+  },
+};
+
+export const DEVICE = {
+  service: 'device',
+  model: {
+    itSupport: 'it-support',
   },
 };
 

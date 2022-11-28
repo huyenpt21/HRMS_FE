@@ -5,8 +5,8 @@ import BasicInput from 'components/BasicInput';
 import CommonModal from 'components/CommonModal';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES, validateMessages } from 'constants/common';
-import { useAddDeviceTypeModal } from 'hooks/useDeviceType';
-import { DeviceTypeModel, ResDeviceTypeModify } from 'models/device';
+import { useAddDeviceModal } from 'hooks/useDevice';
+import { DeviceModel, ResDeviceModify } from 'models/device';
 import styles from './detailDepartment.module.less';
 interface IProps {
   isVisible: boolean;
@@ -15,8 +15,8 @@ interface IProps {
 export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
   const [deviceTypeForm] = Form.useForm();
 
-  const { mutate: createDeviceType } = useAddDeviceTypeModal({
-    onSuccess: (response: ResDeviceTypeModify) => {
+  const { mutate: createDeviceType } = useAddDeviceModal({
+    onSuccess: (response: ResDeviceModify) => {
       const {
         metadata: { message },
       } = response;
@@ -24,7 +24,7 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
         notification.success({ message: 'Create deviceType successfully' });
       }
     },
-    onError: (response: ResDeviceTypeModify) => {
+    onError: (response: ResDeviceModify) => {
       const {
         metadata: { message },
       } = response;
@@ -37,7 +37,7 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
     deviceTypeForm.resetFields();
   };
 
-  const submitHandler = (formValues: DeviceTypeModel) => {
+  const submitHandler = (formValues: DeviceModel) => {
     createDeviceType(formValues);
   };
   return (

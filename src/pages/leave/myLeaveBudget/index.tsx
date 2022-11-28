@@ -2,7 +2,10 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { MENU_TYPE } from 'constants/enums/common';
-import { MyLeaveBudgetListHeader } from 'constants/header';
+import {
+  MyLeaveBudgetListHeader,
+  MyOTBudgetListHeader,
+} from 'constants/header';
 import { useLeaveBudgetList } from 'hooks/useLeaveBudget';
 import { HeaderTableFields } from 'models/common';
 import {
@@ -43,7 +46,11 @@ export default function MyLeaveBudget() {
     removeEmptyValueInObject(defaultFilter),
   );
   // * get header
-  let header: HeaderTableFields[] = MyLeaveBudgetListHeader;
+  const header: HeaderTableFields[] =
+    Number(stateQuery?.requestTypeId) !== 7
+      ? MyLeaveBudgetListHeader
+      : MyOTBudgetListHeader;
+
   // * get data table from API
   const { data: dataTable } = useLeaveBudgetList(stateQuery);
   useEffect(() => {
@@ -61,7 +68,7 @@ export default function MyLeaveBudget() {
       return {
         ...el,
         render: (data: any) => {
-          if (data) {
+          if (data !== undefined && data !== null) {
             return data;
           } else {
             return '-';
@@ -108,7 +115,7 @@ export default function MyLeaveBudget() {
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>My Leave Budget</div>
+        <div className={styles.header__title}>My Benefit Budget</div>
       </div>
       <div className={styles.menu}>
         <MenuRequestType

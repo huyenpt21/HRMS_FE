@@ -19,11 +19,11 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import RequestDetailModal from '../components/detailModal';
+import RequestDetailModal from '../detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
-// import dataMock from '../dataMock.json';
+import dataMock from '../dataMock.json';
 
 export default function MyRequestList() {
   const [searchParams] = useSearchParams();
@@ -44,6 +44,12 @@ export default function MyRequestList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    createDateFrom: searchParams.get('createDateFrom') ?? undefined,
+    createDateTo: searchParams.get('createDateTo') ?? undefined,
+    requestTypeId: searchParams.get('requestTypeId')
+      ? Number(searchParams.get('requestTypeId'))
+      : undefined,
+    status: searchParams.get('status') ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -127,22 +133,22 @@ export default function MyRequestList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable?.data) {
-      const {
-        metadata: { pagination },
-        data: { items },
-      } = dataTable;
-      setRecords(items);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable?.data) {
+    const {
+      metadata: { pagination },
+      data: { items },
+    } = dataMock;
+    setRecords(items);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
+    // }
   }, [dataTable, stateQuery, isError]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -167,14 +173,6 @@ export default function MyRequestList() {
       limit: pagination.pageSize,
       sort,
       dir,
-    }));
-
-    // * set filter to state query
-    const filterKey: any = Object.keys(filters)[0];
-    const filterValues: any = Object.values(filters)[0];
-    setStateQuery((prev: RequestListQuery) => ({
-      ...prev,
-      [filterKey]: filterValues,
     }));
   };
   const rowClickHandler = (record: RequestModel) => {
@@ -206,6 +204,7 @@ export default function MyRequestList() {
             modalAction={modalAction}
             setStateQuery={setStateQuery}
             tabType={REQUEST_MENU.MY_REQUEST}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}

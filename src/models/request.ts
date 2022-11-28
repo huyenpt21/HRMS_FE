@@ -1,6 +1,7 @@
 import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface RequestModel extends Resource {
+  rollNumber?: string;
   requestTypeId?: number;
   requestTypeName?: string;
   createDate?: string;
@@ -11,13 +12,16 @@ export interface RequestModel extends Resource {
   approvalDate?: string;
   personName?: string;
   receiver?: string;
-  createdBy?: string;
-  deviceTypeId?: string;
+  deviceTypeId?: number;
   date?: string;
   time?: string;
   listEvidence?: string[];
   timeRemaining?: number;
   isAllowRollback?: number;
+  isAssigned?: number;
+  deviceTypeName?: string;
+  deviceId?: number;
+  requestId?: number;
 }
 
 export interface OfficeTime {
@@ -41,11 +45,15 @@ export interface RequestListFilter {
   startTime?: string;
   endTime?: string;
   createDate?: string;
-  requestTypeId?: string;
+  requestTypeId?: number;
   status?: string;
   aprovalDate?: string;
   createDateFrom?: string;
   createDateTo?: string;
+  approvalDateFrom?: string;
+  approvalDateTo?: string;
+  isAssigned?: number;
+  deviceTypeId?: string;
 }
 
 export type RequestListSortFields = 'requestType';

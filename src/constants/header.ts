@@ -107,6 +107,50 @@ export const SubordinateRequestListHeader = [
   },
 ];
 
+export const BorrowDeviceListHeader = [
+  {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
+    title: 'Employee Name',
+    key: 'personName',
+    dataIndex: 'personName',
+  },
+  {
+    title: 'Create Date',
+    key: 'createDate',
+    dataIndex: 'createDate',
+  },
+  {
+    title: 'Device Type',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+  },
+  {
+    title: 'Reason',
+    key: 'reason',
+    dataIndex: 'reason',
+  },
+  {
+    title: 'Approval Date',
+    key: 'approvalDate',
+    dataIndex: 'approvalDate',
+  },
+  {
+    title: 'Approval By',
+    key: 'receiver',
+    dataIndex: 'receiver',
+  },
+
+  {
+    title: 'Status',
+    key: 'isAssigned',
+    dataIndex: 'isAssigned',
+  },
+];
+
 export const MyTimeCheckHeader = [
   {
     title: 'Date',
@@ -162,37 +206,37 @@ export const AllTimeCheckHeader = [
     dataIndex: 'personName',
   },
   {
-    title: 'Monday',
+    title: 'MON',
     key: 'mon',
     dataIndex: 'mon',
   },
   {
-    title: 'Tuesday',
+    title: 'TUE',
     key: 'tue',
     dataIndex: 'tue',
   },
   {
-    title: 'Wednesday',
+    title: 'WED',
     key: 'wed',
     dataIndex: 'wed',
   },
   {
-    title: 'Thursday',
+    title: 'THU',
     key: 'thu',
     dataIndex: 'thu',
   },
   {
-    title: 'Friday',
+    title: 'FRI',
     key: 'fri',
     dataIndex: 'fri',
   },
   {
-    title: 'Saturday',
+    title: 'SAT',
     key: 'sat',
     dataIndex: 'sat',
   },
   {
-    title: 'Sunday',
+    title: 'SUN',
     key: 'sun',
     dataIndex: 'sun',
   },
@@ -206,41 +250,96 @@ export const DepartmentHeader = [
   },
   {
     title: 'Total members',
-    key: 'total',
-    dataIndex: 'total',
+    key: 'totalEmployee',
+    dataIndex: 'totalEmployee',
   },
 ];
 
 export const DeviceTypeHeader = [
   {
-    title: 'Department Type Name',
+    title: 'Divice Type Name',
     key: 'deviceTypeName',
     dataIndex: 'deviceTypeName',
     editable: true,
   },
 ];
+export const AllDeviceListHeader = [
+  {
+    title: 'Device Code',
+    key: 'deviceCode',
+    dataIndex: 'deviceCode',
+  },
+  {
+    title: 'Device Name',
+    key: 'deviceName',
+    dataIndex: 'deviceName',
+  },
+  {
+    title: 'Description',
+    key: 'description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Device Type Name',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+  },
+  {
+    title: 'Status',
+    key: 'isUsed',
+    dataIndex: 'isUsed',
+  },
+];
 export const LeaveBudgetListHeader = [
   {
-    title: 'Full name',
+    title: 'Employee Name',
     key: 'fullName',
     dataIndex: 'fullName',
   },
   {
-    title: 'Leave Budget',
+    title: 'Budget',
     key: 'budget',
     dataIndex: 'budget',
   },
   {
-    title: 'Number Of Day Off',
+    title: 'Used',
     key: 'used',
     dataIndex: 'used',
   },
   {
-    title: 'Remain Day Off',
-    key: 'remain',
-    dataIndex: 'remain',
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
   },
 ];
+export const OTBudgetListHeader = [
+  {
+    title: 'Employee Name',
+    key: 'fullName',
+    dataIndex: 'fullName',
+  },
+  {
+    title: 'Budget',
+    key: 'budget',
+    dataIndex: 'budget',
+  },
+  {
+    title: 'Used',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Month Remaining',
+    key: 'remainOfMonth',
+    dataIndex: 'remainOfMonth',
+  },
+  {
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
+  },
+];
+
 export const MyLeaveBudgetListHeader = [
   {
     title: 'Leave Type',
@@ -248,18 +347,40 @@ export const MyLeaveBudgetListHeader = [
     dataIndex: 'requestTypeName',
   },
   {
-    title: 'Leave Budget',
+    title: 'Budget',
     key: 'budget',
     dataIndex: 'budget',
   },
   {
-    title: 'Number Of Day Off',
+    title: 'Used',
     key: 'used',
     dataIndex: 'used',
   },
   {
-    title: 'Remain Day Off',
-    key: 'remain',
-    dataIndex: 'remain',
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
+  },
+];
+export const MyOTBudgetListHeader = [
+  {
+    title: 'Budget',
+    key: 'budget',
+    dataIndex: 'budget',
+  },
+  {
+    title: 'Used',
+    key: 'used',
+    dataIndex: 'used',
+  },
+  {
+    title: 'Month Remaining',
+    key: 'remainOfMonth',
+    dataIndex: 'remainOfMonth',
+  },
+  {
+    title: 'Year Remaining',
+    key: 'remainOfYear',
+    dataIndex: 'remainOfYear',
   },
 ];

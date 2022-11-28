@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 5,
+      "totalRecords": 15
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "deviceName": "tablet apple",
+        "deviceCode": "1231",
+        "description": "table hahahahahahahaha",
+        "isUsed": 1,
+        "deviceTypeName": "Computer"
+      },
+      {
+        "id": 2,
+        "deviceName": "tablet apple",
+        "deviceCode": "1231",
+        "description": "table hahahahahahahaha",
+        "isUsed": 1,
+        "deviceTypeName": "Computer"
+      },
+      {
+        "id": 3,
+        "deviceName": "tablet apple",
+        "deviceCode": "1231",
+        "description": "table hahahahahahahaha",
+        "isUsed": 0,
+        "deviceTypeName": "Computer"
+      }
+    ]
+  }
+}

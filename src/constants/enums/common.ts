@@ -9,6 +9,7 @@ export enum STATUS {
   SUCCESS = 'Success',
   ACTIVE = 'Active',
   INACTIVE = 'Inactive',
+  ASSIGNED = 'Assigned',
 }
 export enum MENU_OPTION_KEY {
   EDIT = 'edit',
@@ -82,6 +83,7 @@ export enum ACTION_TYPE {
   EDIT,
   VIEW_DETAIL,
   CREATE,
+  ASSIGN,
 }
 
 export enum REQUEST_ACTION_TYPE {
@@ -100,8 +102,13 @@ export enum REQUEST_MENU {
   MY_REQUEST = 'my-request',
   SUBORDINATE = 'subordinate',
   ALL = 'all',
+  DEVICE = 'device',
 }
-
+export enum DEVICE_MENU {
+  DEVICE_TYPE = 'device-type',
+  ALL = 'all',
+  SUBORDINATE = 'suborder',
+}
 export enum REQUEST_TYPE_KEY {
   LEAVE = 'leave',
   OT = 'ot',

@@ -2,6 +2,7 @@ import { Col, Row } from 'antd';
 import BasicDatePicker from 'components/BasicDatePicker';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
+import { YEAR_MONTH_NUM } from 'constants/common';
 import { LeaveBudgetListQuery } from 'models/leaveBudget';
 import moment from 'moment-timezone';
 import { Dispatch, SetStateAction } from 'react';
@@ -44,7 +45,7 @@ export default function ExtraHeaderLeaveBudget({
             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
               <BasicDatePicker
                 picker="month"
-                format="MM/YYYY"
+                format={YEAR_MONTH_NUM}
                 placeholder="Filter month"
                 defaultValue={moment()}
                 onChange={(value: moment.Moment) => {

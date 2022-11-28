@@ -16,12 +16,18 @@ export interface EmployeeModel extends Resource {
   onBoardDate?: string;
   isManager?: number;
   isActive?: number;
+  managerName?: string;
+  departmentName?: string;
+  positionName?: string;
+  rankingName?: string;
+  avatar?: string;
 }
 
 export interface EmployeeListFilter {
   search?: string;
-  department?: string;
-  positon?: string;
+  departmentId?: number;
+  positionId?: number;
+  isActive?: number;
 }
 
 export type EmployeeListFields = 'code' | 'email' | 'position' | 'department';

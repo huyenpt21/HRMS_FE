@@ -19,6 +19,11 @@ import SubordinateTimeCheck from 'pages/timeCheck/subordinateTimeCheck';
 import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
+import UserProfile from 'pages/userProfile';
+import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
+import PayslipDetail from 'pages/payslip';
+import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
+import AllDiviceList from 'pages/device/device/allDeviceList';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -31,15 +36,41 @@ export default function RouterElement() {
           element: <HomePage />,
         },
         {
-          path: 'employee',
+          path: 'emp-self-service',
+          children: [
+            { path: 'request', element: <MyRequestList /> },
+            { path: 'time-attendance', element: <MyTimeCheck /> },
+            { path: 'benefit-budget', element: <MyLeaveBudget /> },
+            { path: 'payslip', element: <PayslipDetail /> },
+            { path: 'device-history', element: <PayslipDetail /> },
+          ],
+        },
+        {
+          path: 'human-resource',
           children: [
             {
-              path: 'subordinate',
+              path: 'subordinates',
               element: <SubordinateList />,
             },
             {
-              path: 'all',
+              path: 'all-employees',
               element: <AllEmployeeList />,
+            },
+            {
+              path: 'all-benefits',
+              element: <SubordinateLeaveBudget menuType={MENU_TYPE.ALL} />,
+            },
+            {
+              path: 'subordinate-benefits',
+              element: (
+                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
+              ),
+            },
+            {
+              path: 'borrow-device-history',
+              element: (
+                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
+              ),
             },
           ],
         },
@@ -58,15 +89,15 @@ export default function RouterElement() {
               path: 'all',
               element: <AllRequestList />,
             },
+            {
+              path: 'borrow-device',
+              element: <BorrowDeviceRequest />,
+            },
           ],
         },
         {
-          path: 'time-check',
+          path: 'time-attendance',
           children: [
-            {
-              path: 'my-time-check',
-              element: <MyTimeCheck />,
-            },
             {
               path: 'all',
               children: [
@@ -91,27 +122,25 @@ export default function RouterElement() {
         },
         {
           path: 'device',
-          children: [{ path: 'device-type', element: <DeviceTypeList /> }],
-        },
-        {
-          path: 'department',
-          element: <DepartmentList />,
-        },
-        {
-          path: 'leave-budget',
           children: [
-            {
-              path: 'subordinate',
-              element: (
-                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
-              ),
-            },
-            {
-              path: 'all',
-              element: <SubordinateLeaveBudget menuType={MENU_TYPE.ALL} />,
-            },
-            { path: 'my-leave-budget', element: <MyLeaveBudget /> },
+            { path: 'device-type', element: <DeviceTypeList /> },
+            { path: 'device-management', element: <AllDiviceList /> },
           ],
+        },
+        {
+          path: 'system-company',
+          children: [
+            { path: 'department', element: <DepartmentList /> },
+            { path: 'office-time', element: <DepartmentList /> },
+          ],
+        },
+        {
+          path: 'profile',
+          element: <UserProfile />,
+        },
+        {
+          path: 'setting/security-code',
+          element: <SettingSecurityCode />,
         },
       ],
     },

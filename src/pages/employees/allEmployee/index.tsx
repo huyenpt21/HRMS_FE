@@ -48,6 +48,16 @@ export default function AllEmployeeList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    search: searchParams.get('search') ?? undefined,
+    departmentId: searchParams.get('departmentId')
+      ? Number(searchParams.get('departmentId'))
+      : undefined,
+    positionId: searchParams.get('positionId')
+      ? Number(searchParams.get('positionId'))
+      : undefined,
+    isActive: searchParams.get('isActive')
+      ? Number(searchParams.get('isActive'))
+      : undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -88,17 +98,12 @@ export default function AllEmployeeList() {
         el.sorter = isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
-      if (el.key === 'rollNumber' || el.key === 'status') {
+      if (
+        el.key === 'rollNumber' ||
+        el.key === 'status' ||
+        el.key === 'department'
+      ) {
         el.width = 100;
-      } else if (el.key === 'department') {
-        el.width = 100;
-        el.filterMultiple = isError;
-        el.filters = [
-          { text: 'Dev', value: 'dev' },
-          { text: 'Sale', value: 'sale' },
-        ];
-      } else {
-        el.width = 200;
       }
       return {
         ...el,
@@ -245,6 +250,7 @@ export default function AllEmployeeList() {
             setIsShowDetailModal={setIsShowDetailModal}
             setStateQuery={setStateQuery}
             menuType={EMPLOYEE_MENU.ALL}
+            stateQuery={stateQuery}
           />
         }
         stateQuery={stateQuery}
