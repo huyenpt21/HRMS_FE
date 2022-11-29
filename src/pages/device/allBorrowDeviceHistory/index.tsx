@@ -85,6 +85,10 @@ export default function AllBorrowDeviceHistory() {
           el.width = 250;
           break;
         }
+        case 'returnDate': {
+          el.width = 250;
+          break;
+        }
         case 'isReturned': {
           el.width = 150;
           el.align = 'center';
@@ -94,7 +98,7 @@ export default function AllBorrowDeviceHistory() {
         ...el,
         render: (data: any, record: DeviceModel) => {
           if (data !== null && data !== undefined) {
-            if (el.key === 'borrowDate') {
+            if (el.key === 'borrowDate' || el.key === 'returnDate') {
               return getDateFormat(data, DATE_TIME_US);
             }
             if (el.key === 'isReturned') {

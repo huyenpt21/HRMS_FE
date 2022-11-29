@@ -322,6 +322,11 @@ export const AllBorrowDeviceHistoryListHeader = [
     dataIndex: 'borrowDate',
   },
   {
+    title: 'Returned Date',
+    key: 'returnDate',
+    dataIndex: 'returnDate',
+  },
+  {
     title: 'Status',
     key: 'isReturned',
     dataIndex: 'isReturned',
