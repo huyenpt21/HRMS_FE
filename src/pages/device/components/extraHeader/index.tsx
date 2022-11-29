@@ -44,6 +44,10 @@ export default function ExtraHeaderDevice({
         returnObject.titlePage = 'All Borrow Device History';
         break;
       }
+      case DEVICE_MENU.MY_BORROW_DEVICE_HISTORY: {
+        returnObject.titlePage = 'My Borrow Device History';
+        break;
+      }
     }
     return returnObject;
   };
@@ -51,7 +55,8 @@ export default function ExtraHeaderDevice({
     <>
       <div className={styles.header__section}>
         <div className={styles.header__title}>{getTitle().titlePage}</div>
-        {menuType !== DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY && (
+        {(menuType === DEVICE_MENU.DEVICE_TYPE ||
+          menuType === DEVICE_MENU.ALL) && (
           <BasicButton
             title={getTitle().titleBtn}
             type="filled"
@@ -65,15 +70,17 @@ export default function ExtraHeaderDevice({
       </div>
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
-            <InputDebounce
-              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Search..."
-              allowClear
-              setStateQuery={setStateQuery}
-              keyParam="search"
-            />
-          </Col>
+          {menuType !== DEVICE_MENU.MY_BORROW_DEVICE_HISTORY && (
+            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+              <InputDebounce
+                suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
+                placeholder="Search..."
+                allowClear
+                setStateQuery={setStateQuery}
+                keyParam="search"
+              />
+            </Col>
+          )}
           {menuType !== DEVICE_MENU.DEVICE_TYPE && (
             <>
               <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>

@@ -3,81 +3,61 @@ import { SorterResult } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { DEVICE_MENU, MENU_TYPE, STATUS_COLORS } from 'constants/enums/common';
-import { AllBorrowDeviceHistoryListHeader } from 'constants/header';
+import { DEVICE_MENU, STATUS_COLORS } from 'constants/enums/common';
+import { MyBorrowDeviceHistoryListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
 import { useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
   isEmptyPagination,
   removeEmptyValueInObject,
-  sortInforWithDir,
 } from 'utils/common';
 import ExtraHeaderDevice from '../components/extraHeader';
-interface IProps {
-  menuType: MENU_TYPE;
-}
-export default function AllBorrowDeviceHistory({ menuType }: IProps) {
+export default function MyBorrowDeviceHistory() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<DeviceModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
   // * defailt filters
-  const defaultFilter: DeviceListQuery = useMemo(
-    () => ({
-      page: searchParams.get('page')
-        ? Number(searchParams.get('page'))
-        : paginationConfig.current,
-      limit: searchParams.get('limit')
-        ? Number(searchParams.get('limit'))
-        : paginationConfig.pageSize,
-      search: searchParams.get('search') ?? undefined,
-      sort: searchParams.get('sort') ?? undefined,
-      dir: searchParams.get('dir') ?? undefined,
-      deviceTypeId: searchParams.get('deviceTypeId')
-        ? Number(searchParams.get('deviceTypeId'))
-        : undefined,
-      isReturned: searchParams.get('isReturned')
-        ? Number(searchParams.get('isReturned'))
-        : undefined,
-    }),
-    [menuType],
-  );
+  const defaultFilter: DeviceListQuery = {
+    page: searchParams.get('page')
+      ? Number(searchParams.get('page'))
+      : paginationConfig.current,
+    limit: searchParams.get('limit')
+      ? Number(searchParams.get('limit'))
+      : paginationConfig.pageSize,
+    deviceTypeId: searchParams.get('deviceTypeId')
+      ? Number(searchParams.get('deviceTypeId'))
+      : undefined,
+    isReturned: searchParams.get('isReturned')
+      ? Number(searchParams.get('isReturned'))
+      : undefined,
+  };
+
   // * state query
   const [stateQuery, setStateQuery] = useState(
     removeEmptyValueInObject(defaultFilter),
   );
   //  * get data header and content table
-  const header: HeaderTableFields[] = AllBorrowDeviceHistoryListHeader;
+  const header: HeaderTableFields[] = MyBorrowDeviceHistoryListHeader;
   const {
     isLoading,
     isError,
     data: dataTable,
   } = useDeviceList(
     stateQuery,
-    menuType === MENU_TYPE.ALL
-      ? `${DEVICE.model.itSupport}/${DEVICE.model.borrowHistory}`
-      : `${DEVICE.model.manager}/${DEVICE.model.borrowHistory}`,
-    menuType === MENU_TYPE.ALL
-      ? 'all-borrow-device-history'
-      : 'sub-borrow-device-history',
+    `${DEVICE.model.borrowHistory}`,
+    'my-borrow-device-history',
   );
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
       switch (el.key) {
-        case 'rollNumber': {
-          el.width = 150;
-          el.sorter = true;
-          el.sortOrder = sortInforWithDir(el.key, stateQuery);
-          break;
-        }
-        case 'fullName':
         case 'deviceName':
         case 'borrowDate':
         case 'returnDate': {
@@ -99,7 +79,7 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
       }
       return {
         ...el,
-        render: (data: string | number) => {
+        render: (data: string | number, record: DeviceModel) => {
           if (data !== null && data !== undefined) {
             if (
               (el.key === 'borrowDate' || el.key === 'returnDate') &&
@@ -180,7 +160,7 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
       extra={
         <ExtraHeaderDevice
           setStateQuery={setStateQuery}
-          menuType={DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY}
+          menuType={DEVICE_MENU.MY_BORROW_DEVICE_HISTORY}
         />
       }
       stateQuery={stateQuery}

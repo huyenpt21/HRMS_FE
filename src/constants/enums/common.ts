@@ -109,6 +109,7 @@ export enum DEVICE_MENU {
   ALL = 'all',
   SUBORDINATE = 'suborder',
   ALL_BORROW_DEVICE_HISTORY = 'all-history',
+  MY_BORROW_DEVICE_HISTORY = 'my-history',
 }
 export enum REQUEST_TYPE_KEY {
   LEAVE = 'leave',

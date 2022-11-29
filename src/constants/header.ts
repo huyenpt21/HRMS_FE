@@ -332,6 +332,38 @@ export const AllBorrowDeviceHistoryListHeader = [
     dataIndex: 'isReturned',
   },
 ];
+export const MyBorrowDeviceHistoryListHeader = [
+  {
+    title: 'Device Type Name',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+  },
+  {
+    title: 'Device Code',
+    key: 'deviceCode',
+    dataIndex: 'deviceCode',
+  },
+  {
+    title: 'Device Name',
+    key: 'deviceName',
+    dataIndex: 'deviceName',
+  },
+  {
+    title: 'Borrow Date',
+    key: 'borrowDate',
+    dataIndex: 'borrowDate',
+  },
+  {
+    title: 'Returned Date',
+    key: 'returnDate',
+    dataIndex: 'returnDate',
+  },
+  {
+    title: 'Status',
+    key: 'isReturned',
+    dataIndex: 'isReturned',
+  },
+];
 export const LeaveBudgetListHeader = [
   {
     title: 'Roll Number',

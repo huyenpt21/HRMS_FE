@@ -25,6 +25,7 @@ import PayslipDetail from 'pages/payslip';
 import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
 import AllDiviceList from 'pages/device/device/allDeviceList';
 import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
+import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -43,7 +44,7 @@ export default function RouterElement() {
             { path: 'time-attendance', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
-            { path: 'device-history', element: <PayslipDetail /> },
+            { path: 'device-history', element: <MyBorrowDeviceHistory /> },
           ],
         },
         {
