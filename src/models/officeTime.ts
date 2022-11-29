@@ -5,4 +5,4 @@ export interface OfficeTimelModel extends Resource {
   timeFinish: string;
 }
 
-export type ResOfficeTimelDetail = ResponseData<{ item: OfficeTimelModel }, {}>;
+export type ResOfficeTimelModify = ResponseData<{ item: OfficeTimelModel }, {}>;

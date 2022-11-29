@@ -17,6 +17,9 @@ export const SUBORDINATE_LIST = {
 
 export const OFFICE_TIME = {
   service: 'office-time',
+  model: {
+    hr: 'hr',
+  },
 };
 
 export const REQUEST = {
