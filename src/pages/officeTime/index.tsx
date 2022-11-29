@@ -9,12 +9,16 @@ export default function OfficeTime() {
         <Row className={styles.header__section}>
           <h2 className={styles.header__title}>Office Time</h2>
         </Row>
-        <Row className={styles.content__section} gutter={36}>
-          <Col span={12}>
-            <Card></Card>
+        <Row className={styles.content__section}>
+          <Col span={10}>
+            <Card title="Time In" bodyStyle={{ backgroundColor: '#FFEFD6' }}>
+              <h1 className={styles.content__text}>08 : 00</h1>
+            </Card>
           </Col>
-          <Col span={12}>
-            <Card> </Card>
+          <Col span={10}>
+            <Card title="Time Out" bodyStyle={{ backgroundColor: '#BCEAD5' }}>
+              <h1 className={styles.content__text}>18 : 00</h1>
+            </Card>
           </Col>
         </Row>
       </div>
