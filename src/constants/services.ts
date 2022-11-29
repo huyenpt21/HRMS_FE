@@ -26,6 +26,7 @@ export const REQUEST = {
     hr: 'hr',
     assign: 'assign',
     remainDevice: 'check-remaining-device',
+    cancel: 'cancel-request',
   },
 };
 export const TIME_CHECK = {

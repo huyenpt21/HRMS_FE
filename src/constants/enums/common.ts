@@ -90,7 +90,7 @@ export enum REQUEST_ACTION_TYPE {
   EDIT,
   REJECT,
   APPROVE,
-  DELETE,
+  CANCEL,
 }
 
 export enum EMPLOYEE_MENU {

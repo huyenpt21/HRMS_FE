@@ -6,7 +6,7 @@ import {
   REQUEST_MENU,
   STATUS,
 } from 'constants/enums/common';
-import { useChangeStatusRequest, useDeleteRequest } from 'hooks/useRequestList';
+import { useCancelRequest, useChangeStatusRequest } from 'hooks/useRequestList';
 import {
   RequestListQuery,
   RequestModel,
@@ -57,7 +57,7 @@ export default function RequestMenuAction({
       }
     },
   });
-  const { mutate: deleteRequest } = useDeleteRequest({
+  const { mutate: cancelRequest } = useCancelRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
         metadata: { message },
@@ -89,9 +89,8 @@ export default function RequestMenuAction({
         setIsShowDetailModal && setIsShowDetailModal(true);
         break;
       }
-      case REQUEST_ACTION_TYPE.DELETE: {
-        stateQuery &&
-          deleteRequest({ uid: requestId, currentFilter: stateQuery });
+      case REQUEST_ACTION_TYPE.CANCEL: {
+        cancelRequest(requestId);
         break;
       }
     }
@@ -166,10 +165,10 @@ export default function RequestMenuAction({
               <SvgIcon icon="edit-border" />
             </span>
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title="Cancel">
             <span
               onClick={() =>
-                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.DELETE)
+                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL)
               }
               className="cursor-pointer"
             >

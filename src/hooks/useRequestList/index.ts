@@ -73,6 +73,32 @@ export const useChangeStatusRequest = ({
   );
 };
 
+export const useCancelRequest = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResRequestModify>) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (id: number) =>
+      fetchApi(
+        {
+          url: `${REQUEST.service}/${REQUEST.model.cancel}/${id}`,
+          options: {
+            method: 'PUT',
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+      onSettled: () => {
+        queryClient.invalidateQueries(['cancel-request']);
+      },
+    },
+  );
+};
+
 export const useGetRemainingTime = ({
   onError,
   onSuccess,
