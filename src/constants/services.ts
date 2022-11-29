@@ -22,6 +22,15 @@ export const OFFICE_TIME = {
   },
 };
 
+export const PAYSLIP = {
+  service: 'payroll',
+  model: {
+    secureCode: 'secure-code',
+    correct: 'correct',
+    forgot: 'forgot',
+  },
+};
+
 export const REQUEST = {
   service: 'request',
   model: {

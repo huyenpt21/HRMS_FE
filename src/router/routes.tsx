@@ -22,11 +22,12 @@ import { useRoutes } from 'react-router-dom';
 import UserProfile from 'pages/userProfile';
 import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
 import PayslipDetail from 'pages/payslip';
-import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
+import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
 import AllDiviceList from 'pages/device/device/allDeviceList';
 import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
 import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
 import OfficeTime from 'pages/officeTime';
+import CreateSecurityCode from 'pages/payslip/createSecureCode';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -146,8 +147,22 @@ export default function RouterElement() {
           element: <UserProfile />,
         },
         {
-          path: 'setting/security-code',
-          element: <SettingSecurityCode />,
+          path: 'setting',
+          children: [
+            {
+              path: 'security-code',
+              children: [
+                {
+                  path: 'update',
+                  element: <UpdateSecurityCode />,
+                },
+                {
+                  path: 'create',
+                  element: <CreateSecurityCode />,
+                },
+              ],
+            },
+          ],
         },
       ],
     },
