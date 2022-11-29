@@ -32,3 +32,4 @@ export type ResPayslipDetail = ResponseData<
   { payrollDisplayDto: PayslipModel },
   {}
 >;
+export type ResPayslipModify = ResponseData<any, {}>;

@@ -1,7 +1,12 @@
 import { PAYSLIP } from 'constants/services';
 import { MutationProps, successHandler } from 'hooks/useCustomQuery';
-import { PayslipFilter, ResPayslipDetail, SercurityCode } from 'models/payslip';
-import { useMutation } from 'react-query';
+import {
+  PayslipFilter,
+  ResPayslipDetail,
+  ResPayslipModify,
+  SercurityCode,
+} from 'models/payslip';
+import { useMutation, useQuery } from 'react-query';
 import fetchApi from 'utils/fetch-api';
 
 export const useGetPayslip = ({
@@ -27,20 +32,18 @@ export const useGetPayslip = ({
   );
 };
 export const useCheckSecureCodeExist = () =>
-  fetchApi(
-    {
-      url: `${PAYSLIP.model.secureCode}`,
-      options: {
-        method: 'GET',
+  useQuery(['get-office-time'], () =>
+    fetchApi(
+      {
+        url: PAYSLIP.model.secureCode,
       },
-    },
-    undefined,
+      undefined,
+    ),
   );
-
 export const useCheckSecureCodeCorrectly = ({
   onError,
   onSuccess,
-}: MutationProps<ResPayslipDetail>) => {
+}: MutationProps<ResPayslipModify>) => {
   return useMutation(
     (body: SercurityCode) =>
       fetchApi(

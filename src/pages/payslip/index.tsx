@@ -3,16 +3,32 @@ import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
 import { MESSAGE_RES, YEAR_MONTH_NUM } from 'constants/common';
-import { useGetPayslip } from 'hooks/usePayslip';
+import { useCheckSecureCodeExist, useGetPayslip } from 'hooks/usePayslip';
 import { PayslipModel, ResPayslipDetail } from 'models/payslip';
 import moment from 'moment-timezone';
 import { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './payrollDetail.module.less';
+import dataCheckExistMock from './dataCheckExistMock.json';
 
 export default function PayslipDetail() {
   const [payslipForm] = Form.useForm();
+  const navigate = useNavigate();
   const [isShowPayslip, setIsShowPayslip] = useState(false);
   const payslipDataRef = useRef<PayslipModel>();
+  const { data: secureCodeData } = useCheckSecureCodeExist();
+  useEffect(() => {
+    // if (secureCodeData) {
+    const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
+      metadata: any;
+      data: boolean;
+    };
+    const { data: isSecureCodeExist } = dataMock;
+    if (!isSecureCodeExist) {
+      navigate('/setting/security-code/create');
+    }
+    // }
+  }, [secureCodeData]);
   useEffect(() => {
     if (isShowPayslip) {
       payslipData({
