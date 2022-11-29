@@ -1,5 +1,9 @@
-import { DEVICE_TYPE } from 'constants/services';
-import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
+import { DEVICE, DEVICE_TYPE } from 'constants/services';
+import initialCustomQuery, {
+  Feature,
+  MutationProps,
+  successHandler,
+} from 'hooks/useCustomQuery';
 import {
   DeviceListQuery,
   DeviceListSortFields,
@@ -8,6 +12,8 @@ import {
   ResDeviceList,
   ResDeviceModify,
 } from 'models/device';
+import { useMutation, useQueryClient } from 'react-query';
+import fetchApi from 'utils/fetch-api';
 
 class DeviceList implements Feature<DeviceListSortFields> {
   constructor(
@@ -36,3 +42,29 @@ export const {
   ResDeviceModify,
   DeviceListQuery
 >(DeviceListInstance);
+
+export const useReturnDevice = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResDeviceModify>) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (id: number) =>
+      fetchApi(
+        {
+          url: `${DEVICE.model.return}/${id}`,
+          options: {
+            method: 'PUT',
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+      onSettled: () => {
+        queryClient.invalidateQueries(['my-borrow-device-history']);
+      },
+    },
+  );
+};

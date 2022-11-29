@@ -200,3 +200,13 @@ export const DEVICE_STATUS: SelectBoxType[] = [
     value: COMMON_STATUS.INACTIVE,
   },
 ];
+export const BORROW_DEVICE_STATUS: SelectBoxType[] = [
+  {
+    label: 'Returned',
+    value: COMMON_STATUS.ACTIVE,
+  },
+  {
+    label: 'Using',
+    value: COMMON_STATUS.INACTIVE,
+  },
+];

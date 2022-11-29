@@ -6,12 +6,14 @@ export interface DeviceModel extends Resource {
   description?: string;
   isUsed?: number;
   deviceTypeName?: string;
+  isReturned?: number;
 }
 
 export interface DeviceListFilter {
   search?: string;
   isUsed?: number;
   deviceTypeId?: number;
+  isReturned?: number;
 }
 
 export type DeviceListSortFields = 'deviceTypeName';
