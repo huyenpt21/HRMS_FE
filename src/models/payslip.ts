@@ -16,8 +16,9 @@ export interface PayslipModel extends Resource {
 }
 
 export interface SercurityCode {
-  secureCode: string;
-  confirmSecureCode: string;
+  currentSecureCode?: string;
+  newSecureCode?: string;
+  confirmSecureCode?: string;
 }
 
 export interface PayslipFilter {

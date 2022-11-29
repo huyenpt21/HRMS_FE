@@ -3,7 +3,7 @@ import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import { SercurityCode } from 'models/payslip';
 import styles from '../payrollDetail.module.less';
-export default function SettingSecurityCode() {
+export default function UpdateSecurityCode() {
   const [settingForm] = Form.useForm();
   const submitHandler = (value: SercurityCode) => {};
   return (

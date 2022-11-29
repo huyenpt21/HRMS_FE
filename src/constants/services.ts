@@ -24,6 +24,10 @@ export const OFFICE_TIME = {
 
 export const PAYSLIP = {
   service: 'payroll',
+  model: {
+    secureCode: 'secure-code',
+    correct: 'correct',
+  },
 };
 
 export const REQUEST = {
