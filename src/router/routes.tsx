@@ -24,6 +24,8 @@ import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
 import PayslipDetail from 'pages/payslip';
 import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
 import AllDiviceList from 'pages/device/device/allDeviceList';
+import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
+import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -42,7 +44,7 @@ export default function RouterElement() {
             { path: 'time-attendance', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
-            { path: 'device-history', element: <PayslipDetail /> },
+            { path: 'device-history', element: <MyBorrowDeviceHistory /> },
           ],
         },
         {
@@ -68,14 +70,18 @@ export default function RouterElement() {
             },
             {
               path: 'borrow-device-history',
+              element: <AllBorrowDeviceHistory menuType={MENU_TYPE.ALL} />,
+            },
+            {
+              path: 'sub-borrow-device-history',
               element: (
-                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
+                <AllBorrowDeviceHistory menuType={MENU_TYPE.SUBORDINATE} />
               ),
             },
           ],
         },
         {
-          path: 'request',
+          path: 'request-center',
           children: [
             {
               path: 'my-request',

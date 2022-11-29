@@ -26,6 +26,7 @@ export const REQUEST = {
     hr: 'hr',
     assign: 'assign',
     remainDevice: 'check-remaining-device',
+    cancel: 'cancel-request',
   },
 };
 export const TIME_CHECK = {
@@ -65,6 +66,9 @@ export const DEVICE = {
   service: 'device',
   model: {
     itSupport: 'it-support',
+    manager: 'manager',
+    borrowHistory: 'borrow-history',
+    return: 'return-device',
   },
 };
 

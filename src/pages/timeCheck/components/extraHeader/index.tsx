@@ -41,7 +41,7 @@ export default function ExtraTableTimeCheck({
     let startDate: string | undefined;
     let endDate: string | undefined;
     switch (menuType) {
-      case MENU_TYPE.MIME: {
+      case MENU_TYPE.MINE: {
         startDate = getStartEndDateFormat(dateString[0], DATE_TIME);
         endDate = getStartEndDateFormat(dateString[1], DATE_TIME, false);
         break;
@@ -86,7 +86,7 @@ export default function ExtraTableTimeCheck({
   const handleTitle = () => {
     let title = '';
     switch (menuType) {
-      case MENU_TYPE.MIME: {
+      case MENU_TYPE.MINE: {
         title = 'My Time Check';
         break;
       }
@@ -146,7 +146,7 @@ export default function ExtraTableTimeCheck({
         )}
       </div>
       <Row gutter={20}>
-        {(menuType === MENU_TYPE.MIME || menuType === MENU_TYPE.DETAIL) && (
+        {(menuType === MENU_TYPE.MINE || menuType === MENU_TYPE.DETAIL) && (
           <Col xs={24} sm={20} md={10} xl={8} xxl={6}>
             <BasicDateRangePicker
               label="Filter date"

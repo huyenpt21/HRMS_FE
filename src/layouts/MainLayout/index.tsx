@@ -5,6 +5,7 @@ import HeaderContent from 'layouts/Common/HeaderContent';
 import MenuSidebar from 'layouts/Menu';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import styles from './mainLayout.module.less';
 const { Content, Sider } = Layout;
 
 const { useBreakpoint } = Grid;
@@ -55,7 +56,7 @@ const MainLayout = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout className={styles.main} style={{ minHeight: '100vh' }}>
       <Sider
         theme="light"
         collapsible
@@ -130,7 +131,7 @@ const MainLayout = () => {
         }}
       >
         <HeaderContent marginLeft={marginLeft} />
-        <Content style={{ margin: '92px 28px 0px 28px' }}>
+        <Content>
           <ContentPage />
         </Content>
         <FooterContent marginLeft={marginLeft} />

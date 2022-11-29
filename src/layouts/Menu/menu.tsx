@@ -15,12 +15,12 @@ export const menus: MenuItemType[] = [
     children: [
       {
         title: 'My Request',
-        key: 'request',
+        key: 'my-request',
         path: '/emp-self-service/request',
       },
       {
         title: 'My Attendence',
-        key: 'time-attendance',
+        key: 'my-attendance',
         path: '/emp-self-service/time-attendance',
       },
       {
@@ -82,23 +82,23 @@ export const menus: MenuItemType[] = [
   },
   {
     title: 'Request Center',
-    key: 'request',
+    key: 'request-center',
     icon: 'delivery',
     children: [
       {
         title: 'Subordinate Requests',
         key: 'subordinate-requests',
-        path: '/request/subordinate',
+        path: '/request-center/subordinate',
       },
       {
         title: 'All Employee Requests',
         key: 'all-employee-requests',
-        path: '/request/all',
+        path: '/request-center/all',
       },
       {
         title: 'Borrow Device Request',
         key: 'borrow-device-requests',
-        path: '/request/borrow-device',
+        path: '/request-center/borrow-device',
       },
     ],
   },
@@ -120,7 +120,7 @@ export const menus: MenuItemType[] = [
     ],
   },
   {
-    title: 'Time Attendence',
+    title: 'Time Attendance',
     key: 'time-attendance',
     icon: 'calendar-search',
     children: [

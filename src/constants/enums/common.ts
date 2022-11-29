@@ -90,7 +90,7 @@ export enum REQUEST_ACTION_TYPE {
   EDIT,
   REJECT,
   APPROVE,
-  DELETE,
+  CANCEL,
 }
 
 export enum EMPLOYEE_MENU {
@@ -108,6 +108,8 @@ export enum DEVICE_MENU {
   DEVICE_TYPE = 'device-type',
   ALL = 'all',
   SUBORDINATE = 'suborder',
+  ALL_BORROW_DEVICE_HISTORY = 'all-history',
+  MY_BORROW_DEVICE_HISTORY = 'my-history',
 }
 export enum REQUEST_TYPE_KEY {
   LEAVE = 'leave',
@@ -118,7 +120,7 @@ export enum REQUEST_TYPE_KEY {
 }
 
 export enum MENU_TYPE {
-  MIME,
+  MINE,
   SUBORDINATE,
   ALL,
   DETAIL,
