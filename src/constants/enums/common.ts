@@ -120,7 +120,7 @@ export enum REQUEST_TYPE_KEY {
 }
 
 export enum MENU_TYPE {
-  MIME,
+  MINE,
   SUBORDINATE,
   ALL,
   DETAIL,

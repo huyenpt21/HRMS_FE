@@ -184,7 +184,7 @@ export default function MyTimeCheck() {
       pagination={pagination}
       extra={
         <ExtraTableTimeCheck
-          menuType={MENU_TYPE.MIME}
+          menuType={MENU_TYPE.MINE}
           setStateQuery={setStateQuery}
           stateQuery={stateQuery}
         />

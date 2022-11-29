@@ -68,6 +68,7 @@ export const DEVICE = {
     itSupport: 'it-support',
     manager: 'manager',
     borrowHistory: 'borrow-history',
+    return: 'return-device',
   },
 };
 

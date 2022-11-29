@@ -29,7 +29,7 @@ const MenuRequestType = memo(({ setStateQuery, menuType }: IProps) => {
       mode="vertical"
       triggerSubMenuAction="click"
       defaultSelectedKeys={['1']}
-      items={menuType === MENU_TYPE.MIME ? mine : allAndSub}
+      items={menuType === MENU_TYPE.MINE ? mine : allAndSub}
       onClick={(value: MenuItem) => {
         if (Number(value?.key) === 7) {
           setStateQuery((prev: any) => ({
