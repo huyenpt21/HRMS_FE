@@ -1,6 +1,6 @@
 export enum STATUS {
   OPEN = 'Opened',
-  CANCELLED = 'Cancelled',
+  CANCELLED = 'Canceled',
   COMPLETED = 'Completed',
   PENDING = 'Pending',
   REJECTED = 'Rejected',

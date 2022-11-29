@@ -38,6 +38,8 @@ export interface RequestRemainingTime {
   month: number;
   year: number;
   timeRemaining?: number;
+  otTimeRemainingOfMonth?: number;
+  otTimeRemainingOfYear?: number;
 }
 
 export interface RequestListFilter {

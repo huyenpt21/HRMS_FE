@@ -54,7 +54,7 @@ import SelectCustomSearch from 'components/SelectCustomSearch';
 import { DEVICE_TYPE, REQUEST } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
-import detailMock from './detailMock.json';
+// import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
 interface IProps {
@@ -88,7 +88,6 @@ export default function RequestDetailModal({
   const requestIdRefInternal = useRef<number>();
   const remainingTimeRef = useRef<number | undefined>();
   const officeTimeRef = useRef<OfficeTime>();
-
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal(
       {
@@ -182,11 +181,12 @@ export default function RequestDetailModal({
         data: { item },
       } = response;
       if (message === 'Success') {
-        requestForm.setFieldValue(
-          'timeRemaining',
-          item.timeRemaining?.toFixed(2),
-        );
-        remainingTimeRef.current = item.timeRemaining;
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          timeRemainingMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
+          timeRemainingYear: item?.otTimeRemainingOfYear?.toFixed(2),
+        });
+        remainingTimeRef.current = item?.timeRemaining;
       }
     },
     onError: (response: ResRequestModify) => {
@@ -199,32 +199,32 @@ export default function RequestDetailModal({
     },
   });
   useEffect(() => {
-    // if (detailRequest && detailRequest?.data) {
-    const {
-      metadata: { message },
-      data: { item },
-    } = detailMock;
-    if (message === MESSAGE_RES.SUCCESS && item) {
-      if (actionModal === ACTION_TYPE.ASSIGN) {
-        checkRemainDivce(item?.deviceTypeId);
+    if (detailRequest && detailRequest?.data) {
+      const {
+        metadata: { message },
+        data: { item },
+      } = detailRequest;
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        if (actionModal === ACTION_TYPE.ASSIGN) {
+          checkRemainDivce(item?.deviceTypeId);
+        }
+        setRequestData(item);
+        requestForm.setFieldsValue(item);
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          date: [moment(item.startTime), moment(item.endTime)],
+          time: [moment(item.startTime), moment(item.endTime)],
+        });
+        if (item?.listEvidence) {
+          setEvidenceSource(item?.listEvidence);
+        }
+        setRequestType(item?.requestTypeName);
+        setIsAllowRollback(item?.isAllowRollback);
+        requestIdRefInternal.current = item?.id;
+        remainingTimeRef.current = item?.timeRemaining;
       }
-      setRequestData(item);
-      requestForm.setFieldsValue(item);
-      requestForm.setFieldsValue({
-        timeRemaining: item?.timeRemaining?.toFixed(2),
-        date: [moment(item.startTime), moment(item.endTime)],
-        time: [moment(item.startTime), moment(item.endTime)],
-      });
-      if (item?.listEvidence) {
-        setEvidenceSource(item?.listEvidence);
-      }
-      setRequestType(item?.requestTypeName);
-      setIsAllowRollback(item?.isAllowRollback);
-      requestIdRefInternal.current = item?.id;
-      remainingTimeRef.current = item?.timeRemaining;
     }
-    // }
-  }, [detailRequest, detailMock]);
+  }, [detailRequest]);
   useEffect(() => {
     if (officeTimeData && officeTimeData?.data) {
       const {
@@ -353,8 +353,8 @@ export default function RequestDetailModal({
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
     if (
-      options.type === REQUEST_TYPE_KEY.LEAVE ||
-      options.type === REQUEST_TYPE_KEY.OT
+      options?.type === REQUEST_TYPE_KEY.LEAVE ||
+      options?.type === REQUEST_TYPE_KEY.OT
     ) {
       const data: RequestRemainingTime = {
         requestTypeId: value,
@@ -499,7 +499,10 @@ export default function RequestDetailModal({
             requiredMark
             validateMessages={validateMessages()}
             onFinish={submitHandler}
-            disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+            disabled={
+              actionModal === ACTION_TYPE.VIEW_DETAIL ||
+              requestStatus !== STATUS.PENDING
+            }
           >
             {actionModal !== ACTION_TYPE.CREATE && (
               <>
@@ -549,7 +552,6 @@ export default function RequestDetailModal({
                 </Row>
               </>
             )}
-
             <Row gutter={20}>
               {tabType !== REQUEST_MENU.DEVICE && (
                 <Col span="12">
@@ -563,42 +565,43 @@ export default function RequestDetailModal({
                     showSearch
                     optionFilterProp="label"
                     onChange={handleChangeRequestType}
-                    disabled={actionModal === ACTION_TYPE.EDIT}
                   />
                 </Col>
               )}
-              {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-                requestType === REQUEST_TYPE_KEY.OT) &&
-                requestStatus === STATUS.PENDING && (
-                  <>
+              {requestStatus === STATUS.PENDING && (
+                <>
+                  {requestType === REQUEST_TYPE_KEY.LEAVE && (
                     <Col span="4">
                       <BasicInput
                         label="Remaining Time"
                         name="timeRemaining"
                         disabled
-                        suffix={
-                          requestType === REQUEST_TYPE_KEY.LEAVE
-                            ? 'days'
-                            : 'hours'
-                        }
+                        suffix={'days'}
                       />
                     </Col>
-                    <Col>
-                      {remainingTimeRef.current === 0 && (
-                        <div className={styles.notice}>
-                          * Notice:{' '}
-                          {tabType === REQUEST_MENU.MY_REQUEST
-                            ? 'You'
-                            : 'This person'}{' '}
-                          have used up all the{' '}
-                          {requestType === REQUEST_TYPE_KEY.LEAVE
-                            ? 'holidays this year'
-                            : 'over time this month'}
-                        </div>
-                      )}
-                    </Col>
-                  </>
-                )}
+                  )}
+                  {requestType === REQUEST_TYPE_KEY.OT && (
+                    <>
+                      <Col span="6">
+                        <BasicInput
+                          label="Remaining Time Month"
+                          name="timeRemainingMonth"
+                          disabled
+                          suffix={'hours'}
+                        />
+                      </Col>
+                      <Col span="6">
+                        <BasicInput
+                          label="Remaining Time Year"
+                          name="timeRemainingYear"
+                          disabled
+                          suffix={'hours'}
+                        />
+                      </Col>
+                    </>
+                  )}
+                </>
+              )}
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
                   <SelectCustomSearch
@@ -616,13 +619,16 @@ export default function RequestDetailModal({
                       actionModal === ACTION_TYPE.EDIT ||
                       tabType === REQUEST_MENU.DEVICE
                     }
+                    onChangeHandle={(value) => {
+                      console.log(value);
+                    }}
                   />
                 </Col>
               )}
               {tabType === REQUEST_MENU.DEVICE && (
                 <Col span="12">
                   <SelectCustomSearch
-                    url={`${DEVICE_TYPE.model.deviceName}-${DEVICE_TYPE.model.masterData}`}
+                    url={`${DEVICE_TYPE.model.deviceName}-${DEVICE_TYPE.model.masterData}?deviceTypeId=${requestData?.deviceTypeId}`}
                     dataName="items"
                     apiName="device-name-master-data"
                     label="Device Name"
@@ -630,10 +636,28 @@ export default function RequestDetailModal({
                     placeholder="Choose device name"
                     name="deviceId"
                     allowClear
-                    disabled={actionModal === ACTION_TYPE.EDIT}
+                    disabled={actionModal !== ACTION_TYPE.ASSIGN}
                   />
                 </Col>
               )}
+            </Row>
+            <Row gutter={20}>
+              <Col span={24}>
+                {remainingTimeRef.current === 0 &&
+                  (requestType === REQUEST_TYPE_KEY.LEAVE ||
+                    requestType === REQUEST_TYPE_KEY.OT) && (
+                    <div className={styles.notice}>
+                      * Notice:{' '}
+                      {tabType === REQUEST_MENU.MY_REQUEST
+                        ? 'You'
+                        : 'This person'}{' '}
+                      have used up all the{' '}
+                      {requestType === REQUEST_TYPE_KEY.LEAVE
+                        ? 'holidays this year'
+                        : 'over time this month'}
+                    </div>
+                  )}
+              </Col>
             </Row>
             {(requestType === REQUEST_TYPE_KEY.LEAVE ||
               requestType === REQUEST_TYPE_KEY.OTHER ||

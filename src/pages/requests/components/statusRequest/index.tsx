@@ -38,6 +38,13 @@ export default function RequestStatus({ data }: IProps) {
       };
       break;
     }
+    case STATUS.CANCELLED: {
+      statusTag = {
+        statusColor: STATUS_COLORS.DEFAULT,
+        text: STATUS.CANCELLED,
+      };
+      break;
+    }
   }
   return <BasicTag statusColor={statusTag.statusColor} text={statusTag.text} />;
 }
