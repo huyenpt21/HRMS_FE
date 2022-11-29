@@ -40,6 +40,28 @@ export const useCheckSecureCodeExist = () =>
       undefined,
     ),
   );
+
+export const useForgotSecureCodeExist = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResPayslipModify>) => {
+  return useMutation(
+    () =>
+      fetchApi(
+        {
+          url: `${PAYSLIP.model.secureCode}/${PAYSLIP.model.forgot}`,
+          options: {
+            method: 'GET',
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+    },
+  );
+};
 export const useCheckSecureCodeCorrectly = ({
   onError,
   onSuccess,

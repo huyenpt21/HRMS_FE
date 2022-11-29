@@ -27,6 +27,7 @@ export const PAYSLIP = {
   model: {
     secureCode: 'secure-code',
     correct: 'correct',
+    forgot: 'forgot',
   },
 };
 

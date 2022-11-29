@@ -39,6 +39,9 @@ export default function CreateSecurityCode() {
         xxl={12}
         className={styles.main}
       >
+        <Row className={styles.header__title}>
+          <h2>Setting security code</h2>
+        </Row>
         <Form
           form={settingForm}
           layout="vertical"
@@ -46,9 +49,6 @@ export default function CreateSecurityCode() {
           onFinish={submitHandler}
           className={styles.login__payslip}
         >
-          <Row className={styles.login__title}>
-            <h2>Setting security code</h2>
-          </Row>
           <BasicInput
             name="currentSecureCode"
             label="New security code"
@@ -92,8 +92,13 @@ export default function CreateSecurityCode() {
             allowClear
             hasFeedback
           />
-          <Row className={styles.login__btn}>
-            <BasicButton title="Submit" type="filled" htmlType="submit" />
+          <Row>
+            <BasicButton
+              title="Submit"
+              type="filled"
+              htmlType="submit"
+              className={styles.login__btn}
+            />
           </Row>
         </Form>
       </Col>

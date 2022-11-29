@@ -1,8 +1,11 @@
-import { Col, Form, notification, Row } from 'antd';
+import { Col, Form, notification, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import { MESSAGE_RES } from 'constants/common';
-import { useUpdateSecurityCode } from 'hooks/usePayslip';
+import {
+  useForgotSecureCodeExist,
+  useUpdateSecurityCode,
+} from 'hooks/usePayslip';
 import { ResPayslipModify, SercurityCode } from 'models/payslip';
 import styles from '../payrollDetail.module.less';
 export default function UpdateSecurityCode() {
@@ -24,9 +27,32 @@ export default function UpdateSecurityCode() {
       notification.error({ message: message });
     },
   });
+  const { mutate: forgotSecureCode } = useForgotSecureCodeExist({
+    onSuccess: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+        data: isSecureCodeCreate,
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreate) {
+        notification.success({
+          message: 'Check your email to get new security code',
+        });
+      }
+    },
+    onError: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
+
   const submitHandler = (value: SercurityCode) => {
     updateSecureCode(value);
     settingForm.resetFields();
+  };
+  const handleForgotSecureCode = () => {
+    forgotSecureCode();
   };
   return (
     <div className={styles.container}>
@@ -39,6 +65,9 @@ export default function UpdateSecurityCode() {
         xxl={12}
         className={styles.main}
       >
+        <Row className={styles.header__title}>
+          <h2>Setting security code</h2>
+        </Row>
         <Form
           form={settingForm}
           layout="vertical"
@@ -46,9 +75,6 @@ export default function UpdateSecurityCode() {
           onFinish={submitHandler}
           className={styles.login__payslip}
         >
-          <Row className={styles.login__title}>
-            <h2>Setting security code</h2>
-          </Row>
           <BasicInput
             name="currentSecureCode"
             label="Your old security code"
@@ -109,8 +135,28 @@ export default function UpdateSecurityCode() {
             allowClear
             hasFeedback
           />
-          <Row className={styles.login__btn}>
-            <BasicButton title="Submit" type="filled" htmlType="submit" />
+          <Row>
+            <Col span={24}>
+              <Tooltip
+                title="Send new security code to your email"
+                placement="topRight"
+              >
+                <p
+                  className={styles.forgot__text}
+                  onClick={handleForgotSecureCode}
+                >
+                  Forgot your security code?
+                </p>
+              </Tooltip>
+            </Col>
+          </Row>
+          <Row>
+            <BasicButton
+              title="Submit"
+              type="filled"
+              htmlType="submit"
+              className={styles.login__btn}
+            />
           </Row>
         </Form>
       </Col>
