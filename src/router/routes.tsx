@@ -24,6 +24,7 @@ import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
 import PayslipDetail from 'pages/payslip';
 import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
 import AllDiviceList from 'pages/device/device/allDeviceList';
+import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -68,9 +69,7 @@ export default function RouterElement() {
             },
             {
               path: 'borrow-device-history',
-              element: (
-                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
-              ),
+              element: <AllBorrowDeviceHistory />,
             },
           ],
         },

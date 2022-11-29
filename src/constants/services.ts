@@ -66,6 +66,7 @@ export const DEVICE = {
   service: 'device',
   model: {
     itSupport: 'it-support',
+    borrowHistory: 'borrow-history',
   },
 };
 

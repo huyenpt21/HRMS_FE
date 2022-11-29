@@ -290,6 +290,43 @@ export const AllDeviceListHeader = [
     dataIndex: 'isUsed',
   },
 ];
+export const AllBorrowDeviceHistoryListHeader = [
+  {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
+    title: 'Full Name',
+    key: 'fullName',
+    dataIndex: 'fullName',
+  },
+  {
+    title: 'Device Type Name',
+    key: 'deviceTypeName',
+    dataIndex: 'deviceTypeName',
+  },
+  {
+    title: 'Device Code',
+    key: 'deviceCode',
+    dataIndex: 'deviceCode',
+  },
+  {
+    title: 'Device Name',
+    key: 'deviceName',
+    dataIndex: 'deviceName',
+  },
+  {
+    title: 'Borrow Date',
+    key: 'borrowDate',
+    dataIndex: 'borrowDate',
+  },
+  {
+    title: 'Status',
+    key: 'isReturned',
+    dataIndex: 'isReturned',
+  },
+];
 export const LeaveBudgetListHeader = [
   {
     title: 'Roll Number',

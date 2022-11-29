@@ -12,6 +12,7 @@ export interface DeviceListFilter {
   search?: string;
   isUsed?: number;
   deviceTypeId?: number;
+  isReturned?: number;
 }
 
 export type DeviceListSortFields = 'deviceTypeName';
