@@ -45,7 +45,6 @@ import {
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, getRange, TimeCombine } from 'utils/common';
-import RequestStatus from '../components/statusRequest';
 
 import { RangePickerProps } from 'antd/lib/date-picker';
 import BasicDatePicker from 'components/BasicDatePicker';
@@ -55,8 +54,9 @@ import { DEVICE_TYPE, REQUEST } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
 // import detailMock from './detailMock.json';
-import styles from './requestDetailModal.module.less';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
+import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
+import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -505,52 +505,7 @@ export default function RequestDetailModal({
             }
           >
             {actionModal !== ACTION_TYPE.CREATE && (
-              <>
-                <Row gutter={20} className={styles['infor--header']}>
-                  <Col span={10}>
-                    <span>Created By:</span>
-                    <span className={styles['text--bold']}>
-                      {requestData?.personName}
-                    </span>
-                  </Col>
-                  <Col span={6}>
-                    <span>Roll Number:</span>
-                    <span className={styles['text--bold']}>
-                      {requestData?.rollNumber}
-                    </span>
-                  </Col>
-                  <Col span={8}>
-                    <span>Created Time:</span>
-                    <span className={styles['text--bold']}>
-                      {getDateFormat(requestData?.createDate, DATE_TIME_US)}
-                    </span>
-                  </Col>
-                </Row>
-                <Row gutter={20} className={styles['infor--header']}>
-                  <Col span={10}>
-                    <span>
-                      {requestData?.status === STATUS.APPROVED
-                        ? 'Appoval By:'
-                        : 'Receiver:'}
-                    </span>
-                    <span className={styles['text--bold']}>
-                      {requestData?.receiver}
-                    </span>
-                  </Col>
-                  <Col span={6}>
-                    <span>Status:</span>{' '}
-                    <RequestStatus data={requestData?.status ?? ''} />
-                  </Col>
-                  {requestData?.approvalDate && (
-                    <Col span={8}>
-                      <span>Approved Time:</span>
-                      <span className={styles['text--bold']}>
-                        {getDateFormat(requestData?.createDate, DATE_TIME_US)}
-                      </span>
-                    </Col>
-                  )}
-                </Row>
-              </>
+              <FixDataHeaderRequest requestData={requestData} />
             )}
             <Row gutter={20}>
               {tabType !== REQUEST_MENU.DEVICE && (

@@ -28,6 +28,7 @@ import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
 import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
 import OfficeTime from 'pages/officeTime';
 import CreateSecurityCode from 'pages/payslip/createSecureCode';
+import DetailDeviceRequest from 'pages/requests/detailDeviceRequest';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -72,7 +73,17 @@ export default function RouterElement() {
             },
             {
               path: 'borrow-device-history',
-              element: <AllBorrowDeviceHistory menuType={MENU_TYPE.ALL} />,
+
+              children: [
+                {
+                  path: '',
+                  element: <AllBorrowDeviceHistory menuType={MENU_TYPE.ALL} />,
+                },
+                {
+                  path: 'detail/:assignDeviceId',
+                  element: <DetailDeviceRequest />,
+                },
+              ],
             },
             {
               path: 'sub-borrow-device-history',
