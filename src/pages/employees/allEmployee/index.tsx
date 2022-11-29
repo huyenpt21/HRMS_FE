@@ -100,9 +100,15 @@ export default function AllEmployeeList() {
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
       if (el.key === 'fullName') {
-        el.width = 250;
+        el.width = 300;
       }
-      if (el.key === 'status' || el.key === 'department') {
+      if (el.key === 'positionName' || el.key === 'department') {
+        el.width = 200;
+      }
+      if (el.key === 'email') {
+        el.width = 350;
+      }
+      if (el.key === 'status') {
         el.width = 100;
       }
       return {
