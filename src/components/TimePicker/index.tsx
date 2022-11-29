@@ -1,6 +1,6 @@
 import { Form, TimePicker } from 'antd';
 import moment from 'moment';
-import { TIME_HOUR } from 'constants/common';
+import { TIME_HMS, TIME_HOUR } from 'constants/common';
 import { useState } from 'react';
 
 interface TimeComponentProps {
@@ -10,9 +10,9 @@ interface TimeComponentProps {
   rules?: object[];
   className?: string;
   classNameFormItem?: string;
-  isUseDefaultValue?: boolean;
   defaultValue?: string;
   disabled?: boolean;
+  allowClear?: boolean;
 }
 
 const TimeComponent = ({
@@ -22,15 +22,15 @@ const TimeComponent = ({
   rules,
   className,
   classNameFormItem,
-  isUseDefaultValue,
   defaultValue,
   disabled,
+  allowClear,
 }: TimeComponentProps) => {
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
     : false;
   const [value, setValue] = useState(
-    isUseDefaultValue ? () => moment(defaultValue, TIME_HOUR) : undefined,
+    defaultValue ? () => moment(defaultValue, TIME_HMS) : undefined,
   );
   return (
     <Form.Item
@@ -47,6 +47,7 @@ const TimeComponent = ({
         size="large"
         onChange={(e: any) => setValue(e)}
         disabled={disabled}
+        allowClear={allowClear}
       />
     </Form.Item>
   );
