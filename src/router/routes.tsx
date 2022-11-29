@@ -69,7 +69,13 @@ export default function RouterElement() {
             },
             {
               path: 'borrow-device-history',
-              element: <AllBorrowDeviceHistory />,
+              element: <AllBorrowDeviceHistory menuType={MENU_TYPE.ALL} />,
+            },
+            {
+              path: 'sub-borrow-device-history',
+              element: (
+                <AllBorrowDeviceHistory menuType={MENU_TYPE.SUBORDINATE} />
+              ),
             },
           ],
         },
