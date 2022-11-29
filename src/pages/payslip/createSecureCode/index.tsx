@@ -1,11 +1,33 @@
-import { Col, Form, Row } from 'antd';
+import { Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
-import { SercurityCode } from 'models/payslip';
+import { MESSAGE_RES } from 'constants/common';
+import { useCreateSecurityCode } from 'hooks/usePayslip';
+import { ResPayslipModify, SercurityCode } from 'models/payslip';
 import styles from '../payrollDetail.module.less';
 export default function CreateSecurityCode() {
   const [settingForm] = Form.useForm();
-  const submitHandler = (value: SercurityCode) => {};
+  const { mutate: createSecureCode } = useCreateSecurityCode({
+    onSuccess: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+        data: isSecureCodeCreate,
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreate) {
+        notification.success({ message: 'Create security code successfully' });
+      }
+    },
+    onError: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
+  const submitHandler = (value: SercurityCode) => {
+    createSecureCode(value);
+    settingForm.resetFields();
+  };
   return (
     <div className={styles.container}>
       <Col
@@ -28,7 +50,7 @@ export default function CreateSecurityCode() {
             <h2>Setting security code</h2>
           </Row>
           <BasicInput
-            name="secureCode"
+            name="currentSecureCode"
             label="New security code"
             type="password"
             rules={[
@@ -56,7 +78,7 @@ export default function CreateSecurityCode() {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('secureCode') === value) {
+                  if (!value || getFieldValue('currentSecureCode') === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(

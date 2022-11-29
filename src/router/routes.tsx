@@ -147,12 +147,22 @@ export default function RouterElement() {
           element: <UserProfile />,
         },
         {
-          path: 'setting/security-code/update',
-          element: <UpdateSecurityCode />,
-        },
-        {
-          path: 'setting/security-code/create',
-          element: <CreateSecurityCode />,
+          path: 'setting',
+          children: [
+            {
+              path: 'security-code',
+              children: [
+                {
+                  path: 'update',
+                  element: <UpdateSecurityCode />,
+                },
+                {
+                  path: 'create',
+                  element: <CreateSecurityCode />,
+                },
+              ],
+            },
+          ],
         },
       ],
     },

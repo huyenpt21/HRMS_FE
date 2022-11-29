@@ -1,11 +1,33 @@
-import { Col, Form, Row } from 'antd';
+import { Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
-import { SercurityCode } from 'models/payslip';
+import { MESSAGE_RES } from 'constants/common';
+import { useUpdateSecurityCode } from 'hooks/usePayslip';
+import { ResPayslipModify, SercurityCode } from 'models/payslip';
 import styles from '../payrollDetail.module.less';
 export default function UpdateSecurityCode() {
   const [settingForm] = Form.useForm();
-  const submitHandler = (value: SercurityCode) => {};
+  const { mutate: updateSecureCode } = useUpdateSecurityCode({
+    onSuccess: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+        data: isSecureCodeCreate,
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreate) {
+        notification.success({ message: 'Create security code successfully' });
+      }
+    },
+    onError: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
+  const submitHandler = (value: SercurityCode) => {
+    updateSecureCode(value);
+    settingForm.resetFields();
+  };
   return (
     <div className={styles.container}>
       <Col
@@ -28,7 +50,7 @@ export default function UpdateSecurityCode() {
             <h2>Setting security code</h2>
           </Row>
           <BasicInput
-            name="oldSecureCode"
+            name="currentSecureCode"
             label="Your old security code"
             type="password"
             rules={[
@@ -45,7 +67,7 @@ export default function UpdateSecurityCode() {
             allowClear
           />
           <BasicInput
-            name="secureCode"
+            name="newSecureCode"
             label="New security code"
             type="password"
             rules={[
@@ -73,7 +95,7 @@ export default function UpdateSecurityCode() {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('secureCode') === value) {
+                  if (!value || getFieldValue('newSecureCode') === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
