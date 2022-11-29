@@ -15,6 +15,11 @@ export interface PayrollModel extends Resource {
   actuallyReceived: string;
 }
 
+export interface SercurityCode {
+  secureCode: string;
+  confirmSecureCode: string;
+}
+
 export interface PayrollFilter {
   month?: number;
   year?: number;

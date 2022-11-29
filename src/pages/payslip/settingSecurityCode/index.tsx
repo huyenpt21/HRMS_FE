@@ -1,9 +1,11 @@
 import { Col, Form, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
+import { SercurityCode } from 'models/payroll';
 import styles from '../payrollDetail.module.less';
 export default function SettingSecurityCode() {
   const [settingForm] = Form.useForm();
+  const submitHandler = (value: SercurityCode) => {};
   return (
     <div className={styles.container}>
       <Col
@@ -19,7 +21,7 @@ export default function SettingSecurityCode() {
           form={settingForm}
           layout="vertical"
           requiredMark
-          // onFinish={submitHandler}
+          onFinish={submitHandler}
           className={styles.login__payslip}
         >
           <Row className={styles.login__title}>
@@ -44,7 +46,7 @@ export default function SettingSecurityCode() {
             hasFeedback
           />
           <BasicInput
-            name="confirm"
+            name="confirmSecureCode"
             label="Confirm security code"
             type="password"
             rules={[
