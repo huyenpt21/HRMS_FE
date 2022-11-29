@@ -1,7 +1,7 @@
 import { Col, Form, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
-import { SercurityCode } from 'models/payroll';
+import { SercurityCode } from 'models/payslip';
 import styles from '../payrollDetail.module.less';
 export default function SettingSecurityCode() {
   const [settingForm] = Form.useForm();
@@ -27,6 +27,23 @@ export default function SettingSecurityCode() {
           <Row className={styles.login__title}>
             <h2>Setting security code</h2>
           </Row>
+          <BasicInput
+            name="oldSecureCode"
+            label="Your old security code"
+            type="password"
+            rules={[
+              { required: true, message: 'Please enter your security code!' },
+              {
+                whitespace: true,
+                message: 'Only white spaces are invalid',
+              },
+              {
+                min: 8,
+                message: 'Expected at least 8 characters',
+              },
+            ]}
+            allowClear
+          />
           <BasicInput
             name="secureCode"
             label="New security code"

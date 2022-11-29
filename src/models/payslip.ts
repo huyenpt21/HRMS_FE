@@ -1,6 +1,6 @@
 import { Resource, ResponseData } from './common';
 
-export interface PayrollModel extends Resource {
+export interface PayslipModel extends Resource {
   personId?: number;
   personName?: string;
   rollNumber: string;
@@ -20,14 +20,14 @@ export interface SercurityCode {
   confirmSecureCode: string;
 }
 
-export interface PayrollFilter {
+export interface PayslipFilter {
   month?: number;
   year?: number;
 }
 
-export type PayrollQuery = PayrollFilter;
+export type PayslipQuery = PayslipFilter;
 
-export type ResPayrollDetail = ResponseData<
-  { payrollDisplayDto: PayrollModel },
+export type ResPayslipDetail = ResponseData<
+  { payrollDisplayDto: PayslipModel },
   {}
 >;

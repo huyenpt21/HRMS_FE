@@ -1,17 +1,51 @@
-import { Col, Divider, Form, Row } from 'antd';
+import { Col, Divider, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
-import { YEAR_MONTH_NUM } from 'constants/common';
+import { MESSAGE_RES, YEAR_MONTH_NUM } from 'constants/common';
+import { useGetPayslip } from 'hooks/usePayslip';
+import { PayslipModel, ResPayslipDetail } from 'models/payslip';
 import moment from 'moment-timezone';
-import { useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import styles from './payrollDetail.module.less';
 
 export default function PayslipDetail() {
   const [payslipForm] = Form.useForm();
   const [isShowPayslip, setIsShowPayslip] = useState(false);
+  const payslipDataRef = useRef<PayslipModel>();
+  useEffect(() => {
+    if (isShowPayslip) {
+      payslipData({
+        month: Number(moment().get('month')),
+        year: Number(moment().get('year')),
+      });
+    }
+  }, [isShowPayslip]);
+  const { mutate: payslipData } = useGetPayslip({
+    onSuccess: (response: ResPayslipDetail) => {
+      const {
+        metadata: { message },
+        data: { payrollDisplayDto },
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS) {
+        payslipDataRef.current = payrollDisplayDto;
+      }
+    },
+    onError: (response: ResPayslipDetail) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
+
   const submitHandler = (formValue: { secureCode: string }) => {
     if (formValue) setIsShowPayslip(true);
+  };
+  const handleChangeFilterDate = (_: moment.Moment, dateString: string) => {
+    const month = Number(dateString.split('/')[0].trim());
+    const year = Number(dateString.split('/')[1].trim());
+    payslipData({ month: month, year: year });
   };
   return (
     <div className={styles.container}>
@@ -33,7 +67,7 @@ export default function PayslipDetail() {
             className={styles.login__payslip}
           >
             <Row className={styles.login__title}>
-              <h2>Enter your security code</h2>
+              <div>Enter your security code</div>
             </Row>
             <BasicInput
               name="secureCode"
@@ -66,20 +100,24 @@ export default function PayslipDetail() {
                     name="date"
                     picker="month"
                     format={YEAR_MONTH_NUM}
-                    defaultValue={moment()}
+                    defaultValue={moment().subtract(1, 'month')}
+                    onChange={handleChangeFilterDate}
+                    disabledDate={(current) =>
+                      current >= moment().startOf('month')
+                    }
                   />
                 </Col>
                 <Col span={12} className={styles.text__bold}>
                   <Row gutter={32}>
                     <Col span="12">Full name:</Col>
                     <Col span="12" className={styles.text_right}>
-                      Nguyen Van A
+                      {payslipDataRef.current?.personName}
                     </Col>
                   </Row>
                   <Row gutter={32}>
                     <Col span="12">Roll number:</Col>
                     <Col span="12" className={styles.text_right}>
-                      MS12344
+                      {payslipDataRef.current?.rollNumber}
                     </Col>
                   </Row>
                 </Col>
@@ -90,14 +128,14 @@ export default function PayslipDetail() {
               <Row gutter={32}>
                 <Col span="12">Total work day:</Col>
                 <Col span="12" className={styles.text_right}>
-                  23
+                  {payslipDataRef.current?.totalWork}
                 </Col>
               </Row>
               <Divider />
               <Row gutter={32}>
                 <Col span="12">Actual work day:</Col>
                 <Col span="12" className={styles.text_right}>
-                  22
+                  {payslipDataRef.current?.actualWork}
                 </Col>
               </Row>
               <Divider />
@@ -106,21 +144,21 @@ export default function PayslipDetail() {
                 <Row gutter={32}>
                   <Col span="12">Basic salary:</Col>
                   <Col span="12" className={styles.text_right}>
-                    10000000
+                    {payslipDataRef.current?.basicSalary}
                   </Col>
                 </Row>
                 <Divider />
                 <Row gutter={32}>
                   <Col span="12">Bonus salary:</Col>
                   <Col span="12" className={styles.text_right}>
-                    0
+                    {payslipDataRef.current?.salaryBonus}
                   </Col>
                 </Row>
                 <Divider />
                 <Row gutter={32}>
                   <Col span="12">OT salary:</Col>
                   <Col span="12" className={styles.text_right}>
-                    0
+                    {payslipDataRef.current?.otSalary}
                   </Col>
                 </Row>
               </div>
@@ -130,27 +168,21 @@ export default function PayslipDetail() {
                 <Row gutter={32} className={styles.ml__12}>
                   <Col span="12">Tax:</Col>
                   <Col span="12" className={styles.text_right}>
-                    750000
+                    {payslipDataRef.current?.tax}
                   </Col>
                 </Row>
                 <Divider />
                 <Row gutter={32}>
                   <Col span="12">Social Insurance (10.5%):</Col>
                   <Col span="12" className={styles.text_right}>
-                    1050000
+                    {payslipDataRef.current?.socialInsurance}
                   </Col>
                 </Row>
                 <Divider />
                 <Row gutter={32}>
                   <Col span="12">Fine amount:</Col>
                   <Col span="12" className={styles.text_right}>
-                    0
-                  </Col>
-                </Row>
-                <Row gutter={32}>
-                  <Col span="12">Fine amount:</Col>
-                  <Col span="12" className={styles.text_right}>
-                    0
+                    {payslipDataRef.current?.fineAmount}
                   </Col>
                 </Row>
               </div>
@@ -161,7 +193,7 @@ export default function PayslipDetail() {
               >
                 <Col span={12}>NET Income:</Col>
                 <Col span={12} className={styles.text_right}>
-                  8200000
+                  {payslipDataRef.current?.actuallyReceived}
                 </Col>
               </Row>
             </div>
