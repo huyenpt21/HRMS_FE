@@ -1,14 +1,14 @@
-import { TablePaginationConfig } from 'antd';
+import { notification, TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
-import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { DEVICE_MENU, STATUS_COLORS } from 'constants/enums/common';
+import { DATE_TIME_US, MESSAGE_RES, paginationConfig } from 'constants/common';
+import { DEVICE_MENU, MENU_TYPE, STATUS_COLORS } from 'constants/enums/common';
 import { MyBorrowDeviceHistoryListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
-import { useDeviceList } from 'hooks/useDevice';
+import { useDeviceList, useReturnDevice } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
-import { DeviceListQuery, DeviceModel } from 'models/device';
+import { DeviceListQuery, DeviceModel, ResDeviceModify } from 'models/device';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -17,6 +17,7 @@ import {
   removeEmptyValueInObject,
 } from 'utils/common';
 import ExtraHeaderDevice from '../components/extraHeader';
+import MenuTableDevice from '../components/menuTableDevice';
 export default function MyBorrowDeviceHistory() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -53,6 +54,22 @@ export default function MyBorrowDeviceHistory() {
     `${DEVICE.model.borrowHistory}`,
     'my-borrow-device-history',
   );
+  const { mutate: returnDevice } = useReturnDevice({
+    onSuccess: (response: ResDeviceModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS) {
+        notification.success({ message: 'Return device successfully' });
+      }
+    },
+    onError: (response: ResDeviceModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -106,6 +123,25 @@ export default function MyBorrowDeviceHistory() {
         },
       };
     });
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 100,
+      align: 'center',
+      render: (_, record: DeviceModel) => {
+        if (!record?.isReturned) {
+          return (
+            <MenuTableDevice
+              menuType={MENU_TYPE.MINE}
+              record={record}
+              onClickMenu={menuActionHandler}
+            />
+          );
+        }
+        return <span>-</span>;
+      },
+    });
     setColumnsHeader(columns);
   }, [stateQuery, isError]);
   // * get data source from API and set to state that store records for table
@@ -127,6 +163,9 @@ export default function MyBorrowDeviceHistory() {
       }
     }
   }, [dataTable, stateQuery, isError]);
+  const menuActionHandler = (record: DeviceModel) => {
+    returnDevice(record.id);
+  };
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,

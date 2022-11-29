@@ -6,6 +6,7 @@ export interface DeviceModel extends Resource {
   description?: string;
   isUsed?: number;
   deviceTypeName?: string;
+  isReturned?: number;
 }
 
 export interface DeviceListFilter {

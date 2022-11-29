@@ -93,7 +93,7 @@ export const useCancelRequest = ({
       onError: (error: any) => onError?.(error),
       onSuccess: successHandler(onSuccess),
       onSettled: () => {
-        queryClient.invalidateQueries(['cancel-request']);
+        queryClient.invalidateQueries(['my-request-list']);
       },
     },
   );
