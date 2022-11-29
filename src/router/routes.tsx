@@ -22,8 +22,12 @@ import { useRoutes } from 'react-router-dom';
 import UserProfile from 'pages/userProfile';
 import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
 import PayslipDetail from 'pages/payslip';
-import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
+import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
 import AllDiviceList from 'pages/device/device/allDeviceList';
+import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
+import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
+import OfficeTime from 'pages/officeTime';
+import CreateSecurityCode from 'pages/payslip/createSecureCode';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -42,7 +46,7 @@ export default function RouterElement() {
             { path: 'time-attendance', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
-            { path: 'device-history', element: <PayslipDetail /> },
+            { path: 'device-history', element: <MyBorrowDeviceHistory /> },
           ],
         },
         {
@@ -68,14 +72,18 @@ export default function RouterElement() {
             },
             {
               path: 'borrow-device-history',
+              element: <AllBorrowDeviceHistory menuType={MENU_TYPE.ALL} />,
+            },
+            {
+              path: 'sub-borrow-device-history',
               element: (
-                <SubordinateLeaveBudget menuType={MENU_TYPE.SUBORDINATE} />
+                <AllBorrowDeviceHistory menuType={MENU_TYPE.SUBORDINATE} />
               ),
             },
           ],
         },
         {
-          path: 'request',
+          path: 'request-center',
           children: [
             {
               path: 'my-request',
@@ -131,7 +139,7 @@ export default function RouterElement() {
           path: 'system-company',
           children: [
             { path: 'department', element: <DepartmentList /> },
-            { path: 'office-time', element: <DepartmentList /> },
+            { path: 'office-time', element: <OfficeTime /> },
           ],
         },
         {
@@ -139,8 +147,22 @@ export default function RouterElement() {
           element: <UserProfile />,
         },
         {
-          path: 'setting/security-code',
-          element: <SettingSecurityCode />,
+          path: 'setting',
+          children: [
+            {
+              path: 'security-code',
+              children: [
+                {
+                  path: 'update',
+                  element: <UpdateSecurityCode />,
+                },
+                {
+                  path: 'create',
+                  element: <CreateSecurityCode />,
+                },
+              ],
+            },
+          ],
         },
       ],
     },

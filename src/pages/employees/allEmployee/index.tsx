@@ -94,15 +94,21 @@ export default function AllEmployeeList() {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
-      if (el.key === 'fullName' || el.key === 'rollNumber') {
-        el.sorter = isError;
+      if (el.key === 'rollNumber') {
+        el.width = 150;
+        el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
-      if (
-        el.key === 'rollNumber' ||
-        el.key === 'status' ||
-        el.key === 'department'
-      ) {
+      if (el.key === 'fullName') {
+        el.width = 300;
+      }
+      if (el.key === 'positionName' || el.key === 'department') {
+        el.width = 200;
+      }
+      if (el.key === 'email') {
+        el.width = 350;
+      }
+      if (el.key === 'status') {
         el.width = 100;
       }
       return {

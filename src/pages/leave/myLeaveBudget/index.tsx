@@ -119,7 +119,7 @@ export default function MyLeaveBudget() {
       </div>
       <div className={styles.menu}>
         <MenuRequestType
-          menuType={MENU_TYPE.MIME}
+          menuType={MENU_TYPE.MINE}
           setStateQuery={setStateQuery}
         />
       </div>

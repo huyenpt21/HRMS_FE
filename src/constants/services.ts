@@ -15,17 +15,33 @@ export const SUBORDINATE_LIST = {
   },
 };
 
+export const OFFICE_TIME = {
+  service: 'office-time',
+  model: {
+    hr: 'hr',
+  },
+};
+
+export const PAYSLIP = {
+  service: 'payroll',
+  model: {
+    secureCode: 'secure-code',
+    correct: 'correct',
+    forgot: 'forgot',
+  },
+};
+
 export const REQUEST = {
   service: 'request',
   model: {
     status: 'status',
     remainingTime: 'remaining-time',
-    officeTime: 'office-time',
     itSupport: 'it-support',
     manager: 'manager',
     hr: 'hr',
     assign: 'assign',
     remainDevice: 'check-remaining-device',
+    cancel: 'cancel-request',
   },
 };
 export const TIME_CHECK = {
@@ -65,6 +81,9 @@ export const DEVICE = {
   service: 'device',
   model: {
     itSupport: 'it-support',
+    manager: 'manager',
+    borrowHistory: 'borrow-history',
+    return: 'return-device',
   },
 };
 

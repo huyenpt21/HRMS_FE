@@ -15,7 +15,7 @@ import {
   ResRequestList,
   ResRequestModify,
 } from 'models/request';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import fetchApi from 'utils/fetch-api';
 
 class RequestList implements Feature<RequestListSortFields> {
@@ -73,6 +73,32 @@ export const useChangeStatusRequest = ({
   );
 };
 
+export const useCancelRequest = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResRequestModify>) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (id: number) =>
+      fetchApi(
+        {
+          url: `${REQUEST.service}/${REQUEST.model.cancel}/${id}`,
+          options: {
+            method: 'PUT',
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+      onSettled: () => {
+        queryClient.invalidateQueries(['my-request-list']);
+      },
+    },
+  );
+};
+
 export const useGetRemainingTime = ({
   onError,
   onSuccess,
@@ -92,15 +118,6 @@ export const useGetRemainingTime = ({
     },
   );
 };
-export const useGetOfficeTime = () =>
-  useQuery([], () =>
-    fetchApi(
-      {
-        url: REQUEST.model.officeTime,
-      },
-      undefined,
-    ),
-  );
 export const useCheckRemainDevice = ({
   onError,
   onSuccess,

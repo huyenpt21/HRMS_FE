@@ -75,6 +75,11 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
+      if (el.key === 'rollNumber') {
+        el.sorter = true;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
+        el.width = 150;
+      }
       if (el.key === 'fullName') {
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);

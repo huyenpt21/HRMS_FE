@@ -1,10 +1,11 @@
 @import 'styles/_variables.less';
-
-.footer {
-  height: 56px;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  transition: all 0.2s;
+.main {
+  :global {
+    .ant-layout-content {
+      max-height: calc(100% - 148px);
+      margin: 90px 28px 10px;
+      background-color: @white;
+      border-radius: 8px !important;
+    }
+  }
 }

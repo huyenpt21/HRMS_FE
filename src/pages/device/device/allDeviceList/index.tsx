@@ -7,6 +7,7 @@ import {
   ACTION_TYPE,
   DEVICE_MENU,
   MENU_OPTION_KEY,
+  MENU_TYPE,
   STATUS_COLORS,
 } from 'constants/enums/common';
 import { AllDeviceListHeader } from 'constants/header';
@@ -121,7 +122,11 @@ export default function AllDiviceList() {
       render: (_, record: DeviceModel) => {
         if (!record?.isUsed) {
           return (
-            <MenuTableDevice record={record} onClickMenu={menuActionHandler} />
+            <MenuTableDevice
+              menuType={MENU_TYPE.ALL}
+              record={record}
+              onClickMenu={menuActionHandler}
+            />
           );
         }
         return <span>-</span>;

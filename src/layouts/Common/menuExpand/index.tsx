@@ -16,7 +16,7 @@ export default function MenuExpand() {
       </div>
       <div
         className={styles.item}
-        onClick={() => navigate('setting/security-code')}
+        onClick={() => navigate('setting/security-code/update')}
       >
         <div className={styles.content}>
           <span className={styles.wrapper}>

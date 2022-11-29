@@ -5,25 +5,28 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  align-items: baseline;
   .main {
     width: 40%;
     height: fit-content;
-    margin-top: 30px;
     background-color: @white;
-    padding: 12px 34px 34px;
+    padding: 14px 34px 14px;
+    margin: 48px 0;
     border-radius: 8px;
+    .header__title {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
     .login {
       &__payslip {
         margin: 12px auto;
         width: 50%;
       }
-      &__title {
-        font-size: 18px;
-        justify-content: center;
-        margin-bottom: 24px;
-      }
       &__btn {
-        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 12px;
       }
     }
     .text__bold {
@@ -35,8 +38,8 @@
     }
     .header__section {
       padding: 0 20px;
+      text-align: center;
       .header__title {
-        text-align: center;
         font-size: 28px;
         font-weight: 700;
         margin-bottom: 32px;
@@ -47,6 +50,7 @@
     }
     .content__section {
       padding: 0 50px;
+      // height: 100%;
       .text__main {
         padding-top: 12px;
         font-weight: 600;
@@ -60,6 +64,12 @@
       .ant-divider-horizontal {
         margin: 10px 0 !important;
       }
+    }
+    .forgot__text {
+      text-decoration: underline;
+      cursor: pointer;
+      text-align: end;
+      margin: 0 0 20px;
     }
   }
 }
