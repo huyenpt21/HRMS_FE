@@ -3,13 +3,23 @@ import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
 import { MESSAGE_RES, YEAR_MONTH_NUM } from 'constants/common';
-import { useCheckSecureCodeExist, useGetPayslip } from 'hooks/usePayslip';
-import { PayslipModel, ResPayslipDetail } from 'models/payslip';
+import {
+  useCheckSecureCodeCorrectly,
+  useCheckSecureCodeExist,
+  useGetPayslip,
+} from 'hooks/usePayslip';
+import {
+  PayslipModel,
+  ResPayslipDetail,
+  ResPayslipModify,
+  SercurityCode,
+} from 'models/payslip';
 import moment from 'moment-timezone';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './payrollDetail.module.less';
 import dataCheckExistMock from './dataCheckExistMock.json';
+// import dataCheckCorrectMock from './dataCheckCorrect.json';
 
 export default function PayslipDetail() {
   const [payslipForm] = Form.useForm();
@@ -29,6 +39,26 @@ export default function PayslipDetail() {
     }
     // }
   }, [secureCodeData]);
+  // const { data: isSecureCodeCorrect } = dataCheckCorrectMock;
+  // console.log(isSecureCodeCorrect);
+
+  const { mutate: checkSecureCodeCorrect } = useCheckSecureCodeCorrectly({
+    onSuccess: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+        data: isSecureCodeCorrect,
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCorrect) {
+        setIsShowPayslip(true);
+      }
+    },
+    onError: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
   useEffect(() => {
     if (isShowPayslip) {
       payslipData({
@@ -55,8 +85,9 @@ export default function PayslipDetail() {
     },
   });
 
-  const submitHandler = (formValue: { secureCode: string }) => {
-    if (formValue) setIsShowPayslip(true);
+  const submitHandler = (formValue: SercurityCode) => {
+    // if (formValue) setIsShowPayslip(true);
+    checkSecureCodeCorrect(formValue);
   };
   const handleChangeFilterDate = (_: moment.Moment, dateString: string) => {
     const month = Number(dateString.split('/')[0].trim());
@@ -86,7 +117,7 @@ export default function PayslipDetail() {
               <div>Enter your security code</div>
             </Row>
             <BasicInput
-              name="secureCode"
+              name="currentSecureCode"
               type="password"
               rules={[
                 { required: true, message: 'Security code is required' },

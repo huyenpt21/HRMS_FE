@@ -66,7 +66,7 @@ export const useCheckSecureCodeCorrectly = ({
 export const useCreateSecurityCode = ({
   onError,
   onSuccess,
-}: MutationProps<ResPayslipDetail>) => {
+}: MutationProps<ResPayslipModify>) => {
   return useMutation(
     (body: SercurityCode) =>
       fetchApi(
