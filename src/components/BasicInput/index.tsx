@@ -3,10 +3,11 @@ import { CSSProperties, ReactNode } from 'react';
 import styles from './index.module.less';
 import { LabelTooltipType } from 'antd/lib/form/FormItemLabel';
 import { NamePath } from 'antd/lib/form/interface';
+import { Rule } from 'antd/lib/form';
 
 export interface IInputProps {
   label?: string | ReactNode;
-  rules?: object[];
+  rules?: Rule[];
   name?: string | NamePath;
   colon?: boolean;
   placeholder?: string;
@@ -38,6 +39,7 @@ export interface IInputProps {
   max?: string;
   rows?: number;
   ref?: React.Ref<InputRef>;
+  hasFeedback?: boolean;
 }
 const BasicInput = (props: IInputProps) => {
   const isRequired = props.rules
@@ -150,6 +152,7 @@ const BasicInput = (props: IInputProps) => {
       noStyle={props.noStyle}
       dependencies={props.dependencies}
       validateFirst={props.validateFirst}
+      hasFeedback={props.hasFeedback}
     >
       {InputContent}
     </Form.Item>

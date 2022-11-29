@@ -27,9 +27,10 @@ export default function SettingSecurityCode() {
           </Row>
           <BasicInput
             name="secureCode"
+            label="New security code"
             type="password"
             rules={[
-              { required: true, message: 'Security code is required' },
+              { required: true, message: 'Please enter your security code!' },
               {
                 whitespace: true,
                 message: 'Only white spaces are invalid',
@@ -40,6 +41,32 @@ export default function SettingSecurityCode() {
               },
             ]}
             allowClear
+            hasFeedback
+          />
+          <BasicInput
+            name="confirm"
+            label="Confirm security code"
+            type="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please confirm your security code!',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('secureCode') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error(
+                      'The two security codes that you entered do not match!',
+                    ),
+                  );
+                },
+              }),
+            ]}
+            allowClear
+            hasFeedback
           />
           <Row className={styles.login__btn}>
             <BasicButton title="Submit" type="filled" htmlType="submit" />

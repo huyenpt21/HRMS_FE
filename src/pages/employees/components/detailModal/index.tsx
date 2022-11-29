@@ -183,7 +183,7 @@ export default function EmployeeDetailModal({
                     rules={[
                       { required: true },
                       {
-                        pattern: '^(\\+84|84|0)+([0-9]{9,10})\\b',
+                        pattern: new RegExp('^(\\+84|84|0)+([0-9]{9,10})\\b'),
                         message: 'Phone Number is invalid',
                       },
                     ]}
@@ -243,7 +243,7 @@ export default function EmployeeDetailModal({
                     rules={[
                       { required: true },
                       {
-                        pattern: '\\d',
+                        pattern: new RegExp('\\d'),
                         message: 'Basic Salary is invalid',
                       },
                     ]}
@@ -258,7 +258,7 @@ export default function EmployeeDetailModal({
                     rules={[
                       { required: true },
                       {
-                        pattern: '\\d',
+                        pattern: new RegExp('\\d'),
                         message: 'Basic Bonus is invalid',
                       },
                     ]}

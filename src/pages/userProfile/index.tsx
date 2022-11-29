@@ -143,7 +143,7 @@ export default function UserProfile() {
                   rules={[
                     { required: true },
                     {
-                      pattern: '^(\\+84|84|0)+([0-9]{9,10})\\b',
+                      pattern: new RegExp('^(\\+84|84|0)+([0-9]{9,10})\\b'),
                       message: 'Phone Number is invalid',
                     },
                   ]}
