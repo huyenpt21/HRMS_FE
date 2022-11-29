@@ -26,6 +26,7 @@ import SettingSecurityCode from 'pages/payslip/settingSecurityCode';
 import AllDiviceList from 'pages/device/device/allDeviceList';
 import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
 import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
+import OfficeTime from 'pages/officeTime';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -137,7 +138,7 @@ export default function RouterElement() {
           path: 'system-company',
           children: [
             { path: 'department', element: <DepartmentList /> },
-            { path: 'office-time', element: <DepartmentList /> },
+            { path: 'office-time', element: <OfficeTime /> },
           ],
         },
         {

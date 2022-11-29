@@ -31,7 +31,6 @@ import {
   useAddRequestModal,
   useChangeStatusRequest,
   useCheckRemainDevice,
-  useGetOfficeTime,
   useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
@@ -57,6 +56,7 @@ import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
 import detailMock from './detailMock.json';
 import styles from './requestDetailModal.module.less';
+import { useGetOfficeTime } from 'hooks/useOfficeTime';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;

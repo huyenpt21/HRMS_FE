@@ -15,7 +15,7 @@ import {
   ResRequestList,
   ResRequestModify,
 } from 'models/request';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import fetchApi from 'utils/fetch-api';
 
 class RequestList implements Feature<RequestListSortFields> {
@@ -118,15 +118,6 @@ export const useGetRemainingTime = ({
     },
   );
 };
-export const useGetOfficeTime = () =>
-  useQuery([], () =>
-    fetchApi(
-      {
-        url: REQUEST.model.officeTime,
-      },
-      undefined,
-    ),
-  );
 export const useCheckRemainDevice = ({
   onError,
   onSuccess,
