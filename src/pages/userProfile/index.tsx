@@ -3,7 +3,12 @@ import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
-import { DATE_TIME, MESSAGE_RES, validateMessages } from 'constants/common';
+import {
+  DATE_TIME,
+  MESSAGE_RES,
+  US_DATE_FORMAT,
+  validateMessages,
+} from 'constants/common';
 import { GENDER_LIST } from 'constants/fixData';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storageFirebase } from 'firebaseSetup';
@@ -12,7 +17,7 @@ import { EmployeeModel } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
 import { getDateFormat } from 'utils/common';
-import dataMock from './detailMock.json';
+// import dataMock from './detailMock.json';
 import { UploadAvatar } from './uploadAvatar';
 import styles from './userProfile.module.less';
 
@@ -33,32 +38,33 @@ export default function UserProfile() {
     },
   });
   useEffect(() => {
-    // if (detailUserInfo && detailUserInfo.data) {
-    const {
-      metadata: { message },
-      data: { item: userInfo },
-    } = dataMock;
-    if (message === MESSAGE_RES.SUCCESS && userInfo) {
-      personInforRef.current = userInfo;
-      userProfileForm.setFieldsValue(userInfo);
-      userProfileForm.setFieldsValue({
-        dateOfBirth: moment(userInfo.dateOfBirth),
-      });
+    if (detailUserInfo && detailUserInfo.data) {
+      const {
+        metadata: { message },
+        data: { item: userInfo },
+      } = detailUserInfo;
+      if (message === MESSAGE_RES.SUCCESS && userInfo) {
+        personInforRef.current = userInfo;
+        userProfileForm.setFieldsValue(userInfo);
+        userProfileForm.setFieldsValue({
+          dateOfBirth: moment(userInfo.dateOfBirth),
+        });
+      }
     }
-    // }
   }, [detailUserInfo]);
   const submitHandler = async (formValues: EmployeeModel) => {
     formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
-    formValues.avatar = await uploadImage();
+    if (imageFile) {
+      formValues.avatarImg = await uploadImage();
+    }
     updateUserInfo(formValues);
   };
-
   const uploadImage = async () => {
     setIsUploadingImage(true);
     let imgUrlDownload: string | undefined = undefined;
     const imageRef = ref(
       storageFirebase,
-      `images/avatar/${imageFile.name}-${Math.random()}`,
+      `images/avatar/${imageFile?.name}-${Math.random()}`,
     );
     await uploadBytes(imageRef, imageFile)
       .then(async () => {
@@ -93,7 +99,13 @@ export default function UserProfile() {
       <Row gutter={32} className={styles.content}>
         <Col xs={12} sm={12} md={10} lg={10} xl={8} xxl={6}>
           <div className={styles.left__side}>
-            <UploadAvatar setImageFile={setImageFile} />
+            <UploadAvatar
+              setImageFile={setImageFile}
+              avtUrl={
+                personInforRef.current?.avatarImg ??
+                'https://i.pinimg.com/736x/ed/c9/cb/edc9cb773659891ba03594a3a180887a.jpg'
+              }
+            />
             <Divider />
             <Row className={styles.info}>
               <Col span={24}>
@@ -143,12 +155,15 @@ export default function UserProfile() {
                   rules={[
                     { required: true },
                     {
-                      pattern: new RegExp('^(\\+84|84|0)+([0-9]{9,10})\\b'),
+                      pattern: new RegExp(
+                        '^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$',
+                      ),
                       message: 'Phone Number is invalid',
                     },
                   ]}
                   allowClear
                   placeholder="Enter phone number"
+                  showCount
                 />
               </Col>
             </Row>
@@ -158,8 +173,15 @@ export default function UserProfile() {
                   name="citizenIdentification"
                   label="Citizen Identification"
                   allowClear
-                  rules={[{ required: true, whitespace: true }]}
+                  rules={[
+                    { required: true, whitespace: true },
+                    {
+                      pattern: new RegExp('^[0-9]{9}$|^[0-9]{12}$'),
+                      message: 'Citizen Identification is invalid',
+                    },
+                  ]}
                   placeholder="Enter Citizen Identification"
+                  showCount
                 />
               </Col>
             </Row>
@@ -232,7 +254,10 @@ export default function UserProfile() {
               <Col span={12}>
                 <span>Onboard Date: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.onBoardDate}
+                  {getDateFormat(
+                    personInforRef.current?.onBoardDate,
+                    US_DATE_FORMAT,
+                  )}
                 </span>
               </Col>
             </Row>

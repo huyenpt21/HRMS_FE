@@ -183,12 +183,15 @@ export default function EmployeeDetailModal({
                     rules={[
                       { required: true },
                       {
-                        pattern: new RegExp('^(\\+84|84|0)+([0-9]{9,10})\\b'),
+                        pattern: new RegExp(
+                          '^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$',
+                        ),
                         message: 'Phone Number is invalid',
                       },
                     ]}
                     allowClear
                     placeholder="Enter phone number"
+                    showCount
                   />
                 </Col>
               </Row>
@@ -198,8 +201,15 @@ export default function EmployeeDetailModal({
                     name="citizenIdentification"
                     label="Citizen Identification"
                     allowClear
-                    rules={[{ required: true, whitespace: true }]}
+                    rules={[
+                      { required: true, whitespace: true },
+                      {
+                        pattern: new RegExp('^[0-9]{9}$|^[0-9]{12}$'),
+                        message: 'Expect only 9 or 12 numbers',
+                      },
+                    ]}
                     placeholder="Enter Citizen Identification"
+                    showCount
                   />
                 </Col>
               </Row>
