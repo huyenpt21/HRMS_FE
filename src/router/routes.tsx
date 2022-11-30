@@ -47,7 +47,19 @@ export default function RouterElement() {
             { path: 'time-attendance', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
-            { path: 'device-history', element: <MyBorrowDeviceHistory /> },
+            {
+              path: 'device-history',
+              children: [
+                {
+                  path: '',
+                  element: <MyBorrowDeviceHistory />,
+                },
+                {
+                  path: 'detail/:assignDeviceId',
+                  element: <DetailDeviceRequest />,
+                },
+              ],
+            },
           ],
         },
         {
