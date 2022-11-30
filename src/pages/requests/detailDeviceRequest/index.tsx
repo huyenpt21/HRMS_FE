@@ -32,7 +32,7 @@ export default function DetailDeviceRequest() {
         statusRef.current = item.isReturned;
         requestForm.setFieldsValue({
           borrowDate: getDateFormat(item?.borrowDate, DATE_TIME_US),
-          returnDate: getDateFormat(item?.borrowDate, DATE_TIME_US),
+          returnDate: getDateFormat(item?.returnDate, DATE_TIME_US),
         });
       }
     }
@@ -43,6 +43,7 @@ export default function DetailDeviceRequest() {
       navigate('/human-resource/borrow-device-history');
     if (type === 'emp-self-service')
       navigate('/emp-self-service/device-history');
+    statusRef.current = undefined;
   };
 
   return (
@@ -57,7 +58,7 @@ export default function DetailDeviceRequest() {
         className={styles.content}
       >
         <Row className={styles.header}>
-          <div className={styles.header__title}>Detail Device</div>
+          <div className={styles.header__title}>Device handover details</div>
           <BasicButton
             title="Back"
             type="filled"
@@ -68,25 +69,23 @@ export default function DetailDeviceRequest() {
         <Divider />
         <Form form={requestForm} layout="vertical" requiredMark disabled={true}>
           <Row gutter={36}>
-            <Col span={12}>
+            <Col span={!!statusRef.current ? 6 : 12}>
               <Form.Item label="Status" name="isReturned">
                 <RequestStatus
                   data={!!statusRef.current ? STATUS.RETURNED : STATUS.USING}
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
-              <BasicInput name="deviceTypeName" label="Device Type Name" />
+            <Col span={!!statusRef.current ? 9 : 12}>
+              <BasicInput name="borrowDate" label="Borrow Time" />
             </Col>
+            {!!statusRef.current && (
+              <Col span={9}>
+                <BasicInput name="returnDate" label="Returned Date" />
+              </Col>
+            )}
           </Row>
-          <Row gutter={36}>
-            <Col span={12}>
-              <BasicInput name="deviceCode" label="Device Code" />
-            </Col>
-            <Col span={12}>
-              <BasicInput name="deviceName" label="Device Name" />
-            </Col>
-          </Row>
+          <Divider>Handover information</Divider>
           <Row gutter={36}>
             <Col span={12}>
               <BasicInput name="rollNumber" label="Roll Number" />
@@ -97,10 +96,13 @@ export default function DetailDeviceRequest() {
           </Row>
           <Row gutter={36}>
             <Col span={12}>
-              <BasicInput name="borrowDate" label="Borrow Time" />
+              <BasicInput name="deviceTypeName" label="Device Type Name" />
             </Col>
             <Col span={12}>
-              <BasicInput name="returnDate" label="Returned Date" />
+              <BasicInput name="deviceCode" label="Device Code" />
+            </Col>
+            <Col span={12}>
+              <BasicInput name="deviceName" label="Device Name" />
             </Col>
           </Row>
         </Form>

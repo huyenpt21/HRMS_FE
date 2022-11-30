@@ -197,9 +197,9 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
       rowKey={(record: DeviceModel) => record.id}
       loading={isLoading}
       isShowScroll
-      className={'cursor-pointer'}
+      className={menuType === MENU_TYPE.ALL ? 'cursor-pointer' : ''}
       onRow={(record: DeviceModel) => {
-        return rowClickHandler(record);
+        if (menuType === MENU_TYPE.ALL) return rowClickHandler(record);
       }}
     />
   );
