@@ -1,15 +1,22 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
+import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
+import { DATE_TIME } from 'constants/common';
 import { ACTION_TYPE, DEVICE_MENU } from 'constants/enums/common';
-import { BORROW_DEVICE_STATUS, DEVICE_STATUS } from 'constants/fixData';
-import { DEVICE_TYPE } from 'constants/services';
+import {
+  DEVICE_HISTORY_STATUS,
+  DEVICE_MANAGEMENT_STATUS,
+  DEVICE_REQUEST_STATUS,
+} from 'constants/fixData';
+import { DEVICE } from 'constants/services';
 import { DeviceListQuery } from 'models/device';
-import { Dispatch, SetStateAction, MutableRefObject } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { getStartEndDateFormat } from 'utils/common';
 import styles from './extraHeaderDevice.module.less';
 
 interface IProps {
@@ -17,12 +24,14 @@ interface IProps {
   setStateQuery: Dispatch<SetStateAction<DeviceListQuery>>;
   modalAction?: MutableRefObject<ACTION_TYPE>;
   menuType: string;
+  stateQuery?: DeviceListQuery;
 }
 export default function ExtraHeaderDevice({
   setIsShowDetailModal,
   setStateQuery,
   menuType,
   modalAction,
+  stateQuery,
 }: IProps) {
   const getTitle = () => {
     let returnObject = {
@@ -35,7 +44,7 @@ export default function ExtraHeaderDevice({
         returnObject.titleBtn = 'Add Device Type';
         break;
       }
-      case DEVICE_MENU.ALL: {
+      case DEVICE_MENU.DEVICE_MANAGEMENT: {
         returnObject.titlePage = 'All Device List';
         returnObject.titleBtn = 'Add Device';
         break;
@@ -48,15 +57,28 @@ export default function ExtraHeaderDevice({
         returnObject.titlePage = 'My Borrow Device History';
         break;
       }
+      case DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST: {
+        returnObject.titlePage = 'All Request Borrow Device List';
+        break;
+      }
     }
     return returnObject;
+  };
+  const handleChangeCreateDate = (_: any, dateString: string) => {
+    const fromDate = getStartEndDateFormat(dateString[0], DATE_TIME);
+    const toDate = getStartEndDateFormat(dateString[1], DATE_TIME, false);
+    setStateQuery((prev: any) => ({
+      ...prev,
+      approvalDateFrom: fromDate,
+      approvalDateTo: toDate,
+    }));
   };
   return (
     <>
       <div className={styles.header__section}>
         <div className={styles.header__title}>{getTitle().titlePage}</div>
         {(menuType === DEVICE_MENU.DEVICE_TYPE ||
-          menuType === DEVICE_MENU.ALL) && (
+          menuType === DEVICE_MENU.DEVICE_MANAGEMENT) && (
           <BasicButton
             title={getTitle().titleBtn}
             type="filled"
@@ -78,6 +100,20 @@ export default function ExtraHeaderDevice({
                 allowClear
                 setStateQuery={setStateQuery}
                 keyParam="search"
+                label="Name"
+              />
+            </Col>
+          )}
+          {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST && (
+            <Col xs={24} sm={14} md={12} lg={8} xl={6} xxl={6}>
+              <BasicDateRangePicker
+                placeholder={['From', 'To']}
+                label={'Approval Date'}
+                onChange={handleChangeCreateDate}
+                defaultStartDate={stateQuery?.approvalDateFrom}
+                defaultEndDate={stateQuery?.approvalDateTo}
+                isUseDefaultValue={!!stateQuery?.approvalDateFrom}
+                allowClear
               />
             </Col>
           )}
@@ -85,7 +121,7 @@ export default function ExtraHeaderDevice({
             <>
               <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
                 <SelectCustomSearch
-                  url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
+                  url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
                   dataName="items"
                   apiName="device-type-master-data"
                   placeholder="Choose device type"
@@ -96,14 +132,17 @@ export default function ExtraHeaderDevice({
                       deviceTypeId: value,
                     }));
                   }}
+                  label="Device Type"
                 />
               </Col>
               <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
-                {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY && (
+                {(menuType === DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY ||
+                  menuType === DEVICE_MENU.MY_BORROW_DEVICE_HISTORY) && (
                   <BasicSelect
-                    options={BORROW_DEVICE_STATUS}
+                    options={DEVICE_HISTORY_STATUS}
                     placeholder="Choose status"
                     allowClear
+                    label="Status"
                     onChange={(value) => {
                       setStateQuery((prev: DeviceListQuery) => ({
                         ...prev,
@@ -112,17 +151,35 @@ export default function ExtraHeaderDevice({
                     }}
                   />
                 )}
-                {menuType !== DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY && (
+                {menuType === DEVICE_MENU.DEVICE_MANAGEMENT && (
                   <BasicSelect
-                    options={DEVICE_STATUS}
+                    options={DEVICE_MANAGEMENT_STATUS}
                     placeholder="Choose status"
                     allowClear
+                    label="Status"
                     onChange={(value) => {
                       setStateQuery((prev: DeviceListQuery) => ({
                         ...prev,
                         isUsed: value,
                       }));
                     }}
+                  />
+                )}
+                {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST && (
+                  <BasicSelect
+                    options={DEVICE_REQUEST_STATUS}
+                    placeholder="Choose status"
+                    label="Status"
+                    allowClear
+                    showSearch
+                    optionFilterProp="label"
+                    onChange={(value) => {
+                      setStateQuery((prev: any) => ({
+                        ...prev,
+                        isAssigned: value,
+                      }));
+                    }}
+                    defaultValue={stateQuery?.isAssigned ?? undefined}
                   />
                 )}
               </Col>

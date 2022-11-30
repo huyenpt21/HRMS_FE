@@ -9,6 +9,10 @@ export interface DeviceModel extends Resource {
   isReturned?: number;
   borrowDate?: string;
   returnDate?: string;
+  isAssigned?: number;
+  deviceTypeId?: number;
+  requestId?: number;
+  deviceId?: number;
 }
 
 export interface DeviceListFilter {
@@ -16,6 +20,9 @@ export interface DeviceListFilter {
   isUsed?: number;
   deviceTypeId?: number;
   isReturned?: number;
+  approvalDateFrom?: string;
+  approvalDateTo?: string;
+  isAssigned?: number;
 }
 
 export type DeviceListSortFields = 'deviceTypeName';

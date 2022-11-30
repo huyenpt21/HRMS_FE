@@ -64,7 +64,7 @@ export default function RequestMenuAction({
       } = response;
       if (message === 'Success') {
         notification.success({
-          message: 'Delete request successfully',
+          message: 'Cancel request successfully',
         });
         refetchList();
       }
@@ -184,20 +184,6 @@ export default function RequestMenuAction({
           onCancel={() => setIsShowRollbackModal(false)}
           requestStatus={record?.status}
         />
-      )}
-      {tabType === REQUEST_MENU.DEVICE && (
-        <Tooltip title="Assign device">
-          <span
-            onClick={() => {
-              if (requestIdRef) requestIdRef.current = record.id;
-              if (modalAction) modalAction.current = ACTION_TYPE.ASSIGN;
-              setIsShowDetailModal && setIsShowDetailModal(true);
-            }}
-            className="cursor-pointer"
-          >
-            <SvgIcon icon="tag" />
-          </span>
-        </Tooltip>
       )}
     </div>
   );

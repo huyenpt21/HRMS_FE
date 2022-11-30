@@ -7,10 +7,10 @@ import { STATUS } from 'constants/enums/common';
 import { DEVICE } from 'constants/services';
 import { useDeviceDetail, useReturnDevice } from 'hooks/useDevice';
 import { DeviceModel, ResDeviceModify } from 'models/device';
+import DeviceStatus from 'pages/device/components/statusDevice';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getDateFormat } from 'utils/common';
-import RequestStatus from '../components/statusRequest';
 import styles from './detailDeviceRequest.module.less';
 export default function DetailDeviceRequest() {
   const { assignDeviceId } = useParams();
@@ -88,7 +88,7 @@ export default function DetailDeviceRequest() {
           <Row gutter={36} className={styles.content__header}>
             <Col span={!!detailData?.isReturned ? 6 : 8}>
               <Form.Item label="Status" name="isReturned">
-                <RequestStatus
+                <DeviceStatus
                   data={
                     !!detailData?.isReturned ? STATUS.RETURNED : STATUS.USING
                   }

@@ -4,6 +4,8 @@ import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
 import { DEVICE_MENU } from 'constants/enums/common';
 import { DeviceTypeHeader } from 'constants/header';
+import { DEVICE } from 'constants/services';
+import { useDeviceList } from 'hooks/useDevice';
 import { EditableCellProps, HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDeviceType from 'pages/device/components/extraHeader';
@@ -12,7 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
 import DeviceTypeDetailModal from '../detailModalDeviceType';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 
 export default function DeviceTypeList() {
   const [deviceTypeForm] = Form.useForm();
@@ -42,7 +44,10 @@ export default function DeviceTypeList() {
 
   //  * get data header and content table
   const header: HeaderTableFields[] = DeviceTypeHeader;
-  // const { isError, data: dataTable } = useDeviceTypeList(stateQuery);
+  const { data: dataTable, isLoading } = useDeviceList(
+    stateQuery,
+    `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
+  );
 
   // * render header and data in table
   useEffect(() => {
@@ -79,24 +84,23 @@ export default function DeviceTypeList() {
   }, [stateQuery, editingKey]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable.data) {
-    const {
-      metadata: { pagination },
-      data: { items: recordsTable },
-    } = dataMock;
-    setRecords(recordsTable);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable.data) {
+      const {
+        metadata: { pagination },
+        data: { items: recordsTable },
+      } = dataTable;
+      setRecords(recordsTable);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
-    // }, [dataTable, stateQuery, isError]);
-  }, [stateQuery]);
+  }, [dataTable, stateQuery]);
   const cancelModalHandler = () => {
     setIsShowDetailModal(false);
     deviceTypeId.current = undefined;
@@ -168,7 +172,7 @@ export default function DeviceTypeList() {
           }
           stateQuery={stateQuery}
           rowKey={(record: DeviceModel) => record.id}
-          // loading={isLoading}
+          loading={isLoading}
           isShowScroll
         />
       </Form>

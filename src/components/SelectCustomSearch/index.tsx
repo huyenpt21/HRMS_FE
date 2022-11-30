@@ -26,7 +26,7 @@ type Props = {
   maxTagCount?: 'number' | 'responsive';
   size?: 'large' | 'middle' | 'small';
   isGetWholeValue?: boolean;
-  params?: any;
+  payload?: any;
   apiName: string;
   isCallApi?: boolean;
   refetchValue?: any;
@@ -106,7 +106,7 @@ const SelectCustomSearch = ({
   maxTagCount,
   size,
   isGetWholeValue,
-  params,
+  payload,
   apiName,
   isCallApi,
   refetchValue,
@@ -117,7 +117,7 @@ const SelectCustomSearch = ({
   const { data, isFetching, refetch } = useGetDataOptions(
     {
       search: valueSearch,
-      ...params,
+      ...payload,
     },
     url,
     apiName,

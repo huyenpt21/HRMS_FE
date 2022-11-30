@@ -50,7 +50,7 @@ import { RangePickerProps } from 'antd/lib/date-picker';
 import BasicDatePicker from 'components/BasicDatePicker';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
-import { DEVICE_TYPE, REQUEST } from 'constants/services';
+import { DEVICE } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
 // import detailMock from './detailMock.json';
@@ -89,34 +89,29 @@ export default function RequestDetailModal({
   const remainingTimeRef = useRef<number | undefined>();
   const officeTimeRef = useRef<OfficeTime>();
   const { mutate: createRequest, isLoading: loadingCreate } =
-    useAddRequestModal(
-      {
-        onSuccess: (response: ResRequestModify) => {
-          const {
-            metadata: { message },
-          } = response;
+    useAddRequestModal({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
 
-          if (message === 'Success') {
-            notification.success({
-              message: 'Send request successfully',
-            });
-            refetchList();
-            cancelHandler();
-          }
-        },
-        onError: (response: ResRequestModify) => {
-          const {
-            metadata: { message },
-          } = response;
-          notification.error({
-            message: message,
+        if (message === 'Success') {
+          notification.success({
+            message: 'Send request successfully',
           });
-        },
+          refetchList();
+          cancelHandler();
+        }
       },
-      actionModal === ACTION_TYPE.ASSIGN
-        ? `${REQUEST.model.itSupport}/${REQUEST.model.itSupport}/${REQUEST.model.assign}`
-        : undefined,
-    );
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({
+          message: message,
+        });
+      },
+    });
   const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -508,21 +503,19 @@ export default function RequestDetailModal({
               <FixDataHeaderRequest requestData={requestData} />
             )}
             <Row gutter={20}>
-              {tabType !== REQUEST_MENU.DEVICE && (
-                <Col span="12">
-                  <BasicSelect
-                    options={REQUEST_TYPE_LIST}
-                    label="Request Type"
-                    rules={[{ required: true }]}
-                    placeholder="Choose request type"
-                    name="requestTypeId"
-                    allowClear
-                    showSearch
-                    optionFilterProp="label"
-                    onChange={handleChangeRequestType}
-                  />
-                </Col>
-              )}
+              <Col span="12">
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  label="Request Type"
+                  rules={[{ required: true }]}
+                  placeholder="Choose request type"
+                  name="requestTypeId"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={handleChangeRequestType}
+                />
+              </Col>
               {requestStatus === STATUS.PENDING && (
                 <>
                   {requestType === REQUEST_TYPE_KEY.LEAVE && (
@@ -560,38 +553,14 @@ export default function RequestDetailModal({
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
                   <SelectCustomSearch
-                    url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
+                    url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
                     dataName="items"
                     apiName="device-type-master-data"
                     label="Device Type"
-                    rules={[
-                      { required: true && tabType !== REQUEST_MENU.DEVICE },
-                    ]}
+                    rules={[{ required: true }]}
                     placeholder="Choose device type"
                     name="deviceTypeId"
                     allowClear
-                    disabled={
-                      actionModal === ACTION_TYPE.EDIT ||
-                      tabType === REQUEST_MENU.DEVICE
-                    }
-                    onChangeHandle={(value) => {
-                      console.log(value);
-                    }}
-                  />
-                </Col>
-              )}
-              {tabType === REQUEST_MENU.DEVICE && (
-                <Col span="12">
-                  <SelectCustomSearch
-                    url={`${DEVICE_TYPE.model.deviceName}-${DEVICE_TYPE.model.masterData}?deviceTypeId=${requestData?.deviceTypeId}`}
-                    dataName="items"
-                    apiName="device-name-master-data"
-                    label="Device Name"
-                    rules={[{ required: true }]}
-                    placeholder="Choose device name"
-                    name="deviceId"
-                    allowClear
-                    disabled={actionModal !== ACTION_TYPE.ASSIGN}
                   />
                 </Col>
               )}
@@ -683,37 +652,36 @@ export default function RequestDetailModal({
                 </Col>
               </Row>
             )}
-            {tabType !== REQUEST_MENU.DEVICE && (
+            <Row gutter={20}>
+              <Col span={24}>
+                <BasicInput
+                  type="textarea"
+                  rows={3}
+                  placeholder="Enter your reason . . ."
+                  label="Reason"
+                  name="reason"
+                  allowClear
+                  rules={[{ whitespace: true }]}
+                />
+              </Col>
+            </Row>
+
+            {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>
-                  <BasicInput
-                    type="textarea"
-                    rows={3}
-                    placeholder="Enter your reason . . ."
-                    label="Reason"
-                    name="reason"
-                    allowClear
-                  />
+                  <Form.Item
+                    label="Evidence"
+                    className={styles.form__upload}
+                    name="evidence"
+                  >
+                    <UploadFilePictureWall
+                      fileUpload={imageFileList}
+                      setFileUpload={setImageFileList}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
             )}
-            {actionModal !== ACTION_TYPE.VIEW_DETAIL &&
-              tabType !== REQUEST_MENU.DEVICE && (
-                <Row gutter={20}>
-                  <Col span={24}>
-                    <Form.Item
-                      label="Evidence"
-                      className={styles.form__upload}
-                      name="evidence"
-                    >
-                      <UploadFilePictureWall
-                        fileUpload={imageFileList}
-                        setFileUpload={setImageFileList}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              )}
             {(actionModal === ACTION_TYPE.VIEW_DETAIL ||
               actionModal === ACTION_TYPE.EDIT) && (
               <MultipleImagePreview

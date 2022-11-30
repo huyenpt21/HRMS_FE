@@ -50,7 +50,7 @@ export default function CreateSecurityCode() {
           className={styles.login__payslip}
         >
           <BasicInput
-            name="currentSecureCode"
+            name="newSecureCode"
             label="New security code"
             type="password"
             rules={[

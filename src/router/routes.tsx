@@ -2,7 +2,6 @@
 import { MENU_TYPE } from 'constants/enums/common';
 import MainLayout from 'layouts/MainLayout';
 import DepartmentList from 'pages/department/departmentList';
-import DeviceTypeList from 'pages/device/deviceType/deviceTypeList';
 import AllEmployeeList from 'pages/employees/allEmployee';
 import SubordinateList from 'pages/employees/subordinate';
 import ForbiddenPage from 'pages/forbidden';
@@ -20,15 +19,18 @@ import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
 import UserProfile from 'pages/userProfile';
-import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
+
 import PayslipDetail from 'pages/payslip';
 import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
-import AllDiviceList from 'pages/device/device/allDeviceList';
-import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
-import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
+
 import OfficeTime from 'pages/officeTime';
 import CreateSecurityCode from 'pages/payslip/createSecureCode';
-import DetailDeviceRequest from 'pages/requests/detailDeviceRequest';
+import MyBorrowDeviceHistory from 'pages/device/deviceHistory/myDeviceHistory';
+import DetailDeviceRequest from 'pages/device/deviceRequest/detailDeviceRequest';
+import AllBorrowDeviceHistory from 'pages/device/deviceHistory/allBorrowDeviceHistory';
+import BorrowDeviceRequest from 'pages/device/deviceRequest/borrowDeviceRequest';
+import AllDiviceList from 'pages/device/deviceManagement/allDeviceList';
+import DeviceTypeList from 'pages/device/deviceTypeManagemenrt/deviceTypeList';
 
 export default function RouterElement() {
   let element = useRoutes([
