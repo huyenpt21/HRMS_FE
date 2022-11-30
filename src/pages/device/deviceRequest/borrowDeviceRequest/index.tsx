@@ -17,7 +17,7 @@ import { BorrowDeviceListHeader } from 'constants/header';
 import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
-import { DeviceModel } from 'models/device';
+import { DeviceListQuery, DeviceModel } from 'models/device';
 import {
   RequestListQuery,
   RequestListSortFields,
@@ -44,9 +44,9 @@ export default function BorrowDeviceRequest() {
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const requestIdRef = useRef<number>();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
-  const [records, setRecords] = useState<RequestModel[]>([]);
+  const [records, setRecords] = useState<DeviceModel[]>([]);
   // * default feilters
-  const defaultFilter: RequestListQuery = {
+  const defaultFilter: DeviceListQuery = {
     page: searchParams.get('page')
       ? Number(searchParams.get('page'))
       : paginationConfig.current,
@@ -61,7 +61,7 @@ export default function BorrowDeviceRequest() {
     isAssigned: searchParams.get('isAssigned')
       ? Number(searchParams.get('isAssigned'))
       : undefined,
-    deviceTypeId: searchParams.get('deviceTypeId') ?? undefined,
+    deviceTypeId: Number(searchParams.get('deviceTypeId')) ?? undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -128,8 +128,8 @@ export default function BorrowDeviceRequest() {
       dataIndex: 'action',
       width: 80,
       align: 'center',
-      render: (_, record: RequestModel) => {
-        if (!record.isAssigned) {
+      render: (_, record: DeviceModel) => {
+        if (!record?.isAssigned) {
           return (
             <DeviceMenuTable
               record={record}
@@ -196,7 +196,7 @@ export default function BorrowDeviceRequest() {
     }));
   };
 
-  const rowClickHandler = (record: RequestModel) => {
+  const rowClickHandler = (record: DeviceModel) => {
     return {
       onClick: () => {
         requestIdRef.current = record.id;

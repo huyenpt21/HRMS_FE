@@ -9,6 +9,7 @@ export interface DeviceModel extends Resource {
   isReturned?: number;
   borrowDate?: string;
   returnDate?: string;
+  isAssigned?: number;
 }
 
 export interface DeviceListFilter {
