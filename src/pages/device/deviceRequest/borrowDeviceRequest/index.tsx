@@ -61,7 +61,9 @@ export default function BorrowDeviceRequest() {
     isAssigned: searchParams.get('isAssigned')
       ? Number(searchParams.get('isAssigned'))
       : undefined,
-    deviceTypeId: Number(searchParams.get('deviceTypeId')) ?? undefined,
+    deviceTypeId: searchParams.get('deviceTypeId')
+      ? Number(searchParams.get('deviceTypeId'))
+      : undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
