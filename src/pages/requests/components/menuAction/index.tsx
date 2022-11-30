@@ -1,4 +1,4 @@
-import { notification, Tooltip } from 'antd';
+import { notification, Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import {
   ACTION_TYPE,
@@ -155,7 +155,7 @@ export default function RequestMenuAction({
       )}
       {tabType === REQUEST_MENU.MY_REQUEST && (
         <>
-          <Tooltip title="Edit">
+          <Tooltip title="Edit" placement="left">
             <span
               onClick={() =>
                 actionRequestHandler(record.id, REQUEST_ACTION_TYPE.EDIT)
@@ -165,16 +165,20 @@ export default function RequestMenuAction({
               <SvgIcon icon="edit-border" />
             </span>
           </Tooltip>
-          <Tooltip title="Cancel">
-            <span
-              onClick={() =>
-                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL)
-              }
-              className="cursor-pointer"
-            >
-              <SvgIcon icon="close-circle" />
-            </span>
-          </Tooltip>
+          <Popconfirm
+            title="Are you sure?"
+            onConfirm={() =>
+              actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL)
+            }
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Cancel" placement="right">
+              <span className="cursor-pointer">
+                <SvgIcon icon="close-circle" />
+              </span>
+            </Tooltip>
+          </Popconfirm>
         </>
       )}
       {tabType === REQUEST_MENU.SUBORDINATE && (
