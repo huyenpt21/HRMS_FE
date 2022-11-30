@@ -10,7 +10,7 @@ import { useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
   isEmptyPagination,
@@ -23,6 +23,7 @@ interface IProps {
 }
 export default function AllBorrowDeviceHistory({ menuType }: IProps) {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<DeviceModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
@@ -171,6 +172,15 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
       dir,
     }));
   };
+  const rowClickHandler = (record: DeviceModel) => {
+    return {
+      onClick: () => {
+        navigate({
+          pathname: `/human-resource/borrow-device-history/detail/${record.id}`,
+        });
+      },
+    };
+  };
   return (
     <CommonTable
       columns={columnsHeader}
@@ -188,6 +198,9 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
       loading={isLoading}
       isShowScroll
       className={'cursor-pointer'}
+      onRow={(record: DeviceModel) => {
+        return rowClickHandler(record);
+      }}
     />
   );
 }

@@ -1,16 +1,20 @@
+import { BackwardOutlined } from '@ant-design/icons';
 import { Col, Divider, Form, Row } from 'antd';
+import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import { DATE_TIME_US, MESSAGE_RES } from 'constants/common';
 import { STATUS } from 'constants/enums/common';
 import { DEVICE } from 'constants/services';
 import { useDeviceDetail } from 'hooks/useDevice';
 import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getDateFormat } from 'utils/common';
 import RequestStatus from '../components/statusRequest';
 import styles from './detailDeviceRequest.module.less';
 export default function DetailDeviceRequest() {
   const { assignDeviceId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [requestForm] = Form.useForm();
   const statusRef = useRef<Number | undefined>(undefined);
   const { data: detailRequest } = useDeviceDetail(
@@ -33,10 +37,34 @@ export default function DetailDeviceRequest() {
       }
     }
   }, [detailRequest]);
+  const handleBackButton = () => {
+    const type = location.pathname.split('/')[1];
+    if (type === 'human-resource')
+      navigate('/human-resource/borrow-device-history');
+    if (type === 'emp-self-service')
+      navigate('/emp-self-service/device-history');
+  };
+
   return (
     <Row className={styles.container}>
-      <Col xs={24} sm={20} md={20} lg={18} xl={16} xxl={16}>
-        <div className={styles.header__title}>Detail Device</div>
+      <Col
+        xs={24}
+        sm={20}
+        md={20}
+        lg={18}
+        xl={16}
+        xxl={16}
+        className={styles.content}
+      >
+        <Row className={styles.header}>
+          <div className={styles.header__title}>Detail Device</div>
+          <BasicButton
+            title="Back"
+            type="filled"
+            icon={<BackwardOutlined />}
+            onClick={handleBackButton}
+          />
+        </Row>
         <Divider />
         <Form form={requestForm} layout="vertical" requiredMark disabled={true}>
           <Row gutter={36}>
