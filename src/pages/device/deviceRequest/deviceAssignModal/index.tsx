@@ -7,6 +7,7 @@ import { DEVICE, REQUEST } from 'constants/services';
 import { useAddRequestModal, useRequestDetail } from 'hooks/useRequestList';
 import { DeviceModel } from 'models/device';
 import { ResRequestModify } from 'models/request';
+import FixDataHeaderRequest from 'pages/requests/components/fixDataHeaderRequest';
 import { useEffect, useState } from 'react';
 import styles from './assignDeviceModal.module.less';
 // import detailMock from './detailMock.json';
@@ -69,7 +70,6 @@ export default function DeviceAssignModal({
     onCancel();
     assignDeviceForm.resetFields();
   };
-  console.log(assignData?.deviceTypeId);
   const submitHandler = (formValues: DeviceModel) => {
     delete formValues.deviceTypeId;
     formValues.requestId = requestIdRef;
@@ -82,7 +82,7 @@ export default function DeviceAssignModal({
       title={'ASSIGN DEVICE INFORMATION'}
       onCancel={cancelHandler}
       footer={false}
-      width={500}
+      width={850}
     >
       <>
         <Form
@@ -93,8 +93,9 @@ export default function DeviceAssignModal({
           onFinish={submitHandler}
           initialValues={{ listPosition: [''] }}
         >
+          <FixDataHeaderRequest requestData={assignData} />
           <Row gutter={32}>
-            <Col span="24">
+            <Col span="12">
               <SelectCustomSearch
                 url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
                 dataName="items"
@@ -106,15 +107,13 @@ export default function DeviceAssignModal({
                 disabled={true}
               />
             </Col>
-          </Row>
-          <Row gutter={32}>
-            <Col span="24">
+            <Col span="12">
               <SelectCustomSearch
                 url={`${DEVICE.model.deviceName}-${DEVICE.model.masterData}`}
                 dataName="items"
                 apiName="device-name-master-data"
                 label="Device Name"
-                // rules={[{ required: true }]}
+                rules={[{ required: true }]}
                 placeholder="Choose device name"
                 name="deviceId"
                 allowClear

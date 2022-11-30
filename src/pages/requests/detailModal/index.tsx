@@ -503,21 +503,19 @@ export default function RequestDetailModal({
               <FixDataHeaderRequest requestData={requestData} />
             )}
             <Row gutter={20}>
-              {tabType !== REQUEST_MENU.DEVICE && (
-                <Col span="12">
-                  <BasicSelect
-                    options={REQUEST_TYPE_LIST}
-                    label="Request Type"
-                    rules={[{ required: true }]}
-                    placeholder="Choose request type"
-                    name="requestTypeId"
-                    allowClear
-                    showSearch
-                    optionFilterProp="label"
-                    onChange={handleChangeRequestType}
-                  />
-                </Col>
-              )}
+              <Col span="12">
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  label="Request Type"
+                  rules={[{ required: true }]}
+                  placeholder="Choose request type"
+                  name="requestTypeId"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={handleChangeRequestType}
+                />
+              </Col>
               {requestStatus === STATUS.PENDING && (
                 <>
                   {requestType === REQUEST_TYPE_KEY.LEAVE && (
@@ -559,9 +557,7 @@ export default function RequestDetailModal({
                     dataName="items"
                     apiName="device-type-master-data"
                     label="Device Type"
-                    rules={[
-                      { required: true && tabType !== REQUEST_MENU.DEVICE },
-                    ]}
+                    rules={[{ required: true }]}
                     placeholder="Choose device type"
                     name="deviceTypeId"
                     allowClear
@@ -656,37 +652,36 @@ export default function RequestDetailModal({
                 </Col>
               </Row>
             )}
-            {tabType !== REQUEST_MENU.DEVICE && (
+            <Row gutter={20}>
+              <Col span={24}>
+                <BasicInput
+                  type="textarea"
+                  rows={3}
+                  placeholder="Enter your reason . . ."
+                  label="Reason"
+                  name="reason"
+                  allowClear
+                  rules={[{ whitespace: true }]}
+                />
+              </Col>
+            </Row>
+
+            {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>
-                  <BasicInput
-                    type="textarea"
-                    rows={3}
-                    placeholder="Enter your reason . . ."
-                    label="Reason"
-                    name="reason"
-                    allowClear
-                  />
+                  <Form.Item
+                    label="Evidence"
+                    className={styles.form__upload}
+                    name="evidence"
+                  >
+                    <UploadFilePictureWall
+                      fileUpload={imageFileList}
+                      setFileUpload={setImageFileList}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
             )}
-            {actionModal !== ACTION_TYPE.VIEW_DETAIL &&
-              tabType !== REQUEST_MENU.DEVICE && (
-                <Row gutter={20}>
-                  <Col span={24}>
-                    <Form.Item
-                      label="Evidence"
-                      className={styles.form__upload}
-                      name="evidence"
-                    >
-                      <UploadFilePictureWall
-                        fileUpload={imageFileList}
-                        setFileUpload={setImageFileList}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              )}
             {(actionModal === ACTION_TYPE.VIEW_DETAIL ||
               actionModal === ACTION_TYPE.EDIT) && (
               <MultipleImagePreview
