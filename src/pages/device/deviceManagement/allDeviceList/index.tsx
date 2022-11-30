@@ -1,14 +1,12 @@
 import { notification } from 'antd';
 import { SorterResult, TablePaginationConfig } from 'antd/lib/table/interface';
-import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
 import { MESSAGE_RES, paginationConfig } from 'constants/common';
 import {
   ACTION_TYPE,
   DEVICE_MENU,
   MENU_OPTION_KEY,
-  MENU_TYPE,
-  STATUS_COLORS,
+  STATUS,
 } from 'constants/enums/common';
 import { AllDeviceListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
@@ -18,11 +16,12 @@ import { ResDepartmentModify } from 'models/department';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
 import MenuTableDevice from 'pages/device/components/menuTableDevice';
-import { useEffect, useState, useRef } from 'react';
+import DeviceStatus from 'pages/device/components/statusDevice';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
 import DetailModalDevice from '../detailModalDevice';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 
 export default function AllDiviceList() {
   const [searchParams] = useSearchParams();
@@ -85,6 +84,8 @@ export default function AllDiviceList() {
         el.width = 250;
       } else if (el.key === 'deviceName') {
         el.width = 350;
+      } else if (el.key === 'description') {
+        el.width = 350;
       } else if (el.key === 'deviceTypeName') {
         el.width = 250;
       } else if (el.key === 'isUsed') {
@@ -95,17 +96,8 @@ export default function AllDiviceList() {
         render: (data: any, record: DeviceModel) => {
           if (data !== null && data !== undefined) {
             if (el.key === 'isUsed') {
-              if (data)
-                return (
-                  <BasicTag statusColor={STATUS_COLORS.WARING} text="Using" />
-                );
-              else
-                return (
-                  <BasicTag
-                    statusColor={STATUS_COLORS.SUCCESS}
-                    text="Available"
-                  />
-                );
+              if (data) return <DeviceStatus data={STATUS.USING} />;
+              return <DeviceStatus data={STATUS.AVAILABLE} />;
             }
             return <div>{data}</div>;
           }
@@ -123,7 +115,7 @@ export default function AllDiviceList() {
         if (!record?.isUsed) {
           return (
             <MenuTableDevice
-              menuType={MENU_TYPE.ALL}
+              menuType={DEVICE_MENU.DEVICE_MANAGEMENT}
               record={record}
               onClickMenu={menuActionHandler}
             />
@@ -136,22 +128,22 @@ export default function AllDiviceList() {
   }, [stateQuery, isError]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable.data) {
-    const {
-      metadata: { pagination },
-      data: { items: recordsTable },
-    } = dataMock;
-    setRecords(recordsTable);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable.data) {
+      const {
+        metadata: { pagination },
+        data: { items: recordsTable },
+      } = dataTable;
+      setRecords(recordsTable);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
   }, [dataTable, stateQuery, isError]);
   const menuActionHandler = (record: DeviceModel, action: MENU_OPTION_KEY) => {
     switch (action) {
@@ -202,7 +194,7 @@ export default function AllDiviceList() {
           <ExtraHeaderDevice
             setIsShowDetailModal={setIsShowDetailModal}
             setStateQuery={setStateQuery}
-            menuType={DEVICE_MENU.ALL}
+            menuType={DEVICE_MENU.DEVICE_MANAGEMENT}
             modalAction={modalAction}
           />
         }

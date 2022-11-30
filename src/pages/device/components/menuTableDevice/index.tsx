@@ -1,13 +1,13 @@
-import { Tooltip } from 'antd';
+import { Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
-import { MENU_OPTION_KEY, MENU_TYPE } from 'constants/enums/common';
+import { DEVICE_MENU, MENU_OPTION_KEY } from 'constants/enums/common';
 import { DeviceModel } from 'models/device';
 interface IProps {
   record: DeviceModel;
   onClickMenu: (itemSelected: DeviceModel, actionType: MENU_OPTION_KEY) => void;
-  menuType: MENU_TYPE;
+  menuType: DEVICE_MENU;
 }
-export default function MenuTableDevice({
+export default function DeviceMenuTable({
   record,
   onClickMenu,
   menuType,
@@ -19,7 +19,7 @@ export default function MenuTableDevice({
         e.stopPropagation();
       }}
     >
-      {menuType === MENU_TYPE.ALL && (
+      {menuType === DEVICE_MENU.DEVICE_MANAGEMENT && (
         <>
           <Tooltip title="Edit">
             <span
@@ -30,24 +30,46 @@ export default function MenuTableDevice({
             </span>
           </Tooltip>
           {!record.isUsed && (
-            <Tooltip title="Delete">
-              <span
-                onClick={() => onClickMenu(record, MENU_OPTION_KEY.DELETE)}
-                className="cursor-pointer"
-              >
-                <SvgIcon icon="close-circle" />
-              </span>
-            </Tooltip>
+            <Popconfirm
+              title="Are you sure?"
+              onConfirm={() => onClickMenu(record, MENU_OPTION_KEY.DELETE)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tooltip title="Delete" placement="right">
+                <span className="cursor-pointer">
+                  <SvgIcon icon="close-circle" />
+                </span>
+              </Tooltip>
+            </Popconfirm>
           )}
         </>
       )}
-      {menuType === MENU_TYPE.MINE && (
-        <Tooltip title="Return">
+      {menuType === DEVICE_MENU.MY_BORROW_DEVICE_HISTORY && (
+        <Popconfirm
+          title="Are you sure?"
+          onConfirm={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tooltip title="Return">
+            <span className="cursor-pointer">
+              <SvgIcon icon="return" size={28} />
+            </span>
+          </Tooltip>
+        </Popconfirm>
+      )}
+      {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST && (
+        <Tooltip title="Assign device">
           <span
-            onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
+            // onClick={() => {
+            //   if (requestIdRef) requestIdRef.current = record.id;
+            //   if (modalAction) modalAction.current = ACTION_TYPE.ASSIGN;
+            //   setIsShowDetailModal && setIsShowDetailModal(true);
+            // }}
             className="cursor-pointer"
           >
-            <SvgIcon icon="return" size={28} />
+            <SvgIcon icon="tag" />
           </span>
         </Tooltip>
       )}

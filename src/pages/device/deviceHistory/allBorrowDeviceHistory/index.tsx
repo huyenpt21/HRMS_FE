@@ -1,80 +1,84 @@
-import { notification, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
-import { DATE_TIME_US, MESSAGE_RES, paginationConfig } from 'constants/common';
+import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { DEVICE_MENU, MENU_TYPE, STATUS_COLORS } from 'constants/enums/common';
-import { MyBorrowDeviceHistoryListHeader } from 'constants/header';
+import { AllBorrowDeviceHistoryListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
-import { useDeviceList, useReturnDevice } from 'hooks/useDevice';
+import { useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
-import { DeviceListQuery, DeviceModel, ResDeviceModify } from 'models/device';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { DeviceListQuery, DeviceModel } from 'models/device';
+import ExtraHeaderDevice from 'pages/device/components/extraHeader';
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
   isEmptyPagination,
   removeEmptyValueInObject,
+  sortInforWithDir,
 } from 'utils/common';
-import ExtraHeaderDevice from '../components/extraHeader';
-import MenuTableDevice from '../components/menuTableDevice';
-export default function MyBorrowDeviceHistory() {
+interface IProps {
+  menuType: MENU_TYPE;
+}
+export default function AllBorrowDeviceHistory({ menuType }: IProps) {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<DeviceModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
   // * defailt filters
-  const defaultFilter: DeviceListQuery = {
-    page: searchParams.get('page')
-      ? Number(searchParams.get('page'))
-      : paginationConfig.current,
-    limit: searchParams.get('limit')
-      ? Number(searchParams.get('limit'))
-      : paginationConfig.pageSize,
-    deviceTypeId: searchParams.get('deviceTypeId')
-      ? Number(searchParams.get('deviceTypeId'))
-      : undefined,
-    isReturned: searchParams.get('isReturned')
-      ? Number(searchParams.get('isReturned'))
-      : undefined,
-  };
-
+  const defaultFilter: DeviceListQuery = useMemo(
+    () => ({
+      page: searchParams.get('page')
+        ? Number(searchParams.get('page'))
+        : paginationConfig.current,
+      limit: searchParams.get('limit')
+        ? Number(searchParams.get('limit'))
+        : paginationConfig.pageSize,
+      search: searchParams.get('search') ?? undefined,
+      sort: searchParams.get('sort') ?? undefined,
+      dir: searchParams.get('dir') ?? undefined,
+      deviceTypeId: searchParams.get('deviceTypeId')
+        ? Number(searchParams.get('deviceTypeId'))
+        : undefined,
+      isReturned: searchParams.get('isReturned')
+        ? Number(searchParams.get('isReturned'))
+        : undefined,
+    }),
+    [menuType],
+  );
   // * state query
   const [stateQuery, setStateQuery] = useState(
     removeEmptyValueInObject(defaultFilter),
   );
   //  * get data header and content table
-  const header: HeaderTableFields[] = MyBorrowDeviceHistoryListHeader;
+  const header: HeaderTableFields[] = AllBorrowDeviceHistoryListHeader;
   const {
     isLoading,
     isError,
     data: dataTable,
   } = useDeviceList(
     stateQuery,
-    `${DEVICE.model.borrowHistory}`,
-    'my-borrow-device-history',
+    menuType === MENU_TYPE.ALL
+      ? `${DEVICE.model.itSupport}/${DEVICE.model.borrowHistory}`
+      : `${DEVICE.model.manager}/${DEVICE.model.borrowHistory}`,
+    menuType === MENU_TYPE.ALL
+      ? 'all-borrow-device-history'
+      : 'sub-borrow-device-history',
   );
-  const { mutate: returnDevice } = useReturnDevice({
-    onSuccess: (response: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({ message: 'Return device successfully' });
-      }
-    },
-    onError: (response: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({ message: message });
-    },
-  });
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
       switch (el.key) {
+        case 'rollNumber': {
+          el.width = 150;
+          el.sorter = true;
+          el.sortOrder = sortInforWithDir(el.key, stateQuery);
+          break;
+        }
+        case 'fullName':
         case 'deviceName':
         case 'borrowDate':
         case 'returnDate': {
@@ -96,7 +100,7 @@ export default function MyBorrowDeviceHistory() {
       }
       return {
         ...el,
-        render: (data: string | number, record: DeviceModel) => {
+        render: (data: string | number) => {
           if (data !== null && data !== undefined) {
             if (
               (el.key === 'borrowDate' || el.key === 'returnDate') &&
@@ -123,25 +127,6 @@ export default function MyBorrowDeviceHistory() {
         },
       };
     });
-    columns.push({
-      title: 'Action',
-      key: 'action',
-      dataIndex: 'action',
-      width: 100,
-      align: 'center',
-      render: (_, record: DeviceModel) => {
-        if (!record?.isReturned) {
-          return (
-            <MenuTableDevice
-              menuType={MENU_TYPE.MINE}
-              record={record}
-              onClickMenu={menuActionHandler}
-            />
-          );
-        }
-        return <span>-</span>;
-      },
-    });
     setColumnsHeader(columns);
   }, [stateQuery, isError]);
   // * get data source from API and set to state that store records for table
@@ -163,9 +148,6 @@ export default function MyBorrowDeviceHistory() {
       }
     }
   }, [dataTable, stateQuery, isError]);
-  const menuActionHandler = (record: DeviceModel) => {
-    returnDevice(record.id);
-  };
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -190,6 +172,15 @@ export default function MyBorrowDeviceHistory() {
       dir,
     }));
   };
+  const rowClickHandler = (record: DeviceModel) => {
+    return {
+      onClick: () => {
+        navigate({
+          pathname: `/human-resource/borrow-device-history/detail/${record.id}`,
+        });
+      },
+    };
+  };
   return (
     <CommonTable
       columns={columnsHeader}
@@ -199,14 +190,17 @@ export default function MyBorrowDeviceHistory() {
       extra={
         <ExtraHeaderDevice
           setStateQuery={setStateQuery}
-          menuType={DEVICE_MENU.MY_BORROW_DEVICE_HISTORY}
+          menuType={DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY}
         />
       }
       stateQuery={stateQuery}
       rowKey={(record: DeviceModel) => record.id}
       loading={isLoading}
       isShowScroll
-      className={'cursor-pointer'}
+      className={menuType === MENU_TYPE.ALL ? 'cursor-pointer' : ''}
+      onRow={(record: DeviceModel) => {
+        if (menuType === MENU_TYPE.ALL) return rowClickHandler(record);
+      }}
     />
   );
 }

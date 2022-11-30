@@ -40,6 +40,7 @@ export interface IInputProps {
   rows?: number;
   ref?: React.Ref<InputRef>;
   hasFeedback?: boolean;
+  showCount?: boolean;
 }
 const BasicInput = (props: IInputProps) => {
   const isRequired = props.rules
@@ -136,6 +137,7 @@ const BasicInput = (props: IInputProps) => {
           size="large"
           style={props.inputStyle}
           ref={props.ref}
+          showCount={props.showCount}
         />
       );
   }

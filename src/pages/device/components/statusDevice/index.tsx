@@ -4,7 +4,7 @@ import { StatusTag } from 'models/common';
 interface IProps {
   data: string;
 }
-export default function RequestStatus({ data }: IProps) {
+export default function DeviceStatus({ data }: IProps) {
   let statusTag: StatusTag = {
     statusColor: STATUS_COLORS.PROCESSING,
     text: '',
@@ -17,13 +17,6 @@ export default function RequestStatus({ data }: IProps) {
       };
       break;
     }
-    case STATUS.APPROVED: {
-      statusTag = {
-        statusColor: STATUS_COLORS.SUCCESS,
-        text: STATUS.APPROVED,
-      };
-      break;
-    }
     case STATUS.ASSIGNED: {
       statusTag = {
         statusColor: STATUS_COLORS.SUCCESS,
@@ -31,17 +24,10 @@ export default function RequestStatus({ data }: IProps) {
       };
       break;
     }
-    case STATUS.REJECTED: {
+    case STATUS.AVAILABLE: {
       statusTag = {
-        statusColor: STATUS_COLORS.ERROR,
-        text: STATUS.REJECTED,
-      };
-      break;
-    }
-    case STATUS.CANCELLED: {
-      statusTag = {
-        statusColor: STATUS_COLORS.DEFAULT,
-        text: STATUS.CANCELLED,
+        statusColor: STATUS_COLORS.SUCCESS,
+        text: STATUS.AVAILABLE,
       };
       break;
     }

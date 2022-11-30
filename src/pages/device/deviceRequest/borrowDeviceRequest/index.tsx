@@ -6,16 +6,25 @@ import {
   DATE_TIME_US,
   paginationConfig,
 } from 'constants/common';
-import { ACTION_TYPE, REQUEST_MENU, STATUS } from 'constants/enums/common';
+import {
+  ACTION_TYPE,
+  DEVICE_MENU,
+  MENU_OPTION_KEY,
+  STATUS,
+} from 'constants/enums/common';
 import { BorrowDeviceListHeader } from 'constants/header';
 import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
 import { HeaderTableFields } from 'models/common';
+import { DeviceListQuery, DeviceModel } from 'models/device';
 import {
   RequestListQuery,
   RequestListSortFields,
   RequestModel,
 } from 'models/request';
+import ExtraHeaderDevice from 'pages/device/components/extraHeader';
+import DeviceMenuTable from 'pages/device/components/menuTableDevice';
+import DeviceStatus from 'pages/device/components/statusDevice';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -24,11 +33,8 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import RequestDetailModal from '../detailModal';
-import ExtraTableHeader from '../components/extraHeader';
-import RequestMenuAction from '../components/menuAction';
-import RequestStatus from '../components/statusRequest';
-import dataMock from './dataMock.json';
+import DeviceAssignModal from '../deviceAssignModal';
+// import dataMock from './dataMock.json';
 
 export default function BorrowDeviceRequest() {
   const [searchParams] = useSearchParams();
@@ -37,9 +43,9 @@ export default function BorrowDeviceRequest() {
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const requestIdRef = useRef<number>();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
-  const [records, setRecords] = useState<RequestModel[]>([]);
+  const [records, setRecords] = useState<DeviceModel[]>([]);
   // * default feilters
-  const defaultFilter: RequestListQuery = {
+  const defaultFilter: DeviceListQuery = {
     page: searchParams.get('page')
       ? Number(searchParams.get('page'))
       : paginationConfig.current,
@@ -54,7 +60,9 @@ export default function BorrowDeviceRequest() {
     isAssigned: searchParams.get('isAssigned')
       ? Number(searchParams.get('isAssigned'))
       : undefined,
-    deviceTypeId: searchParams.get('deviceTypeId') ?? undefined,
+    deviceTypeId: searchParams.get('deviceTypeId')
+      ? Number(searchParams.get('deviceTypeId'))
+      : undefined,
   };
   // * state query
   const [stateQuery, setStateQuery] = useState(
@@ -88,7 +96,11 @@ export default function BorrowDeviceRequest() {
         el.width = 200;
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-      } else if (el.key === 'reason' || el.key === 'personName') {
+      } else if (
+        el.key === 'reason' ||
+        el.key === 'personName' ||
+        el.key === 'receiver'
+      ) {
         el.width = 200;
       }
       return {
@@ -102,7 +114,7 @@ export default function BorrowDeviceRequest() {
               return convertDate(data, DATE_TIME_US);
             } else if (el.key === 'isAssigned') {
               return (
-                <RequestStatus
+                <DeviceStatus
                   data={data === 0 ? STATUS.PENDING : STATUS.ASSIGNED}
                 />
               );
@@ -121,16 +133,16 @@ export default function BorrowDeviceRequest() {
       dataIndex: 'action',
       width: 80,
       align: 'center',
-      render: (_, record: RequestModel) => {
-        if (!record.isAssigned) {
+      render: (_, record: DeviceModel) => {
+        if (!record?.isAssigned) {
           return (
-            <RequestMenuAction
+            <DeviceMenuTable
               record={record}
-              tabType={REQUEST_MENU.DEVICE}
-              refetchList={refetchList}
-              requestStatus={record?.status}
-              setIsShowDetailModal={setIsShowDetailModal}
-              modalAction={modalAction}
+              onClickMenu={menuActionHandler}
+              menuType={DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST}
+              // refetchList={refetchList}
+              // setIsShowDetailModal={setIsShowDetailModal}
+              // modalAction={modalAction}
             />
           );
         }
@@ -142,23 +154,27 @@ export default function BorrowDeviceRequest() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { items: requestList },
-    } = dataMock;
-    setRecords(requestList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { items: requestList },
+      } = dataTable;
+      setRecords(requestList);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
   }, [dataTable]);
+  const menuActionHandler = (
+    record: DeviceModel,
+    action: MENU_OPTION_KEY,
+  ) => {};
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -185,7 +201,7 @@ export default function BorrowDeviceRequest() {
     }));
   };
 
-  const rowClickHandler = (record: RequestModel) => {
+  const rowClickHandler = (record: DeviceModel) => {
     return {
       onClick: () => {
         requestIdRef.current = record.id;
@@ -210,11 +226,11 @@ export default function BorrowDeviceRequest() {
         onChange={handleTableChange}
         pagination={pagination}
         extra={
-          <ExtraTableHeader
+          <ExtraHeaderDevice
             setIsShowDetailModal={setIsShowDetailModal}
             modalAction={modalAction}
             setStateQuery={setStateQuery}
-            tabType={REQUEST_MENU.DEVICE}
+            menuType={DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST}
             stateQuery={stateQuery}
           />
         }
@@ -228,12 +244,10 @@ export default function BorrowDeviceRequest() {
         loading={isLoading}
       />
       {isShowDetailModal && (
-        <RequestDetailModal
+        <DeviceAssignModal
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
-          action={modalAction.current}
           requestIdRef={requestIdRef.current}
-          tabType={REQUEST_MENU.DEVICE}
           refetchList={refetchList}
         />
       )}

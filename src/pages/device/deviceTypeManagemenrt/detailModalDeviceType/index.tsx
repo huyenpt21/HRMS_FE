@@ -5,6 +5,7 @@ import BasicInput from 'components/BasicInput';
 import CommonModal from 'components/CommonModal';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES, validateMessages } from 'constants/common';
+import { DEVICE } from 'constants/services';
 import { useAddDeviceModal } from 'hooks/useDevice';
 import { DeviceModel, ResDeviceModify } from 'models/device';
 import styles from './detailDepartment.module.less';
@@ -15,22 +16,25 @@ interface IProps {
 export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
   const [deviceTypeForm] = Form.useForm();
 
-  const { mutate: createDeviceType } = useAddDeviceModal({
-    onSuccess: (response: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({ message: 'Create deviceType successfully' });
-      }
+  const { mutate: createDeviceType } = useAddDeviceModal(
+    {
+      onSuccess: (response: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === MESSAGE_RES.SUCCESS) {
+          notification.success({ message: 'Create deviceType successfully' });
+        }
+      },
+      onError: (response: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({ message: message });
+      },
     },
-    onError: (response: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({ message: message });
-    },
-  });
+    `${DEVICE.model.deviceType}`,
+  );
 
   const cancelHandler = () => {
     onCancel();

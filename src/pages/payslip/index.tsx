@@ -18,7 +18,7 @@ import moment from 'moment-timezone';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './payrollDetail.module.less';
-import dataCheckExistMock from './dataCheckExistMock.json';
+// import dataCheckExistMock from './dataCheckExistMock.json';
 // import dataCheckCorrectMock from './dataCheckCorrect.json';
 
 export default function PayslipDetail() {
@@ -28,20 +28,22 @@ export default function PayslipDetail() {
   const payslipDataRef = useRef<PayslipModel>();
   const { data: secureCodeData } = useCheckSecureCodeExist();
   useEffect(() => {
-    // if (secureCodeData) {
-    const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
-      metadata: any;
-      data: boolean;
-    };
-    const { data: isSecureCodeExist } = dataMock;
-    if (!isSecureCodeExist) {
-      navigate('/setting/security-code/create');
+    if (secureCodeData) {
+      // const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
+      //   metadata: any;
+      //   data: boolean;
+      // };
+      // const { data: isSecureCodeExist } = dataMock;
+      const { data: isSecureCodeExist } = secureCodeData;
+      if (!isSecureCodeExist) {
+        notification.warning({
+          message: 'You do not have a security code',
+          key: '1',
+        });
+        navigate('/setting/security-code/create');
+      }
     }
-    // }
   }, [secureCodeData]);
-  // const { data: isSecureCodeCorrect } = dataCheckCorrectMock;
-  // console.log(isSecureCodeCorrect);
-
   const { mutate: checkSecureCodeCorrect } = useCheckSecureCodeCorrectly({
     onSuccess: (response: ResPayslipModify) => {
       const {
@@ -86,7 +88,6 @@ export default function PayslipDetail() {
   });
 
   const submitHandler = (formValue: SercurityCode) => {
-    // if (formValue) setIsShowPayslip(true);
     checkSecureCodeCorrect(formValue);
   };
   const handleChangeFilterDate = (_: moment.Moment, dateString: string) => {
@@ -106,36 +107,41 @@ export default function PayslipDetail() {
         className={styles.main}
       >
         {!isShowPayslip && (
-          <Form
-            form={payslipForm}
-            layout="vertical"
-            requiredMark
-            onFinish={submitHandler}
-            className={styles.login__payslip}
-          >
-            <Row className={styles.login__title}>
+          <>
+            <Row className={styles.header__title}>
               <div>Enter your security code</div>
             </Row>
-            <BasicInput
-              name="currentSecureCode"
-              type="password"
-              rules={[
-                { required: true, message: 'Security code is required' },
-                {
-                  whitespace: true,
-                  message: 'Only white spaces are invalid',
-                },
-                {
-                  min: 8,
-                  message: 'Expected at least 8 characters',
-                },
-              ]}
-              allowClear
-            />
-            <Row className={styles.login__btn}>
-              <BasicButton title="Submit" type="filled" htmlType="submit" />
-            </Row>
-          </Form>
+            <Form
+              form={payslipForm}
+              layout="vertical"
+              requiredMark
+              onFinish={submitHandler}
+              className={styles.login__payslip}
+            >
+              <BasicInput
+                name="currentSecureCode"
+                type="password"
+                rules={[
+                  { required: true, message: 'Security code is required' },
+                  {
+                    whitespace: true,
+                    message: 'Only white spaces are invalid',
+                  },
+                  {
+                    min: 8,
+                    message: 'Expected at least 8 characters',
+                  },
+                ]}
+                allowClear
+              />
+              <BasicButton
+                title="Submit"
+                type="filled"
+                htmlType="submit"
+                className={styles.login__btn}
+              />
+            </Form>
+          </>
         )}
         {isShowPayslip && (
           <>

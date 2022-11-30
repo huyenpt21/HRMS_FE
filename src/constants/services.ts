@@ -4,6 +4,9 @@ export const EMPLOYEE_LIST_ALL = {
 
 export const USER_INFO = {
   service: 'user-info',
+  modle: {
+    user: 'user',
+  },
 };
 export const EMPLOYEE_CHANGE_STATUS = {
   service: 'hr/status/employee',
@@ -69,13 +72,13 @@ export const DEPARTMENT = {
   },
 };
 
-export const DEVICE_TYPE = {
-  service: 'device-type',
-  model: {
-    deviceName: 'device-by-deviceType',
-    masterData: 'master-data',
-  },
-};
+// export const DEVICE_TYPE = {
+//   service: 'device-type',
+//   model: {
+//     deviceName: 'device-by-deviceType',
+//     masterData: 'master-data',
+//   },
+// };
 
 export const DEVICE = {
   service: 'device',
@@ -84,6 +87,9 @@ export const DEVICE = {
     manager: 'manager',
     borrowHistory: 'borrow-history',
     return: 'return-device',
+    deviceType: 'device-type',
+    deviceName: 'device-by-deviceType',
+    masterData: 'master-data',
   },
 };
 

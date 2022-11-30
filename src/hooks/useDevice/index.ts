@@ -1,4 +1,4 @@
-import { DEVICE, DEVICE_TYPE } from 'constants/services';
+import { DEVICE } from 'constants/services';
 import initialCustomQuery, {
   Feature,
   MutationProps,
@@ -24,9 +24,9 @@ class DeviceList implements Feature<DeviceListSortFields> {
 }
 
 const DeviceListInstance = new DeviceList(
-  DEVICE_TYPE.service,
+  DEVICE.service,
   undefined,
-  'department-list',
+  'device-list',
 );
 
 export const {

@@ -5,7 +5,7 @@ import CommonModal from 'components/CommonModal';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import { validateMessages } from 'constants/common';
 import { ACTION_TYPE, STATUS_COLORS } from 'constants/enums/common';
-import { DEVICE, DEVICE_TYPE } from 'constants/services';
+import { DEVICE } from 'constants/services';
 import { useDeviceDetail } from 'hooks/useDevice';
 import { DeviceModel } from 'models/device';
 import { useEffect, useState, useRef } from 'react';
@@ -80,7 +80,7 @@ export default function DetailModalDevice({
           <Row gutter={32}>
             <Col span={actionModal === ACTION_TYPE.CREATE ? 24 : 18}>
               <SelectCustomSearch
-                url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
+                url={`${DEVICE.service}-${DEVICE.model.masterData}`}
                 name="deviceTypeId"
                 label="Device Type"
                 dataName="items"
