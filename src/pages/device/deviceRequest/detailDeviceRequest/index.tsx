@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getDateFormat } from 'utils/common';
 import styles from './detailDeviceRequest.module.less';
+
 export default function DetailDeviceRequest() {
   const { assignDeviceId } = useParams();
   const location = useLocation();
@@ -55,8 +56,8 @@ export default function DetailDeviceRequest() {
       }
     }
   }, [detailRequest]);
+  const type = location.pathname.split('/')[1];
   const handleBackButton = () => {
-    const type = location.pathname.split('/')[1];
     if (type === 'human-resource')
       navigate('/human-resource/borrow-device-history');
     if (type === 'emp-self-service')
@@ -103,7 +104,7 @@ export default function DetailDeviceRequest() {
                 <BasicInput name="returnDate" label="Returned Date" />
               </Col>
             )}
-            {!detailData?.isReturned && (
+            {!detailData?.isReturned && type === 'emp-self-service' && (
               <Col span={8} className={styles.btn__return}>
                 <BasicButton
                   title="Return"

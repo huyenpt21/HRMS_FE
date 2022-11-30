@@ -177,7 +177,7 @@ export default function RequestMenuAction({
           </Tooltip>
         </>
       )}
-      {tabType !== REQUEST_MENU.SUBORDINATE && (
+      {tabType === REQUEST_MENU.SUBORDINATE && (
         <RollbackModal
           isVisible={isShowRollbackModal}
           handleQickActionRequest={handleRollback}
