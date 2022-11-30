@@ -16,6 +16,9 @@ export interface DeviceListFilter {
   isUsed?: number;
   deviceTypeId?: number;
   isReturned?: number;
+  approvalDateFrom?: string;
+  approvalDateTo?: string;
+  isAssigned?: number;
 }
 
 export type DeviceListSortFields = 'deviceTypeName';

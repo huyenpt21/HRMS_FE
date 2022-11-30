@@ -11,6 +11,7 @@ export enum STATUS {
   INACTIVE = 'Inactive',
   ASSIGNED = 'Assigned',
   RETURNED = 'Returned',
+  AVAILABLE = 'Available',
 }
 export enum MENU_OPTION_KEY {
   EDIT = 'edit',
@@ -107,10 +108,11 @@ export enum REQUEST_MENU {
 }
 export enum DEVICE_MENU {
   DEVICE_TYPE = 'device-type',
-  ALL = 'all',
+  DEVICE_MANAGEMENT = 'device-management',
   SUBORDINATE = 'suborder',
   ALL_BORROW_DEVICE_HISTORY = 'all-history',
   MY_BORROW_DEVICE_HISTORY = 'my-history',
+  ALL_BORROW_DEVICE_REQUEST = 'all-request-device',
 }
 export enum REQUEST_TYPE_KEY {
   LEAVE = 'leave',

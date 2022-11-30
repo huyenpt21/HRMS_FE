@@ -69,13 +69,13 @@ export const DEPARTMENT = {
   },
 };
 
-export const DEVICE_TYPE = {
-  service: 'device-type',
-  model: {
-    deviceName: 'device-by-deviceType',
-    masterData: 'master-data',
-  },
-};
+// export const DEVICE_TYPE = {
+//   service: 'device-type',
+//   model: {
+//     deviceName: 'device-by-deviceType',
+//     masterData: 'master-data',
+//   },
+// };
 
 export const DEVICE = {
   service: 'device',
@@ -84,6 +84,9 @@ export const DEVICE = {
     manager: 'manager',
     borrowHistory: 'borrow-history',
     return: 'return-device',
+    deviceType: 'device-type',
+    deviceName: 'device-by-deviceType',
+    masterData: 'master-data',
   },
 };
 

@@ -50,7 +50,7 @@ import { RangePickerProps } from 'antd/lib/date-picker';
 import BasicDatePicker from 'components/BasicDatePicker';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
-import { DEVICE_TYPE, REQUEST } from 'constants/services';
+import { DEVICE, REQUEST } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
 // import detailMock from './detailMock.json';
@@ -560,7 +560,7 @@ export default function RequestDetailModal({
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
                   <SelectCustomSearch
-                    url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
+                    url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
                     dataName="items"
                     apiName="device-type-master-data"
                     label="Device Type"
@@ -583,7 +583,7 @@ export default function RequestDetailModal({
               {tabType === REQUEST_MENU.DEVICE && (
                 <Col span="12">
                   <SelectCustomSearch
-                    url={`${DEVICE_TYPE.model.deviceName}-${DEVICE_TYPE.model.masterData}?deviceTypeId=${requestData?.deviceTypeId}`}
+                    url={`${DEVICE.model.deviceName}-${DEVICE.model.masterData}?deviceTypeId=${requestData?.deviceTypeId}`}
                     dataName="items"
                     apiName="device-name-master-data"
                     label="Device Name"
