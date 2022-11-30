@@ -46,6 +46,7 @@ const NotifyPopup = ({
       closable={closable}
       onCancel={onCancel}
       afterClose={afterClose}
+      centered
     >
       {status === 'success' && (
         <div className={styles.content}>

@@ -107,9 +107,11 @@ export default function UserProfile() {
               }
             />
             <Divider />
-            <Row className={styles.info}>
+            <Row>
               <Col span={24}>
-                <h3>{personInforRef.current?.fullName}</h3>
+                <div className={styles.title__name}>
+                  {personInforRef.current?.fullName}
+                </div>
               </Col>
               <Col span={24}>{personInforRef.current?.rollNumber}</Col>
               <Col span={24}>{personInforRef.current?.email}</Col>
@@ -118,7 +120,7 @@ export default function UserProfile() {
         </Col>
         <Col xs={14} sm={14} md={14} lg={14} xl={16} xxl={12}>
           <div className={styles.personal__info}>
-            <h2>Personnal Information</h2>
+            <div className={styles.title__text}>Personnal Information</div>
             <Row gutter={12}>
               <Col span={12}>
                 <BasicInput
@@ -207,7 +209,7 @@ export default function UserProfile() {
             </Row>
           </div>
           <div className={styles.personal__info}>
-            <h2>Working Information</h2>
+            <div className={styles.title__text}>Working Information</div>
             <Row gutter={12} className={styles['infor--header']}>
               <Col span={10}>
                 <span>Roll Number: </span>

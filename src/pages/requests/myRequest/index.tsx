@@ -19,10 +19,10 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
-import RequestDetailModal from '../detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
+import RequestDetailModal from '../detailModal';
 // import dataMock from '../dataMock.json';
 
 export default function MyRequestList() {
