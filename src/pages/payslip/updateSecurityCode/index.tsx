@@ -17,7 +17,7 @@ export default function UpdateSecurityCode() {
         data: isSecureCodeCreate,
       } = response;
       if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreate) {
-        notification.success({ message: 'Create security code successfully' });
+        notification.success({ message: 'Update security code successfully' });
       }
     },
     onError: (response: ResPayslipModify) => {
