@@ -1,6 +1,6 @@
 export enum STATUS {
-  OPEN = 'Opened',
-  CANCELLED = 'Cancelled',
+  USING = 'Using',
+  CANCELLED = 'Canceled',
   COMPLETED = 'Completed',
   PENDING = 'Pending',
   REJECTED = 'Rejected',
@@ -10,6 +10,7 @@ export enum STATUS {
   ACTIVE = 'Active',
   INACTIVE = 'Inactive',
   ASSIGNED = 'Assigned',
+  RETURNED = 'Returned',
 }
 export enum MENU_OPTION_KEY {
   EDIT = 'edit',

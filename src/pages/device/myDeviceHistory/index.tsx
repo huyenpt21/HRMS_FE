@@ -10,7 +10,7 @@ import { useDeviceList, useReturnDevice } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel, ResDeviceModify } from 'models/device';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
   isEmptyPagination,
@@ -20,6 +20,7 @@ import ExtraHeaderDevice from '../components/extraHeader';
 import MenuTableDevice from '../components/menuTableDevice';
 export default function MyBorrowDeviceHistory() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<DeviceModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
@@ -190,6 +191,15 @@ export default function MyBorrowDeviceHistory() {
       dir,
     }));
   };
+  const rowClickHandler = (record: DeviceModel) => {
+    return {
+      onClick: () => {
+        navigate({
+          pathname: `/emp-self-service/device-history/detail/${record.id}`,
+        });
+      },
+    };
+  };
   return (
     <CommonTable
       columns={columnsHeader}
@@ -207,6 +217,9 @@ export default function MyBorrowDeviceHistory() {
       loading={isLoading}
       isShowScroll
       className={'cursor-pointer'}
+      onRow={(record: DeviceModel) => {
+        return rowClickHandler(record);
+      }}
     />
   );
 }
