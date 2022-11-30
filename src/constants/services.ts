@@ -4,6 +4,9 @@ export const EMPLOYEE_LIST_ALL = {
 
 export const USER_INFO = {
   service: 'user-info',
+  modle: {
+    user: 'user',
+  },
 };
 export const EMPLOYEE_CHANGE_STATUS = {
   service: 'hr/status/employee',

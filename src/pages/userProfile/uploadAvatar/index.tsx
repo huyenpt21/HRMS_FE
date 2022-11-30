@@ -6,8 +6,9 @@ import styles from '../userProfile.module.less';
 
 interface IProps {
   setImageFile: Dispatch<SetStateAction<any>>;
+  avtUrl: string;
 }
-export const UploadAvatar = memo(({ setImageFile }: IProps) => {
+export const UploadAvatar = memo(({ setImageFile, avtUrl }: IProps) => {
   const [previewImage, setPreviewImage] = useState('');
 
   const getBase64 = (file: RcFile): Promise<string> =>
@@ -25,13 +26,7 @@ export const UploadAvatar = memo(({ setImageFile }: IProps) => {
   return (
     <Row className={styles.header}>
       <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-        <Image
-          src={
-            !!previewImage
-              ? previewImage
-              : 'https://i.pinimg.com/736x/ed/c9/cb/edc9cb773659891ba03594a3a180887a.jpg'
-          }
-        />
+        <Image src={!!previewImage ? previewImage : avtUrl} />
       </Col>
       <Col
         xs={24}

@@ -19,18 +19,16 @@ import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
 import UserProfile from 'pages/userProfile';
-
 import PayslipDetail from 'pages/payslip';
-import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
-
-import OfficeTime from 'pages/officeTime';
-import CreateSecurityCode from 'pages/payslip/createSecureCode';
 import MyBorrowDeviceHistory from 'pages/device/deviceHistory/myDeviceHistory';
 import DetailDeviceRequest from 'pages/device/deviceRequest/detailDeviceRequest';
 import AllBorrowDeviceHistory from 'pages/device/deviceHistory/allBorrowDeviceHistory';
 import BorrowDeviceRequest from 'pages/device/deviceRequest/borrowDeviceRequest';
-import AllDiviceList from 'pages/device/deviceManagement/allDeviceList';
 import DeviceTypeList from 'pages/device/deviceTypeManagemenrt/deviceTypeList';
+import AllDiviceList from 'pages/device/deviceManagement/allDeviceList';
+import OfficeTime from 'pages/officeTime';
+import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
+import CreateSecurityCode from 'pages/payslip/createSecureCode';
 
 export default function RouterElement() {
   let element = useRoutes([
