@@ -570,28 +570,7 @@ export default function RequestDetailModal({
                     placeholder="Choose device type"
                     name="deviceTypeId"
                     allowClear
-                    disabled={
-                      actionModal === ACTION_TYPE.EDIT ||
-                      tabType === REQUEST_MENU.DEVICE
-                    }
-                    onChangeHandle={(value) => {
-                      console.log(value);
-                    }}
-                  />
-                </Col>
-              )}
-              {tabType === REQUEST_MENU.DEVICE && (
-                <Col span="12">
-                  <SelectCustomSearch
-                    url={`${DEVICE.model.deviceName}-${DEVICE.model.masterData}?deviceTypeId=${requestData?.deviceTypeId}`}
-                    dataName="items"
-                    apiName="device-name-master-data"
-                    label="Device Name"
-                    rules={[{ required: true }]}
-                    placeholder="Choose device name"
-                    name="deviceId"
-                    allowClear
-                    disabled={actionModal !== ACTION_TYPE.ASSIGN}
+                    disabled={actionModal === ACTION_TYPE.EDIT}
                   />
                 </Col>
               )}

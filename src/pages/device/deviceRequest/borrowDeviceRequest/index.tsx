@@ -10,7 +10,6 @@ import {
   ACTION_TYPE,
   DEVICE_MENU,
   MENU_OPTION_KEY,
-  REQUEST_MENU,
   STATUS,
 } from 'constants/enums/common';
 import { BorrowDeviceListHeader } from 'constants/header';
@@ -26,7 +25,6 @@ import {
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
 import DeviceMenuTable from 'pages/device/components/menuTableDevice';
 import DeviceStatus from 'pages/device/components/statusDevice';
-import RequestDetailModal from 'pages/requests/detailModal';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -35,6 +33,7 @@ import {
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
+import DeviceAssignModal from '../deviceAssignModal';
 // import dataMock from './dataMock.json';
 
 export default function BorrowDeviceRequest() {
@@ -97,7 +96,11 @@ export default function BorrowDeviceRequest() {
         el.width = 200;
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
-      } else if (el.key === 'reason' || el.key === 'personName') {
+      } else if (
+        el.key === 'reason' ||
+        el.key === 'personName' ||
+        el.key === 'receiver'
+      ) {
         el.width = 200;
       }
       return {
@@ -241,12 +244,10 @@ export default function BorrowDeviceRequest() {
         loading={isLoading}
       />
       {isShowDetailModal && (
-        <RequestDetailModal
+        <DeviceAssignModal
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
-          action={modalAction.current}
           requestIdRef={requestIdRef.current}
-          tabType={REQUEST_MENU.DEVICE}
           refetchList={refetchList}
         />
       )}
