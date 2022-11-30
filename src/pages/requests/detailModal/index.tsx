@@ -50,7 +50,7 @@ import { RangePickerProps } from 'antd/lib/date-picker';
 import BasicDatePicker from 'components/BasicDatePicker';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
-import { DEVICE, REQUEST } from 'constants/services';
+import { DEVICE } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
 // import detailMock from './detailMock.json';
@@ -89,34 +89,29 @@ export default function RequestDetailModal({
   const remainingTimeRef = useRef<number | undefined>();
   const officeTimeRef = useRef<OfficeTime>();
   const { mutate: createRequest, isLoading: loadingCreate } =
-    useAddRequestModal(
-      {
-        onSuccess: (response: ResRequestModify) => {
-          const {
-            metadata: { message },
-          } = response;
+    useAddRequestModal({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
 
-          if (message === 'Success') {
-            notification.success({
-              message: 'Send request successfully',
-            });
-            refetchList();
-            cancelHandler();
-          }
-        },
-        onError: (response: ResRequestModify) => {
-          const {
-            metadata: { message },
-          } = response;
-          notification.error({
-            message: message,
+        if (message === 'Success') {
+          notification.success({
+            message: 'Send request successfully',
           });
-        },
+          refetchList();
+          cancelHandler();
+        }
       },
-      actionModal === ACTION_TYPE.ASSIGN
-        ? `${REQUEST.model.itSupport}/${REQUEST.model.itSupport}/${REQUEST.model.assign}`
-        : undefined,
-    );
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({
+          message: message,
+        });
+      },
+    });
   const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -570,7 +565,6 @@ export default function RequestDetailModal({
                     placeholder="Choose device type"
                     name="deviceTypeId"
                     allowClear
-                    disabled={actionModal === ACTION_TYPE.EDIT}
                   />
                 </Col>
               )}

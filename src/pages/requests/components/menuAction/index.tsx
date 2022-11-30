@@ -64,7 +64,7 @@ export default function RequestMenuAction({
       } = response;
       if (message === 'Success') {
         notification.success({
-          message: 'Delete request successfully',
+          message: 'Cancel request successfully',
         });
         refetchList();
       }
