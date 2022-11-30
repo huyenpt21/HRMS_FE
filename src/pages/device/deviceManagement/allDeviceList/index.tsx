@@ -1,6 +1,5 @@
 import { notification } from 'antd';
 import { SorterResult, TablePaginationConfig } from 'antd/lib/table/interface';
-import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
 import { MESSAGE_RES, paginationConfig } from 'constants/common';
 import {
@@ -8,7 +7,7 @@ import {
   DEVICE_MENU,
   MENU_OPTION_KEY,
   MENU_TYPE,
-  STATUS_COLORS,
+  STATUS,
 } from 'constants/enums/common';
 import { AllDeviceListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
@@ -18,7 +17,8 @@ import { ResDepartmentModify } from 'models/department';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
 import MenuTableDevice from 'pages/device/components/menuTableDevice';
-import { useEffect, useState, useRef } from 'react';
+import DeviceStatus from 'pages/device/components/statusDevice';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
 import DetailModalDevice from '../detailModalDevice';
@@ -95,17 +95,8 @@ export default function AllDiviceList() {
         render: (data: any, record: DeviceModel) => {
           if (data !== null && data !== undefined) {
             if (el.key === 'isUsed') {
-              if (data)
-                return (
-                  <BasicTag statusColor={STATUS_COLORS.WARING} text="Using" />
-                );
-              else
-                return (
-                  <BasicTag
-                    statusColor={STATUS_COLORS.SUCCESS}
-                    text="Available"
-                  />
-                );
+              if (data) return <DeviceStatus data={STATUS.USING} />;
+              return <DeviceStatus data={STATUS.AVAILABLE} />;
             }
             return <div>{data}</div>;
           }
