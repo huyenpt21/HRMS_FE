@@ -117,8 +117,7 @@ export default function DeviceAssignModal({
                 dataName="items"
                 apiName="device-type-master-data"
                 label="Device Type"
-                rules={[{ required: true }]}
-                placeholder="Choose device type"
+                placeholder="Cannot find device type"
                 name="deviceTypeId"
                 disabled={true}
               />
