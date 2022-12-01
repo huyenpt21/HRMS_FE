@@ -1,4 +1,4 @@
-import { EMPLOYEE_LIST_ALL, USER_INFO } from 'constants/services';
+import { EMPLOYEE, USER_INFO } from 'constants/services';
 import initialCustomQuery, {
   Feature,
   MutationProps,
@@ -24,7 +24,7 @@ class EmployeeList implements Feature<EmployeeListFields> {
 }
 
 const EmployeeListInstance = new EmployeeList(
-  EMPLOYEE_LIST_ALL.service,
+  `${EMPLOYEE.model.hr}/${EMPLOYEE.service}`,
   undefined,
   'employee-list-all',
 );
