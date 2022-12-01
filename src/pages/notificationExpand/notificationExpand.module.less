@@ -1,0 +1,28 @@
+@import 'styles/_variables.less';
+
+.container {
+  background-color: @white;
+  width: 260px;
+  position: absolute;
+  min-height: 100px;
+  box-shadow: @color-box-shadow;
+  top: 66px;
+  right: -3px;
+  border-radius: 8px;
+  display: block;
+  .item {
+    cursor: pointer;
+    padding: 8px 8px;
+    margin: 0 6px;
+    color: @text-color !important;
+  }
+}
+
+.item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+.text__bold {
+  font-weight: 500;
+  color: @text-color;
+}
