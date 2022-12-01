@@ -1,6 +1,7 @@
-import { notification } from 'antd';
+import { notification, Tooltip } from 'antd';
 import { SorterResult, TablePaginationConfig } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
+import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES, paginationConfig } from 'constants/common';
 import {
   ACTION_TYPE,
@@ -21,7 +22,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
 import DetailModalDevice from '../detailModalDevice';
-// import dataMock from './dataMock.json';
+import dataMock from './dataMock.json';
 
 export default function AllDiviceList() {
   const [searchParams] = useSearchParams();
@@ -106,7 +107,16 @@ export default function AllDiviceList() {
       };
     });
     columns.push({
-      title: 'Action',
+      title: (
+        <div>
+          <Tooltip
+            title="Can not edit or delete devices are currently in use"
+            placement="topRight"
+          >
+            Action <SvgIcon icon="infor" size={18} />
+          </Tooltip>
+        </div>
+      ),
       key: 'action',
       dataIndex: 'action',
       width: 100,
@@ -128,22 +138,22 @@ export default function AllDiviceList() {
   }, [stateQuery, isError]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable.data) {
-      const {
-        metadata: { pagination },
-        data: { items: recordsTable },
-      } = dataTable;
-      setRecords(recordsTable);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable.data) {
+    const {
+      metadata: { pagination },
+      data: { items: recordsTable },
+    } = dataMock;
+    setRecords(recordsTable);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
+    // }
   }, [dataTable, stateQuery, isError]);
   const menuActionHandler = (record: DeviceModel, action: MENU_OPTION_KEY) => {
     switch (action) {

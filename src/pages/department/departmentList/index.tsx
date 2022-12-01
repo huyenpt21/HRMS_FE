@@ -1,6 +1,7 @@
-import { notification, TablePaginationConfig } from 'antd';
+import { notification, TablePaginationConfig, Tooltip } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
+import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES, paginationConfig } from 'constants/common';
 import { ACTION_TYPE, MENU_OPTION_KEY } from 'constants/enums/common';
 import { DepartmentHeader } from 'constants/header';
@@ -22,7 +23,7 @@ import {
 import ExtraHeaderDepartment from '../components/extraHeader';
 import MenuTableDepartment from '../components/menuTable';
 import DepartmentDetailModal from '../detailModal';
-// import dataMock from './dataMock.json';
+import dataMock from './dataMock.json';
 
 export default function DepartmentList() {
   const [searchParams] = useSearchParams();
@@ -87,18 +88,30 @@ export default function DepartmentList() {
       };
     });
     columns.push({
-      title: 'Action',
+      title: (
+        <div>
+          <Tooltip
+            title="Can not edit or delete departments is currently have employees"
+            placement="topRight"
+          >
+            Action <SvgIcon icon="infor" size={18} />
+          </Tooltip>
+        </div>
+      ),
       key: 'action',
       dataIndex: 'action',
-      width: 80,
+      width: 100,
       align: 'center',
       render: (_, record: DepartmentModel) => {
-        return (
-          <MenuTableDepartment
-            record={record}
-            onClickMenu={menuActionHandler}
-          />
-        );
+        if (record?.isAllowDelete) {
+          return (
+            <MenuTableDepartment
+              record={record}
+              onClickMenu={menuActionHandler}
+            />
+          );
+        }
+        return <span>-</span>;
       },
     });
     setColumnsHeader(columns);
@@ -106,22 +119,22 @@ export default function DepartmentList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable.data) {
-      const {
-        metadata: { pagination },
-        data: { items: recordsTable },
-      } = dataTable;
-      setRecords(recordsTable);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
+    // if (dataTable && dataTable.data) {
+    const {
+      metadata: { pagination },
+      data: { items: recordsTable },
+    } = dataMock;
+    setRecords(recordsTable);
+    if (!isEmptyPagination(pagination)) {
+      // * set the pagination data from API
+      setPagination((prevPagination: TablePaginationConfig) => ({
+        ...prevPagination,
+        current: pagination.page,
+        pageSize: pagination.limit,
+        total: pagination.totalRecords,
+      }));
     }
+    // }
   }, [dataTable, stateQuery, isError]);
 
   const menuActionHandler = (

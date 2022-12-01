@@ -17,7 +17,7 @@ export default function MenuTableDepartment({ record, onClickMenu }: IProps) {
         e.stopPropagation();
       }}
     >
-      <Tooltip title="Edit">
+      <Tooltip title="Edit" placement="left">
         <span
           onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
           className="cursor-pointer"
@@ -25,7 +25,7 @@ export default function MenuTableDepartment({ record, onClickMenu }: IProps) {
           <SvgIcon icon="edit-border" />
         </span>
       </Tooltip>
-      <Tooltip title="Delete">
+      <Tooltip title="Delete" placement="right">
         <span
           onClick={() => onClickMenu(record, MENU_OPTION_KEY.DELETE)}
           className="cursor-pointer"
