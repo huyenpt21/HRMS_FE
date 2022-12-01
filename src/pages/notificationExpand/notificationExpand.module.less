@@ -2,19 +2,31 @@
 
 .container {
   background-color: @white;
-  width: 260px;
-  position: absolute;
+  width: 24rem;
+  position: absolute !important;
   min-height: 100px;
   box-shadow: @color-box-shadow;
   top: 66px;
   right: -3px;
   border-radius: 8px;
-  display: block;
+  // display: block;
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1rem 1.4rem;
+  }
   .item {
     cursor: pointer;
-    padding: 8px 8px;
-    margin: 0 6px;
-    color: @text-color !important;
+    padding: 1.2rem 0.8rem;
+    margin: 0 0.4rem;
+    .item__content {
+      max-width: 92%;
+    }
+    :global {
+      .ant-list-item-meta {
+        align-items: center;
+      }
+    }
   }
 }
 
@@ -23,6 +35,6 @@
   border-radius: 8px;
 }
 .text__bold {
-  font-weight: 500;
+  font-weight: 600;
   color: @text-color;
 }

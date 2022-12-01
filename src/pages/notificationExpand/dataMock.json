@@ -10,8 +10,8 @@
       {
         "notificationId": 1,
         "userTo": 1,
-        "userFrom": "Nguyen Van A",
-        "content": "Please approve",
+        "userFrom": "Nguyen Huy Hung",
+        "content": "send you a request",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
         "isRead": 0
@@ -19,8 +19,8 @@
       {
         "notificationId": 2,
         "userTo": 1,
-        "userFrom": "Nguyen Van B",
-        "content": "manager approved",
+        "userFrom": "Minswap-HR",
+        "content": "has changed office time sh djhdag hufd ASGD BJKahd jsd",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
         "isRead": 0
@@ -28,8 +28,8 @@
       {
         "notificationId": 3,
         "userTo": 1,
-        "userFrom": "Nguyen Van A",
-        "content": "Please approve",
+        "userFrom": "Hoang Quan Truong",
+        "content": "send a request",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
         "isRead": 0
@@ -37,8 +37,8 @@
       {
         "notificationId": 4,
         "userTo": 1,
-        "userFrom": "Nguyen Van B",
-        "content": "manager approved",
+        "userFrom": "Pham Duc Hung",
+        "content": "has assigned you a device ",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
         "isRead": 0
@@ -50,7 +50,7 @@
         "content": "manager approved",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 1
       },
       {
         "notificationId": 6,
@@ -68,7 +68,7 @@
         "content": "manager approved",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 1
       },
       {
         "notificationId": 8,

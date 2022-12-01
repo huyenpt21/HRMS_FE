@@ -1,11 +1,13 @@
 import { Avatar, List, message } from 'antd';
+import Paragraph from 'antd/lib/typography/Paragraph';
+import SvgIcon from 'components/SvgIcon';
 import { useGetAllNorification } from 'hooks/useNotification';
 import { NotifcationModel, NotificationQuery } from 'models/notification';
 import VirtualList from 'rc-virtual-list';
 import { useState } from 'react';
-import styles from './notificationExpand.module.less';
-import dataMock from './dataMock.json';
 import { useNavigate } from 'react-router-dom';
+import dataMock from './dataMock.json';
+import styles from './notificationExpand.module.less';
 export default function NotificationExpand() {
   const navigate = useNavigate();
   const ContainerHeight = 400;
@@ -18,7 +20,7 @@ export default function NotificationExpand() {
   } = dataMock;
   const [dataNotiList, setDataNotiList] = useState<NotifcationModel[]>(items);
 
-  const { mutate: dataNotification } = useGetAllNorification({
+  const { mutate: dataNotification, isLoading } = useGetAllNorification({
     onSuccess: (res) => {
       const {
         data: { items },
@@ -46,7 +48,8 @@ export default function NotificationExpand() {
   };
   return (
     <>
-      <List className={styles.container}>
+      <List className={styles.container} loading={isLoading}>
+        <div className={styles.title}>Notification</div>
         <VirtualList
           data={dataNotiList}
           height={ContainerHeight}
@@ -62,15 +65,22 @@ export default function NotificationExpand() {
             >
               <List.Item.Meta
                 avatar={
-                  <Avatar src="https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d" />
+                  <Avatar
+                    src="https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
+                    size={'large'}
+                  />
                 }
                 description={
-                  <>
-                    <span className={styles.text__bold}>{item.userFrom}</span>{' '}
-                    <span>{item.content}</span>
-                  </>
+                  <Paragraph ellipsis={{ rows: 2 }}>
+                    <>
+                      <span className={styles.text__bold}>{item.userFrom}</span>{' '}
+                      <span>{item.content}</span>
+                    </>
+                  </Paragraph>
                 }
+                className={styles.item__content}
               />
+              {!item.isRead && <SvgIcon icon="active" size={10} />}
             </List.Item>
           )}
         </VirtualList>
