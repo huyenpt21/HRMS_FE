@@ -1,9 +1,11 @@
+import { BackwardOutlined } from '@ant-design/icons';
 import { Col, Divider, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
+import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import TimeRangePicker from 'components/TimeRangePicker';
 import { DATE_TIME_US, MESSAGE_RES } from 'constants/common';
@@ -13,13 +15,11 @@ import { DEVICE } from 'constants/services';
 import { useChangeStatusRequest, useRequestDetail } from 'hooks/useRequestList';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
-import styles from './detailPageRequestNoti.module.less';
 import dataMock from './detailMock.json';
-import MultipleImagePreview from 'components/MultipleImagePreview';
-import { BackwardOutlined } from '@ant-design/icons';
+import styles from './detailPageRequestNoti.module.less';
 
 export default function DetailPageRequestForNoti() {
   const { requestId } = useParams();
@@ -31,6 +31,7 @@ export default function DetailPageRequestForNoti() {
   const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
 
   const { data: detailRequest, refetch } = useRequestDetail(requestId || -1);
+
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -68,8 +69,6 @@ export default function DetailPageRequestForNoti() {
       if (item?.listEvidence) {
         setEvidenceSource(item?.listEvidence);
       }
-      // ! rollback
-      // setIsAllowRollback(item?.isAllowRollback);
     }
     // }
   }, [detailRequest]);

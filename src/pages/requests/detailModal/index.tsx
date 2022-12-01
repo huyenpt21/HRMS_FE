@@ -30,7 +30,6 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
-  useCheckRemainDevice,
   useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
@@ -137,17 +136,6 @@ export default function RequestDetailModal({
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { data: officeTimeData } = useGetOfficeTime();
-  const { mutate: checkRemainDivce } = useCheckRemainDevice({
-    onSuccess: () => {},
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({
-        message: message,
-      });
-    },
-  });
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -200,10 +188,6 @@ export default function RequestDetailModal({
         data: { item },
       } = detailRequest;
       if (message === MESSAGE_RES.SUCCESS && item) {
-        // ! move check remainign device to device detail modal
-        if (actionModal === ACTION_TYPE.ASSIGN) {
-          checkRemainDivce(item?.deviceTypeId);
-        }
         setRequestData(item);
         requestForm.setFieldsValue(item);
         requestForm.setFieldsValue({
@@ -789,12 +773,14 @@ export default function RequestDetailModal({
           )}
         </>
       </CommonModal>
-      <RollbackModal
-        isVisible={isShowRollbackModal}
-        onCancel={() => setIsShowRollbackModal(false)}
-        handleQickActionRequest={handleQickActionRequest}
-        requestStatus={requestStatus}
-      />
+      {isShowRollbackModal && (
+        <RollbackModal
+          isVisible={isShowRollbackModal}
+          onCancel={() => setIsShowRollbackModal(false)}
+          handleQickActionRequest={handleQickActionRequest}
+          requestStatus={requestStatus}
+        />
+      )}
     </>
   );
 }
