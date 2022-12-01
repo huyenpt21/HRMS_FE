@@ -21,7 +21,7 @@ export default function DeviceMenuTable({
     >
       {menuType === DEVICE_MENU.DEVICE_MANAGEMENT && (
         <>
-          <Tooltip title="Edit">
+          <Tooltip title="Edit" placement="left">
             <span
               onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
               className="cursor-pointer"

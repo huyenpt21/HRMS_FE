@@ -13,6 +13,7 @@ export interface DeviceModel extends Resource {
   deviceTypeId?: number;
   requestId?: number;
   deviceId?: number;
+  isAllowDelete?: number;
 }
 
 export interface DeviceListFilter {
