@@ -200,6 +200,7 @@ export default function RequestDetailModal({
         data: { item },
       } = detailRequest;
       if (message === MESSAGE_RES.SUCCESS && item) {
+        // ! move check remainign device to device detail modal
         if (actionModal === ACTION_TYPE.ASSIGN) {
           checkRemainDivce(item?.deviceTypeId);
         }
@@ -567,25 +568,34 @@ export default function RequestDetailModal({
             </Row>
             <Row gutter={20}>
               <Col span={24}>
-                {remainingTimeRef.current === 0 &&
-                  (requestType === REQUEST_TYPE_KEY.LEAVE ||
-                    requestType === REQUEST_TYPE_KEY.OT) && (
-                    <div className={styles.notice}>
-                      * Notice:{' '}
-                      {tabType === REQUEST_MENU.MY_REQUEST
-                        ? 'You'
-                        : 'This person'}{' '}
-                      have used up all the{' '}
-                      {requestType === REQUEST_TYPE_KEY.LEAVE
-                        ? 'holidays this year'
-                        : 'over time this month'}
+                {remainingTimeRef.current === 0 ||
+                  (requestType === REQUEST_TYPE_KEY.LEAVE && (
+                    <div>
+                      * Notice: This person have used up all the holidays this
+                      year
                     </div>
-                  )}
+                  ))}
+                {requestType === REQUEST_TYPE_KEY.OT && (
+                  <>
+                    {remainingTimeRef.current === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this year
+                      </div>
+                    )}
+                    {remainingTimeRef.current === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this month
+                      </div>
+                    )}
+                  </>
+                )}
               </Col>
             </Row>
-            {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-              requestType === REQUEST_TYPE_KEY.OTHER ||
-              requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) && (
+            {(requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+              requestType === REQUEST_TYPE_KEY.LEAVE ||
+              requestType === REQUEST_TYPE_KEY.OTHER) && (
               <Row gutter={20}>
                 <Col span="12">
                   {requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
@@ -665,7 +675,6 @@ export default function RequestDetailModal({
                 />
               </Col>
             </Row>
-
             {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>
@@ -715,16 +724,6 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingUpdate || isUploadingImage}
-                    disabled={remainingTimeRef.current === 0}
-                  />
-                )}
-                {actionModal === ACTION_TYPE.ASSIGN && (
-                  <BasicButton
-                    title="Assign"
-                    type="filled"
-                    className={styles['btn--save']}
-                    htmlType={'submit'}
-                    loading={loadingCreate}
                     disabled={remainingTimeRef.current === 0}
                   />
                 )}

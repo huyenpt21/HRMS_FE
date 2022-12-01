@@ -19,6 +19,8 @@ export interface RequestModel extends Resource {
   timeRemaining?: number;
   isAllowRollback?: number;
   requestId?: number;
+  otTimeRemainingOfMonth?: number;
+  otTimeRemainingOfYear?: number;
 }
 
 export interface OfficeTime {
