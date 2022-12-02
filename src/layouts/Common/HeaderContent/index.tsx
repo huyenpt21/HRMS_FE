@@ -37,7 +37,10 @@ export default function HeaderContent({ marginLeft }: IProps) {
           </div>
           <div
             className={styles.user__noti}
-            onClick={() => setIsShowNotiExpand(!isShowNotiExpand)}
+            onClick={() => {
+              setIsShowNotiExpand(!isShowNotiExpand);
+              setIsShowMenuExpand(false);
+            }}
           >
             <Badge count={notiNum} size={notiNum >= 10 ? 'small' : 'default'}>
               <Avatar shape="circle" size="large">
@@ -48,7 +51,10 @@ export default function HeaderContent({ marginLeft }: IProps) {
           </div>
           <div
             className={styles.menu__expand}
-            onClick={() => setIsShowMenuExpand(!isShowMenuExpand)}
+            onClick={() => {
+              setIsShowMenuExpand(!isShowMenuExpand);
+              setIsShowNotiExpand(false);
+            }}
           >
             <Avatar shape="circle" size="large">
               <SvgIcon icon="list" />

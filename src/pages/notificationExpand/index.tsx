@@ -48,6 +48,7 @@ export default function NotificationExpand() {
   };
   return (
     <>
+      <div className="backdrop"></div>
       <List className={styles.container} loading={isLoading}>
         <div className={styles.title}>Notification</div>
         <VirtualList
