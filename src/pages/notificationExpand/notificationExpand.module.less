@@ -3,13 +3,13 @@
 .container {
   background-color: @white;
   width: 24rem;
-  position: absolute !important;
+  position: absolute;
   min-height: 100px;
   box-shadow: @color-box-shadow;
   top: 66px;
   right: -3px;
   border-radius: 8px;
-  // display: block;
+  display: block;
   .title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -17,10 +17,25 @@
   }
   .item {
     cursor: pointer;
-    padding: 1.2rem 0.8rem;
+    padding: 0.8rem;
     margin: 0 0.4rem;
     .item__content {
       max-width: 92%;
+      .text__date {
+        font-size: 0.9rem;
+      }
+      :global {
+        div.ant-typography {
+          margin-bottom: 0.2rem;
+        }
+        .ant-list-item-meta-avatar {
+          margin-right: 10px;
+        }
+        .ant-avatar-lg {
+          height: 50px;
+          width: 50px;
+        }
+      }
     }
     :global {
       .ant-list-item-meta {
