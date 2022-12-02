@@ -14,7 +14,9 @@
         "content": "send you a request",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
       },
       {
         "notificationId": 2,
@@ -23,7 +25,9 @@
         "content": "has changed office time sh djhdag hufd ASGD BJKahd jsd",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Favatar%2Fcompany-logo_jkahsdhhashdghajs.png?alt=media&token=2763f064-9fbd-44ab-b8f9-4ae9e0a2924e"
       },
       {
         "notificationId": 3,
@@ -32,7 +36,9 @@
         "content": "send a request",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
       },
       {
         "notificationId": 4,
@@ -41,7 +47,9 @@
         "content": "has assigned you a device ",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
       },
       {
         "notificationId": 5,
@@ -59,7 +67,9 @@
         "content": "manager approved",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
       },
       {
         "notificationId": 7,
@@ -77,7 +87,9 @@
         "content": "manager approved",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
       },
       {
         "notificationId": 9,
@@ -86,7 +98,9 @@
         "content": "manager approved",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
       },
       {
         "notificationId": 10,
@@ -95,7 +109,9 @@
         "content": "manager approved",
         "redirectUrl": "human-resource/borrow-device-history/detail/8",
         "delivered": 1,
-        "isRead": 0
+        "isRead": 0,
+        "createDate": "2022-12-03 : 15:03:11",
+        "avtUrl": "https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
       }
     ]
   }

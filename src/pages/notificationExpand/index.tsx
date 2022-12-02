@@ -1,11 +1,13 @@
 import { Avatar, List, message } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import SvgIcon from 'components/SvgIcon';
+import { DATE_TIME_US } from 'constants/common';
 import { useGetAllNorification } from 'hooks/useNotification';
 import { NotifcationModel, NotificationQuery } from 'models/notification';
 import VirtualList from 'rc-virtual-list';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getDateFormat } from 'utils/common';
 import dataMock from './dataMock.json';
 import styles from './notificationExpand.module.less';
 export default function NotificationExpand() {
@@ -65,19 +67,21 @@ export default function NotificationExpand() {
               className={styles.item}
             >
               <List.Item.Meta
-                avatar={
-                  <Avatar
-                    src="https://media.istockphoto.com/id/1267021092/photo/funny-winking-kitten.jpg?s=612x612&w=0&k=20&c=9PoFYkqKZ30F_ubxX90_azwsR22ENwrFnOjxV0RaoTo="
-                    size={'large'}
-                  />
-                }
+                avatar={<Avatar src={item?.avtUrl} size={'large'} />}
                 description={
-                  <Paragraph ellipsis={{ rows: 2 }}>
-                    <>
-                      <span className={styles.text__bold}>{item.userFrom}</span>{' '}
-                      <span>{item.content}</span>
-                    </>
-                  </Paragraph>
+                  <>
+                    <Paragraph ellipsis={{ rows: 2 }}>
+                      <>
+                        <span className={styles.text__bold}>
+                          {item.userFrom}
+                        </span>{' '}
+                        <span>{item.content}</span>
+                      </>
+                    </Paragraph>
+                    <div className={styles.text__date}>
+                      {getDateFormat(item?.createDate, DATE_TIME_US)}
+                    </div>
+                  </>
                 }
                 className={styles.item__content}
               />

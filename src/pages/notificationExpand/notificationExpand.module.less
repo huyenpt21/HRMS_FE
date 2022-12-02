@@ -17,10 +17,25 @@
   }
   .item {
     cursor: pointer;
-    padding: 1.2rem 0.8rem;
+    padding: 0.8rem;
     margin: 0 0.4rem;
     .item__content {
       max-width: 92%;
+      .text__date {
+        font-size: 0.9rem;
+      }
+      :global {
+        div.ant-typography {
+          margin-bottom: 0.2rem;
+        }
+        .ant-list-item-meta-avatar {
+          margin-right: 10px;
+        }
+        .ant-avatar-lg {
+          height: 50px;
+          width: 50px;
+        }
+      }
     }
     :global {
       .ant-list-item-meta {

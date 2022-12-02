@@ -8,6 +8,8 @@ export interface NotifcationModel {
   redirectUrl: string;
   delivered: number;
   isRead: number;
+  createDate?: string;
+  avtUrl?: string;
 }
 
 export interface NotificationQuery {
