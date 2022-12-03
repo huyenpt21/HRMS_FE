@@ -19,7 +19,7 @@ export const menus: MenuItemType[] = [
         path: '/emp-self-service/request',
       },
       {
-        title: 'My Attendence',
+        title: 'My Attendance',
         key: 'my-attendance',
         path: '/emp-self-service/time-attendance',
       },
