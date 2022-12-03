@@ -2,9 +2,12 @@ import { Badge, Image } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Header } from 'antd/lib/layout/layout';
 import SvgIcon from 'components/SvgIcon';
-import NotificationExpand from 'pages/notificationExpand';
-import { useState } from 'react';
+import { MESSAGE_RES } from 'constants/common';
+import { useGetUserInfor } from 'hooks/useEmployee';
+import { EmployeeModel } from 'models/employee';
 import MenuExpand from 'pages/menuExpand';
+import NotificationExpand from 'pages/notificationExpand';
+import { useEffect, useState } from 'react';
 import styles from './headerContent.module.less';
 interface IProps {
   marginLeft: number;
@@ -13,6 +16,20 @@ export default function HeaderContent({ marginLeft }: IProps) {
   const notiNum = 5;
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
+  const [personInfor, setPersonInfor] = useState<EmployeeModel>();
+  const { data: detailUserInfo } = useGetUserInfor();
+  useEffect(() => {
+    if (detailUserInfo && detailUserInfo.data) {
+      const {
+        metadata: { message },
+        data: { item: userInfo },
+      } = detailUserInfo;
+      if (message === MESSAGE_RES.SUCCESS && userInfo) {
+        setPersonInfor(userInfo);
+      }
+    }
+  }, [detailUserInfo]);
+
   return (
     <>
       <Header
@@ -25,15 +42,20 @@ export default function HeaderContent({ marginLeft }: IProps) {
         <div className={styles.container}>
           <div className={styles['user__avt']}>
             <Avatar
-              size={42}
+              size={50}
               src={
-                <Image src="https://i.pinimg.com/736x/ed/c9/cb/edc9cb773659891ba03594a3a180887a.jpg" />
+                <Image
+                  src={
+                    personInfor?.avatarImg ??
+                    'https://joeschmoe.io/api/v1/random'
+                  }
+                />
               }
             />
           </div>
           <div className={styles['user__infor']}>
-            <div className={styles.user__name}>Meow</div>
-            <div className={styles.user__role}>True love not choose love</div>
+            <div className={styles.user__name}>{personInfor?.fullName}</div>
+            <div className={styles.user__role}>{personInfor?.positionName}</div>
           </div>
           <div
             className={styles.user__noti}
