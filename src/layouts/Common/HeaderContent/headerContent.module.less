@@ -20,6 +20,15 @@
 .user__avt {
   display: inline-block;
   line-height: 64px;
+  :global {
+    .ant-image {
+      height: 100%;
+      .ant-image-img {
+        object-fit: cover;
+        height: 100%;
+      }
+    }
+  }
 }
 
 .user__infor {

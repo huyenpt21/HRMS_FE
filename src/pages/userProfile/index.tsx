@@ -15,7 +15,7 @@ import { storageFirebase } from 'firebaseSetup';
 import { useGetUserInfor, useUpdateUserInfor } from 'hooks/useEmployee';
 import { EmployeeModel } from 'models/employee';
 import moment from 'moment-timezone';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getDateFormat } from 'utils/common';
 // import dataMock from './detailMock.json';
 import { UploadAvatar } from './uploadAvatar';
@@ -24,7 +24,7 @@ import styles from './userProfile.module.less';
 export default function UserProfile() {
   const [userProfileForm] = Form.useForm();
   const [imageFile, setImageFile] = useState<any>(undefined);
-  const personInforRef = useRef<EmployeeModel>();
+  const [personInfor, setPersonInfor] = useState<EmployeeModel>();
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const { data: detailUserInfo } = useGetUserInfor();
   const { mutate: updateUserInfo, isLoading } = useUpdateUserInfor({
@@ -44,7 +44,7 @@ export default function UserProfile() {
         data: { item: userInfo },
       } = detailUserInfo;
       if (message === MESSAGE_RES.SUCCESS && userInfo) {
-        personInforRef.current = userInfo;
+        setPersonInfor(userInfo);
         userProfileForm.setFieldsValue(userInfo);
         userProfileForm.setFieldsValue({
           dateOfBirth: moment(userInfo.dateOfBirth),
@@ -102,19 +102,18 @@ export default function UserProfile() {
             <UploadAvatar
               setImageFile={setImageFile}
               avtUrl={
-                personInforRef.current?.avatarImg ??
-                'https://i.pinimg.com/736x/ed/c9/cb/edc9cb773659891ba03594a3a180887a.jpg'
+                personInfor?.avatarImg ?? 'https://joeschmoe.io/api/v1/random'
               }
             />
             <Divider />
             <Row>
               <Col span={24}>
                 <div className={styles.title__name}>
-                  {personInforRef.current?.fullName}
+                  {personInfor?.fullName}
                 </div>
               </Col>
-              <Col span={24}>{personInforRef.current?.rollNumber}</Col>
-              <Col span={24}>{personInforRef.current?.email}</Col>
+              <Col span={24}>{personInfor?.rollNumber}</Col>
+              <Col span={24}>{personInfor?.email}</Col>
             </Row>
           </div>
         </Col>
@@ -214,13 +213,13 @@ export default function UserProfile() {
               <Col span={10}>
                 <span>Roll Number: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.rollNumber}
+                  {personInfor?.rollNumber}
                 </span>
               </Col>
               <Col span={14}>
                 <span>Email: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.email}
+                  {personInfor?.email}
                 </span>
               </Col>
             </Row>
@@ -228,13 +227,13 @@ export default function UserProfile() {
               <Col span={10}>
                 <span>Department: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.departmentName}
+                  {personInfor?.departmentName}
                 </span>
               </Col>
               <Col span={14}>
                 <span>Manager: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.managerName}
+                  {personInfor?.managerName}
                 </span>
               </Col>
             </Row>
@@ -242,13 +241,13 @@ export default function UserProfile() {
               <Col span={10}>
                 <span>Ranking: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.rankingName}
+                  {personInfor?.rankingName}
                 </span>
               </Col>
               <Col span={14}>
                 <span>Position: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.positionName}
+                  {personInfor?.positionName}
                 </span>
               </Col>
             </Row>
@@ -256,10 +255,7 @@ export default function UserProfile() {
               <Col span={12}>
                 <span>Onboard Date: </span>
                 <span className={styles['text--bold']}>
-                  {getDateFormat(
-                    personInforRef.current?.onBoardDate,
-                    US_DATE_FORMAT,
-                  )}
+                  {getDateFormat(personInfor?.onBoardDate, US_DATE_FORMAT)}
                 </span>
               </Col>
             </Row>
