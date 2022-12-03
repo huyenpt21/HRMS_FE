@@ -1,5 +1,5 @@
 import { Col, Image, Row, Upload } from 'antd';
-import { RcFile } from 'antd/lib/upload';
+import { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload';
 import BasicButton from 'components/BasicButton';
 import { Dispatch, memo, SetStateAction, useState } from 'react';
 import styles from '../userProfile.module.less';
@@ -18,7 +18,7 @@ export const UploadAvatar = memo(({ setImageFile, avtUrl }: IProps) => {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
-  const handleUpload = async (info: any) => {
+  const handleUpload = async (info: UploadChangeParam<UploadFile<any>>) => {
     const fileUpload = await getBase64(info.file.originFileObj as RcFile);
     setPreviewImage(fileUpload as string);
     setImageFile(info.file.originFileObj);

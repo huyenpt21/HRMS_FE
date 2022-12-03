@@ -1,0 +1,62 @@
+@import 'styles/_variables.less';
+.container {
+  justify-content: center;
+  background-color: #f0f2f5 !important;
+  height: 100%;
+  .content {
+    margin-top: 0.6rem;
+    overflow: auto;
+    background-color: @white;
+    padding: 0.8rem 5rem;
+    border-radius: 8px;
+    height: fit-content;
+    .header {
+      margin: 1rem 0;
+      justify-content: space-between;
+      .header__title {
+        font-size: 28px;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.modal__footer {
+  margin-bottom: 1rem;
+  justify-content: flex-end;
+
+  .btn {
+    &--save {
+      padding: 0px 25px;
+      margin-left: 20px;
+    }
+    &--approve {
+      padding: 0px 20px;
+      color: @success-color !important;
+      border-color: @success-color !important;
+      background-color: @success-background-color !important;
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: #e4ffc9 !important;
+        border-color: @success-color !important;
+      }
+    }
+    &--reject {
+      color: @error-color !important;
+      border-color: @error-color !important;
+      background-color: @error-background-color !important;
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: #fbc6c1 !important;
+        border-color: @error-color !important;
+      }
+    }
+  }
+}
+
+.notice {
+  color: @warning-color;
+  margin-bottom: 1rem;
+}

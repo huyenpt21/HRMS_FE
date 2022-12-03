@@ -1,14 +1,24 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, Row } from 'antd';
+import {
+  DownloadOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
+import { Col, notification, Row, Upload } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
+import { MESSAGE_RES } from 'constants/common';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import { COMMON_STATUS_LIST } from 'constants/fixData';
-import { DEPARTMENT, POSITION_BY_DEPARTMENT } from 'constants/services';
-import { EmployeeListQuery } from 'models/employee';
+import {
+  DEPARTMENT,
+  EMPLOYEE,
+  POSITION_BY_DEPARTMENT,
+} from 'constants/services';
+import { useDownloadEmployeeList } from 'hooks/useEmployee';
+import { EmployeeListQuery, ResEmployeeModify } from 'models/employee';
 import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
 import styles from './extraHeaderEmployee.module.less';
 interface IProps {
@@ -26,6 +36,17 @@ export default function ExtraHeaderTable({
   stateQuery,
 }: IProps) {
   const departmentIdRef = useRef<number>(-1);
+  const { mutate: downloadFile } = useDownloadEmployeeList({
+    onSuccess: () => {},
+    onError: (response: ResEmployeeModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message !== MESSAGE_RES.SUCCESS) {
+        notification.error({ message: message });
+      }
+    },
+  });
   const addEmployeeHandler = () => {
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
@@ -36,17 +57,43 @@ export default function ExtraHeaderTable({
       [fieldName]: value,
     }));
   };
+
+  const downloadHandler = () => {
+    delete stateQuery.limit;
+    delete stateQuery.page;
+    downloadFile(stateQuery);
+  };
+
   return (
     <>
       <div className={styles.header__section}>
         <div className={styles.header__title}>Employee List</div>
         {menuType === EMPLOYEE_MENU.ALL && (
-          <BasicButton
-            title="Add Employee"
-            type="filled"
-            icon={<PlusOutlined />}
-            onClick={addEmployeeHandler}
-          />
+          <span>
+            <BasicButton
+              title="Add Employee"
+              type="filled"
+              icon={<PlusOutlined />}
+              onClick={addEmployeeHandler}
+            />
+            <BasicButton
+              title="Download"
+              type="outline"
+              icon={<DownloadOutlined />}
+              onClick={downloadHandler}
+              className={styles.btn}
+            />
+            <Upload
+              className={styles.btn}
+              action={`${process.env.REACT_APP_API_URL}${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`}
+            >
+              <BasicButton
+                title="Upload"
+                type="outline"
+                icon={<UploadOutlined />}
+              />
+            </Upload>
+          </span>
         )}
       </div>
       <div className={styles.header__container}>

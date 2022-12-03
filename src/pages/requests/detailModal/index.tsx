@@ -30,7 +30,6 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
-  useCheckRemainDevice,
   useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
@@ -53,7 +52,7 @@ import SelectCustomSearch from 'components/SelectCustomSearch';
 import { DEVICE } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
-// import detailMock from './detailMock.json';
+import detailMock from './detailMock.json';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
 import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
 import styles from './requestDetailModal.module.less';
@@ -137,17 +136,6 @@ export default function RequestDetailModal({
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { data: officeTimeData } = useGetOfficeTime();
-  const { mutate: checkRemainDivce } = useCheckRemainDevice({
-    onSuccess: () => {},
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({
-        message: message,
-      });
-    },
-  });
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -200,9 +188,27 @@ export default function RequestDetailModal({
         data: { item },
       } = detailRequest;
       if (message === MESSAGE_RES.SUCCESS && item) {
-        if (actionModal === ACTION_TYPE.ASSIGN) {
-          checkRemainDivce(item?.deviceTypeId);
+        setRequestData(item);
+        requestForm.setFieldsValue(item);
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          date: [moment(item.startTime), moment(item.endTime)],
+          time: [moment(item.startTime), moment(item.endTime)],
+        });
+        if (item?.listEvidence) {
+          setEvidenceSource(item?.listEvidence);
         }
+        setRequestType(item?.requestTypeName);
+        setIsAllowRollback(item?.isAllowRollback);
+        requestIdRefInternal.current = item?.id;
+        remainingTimeRef.current = item?.timeRemaining;
+      }
+    } else {
+      const {
+        metadata: { message },
+        data: { item },
+      } = detailMock;
+      if (message === MESSAGE_RES.SUCCESS && item) {
         setRequestData(item);
         requestForm.setFieldsValue(item);
         requestForm.setFieldsValue({
@@ -567,25 +573,34 @@ export default function RequestDetailModal({
             </Row>
             <Row gutter={20}>
               <Col span={24}>
-                {remainingTimeRef.current === 0 &&
-                  (requestType === REQUEST_TYPE_KEY.LEAVE ||
-                    requestType === REQUEST_TYPE_KEY.OT) && (
-                    <div className={styles.notice}>
-                      * Notice:{' '}
-                      {tabType === REQUEST_MENU.MY_REQUEST
-                        ? 'You'
-                        : 'This person'}{' '}
-                      have used up all the{' '}
-                      {requestType === REQUEST_TYPE_KEY.LEAVE
-                        ? 'holidays this year'
-                        : 'over time this month'}
+                {remainingTimeRef.current === 0 ||
+                  (requestType === REQUEST_TYPE_KEY.LEAVE && (
+                    <div>
+                      * Notice: This person have used up all the holidays this
+                      year
                     </div>
-                  )}
+                  ))}
+                {requestType === REQUEST_TYPE_KEY.OT && (
+                  <>
+                    {remainingTimeRef.current === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this year
+                      </div>
+                    )}
+                    {remainingTimeRef.current === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this month
+                      </div>
+                    )}
+                  </>
+                )}
               </Col>
             </Row>
-            {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-              requestType === REQUEST_TYPE_KEY.OTHER ||
-              requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) && (
+            {(requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+              requestType === REQUEST_TYPE_KEY.LEAVE ||
+              requestType === REQUEST_TYPE_KEY.OTHER) && (
               <Row gutter={20}>
                 <Col span="12">
                   {requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
@@ -665,7 +680,6 @@ export default function RequestDetailModal({
                 />
               </Col>
             </Row>
-
             {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>
@@ -715,16 +729,6 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingUpdate || isUploadingImage}
-                    disabled={remainingTimeRef.current === 0}
-                  />
-                )}
-                {actionModal === ACTION_TYPE.ASSIGN && (
-                  <BasicButton
-                    title="Assign"
-                    type="filled"
-                    className={styles['btn--save']}
-                    htmlType={'submit'}
-                    loading={loadingCreate}
                     disabled={remainingTimeRef.current === 0}
                   />
                 )}
@@ -790,12 +794,14 @@ export default function RequestDetailModal({
           )}
         </>
       </CommonModal>
-      <RollbackModal
-        isVisible={isShowRollbackModal}
-        onCancel={() => setIsShowRollbackModal(false)}
-        handleQickActionRequest={handleQickActionRequest}
-        requestStatus={requestStatus}
-      />
+      {isShowRollbackModal && (
+        <RollbackModal
+          isVisible={isShowRollbackModal}
+          onCancel={() => setIsShowRollbackModal(false)}
+          handleQickActionRequest={handleQickActionRequest}
+          requestStatus={requestStatus}
+        />
+      )}
     </>
   );
 }

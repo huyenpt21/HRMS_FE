@@ -9,6 +9,7 @@ interface Props {
   icon: string;
   className?: string;
   iconSet?: object;
+  style?: any;
 }
 
 const SvgIcon = (props: Props) => {
@@ -18,6 +19,7 @@ const SvgIcon = (props: Props) => {
     iconSet = selection,
     icon,
     className = '',
+    style = '',
   } = props;
 
   return (
@@ -26,7 +28,7 @@ const SvgIcon = (props: Props) => {
       iconSet={iconSet}
       size={size}
       icon={icon}
-      style={{ stroke: color, fill: color }}
+      style={style ? style : { stroke: color, fill: color }}
     />
   );
 };

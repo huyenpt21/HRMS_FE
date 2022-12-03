@@ -1,5 +1,11 @@
-export const EMPLOYEE_LIST_ALL = {
-  service: 'hr/employee',
+export const EMPLOYEE = {
+  service: 'employee',
+  model: {
+    hr: 'hr',
+    notification: 'notifications',
+    export: 'export',
+    import: 'import',
+  },
 };
 
 export const USER_INFO = {
@@ -71,14 +77,6 @@ export const DEPARTMENT = {
     masterData: 'department-master-data',
   },
 };
-
-// export const DEVICE_TYPE = {
-//   service: 'device-type',
-//   model: {
-//     deviceName: 'device-by-deviceType',
-//     masterData: 'master-data',
-//   },
-// };
 
 export const DEVICE = {
   service: 'device',

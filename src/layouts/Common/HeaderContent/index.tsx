@@ -2,8 +2,9 @@ import { Badge, Image } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Header } from 'antd/lib/layout/layout';
 import SvgIcon from 'components/SvgIcon';
+import NotificationExpand from 'pages/notificationExpand';
 import { useState } from 'react';
-import MenuExpand from '../menuExpand';
+import MenuExpand from 'pages/menuExpand';
 import styles from './headerContent.module.less';
 interface IProps {
   marginLeft: number;
@@ -11,6 +12,7 @@ interface IProps {
 export default function HeaderContent({ marginLeft }: IProps) {
   const notiNum = 5;
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
+  const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
   return (
     <>
       <Header
@@ -33,16 +35,26 @@ export default function HeaderContent({ marginLeft }: IProps) {
             <div className={styles.user__name}>Meow</div>
             <div className={styles.user__role}>True love not choose love</div>
           </div>
-          <div className={styles.user__noti}>
+          <div
+            className={styles.user__noti}
+            onClick={() => {
+              setIsShowNotiExpand(!isShowNotiExpand);
+              setIsShowMenuExpand(false);
+            }}
+          >
             <Badge count={notiNum} size={notiNum >= 10 ? 'small' : 'default'}>
               <Avatar shape="circle" size="large">
                 <SvgIcon icon="notification" />
               </Avatar>
             </Badge>
+            {isShowNotiExpand && <NotificationExpand />}
           </div>
           <div
             className={styles.menu__expand}
-            onClick={() => setIsShowMenuExpand(!isShowMenuExpand)}
+            onClick={() => {
+              setIsShowMenuExpand(!isShowMenuExpand);
+              setIsShowNotiExpand(false);
+            }}
           >
             <Avatar shape="circle" size="large">
               <SvgIcon icon="list" />

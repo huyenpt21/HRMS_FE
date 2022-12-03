@@ -4,7 +4,11 @@ import CommonModal from 'components/CommonModal';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import { MESSAGE_RES, validateMessages } from 'constants/common';
 import { DEVICE, REQUEST } from 'constants/services';
-import { useAddRequestModal, useRequestDetail } from 'hooks/useRequestList';
+import {
+  useAddRequestModal,
+  useCheckRemainDevice,
+  useRequestDetail,
+} from 'hooks/useRequestList';
 import { DeviceModel } from 'models/device';
 import { ResRequestModify } from 'models/request';
 import FixDataHeaderRequest from 'pages/requests/components/fixDataHeaderRequest';
@@ -26,6 +30,17 @@ export default function DeviceAssignModal({
   const [assignDeviceForm] = Form.useForm();
   const [assignData, setAssignData] = useState<DeviceModel>();
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
+  const { mutate: checkRemainDivce } = useCheckRemainDevice({
+    onSuccess: () => {},
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
+    },
+  });
   const { mutate: assignDevice, isLoading } = useAddRequestModal(
     {
       onSuccess: (response: ResRequestModify) => {
@@ -62,6 +77,7 @@ export default function DeviceAssignModal({
       if (message === MESSAGE_RES.SUCCESS && item) {
         assignDeviceForm.setFieldsValue(item);
         setAssignData(item);
+        checkRemainDivce(item?.deviceTypeId);
       }
     }
   }, [detailRequest]);
@@ -101,8 +117,7 @@ export default function DeviceAssignModal({
                 dataName="items"
                 apiName="device-type-master-data"
                 label="Device Type"
-                rules={[{ required: true }]}
-                placeholder="Choose device type"
+                placeholder="Cannot find device type"
                 name="deviceTypeId"
                 disabled={true}
               />

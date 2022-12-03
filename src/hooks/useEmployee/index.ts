@@ -1,4 +1,4 @@
-import { EMPLOYEE_LIST_ALL, USER_INFO } from 'constants/services';
+import { EMPLOYEE, USER_INFO } from 'constants/services';
 import initialCustomQuery, {
   Feature,
   MutationProps,
@@ -24,7 +24,7 @@ class EmployeeList implements Feature<EmployeeListFields> {
 }
 
 const EmployeeListInstance = new EmployeeList(
-  EMPLOYEE_LIST_ALL.service,
+  `${EMPLOYEE.model.hr}/${EMPLOYEE.service}`,
   undefined,
   'employee-list-all',
 );
@@ -52,6 +52,79 @@ export const useGetUserInfor = () =>
       undefined,
     ),
   );
+
+export const useDownloadEmployeeList = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResEmployeeModify>) => {
+  return useMutation(
+    (payload: EmployeeListQuery) =>
+      fetchApi(
+        {
+          url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.export}`,
+          options: {
+            method: 'GET',
+          },
+          payload,
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+    },
+  );
+};
+export const useUploadEmployeeList = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResEmployeeModify>) => {
+  // const queryClient = useQueryClient();
+  return useMutation(
+    (formData: any) =>
+      fetchApi(
+        {
+          url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`,
+          options: {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Content-Type': `multipart/form-data; ${formData.getBoundary()}`,
+            },
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+      // onSettled: () => {
+      //   queryClient.invalidateQueries(['employee-list-all']);
+      // },
+    },
+  );
+};
+
+// export const useUploadEmployeeList = () => {
+//   return useMutation((formData: any) =>
+//     axios({
+//       method: 'post',
+//       url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`,
+//       data: formData,
+//       headers: {
+//         'Content-Type': `multipart/form-data; ${formData.getBoundary()}`,
+//       },
+//     })
+//       .then(function (response) {
+//         //handle success
+//         console.log(response);
+//       })
+//       .catch(function (response) {
+//         //handle error
+//         console.log(response);
+//       }),
+//   );
+// };
 
 export const useUpdateUserInfor = ({
   onError,

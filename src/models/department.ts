@@ -4,6 +4,7 @@ export interface DepartmentModel extends Resource {
   departmentName?: string;
   listPosition?: string[];
   total?: number;
+  isAllowDelete?: number;
 }
 
 export interface DepartmentListFilter {

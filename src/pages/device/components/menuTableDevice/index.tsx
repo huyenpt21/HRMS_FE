@@ -2,15 +2,18 @@ import { Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { DEVICE_MENU, MENU_OPTION_KEY } from 'constants/enums/common';
 import { DeviceModel } from 'models/device';
+import { Dispatch, SetStateAction } from 'react';
 interface IProps {
   record: DeviceModel;
   onClickMenu: (itemSelected: DeviceModel, actionType: MENU_OPTION_KEY) => void;
   menuType: DEVICE_MENU;
+  setIsShowDetailModal?: Dispatch<SetStateAction<any>>;
 }
 export default function DeviceMenuTable({
   record,
   onClickMenu,
   menuType,
+  setIsShowDetailModal,
 }: IProps) {
   return (
     <div
@@ -21,7 +24,7 @@ export default function DeviceMenuTable({
     >
       {menuType === DEVICE_MENU.DEVICE_MANAGEMENT && (
         <>
-          <Tooltip title="Edit">
+          <Tooltip title="Edit" placement="left">
             <span
               onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
               className="cursor-pointer"
@@ -62,11 +65,9 @@ export default function DeviceMenuTable({
       {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST && (
         <Tooltip title="Assign device">
           <span
-            // onClick={() => {
-            //   if (requestIdRef) requestIdRef.current = record.id;
-            //   if (modalAction) modalAction.current = ACTION_TYPE.ASSIGN;
-            //   setIsShowDetailModal && setIsShowDetailModal(true);
-            // }}
+            onClick={() => {
+              setIsShowDetailModal && setIsShowDetailModal(true);
+            }}
             className="cursor-pointer"
           >
             <SvgIcon icon="tag" />

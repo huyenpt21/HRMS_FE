@@ -12,8 +12,8 @@
     "item": {
       "id": 4,
       "personName": "Nguyen Van Binh",
-      "requestTypeId": 11,
-      "requestTypeName": "device",
+      "requestTypeId": 1,
+      "requestTypeName": "leave",
       "createDate": "2022-10-19 15:00:00",
       "startTime": "2022-10-22 10:00:00",
       "endTime": "2022-10-24 12:00:00",
@@ -24,11 +24,11 @@
         "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F53262036_1188116314698149_1116890731902926848_n.jpg?alt=media&token=2c1607f4-8248-4736-a20b-8d5f3beeee9e"
       ],
       "reason": "I don't have laptop to code",
-      "status": "Pending",
+      "status": "Approved",
       "receiver": "Nguyen Thi Huyen",
       "deviceTypeId": 11,
       "approvalDate": "2022-10-24 12:00:00",
-      "timeRemaining": 2.49746464,
+      "timeRemaining": 2,
       "isAllowRollback": 1
     }
   }

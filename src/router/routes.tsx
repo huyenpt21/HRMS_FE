@@ -29,6 +29,7 @@ import AllDiviceList from 'pages/device/deviceManagement/allDeviceList';
 import OfficeTime from 'pages/officeTime';
 import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
 import CreateSecurityCode from 'pages/payslip/createSecureCode';
+import DetailPageRequestForNoti from 'pages/requests/detailPageRequestNoti';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -43,7 +44,16 @@ export default function RouterElement() {
         {
           path: 'emp-self-service',
           children: [
-            { path: 'request', element: <MyRequestList /> },
+            {
+              path: 'request',
+              children: [
+                { path: '', element: <MyRequestList /> },
+                {
+                  path: 'detail/:requestId',
+                  element: <DetailPageRequestForNoti />,
+                },
+              ],
+            },
             { path: 'time-attendance', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
@@ -114,7 +124,13 @@ export default function RouterElement() {
             },
             {
               path: 'subordinate',
-              element: <SubordinateRequestList />,
+              children: [
+                { path: '', element: <SubordinateRequestList /> },
+                {
+                  path: 'detail/:requestId',
+                  element: <DetailPageRequestForNoti />,
+                },
+              ],
             },
             {
               path: 'all',
