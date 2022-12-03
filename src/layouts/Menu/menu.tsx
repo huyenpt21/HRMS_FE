@@ -9,7 +9,7 @@ export const menus: MenuItemType[] = [
     path: '/',
   },
   {
-    title: 'Emplyee Self-service',
+    title: 'Employee Self-service',
     key: 'emp-self-service',
     icon: 'function',
     children: [
