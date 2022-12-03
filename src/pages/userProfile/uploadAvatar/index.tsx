@@ -1,13 +1,14 @@
 import { Col, Image, Row, Upload } from 'antd';
-import { RcFile } from 'antd/lib/upload';
+import { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload';
 import BasicButton from 'components/BasicButton';
 import { Dispatch, memo, SetStateAction, useState } from 'react';
 import styles from '../userProfile.module.less';
 
 interface IProps {
   setImageFile: Dispatch<SetStateAction<any>>;
+  avtUrl: string;
 }
-export const UploadAvatar = memo(({ setImageFile }: IProps) => {
+export const UploadAvatar = memo(({ setImageFile, avtUrl }: IProps) => {
   const [previewImage, setPreviewImage] = useState('');
 
   const getBase64 = (file: RcFile): Promise<string> =>
@@ -17,7 +18,7 @@ export const UploadAvatar = memo(({ setImageFile }: IProps) => {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
-  const handleUpload = async (info: any) => {
+  const handleUpload = async (info: UploadChangeParam<UploadFile<any>>) => {
     const fileUpload = await getBase64(info.file.originFileObj as RcFile);
     setPreviewImage(fileUpload as string);
     setImageFile(info.file.originFileObj);
@@ -25,13 +26,7 @@ export const UploadAvatar = memo(({ setImageFile }: IProps) => {
   return (
     <Row className={styles.header}>
       <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-        <Image
-          src={
-            !!previewImage
-              ? previewImage
-              : 'https://i.pinimg.com/736x/ed/c9/cb/edc9cb773659891ba03594a3a180887a.jpg'
-          }
-        />
+        <Image src={!!previewImage ? previewImage : avtUrl} />
       </Col>
       <Col
         xs={24}

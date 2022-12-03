@@ -1,9 +1,12 @@
-import { Form, TablePaginationConfig } from 'antd';
+import { Form, TablePaginationConfig, Tooltip } from 'antd';
 import BasicInput from 'components/BasicInput';
 import CommonTable from 'components/CommonTable';
+import SvgIcon from 'components/SvgIcon';
 import { paginationConfig } from 'constants/common';
 import { DEVICE_MENU } from 'constants/enums/common';
 import { DeviceTypeHeader } from 'constants/header';
+import { DEVICE } from 'constants/services';
+import { useDeviceList } from 'hooks/useDevice';
 import { EditableCellProps, HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDeviceType from 'pages/device/components/extraHeader';
@@ -42,7 +45,10 @@ export default function DeviceTypeList() {
 
   //  * get data header and content table
   const header: HeaderTableFields[] = DeviceTypeHeader;
-  // const { isError, data: dataTable } = useDeviceTypeList(stateQuery);
+  const { data: dataTable, isLoading } = useDeviceList(
+    stateQuery,
+    `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
+  );
 
   // * render header and data in table
   useEffect(() => {
@@ -58,21 +64,33 @@ export default function DeviceTypeList() {
       };
     });
     columns.push({
-      title: 'Action',
+      title: (
+        <div>
+          <Tooltip
+            title="Can not edit or delete device types have device is currently in use"
+            placement="topRight"
+          >
+            Action <SvgIcon icon="infor" size={18} />
+          </Tooltip>
+        </div>
+      ),
       key: 'action',
       dataIndex: 'action',
       width: 100,
       align: 'center',
       render: (_, record: DeviceModel) => {
-        return (
-          <MenuTableDeviceType
-            record={record}
-            form={deviceTypeForm}
-            editingKey={editingKey}
-            setEditingKey={setEditingKey}
-            stateQuery={stateQuery}
-          />
-        );
+        if (record.isAllowDelete) {
+          return (
+            <MenuTableDeviceType
+              record={record}
+              form={deviceTypeForm}
+              editingKey={editingKey}
+              setEditingKey={setEditingKey}
+              stateQuery={stateQuery}
+            />
+          );
+        }
+        return <span>-</span>;
       },
     });
     setColumnsHeader(columns);
@@ -95,8 +113,7 @@ export default function DeviceTypeList() {
       }));
     }
     // }
-    // }, [dataTable, stateQuery, isError]);
-  }, [stateQuery]);
+  }, [dataTable, stateQuery]);
   const cancelModalHandler = () => {
     setIsShowDetailModal(false);
     deviceTypeId.current = undefined;
@@ -168,7 +185,7 @@ export default function DeviceTypeList() {
           }
           stateQuery={stateQuery}
           rowKey={(record: DeviceModel) => record.id}
-          // loading={isLoading}
+          loading={isLoading}
           isShowScroll
         />
       </Form>

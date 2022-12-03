@@ -1,13 +1,13 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { notification, Tooltip, Typography } from 'antd';
+import { notification, Popconfirm, Tooltip, Typography } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
-import NotifyPopup from 'components/NotifyPopup';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
+import { DEVICE } from 'constants/services';
 import { useDeleteDevice, useUpdateDevice } from 'hooks/useDevice';
 import { DeviceListQuery, DeviceModel, ResDeviceModify } from 'models/device';
 import { EmployeeModel } from 'models/employee';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 interface IProps {
   record: EmployeeModel;
   form: FormInstance;
@@ -22,7 +22,6 @@ export default function MenuTableDeviceType({
   setEditingKey,
   stateQuery,
 }: IProps) {
-  const [isShowPopup, setIsShowPopup] = useState(false);
   const { mutate: updateDeviceType } = useUpdateDevice({
     onSuccess: (res: ResDeviceModify) => {
       const {
@@ -41,24 +40,25 @@ export default function MenuTableDeviceType({
       notification.error({ message: message });
     },
   });
-  const { mutate: deleteDeviceType } = useDeleteDevice({
-    onSuccess: (res: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = res;
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({ message: 'Delete device type successfully' });
-        setIsShowPopup(false);
-      }
+  const { mutate: deleteDeviceType } = useDeleteDevice(
+    {
+      onSuccess: (res: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = res;
+        if (message === MESSAGE_RES.SUCCESS) {
+          notification.success({ message: 'Delete device type successfully' });
+        }
+      },
+      onError: (res: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = res;
+        notification.error({ message: message });
+      },
     },
-    onError: (res: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = res;
-      notification.error({ message: message });
-      setIsShowPopup(false);
-    },
-  });
+    `${DEVICE.model.deviceType}`,
+  );
   const handleEdit = (record: DeviceModel & { id: React.Key }) => {
     form.setFieldsValue({ ...record });
     setEditingKey(record.id);
@@ -103,7 +103,7 @@ export default function MenuTableDeviceType({
         )}
         {record.id !== editingKey && (
           <>
-            <Tooltip title="Edit">
+            <Tooltip title="Edit" placement="left">
               <Typography.Link
                 disabled={editingKey !== -1}
                 onClick={() => handleEdit(record)}
@@ -111,28 +111,23 @@ export default function MenuTableDeviceType({
                 <SvgIcon icon="edit-border" />
               </Typography.Link>
             </Tooltip>
-            <Tooltip title="Delete">
-              <Typography.Link
-                onClick={() => setIsShowPopup(true)}
-                disabled={editingKey !== -1}
-              >
-                <SvgIcon icon="close-circle" />
-              </Typography.Link>
-            </Tooltip>
+            <Popconfirm
+              title="Are you sure?"
+              onConfirm={() =>
+                deleteDeviceType({ uid: record.id, currentFilter: stateQuery })
+              }
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tooltip title="Delete" placement="right">
+                <Typography.Link disabled={editingKey !== -1}>
+                  <SvgIcon icon="close-circle" />
+                </Typography.Link>
+              </Tooltip>
+            </Popconfirm>
           </>
         )}
       </div>
-      {isShowPopup && (
-        <NotifyPopup
-          visible={isShowPopup}
-          onCancel={() => setIsShowPopup(false)}
-          status="warning"
-          title="Are you sure?"
-          onDelete={() => {
-            deleteDeviceType({ uid: record.id, currentFilter: stateQuery });
-          }}
-        />
-      )}
     </>
   );
 }

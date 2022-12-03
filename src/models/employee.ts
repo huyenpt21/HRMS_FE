@@ -20,7 +20,7 @@ export interface EmployeeModel extends Resource {
   departmentName?: string;
   positionName?: string;
   rankingName?: string;
-  avatar?: string;
+  avatarImg?: string;
 }
 
 export interface EmployeeListFilter {

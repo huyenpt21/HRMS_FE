@@ -179,7 +179,7 @@ export const REQUEST_STATUS_LIST: SelectBoxType[] = [
   },
 ];
 
-export const REQUEST_DEVICE_LIST: SelectBoxType[] = [
+export const DEVICE_REQUEST_STATUS: SelectBoxType[] = [
   {
     label: STATUS.PENDING,
     value: COMMON_STATUS.INACTIVE,
@@ -190,7 +190,7 @@ export const REQUEST_DEVICE_LIST: SelectBoxType[] = [
   },
 ];
 
-export const DEVICE_STATUS: SelectBoxType[] = [
+export const DEVICE_MANAGEMENT_STATUS: SelectBoxType[] = [
   {
     label: 'Using',
     value: COMMON_STATUS.ACTIVE,
@@ -200,7 +200,7 @@ export const DEVICE_STATUS: SelectBoxType[] = [
     value: COMMON_STATUS.INACTIVE,
   },
 ];
-export const BORROW_DEVICE_STATUS: SelectBoxType[] = [
+export const DEVICE_HISTORY_STATUS: SelectBoxType[] = [
   {
     label: 'Returned',
     value: COMMON_STATUS.ACTIVE,

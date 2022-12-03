@@ -2,7 +2,6 @@
 import { MENU_TYPE } from 'constants/enums/common';
 import MainLayout from 'layouts/MainLayout';
 import DepartmentList from 'pages/department/departmentList';
-import DeviceTypeList from 'pages/device/deviceType/deviceTypeList';
 import AllEmployeeList from 'pages/employees/allEmployee';
 import SubordinateList from 'pages/employees/subordinate';
 import ForbiddenPage from 'pages/forbidden';
@@ -20,14 +19,17 @@ import TimeCheckDetail from 'pages/timeCheck/timeCheckDetail';
 
 import { useRoutes } from 'react-router-dom';
 import UserProfile from 'pages/userProfile';
-import BorrowDeviceRequest from 'pages/requests/borrowDeviceRequest';
 import PayslipDetail from 'pages/payslip';
-import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
-import AllDiviceList from 'pages/device/device/allDeviceList';
-import AllBorrowDeviceHistory from 'pages/device/allBorrowDeviceHistory';
-import MyBorrowDeviceHistory from 'pages/device/myDeviceHistory';
+import MyBorrowDeviceHistory from 'pages/device/deviceHistory/myDeviceHistory';
+import DetailDeviceRequest from 'pages/device/deviceRequest/detailDeviceRequest';
+import AllBorrowDeviceHistory from 'pages/device/deviceHistory/allBorrowDeviceHistory';
+import BorrowDeviceRequest from 'pages/device/deviceRequest/borrowDeviceRequest';
+import DeviceTypeList from 'pages/device/deviceTypeManagemenrt/deviceTypeList';
+import AllDiviceList from 'pages/device/deviceManagement/allDeviceList';
 import OfficeTime from 'pages/officeTime';
+import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
 import CreateSecurityCode from 'pages/payslip/createSecureCode';
+import DetailPageRequestForNoti from 'pages/requests/detailPageRequestNoti';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -42,11 +44,32 @@ export default function RouterElement() {
         {
           path: 'emp-self-service',
           children: [
-            { path: 'request', element: <MyRequestList /> },
+            {
+              path: 'request',
+              children: [
+                { path: '', element: <MyRequestList /> },
+                {
+                  path: 'detail/:requestId',
+                  element: <DetailPageRequestForNoti />,
+                },
+              ],
+            },
             { path: 'time-attendance', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
-            { path: 'device-history', element: <MyBorrowDeviceHistory /> },
+            {
+              path: 'device-history',
+              children: [
+                {
+                  path: '',
+                  element: <MyBorrowDeviceHistory />,
+                },
+                {
+                  path: 'detail/:assignDeviceId',
+                  element: <DetailDeviceRequest />,
+                },
+              ],
+            },
           ],
         },
         {
@@ -72,7 +95,17 @@ export default function RouterElement() {
             },
             {
               path: 'borrow-device-history',
-              element: <AllBorrowDeviceHistory menuType={MENU_TYPE.ALL} />,
+
+              children: [
+                {
+                  path: '',
+                  element: <AllBorrowDeviceHistory menuType={MENU_TYPE.ALL} />,
+                },
+                {
+                  path: 'detail/:assignDeviceId',
+                  element: <DetailDeviceRequest />,
+                },
+              ],
             },
             {
               path: 'sub-borrow-device-history',
@@ -91,7 +124,13 @@ export default function RouterElement() {
             },
             {
               path: 'subordinate',
-              element: <SubordinateRequestList />,
+              children: [
+                { path: '', element: <SubordinateRequestList /> },
+                {
+                  path: 'detail/:requestId',
+                  element: <DetailPageRequestForNoti />,
+                },
+              ],
             },
             {
               path: 'all',

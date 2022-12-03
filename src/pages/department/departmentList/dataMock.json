@@ -9,7 +9,7 @@
     }
   },
   "data": {
-    "listDepartment": [
+    "items": [
       {
         "id": 1,
         "departmentName": "DEV",

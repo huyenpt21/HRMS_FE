@@ -10,7 +10,7 @@ interface IProps {
   preview?: any;
   height?: number;
   allowRemove?: boolean;
-  handleRemoveFile: (url: string) => Promise<void>;
+  handleRemoveFile?: (url: string) => Promise<void>;
 }
 export default function MultipleImagePreview({
   src,
@@ -25,7 +25,7 @@ export default function MultipleImagePreview({
   const [confirmLoading, setConfirmLoading] = useState(false);
   const handleOk = async (el: string) => {
     setConfirmLoading(true);
-    await handleRemoveFile(el);
+    handleRemoveFile && (await handleRemoveFile(el));
     setConfirmLoading(false);
   };
 

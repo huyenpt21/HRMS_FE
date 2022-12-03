@@ -35,7 +35,7 @@ export const YEAR_MONTH_NUM = 'MM / YYYY';
 export const DEFAULT_SIZE_ICON = 24;
 export const validateMessages = () => ({
   required: '${label} is required',
-  whitespace: '${label} is invalid',
+  whitespace: 'Only white spaces is invalid',
   types: {
     email: '${label} is not valid email',
     number: '${label} is not a valid number',

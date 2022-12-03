@@ -3,23 +3,28 @@ import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
-import { DATE_TIME, MESSAGE_RES, validateMessages } from 'constants/common';
+import {
+  DATE_TIME,
+  MESSAGE_RES,
+  US_DATE_FORMAT,
+  validateMessages,
+} from 'constants/common';
 import { GENDER_LIST } from 'constants/fixData';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storageFirebase } from 'firebaseSetup';
 import { useGetUserInfor, useUpdateUserInfor } from 'hooks/useEmployee';
 import { EmployeeModel } from 'models/employee';
 import moment from 'moment-timezone';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getDateFormat } from 'utils/common';
-import dataMock from './detailMock.json';
+// import dataMock from './detailMock.json';
 import { UploadAvatar } from './uploadAvatar';
 import styles from './userProfile.module.less';
 
 export default function UserProfile() {
   const [userProfileForm] = Form.useForm();
   const [imageFile, setImageFile] = useState<any>(undefined);
-  const personInforRef = useRef<EmployeeModel>();
+  const [personInfor, setPersonInfor] = useState<EmployeeModel>();
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const { data: detailUserInfo } = useGetUserInfor();
   const { mutate: updateUserInfo, isLoading } = useUpdateUserInfor({
@@ -33,32 +38,33 @@ export default function UserProfile() {
     },
   });
   useEffect(() => {
-    // if (detailUserInfo && detailUserInfo.data) {
-    const {
-      metadata: { message },
-      data: { item: userInfo },
-    } = dataMock;
-    if (message === MESSAGE_RES.SUCCESS && userInfo) {
-      personInforRef.current = userInfo;
-      userProfileForm.setFieldsValue(userInfo);
-      userProfileForm.setFieldsValue({
-        dateOfBirth: moment(userInfo.dateOfBirth),
-      });
+    if (detailUserInfo && detailUserInfo.data) {
+      const {
+        metadata: { message },
+        data: { item: userInfo },
+      } = detailUserInfo;
+      if (message === MESSAGE_RES.SUCCESS && userInfo) {
+        setPersonInfor(userInfo);
+        userProfileForm.setFieldsValue(userInfo);
+        userProfileForm.setFieldsValue({
+          dateOfBirth: moment(userInfo.dateOfBirth),
+        });
+      }
     }
-    // }
   }, [detailUserInfo]);
   const submitHandler = async (formValues: EmployeeModel) => {
     formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
-    formValues.avatar = await uploadImage();
+    if (imageFile) {
+      formValues.avatarImg = await uploadImage();
+    }
     updateUserInfo(formValues);
   };
-
   const uploadImage = async () => {
     setIsUploadingImage(true);
     let imgUrlDownload: string | undefined = undefined;
     const imageRef = ref(
       storageFirebase,
-      `images/avatar/${imageFile.name}-${Math.random()}`,
+      `images/avatar/${imageFile?.name}-${Math.random()}`,
     );
     await uploadBytes(imageRef, imageFile)
       .then(async () => {
@@ -93,20 +99,27 @@ export default function UserProfile() {
       <Row gutter={32} className={styles.content}>
         <Col xs={12} sm={12} md={10} lg={10} xl={8} xxl={6}>
           <div className={styles.left__side}>
-            <UploadAvatar setImageFile={setImageFile} />
+            <UploadAvatar
+              setImageFile={setImageFile}
+              avtUrl={
+                personInfor?.avatarImg ?? 'https://joeschmoe.io/api/v1/random'
+              }
+            />
             <Divider />
-            <Row className={styles.info}>
+            <Row>
               <Col span={24}>
-                <h3>{personInforRef.current?.fullName}</h3>
+                <div className={styles.title__name}>
+                  {personInfor?.fullName}
+                </div>
               </Col>
-              <Col span={24}>{personInforRef.current?.rollNumber}</Col>
-              <Col span={24}>{personInforRef.current?.email}</Col>
+              <Col span={24}>{personInfor?.rollNumber}</Col>
+              <Col span={24}>{personInfor?.email}</Col>
             </Row>
           </div>
         </Col>
         <Col xs={14} sm={14} md={14} lg={14} xl={16} xxl={12}>
           <div className={styles.personal__info}>
-            <h2>Personnal Information</h2>
+            <div className={styles.title__text}>Personnal Information</div>
             <Row gutter={12}>
               <Col span={12}>
                 <BasicInput
@@ -132,7 +145,7 @@ export default function UserProfile() {
                   name="gender"
                   label="Gender"
                   allowClear
-                  placeholder="Enter address"
+                  placeholder="Choose gender"
                   rules={[{ required: true }]}
                 />
               </Col>
@@ -143,12 +156,15 @@ export default function UserProfile() {
                   rules={[
                     { required: true },
                     {
-                      pattern: new RegExp('^(\\+84|84|0)+([0-9]{9,10})\\b'),
+                      pattern: new RegExp(
+                        '^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$',
+                      ),
                       message: 'Phone Number is invalid',
                     },
                   ]}
                   allowClear
                   placeholder="Enter phone number"
+                  showCount
                 />
               </Col>
             </Row>
@@ -158,8 +174,15 @@ export default function UserProfile() {
                   name="citizenIdentification"
                   label="Citizen Identification"
                   allowClear
-                  rules={[{ required: true, whitespace: true }]}
+                  rules={[
+                    { required: true, whitespace: true },
+                    {
+                      pattern: new RegExp('^[0-9]{9}$|^[0-9]{12}$'),
+                      message: 'Citizen Identification is invalid',
+                    },
+                  ]}
                   placeholder="Enter Citizen Identification"
+                  showCount
                 />
               </Col>
             </Row>
@@ -185,18 +208,18 @@ export default function UserProfile() {
             </Row>
           </div>
           <div className={styles.personal__info}>
-            <h2>Working Information</h2>
+            <div className={styles.title__text}>Working Information</div>
             <Row gutter={12} className={styles['infor--header']}>
               <Col span={10}>
                 <span>Roll Number: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.rollNumber}
+                  {personInfor?.rollNumber}
                 </span>
               </Col>
               <Col span={14}>
                 <span>Email: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.email}
+                  {personInfor?.email}
                 </span>
               </Col>
             </Row>
@@ -204,13 +227,13 @@ export default function UserProfile() {
               <Col span={10}>
                 <span>Department: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.departmentName}
+                  {personInfor?.departmentName}
                 </span>
               </Col>
               <Col span={14}>
                 <span>Manager: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.managerName}
+                  {personInfor?.managerName}
                 </span>
               </Col>
             </Row>
@@ -218,13 +241,13 @@ export default function UserProfile() {
               <Col span={10}>
                 <span>Ranking: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.rankingName}
+                  {personInfor?.rankingName}
                 </span>
               </Col>
               <Col span={14}>
                 <span>Position: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.positionName}
+                  {personInfor?.positionName}
                 </span>
               </Col>
             </Row>
@@ -232,7 +255,7 @@ export default function UserProfile() {
               <Col span={12}>
                 <span>Onboard Date: </span>
                 <span className={styles['text--bold']}>
-                  {personInforRef.current?.onBoardDate}
+                  {getDateFormat(personInfor?.onBoardDate, US_DATE_FORMAT)}
                 </span>
               </Col>
             </Row>

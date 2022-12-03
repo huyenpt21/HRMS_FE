@@ -1,4 +1,4 @@
-import { notification, Tooltip } from 'antd';
+import { notification, Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import {
   ACTION_TYPE,
@@ -64,7 +64,7 @@ export default function RequestMenuAction({
       } = response;
       if (message === 'Success') {
         notification.success({
-          message: 'Delete request successfully',
+          message: 'Cancel request successfully',
         });
         refetchList();
       }
@@ -155,7 +155,7 @@ export default function RequestMenuAction({
       )}
       {tabType === REQUEST_MENU.MY_REQUEST && (
         <>
-          <Tooltip title="Edit">
+          <Tooltip title="Edit" placement="left">
             <span
               onClick={() =>
                 actionRequestHandler(record.id, REQUEST_ACTION_TYPE.EDIT)
@@ -165,39 +165,29 @@ export default function RequestMenuAction({
               <SvgIcon icon="edit-border" />
             </span>
           </Tooltip>
-          <Tooltip title="Cancel">
-            <span
-              onClick={() =>
-                actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL)
-              }
-              className="cursor-pointer"
-            >
-              <SvgIcon icon="close-circle" />
-            </span>
-          </Tooltip>
+          <Popconfirm
+            title="Are you sure?"
+            onConfirm={() =>
+              actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL)
+            }
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Cancel" placement="right">
+              <span className="cursor-pointer">
+                <SvgIcon icon="close-circle" />
+              </span>
+            </Tooltip>
+          </Popconfirm>
         </>
       )}
-      {tabType !== REQUEST_MENU.SUBORDINATE && (
+      {tabType === REQUEST_MENU.SUBORDINATE && (
         <RollbackModal
           isVisible={isShowRollbackModal}
           handleQickActionRequest={handleRollback}
           onCancel={() => setIsShowRollbackModal(false)}
           requestStatus={record?.status}
         />
-      )}
-      {tabType === REQUEST_MENU.DEVICE && (
-        <Tooltip title="Assign device">
-          <span
-            onClick={() => {
-              if (requestIdRef) requestIdRef.current = record.id;
-              if (modalAction) modalAction.current = ACTION_TYPE.ASSIGN;
-              setIsShowDetailModal && setIsShowDetailModal(true);
-            }}
-            className="cursor-pointer"
-          >
-            <SvgIcon icon="tag" />
-          </span>
-        </Tooltip>
       )}
     </div>
   );

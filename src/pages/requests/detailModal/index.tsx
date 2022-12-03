@@ -30,7 +30,6 @@ import {
 import {
   useAddRequestModal,
   useChangeStatusRequest,
-  useCheckRemainDevice,
   useGetRemainingTime,
   useRequestDetail,
   useUpdateRequest,
@@ -45,18 +44,18 @@ import {
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
 import { getDateFormat, getRange, TimeCombine } from 'utils/common';
-import RequestStatus from '../components/statusRequest';
 
 import { RangePickerProps } from 'antd/lib/date-picker';
 import BasicDatePicker from 'components/BasicDatePicker';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
-import { DEVICE_TYPE, REQUEST } from 'constants/services';
+import { DEVICE } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
 import detailMock from './detailMock.json';
-import styles from './requestDetailModal.module.less';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
+import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
+import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -88,36 +87,30 @@ export default function RequestDetailModal({
   const requestIdRefInternal = useRef<number>();
   const remainingTimeRef = useRef<number | undefined>();
   const officeTimeRef = useRef<OfficeTime>();
-
   const { mutate: createRequest, isLoading: loadingCreate } =
-    useAddRequestModal(
-      {
-        onSuccess: (response: ResRequestModify) => {
-          const {
-            metadata: { message },
-          } = response;
+    useAddRequestModal({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
 
-          if (message === 'Success') {
-            notification.success({
-              message: 'Send request successfully',
-            });
-            refetchList();
-            cancelHandler();
-          }
-        },
-        onError: (response: ResRequestModify) => {
-          const {
-            metadata: { message },
-          } = response;
-          notification.error({
-            message: message,
+        if (message === 'Success') {
+          notification.success({
+            message: 'Send request successfully',
           });
-        },
+          refetchList();
+          cancelHandler();
+        }
       },
-      actionModal === ACTION_TYPE.ASSIGN
-        ? `${REQUEST.model.itSupport}/${REQUEST.model.itSupport}/${REQUEST.model.assign}`
-        : undefined,
-    );
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({
+          message: message,
+        });
+      },
+    });
   const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -143,17 +136,6 @@ export default function RequestDetailModal({
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { data: officeTimeData } = useGetOfficeTime();
-  const { mutate: checkRemainDivce } = useCheckRemainDevice({
-    onSuccess: () => {},
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({
-        message: message,
-      });
-    },
-  });
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -182,11 +164,12 @@ export default function RequestDetailModal({
         data: { item },
       } = response;
       if (message === 'Success') {
-        requestForm.setFieldValue(
-          'timeRemaining',
-          item.timeRemaining?.toFixed(2),
-        );
-        remainingTimeRef.current = item.timeRemaining;
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          timeRemainingMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
+          timeRemainingYear: item?.otTimeRemainingOfYear?.toFixed(2),
+        });
+        remainingTimeRef.current = item?.timeRemaining;
       }
     },
     onError: (response: ResRequestModify) => {
@@ -199,32 +182,50 @@ export default function RequestDetailModal({
     },
   });
   useEffect(() => {
-    // if (detailRequest && detailRequest?.data) {
-    const {
-      metadata: { message },
-      data: { item },
-    } = detailMock;
-    if (message === MESSAGE_RES.SUCCESS && item) {
-      if (actionModal === ACTION_TYPE.ASSIGN) {
-        checkRemainDivce(item?.deviceTypeId);
+    if (detailRequest && detailRequest?.data) {
+      const {
+        metadata: { message },
+        data: { item },
+      } = detailRequest;
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        setRequestData(item);
+        requestForm.setFieldsValue(item);
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          date: [moment(item.startTime), moment(item.endTime)],
+          time: [moment(item.startTime), moment(item.endTime)],
+        });
+        if (item?.listEvidence) {
+          setEvidenceSource(item?.listEvidence);
+        }
+        setRequestType(item?.requestTypeName);
+        setIsAllowRollback(item?.isAllowRollback);
+        requestIdRefInternal.current = item?.id;
+        remainingTimeRef.current = item?.timeRemaining;
       }
-      setRequestData(item);
-      requestForm.setFieldsValue(item);
-      requestForm.setFieldsValue({
-        timeRemaining: item?.timeRemaining?.toFixed(2),
-        date: [moment(item.startTime), moment(item.endTime)],
-        time: [moment(item.startTime), moment(item.endTime)],
-      });
-      if (item?.listEvidence) {
-        setEvidenceSource(item?.listEvidence);
+    } else {
+      const {
+        metadata: { message },
+        data: { item },
+      } = detailMock;
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        setRequestData(item);
+        requestForm.setFieldsValue(item);
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          date: [moment(item.startTime), moment(item.endTime)],
+          time: [moment(item.startTime), moment(item.endTime)],
+        });
+        if (item?.listEvidence) {
+          setEvidenceSource(item?.listEvidence);
+        }
+        setRequestType(item?.requestTypeName);
+        setIsAllowRollback(item?.isAllowRollback);
+        requestIdRefInternal.current = item?.id;
+        remainingTimeRef.current = item?.timeRemaining;
       }
-      setRequestType(item?.requestTypeName);
-      setIsAllowRollback(item?.isAllowRollback);
-      requestIdRefInternal.current = item?.id;
-      remainingTimeRef.current = item?.timeRemaining;
     }
-    // }
-  }, [detailRequest, detailMock]);
+  }, [detailRequest]);
   useEffect(() => {
     if (officeTimeData && officeTimeData?.data) {
       const {
@@ -353,8 +354,8 @@ export default function RequestDetailModal({
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
     if (
-      options.type === REQUEST_TYPE_KEY.LEAVE ||
-      options.type === REQUEST_TYPE_KEY.OT
+      options?.type === REQUEST_TYPE_KEY.LEAVE ||
+      options?.type === REQUEST_TYPE_KEY.OT
     ) {
       const data: RequestRemainingTime = {
         requestTypeId: value,
@@ -499,145 +500,107 @@ export default function RequestDetailModal({
             requiredMark
             validateMessages={validateMessages()}
             onFinish={submitHandler}
-            disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+            disabled={
+              actionModal === ACTION_TYPE.VIEW_DETAIL ||
+              requestStatus !== STATUS.PENDING
+            }
           >
             {actionModal !== ACTION_TYPE.CREATE && (
-              <>
-                <Row gutter={20} className={styles['infor--header']}>
-                  <Col span={10}>
-                    <span>Created By:</span>
-                    <span className={styles['text--bold']}>
-                      {requestData?.personName}
-                    </span>
-                  </Col>
-                  <Col span={6}>
-                    <span>Roll Number:</span>
-                    <span className={styles['text--bold']}>
-                      {requestData?.rollNumber}
-                    </span>
-                  </Col>
-                  <Col span={8}>
-                    <span>Created Time:</span>
-                    <span className={styles['text--bold']}>
-                      {getDateFormat(requestData?.createDate, DATE_TIME_US)}
-                    </span>
-                  </Col>
-                </Row>
-                <Row gutter={20} className={styles['infor--header']}>
-                  <Col span={10}>
-                    <span>
-                      {requestData?.status === STATUS.APPROVED
-                        ? 'Appoval By:'
-                        : 'Receiver:'}
-                    </span>
-                    <span className={styles['text--bold']}>
-                      {requestData?.receiver}
-                    </span>
-                  </Col>
-                  <Col span={6}>
-                    <span>Status:</span>{' '}
-                    <RequestStatus data={requestData?.status ?? ''} />
-                  </Col>
-                  {requestData?.approvalDate && (
-                    <Col span={8}>
-                      <span>Approved Time:</span>
-                      <span className={styles['text--bold']}>
-                        {getDateFormat(requestData?.createDate, DATE_TIME_US)}
-                      </span>
-                    </Col>
-                  )}
-                </Row>
-              </>
+              <FixDataHeaderRequest requestData={requestData} />
             )}
-
             <Row gutter={20}>
-              {tabType !== REQUEST_MENU.DEVICE && (
-                <Col span="12">
-                  <BasicSelect
-                    options={REQUEST_TYPE_LIST}
-                    label="Request Type"
-                    rules={[{ required: true }]}
-                    placeholder="Choose request type"
-                    name="requestTypeId"
-                    allowClear
-                    showSearch
-                    optionFilterProp="label"
-                    onChange={handleChangeRequestType}
-                    disabled={actionModal === ACTION_TYPE.EDIT}
-                  />
-                </Col>
-              )}
-              {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-                requestType === REQUEST_TYPE_KEY.OT) &&
-                requestStatus === STATUS.PENDING && (
-                  <>
+              <Col span="12">
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  label="Request Type"
+                  rules={[{ required: true }]}
+                  placeholder="Choose request type"
+                  name="requestTypeId"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={handleChangeRequestType}
+                />
+              </Col>
+              {requestStatus === STATUS.PENDING && (
+                <>
+                  {requestType === REQUEST_TYPE_KEY.LEAVE && (
                     <Col span="4">
                       <BasicInput
                         label="Remaining Time"
                         name="timeRemaining"
                         disabled
-                        suffix={
-                          requestType === REQUEST_TYPE_KEY.LEAVE
-                            ? 'days'
-                            : 'hours'
-                        }
+                        suffix={'days'}
                       />
                     </Col>
-                    <Col>
-                      {remainingTimeRef.current === 0 && (
-                        <div className={styles.notice}>
-                          * Notice:{' '}
-                          {tabType === REQUEST_MENU.MY_REQUEST
-                            ? 'You'
-                            : 'This person'}{' '}
-                          have used up all the{' '}
-                          {requestType === REQUEST_TYPE_KEY.LEAVE
-                            ? 'holidays this year'
-                            : 'over time this month'}
-                        </div>
-                      )}
-                    </Col>
-                  </>
-                )}
+                  )}
+                  {requestType === REQUEST_TYPE_KEY.OT && (
+                    <>
+                      <Col span="6">
+                        <BasicInput
+                          label="Remaining Time Month"
+                          name="timeRemainingMonth"
+                          disabled
+                          suffix={'hours'}
+                        />
+                      </Col>
+                      <Col span="6">
+                        <BasicInput
+                          label="Remaining Time Year"
+                          name="timeRemainingYear"
+                          disabled
+                          suffix={'hours'}
+                        />
+                      </Col>
+                    </>
+                  )}
+                </>
+              )}
               {requestType === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
                   <SelectCustomSearch
-                    url={`${DEVICE_TYPE.service}-${DEVICE_TYPE.model.masterData}`}
+                    url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
                     dataName="items"
                     apiName="device-type-master-data"
                     label="Device Type"
-                    rules={[
-                      { required: true && tabType !== REQUEST_MENU.DEVICE },
-                    ]}
+                    rules={[{ required: true }]}
                     placeholder="Choose device type"
                     name="deviceTypeId"
                     allowClear
-                    disabled={
-                      actionModal === ACTION_TYPE.EDIT ||
-                      tabType === REQUEST_MENU.DEVICE
-                    }
-                  />
-                </Col>
-              )}
-              {tabType === REQUEST_MENU.DEVICE && (
-                <Col span="12">
-                  <SelectCustomSearch
-                    url={`${DEVICE_TYPE.model.deviceName}-${DEVICE_TYPE.model.masterData}`}
-                    dataName="items"
-                    apiName="device-name-master-data"
-                    label="Device Name"
-                    rules={[{ required: true }]}
-                    placeholder="Choose device name"
-                    name="deviceId"
-                    allowClear
-                    disabled={actionModal === ACTION_TYPE.EDIT}
                   />
                 </Col>
               )}
             </Row>
-            {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-              requestType === REQUEST_TYPE_KEY.OTHER ||
-              requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT) && (
+            <Row gutter={20}>
+              <Col span={24}>
+                {remainingTimeRef.current === 0 ||
+                  (requestType === REQUEST_TYPE_KEY.LEAVE && (
+                    <div>
+                      * Notice: This person have used up all the holidays this
+                      year
+                    </div>
+                  ))}
+                {requestType === REQUEST_TYPE_KEY.OT && (
+                  <>
+                    {remainingTimeRef.current === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this year
+                      </div>
+                    )}
+                    {remainingTimeRef.current === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this month
+                      </div>
+                    )}
+                  </>
+                )}
+              </Col>
+            </Row>
+            {(requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+              requestType === REQUEST_TYPE_KEY.LEAVE ||
+              requestType === REQUEST_TYPE_KEY.OTHER) && (
               <Row gutter={20}>
                 <Col span="12">
                   {requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
@@ -704,37 +667,35 @@ export default function RequestDetailModal({
                 </Col>
               </Row>
             )}
-            {tabType !== REQUEST_MENU.DEVICE && (
+            <Row gutter={20}>
+              <Col span={24}>
+                <BasicInput
+                  type="textarea"
+                  rows={3}
+                  placeholder="Enter your reason . . ."
+                  label="Reason"
+                  name="reason"
+                  allowClear
+                  rules={[{ whitespace: true }]}
+                />
+              </Col>
+            </Row>
+            {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
               <Row gutter={20}>
                 <Col span={24}>
-                  <BasicInput
-                    type="textarea"
-                    rows={3}
-                    placeholder="Enter your reason . . ."
-                    label="Reason"
-                    name="reason"
-                    allowClear
-                  />
+                  <Form.Item
+                    label="Evidence"
+                    className={styles.form__upload}
+                    name="evidence"
+                  >
+                    <UploadFilePictureWall
+                      fileUpload={imageFileList}
+                      setFileUpload={setImageFileList}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
             )}
-            {actionModal !== ACTION_TYPE.VIEW_DETAIL &&
-              tabType !== REQUEST_MENU.DEVICE && (
-                <Row gutter={20}>
-                  <Col span={24}>
-                    <Form.Item
-                      label="Evidence"
-                      className={styles.form__upload}
-                      name="evidence"
-                    >
-                      <UploadFilePictureWall
-                        fileUpload={imageFileList}
-                        setFileUpload={setImageFileList}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              )}
             {(actionModal === ACTION_TYPE.VIEW_DETAIL ||
               actionModal === ACTION_TYPE.EDIT) && (
               <MultipleImagePreview
@@ -768,16 +729,6 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingUpdate || isUploadingImage}
-                    disabled={remainingTimeRef.current === 0}
-                  />
-                )}
-                {actionModal === ACTION_TYPE.ASSIGN && (
-                  <BasicButton
-                    title="Assign"
-                    type="filled"
-                    className={styles['btn--save']}
-                    htmlType={'submit'}
-                    loading={loadingCreate}
                     disabled={remainingTimeRef.current === 0}
                   />
                 )}
@@ -843,12 +794,14 @@ export default function RequestDetailModal({
           )}
         </>
       </CommonModal>
-      <RollbackModal
-        isVisible={isShowRollbackModal}
-        onCancel={() => setIsShowRollbackModal(false)}
-        handleQickActionRequest={handleQickActionRequest}
-        requestStatus={requestStatus}
-      />
+      {isShowRollbackModal && (
+        <RollbackModal
+          isVisible={isShowRollbackModal}
+          onCancel={() => setIsShowRollbackModal(false)}
+          handleQickActionRequest={handleQickActionRequest}
+          requestStatus={requestStatus}
+        />
+      )}
     </>
   );
 }

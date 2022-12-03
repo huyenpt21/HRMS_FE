@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "code": 200,
+    "message": "Success",
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "totalRecords": 15
+    }
+  },
+  "data": {
+    "item": {
+      "id": 4,
+      "personName": "Nguyen Van Binh",
+      "requestTypeId": 1,
+      "requestTypeName": "leave",
+      "createDate": "2022-10-19 15:00:00",
+      "startTime": "2022-10-22 10:00:00",
+      "endTime": "2022-10-24 12:00:00",
+      "listEvidence": [
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F26153706115_a6e93366f7_k.jpg?alt=media&token=1f19c928-1c8c-4ab7-8668-607b3423a2bd",
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FSapaJS-130.jpg?alt=media&token=b2e2fc9e-93fd-459a-aeec-b65a691d45f8",
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2FIMG_4954.jpg?alt=media&token=a9cc3a62-8635-4220-bb45-eaf781592963",
+        "https://firebasestorage.googleapis.com/v0/b/hrms-3e889.appspot.com/o/images%2Fevidences%2F53262036_1188116314698149_1116890731902926848_n.jpg?alt=media&token=2c1607f4-8248-4736-a20b-8d5f3beeee9e"
+      ],
+      "reason": "I don't have laptop to code",
+      "status": "Approved",
+      "receiver": "Nguyen Thi Huyen",
+      "deviceTypeId": 11,
+      "approvalDate": "2022-10-24 12:00:00",
+      "timeRemaining": 2,
+      "isAllowRollback": 1
+    }
+  }
+}
