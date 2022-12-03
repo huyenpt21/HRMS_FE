@@ -4,12 +4,12 @@ import TimeComponent from 'components/TimePicker';
 import { MESSAGE_RES, TIME_HMS, TIME_HOUR } from 'constants/common';
 import { useGetOfficeTime, useUpdateOfficeTime } from 'hooks/useOfficeTime';
 import { OfficeTimelModel, ResOfficeTimelModify } from 'models/officeTime';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getDateFormat } from 'utils/common';
 import styles from './officeTime.module.less';
 
 export default function OfficeTime() {
-  const officeTimeData = useRef<OfficeTimelModel>();
+  const [officeTimeData, setOfficeTimeData] = useState<OfficeTimelModel>();
   const [isShowEditing, setIsShowEditting] = useState(false);
   const { data: officeTime } = useGetOfficeTime();
   const { mutate: updateOfficeTime } = useUpdateOfficeTime({
@@ -44,7 +44,7 @@ export default function OfficeTime() {
       const {
         data: { item },
       } = officeTime;
-      officeTimeData.current = item;
+      setOfficeTimeData(item);
     }
   }, []);
   return (
@@ -60,10 +60,10 @@ export default function OfficeTime() {
               headStyle={{ fontWeight: 600 }}
               bodyStyle={{ backgroundColor: '#FFEFD6' }}
             >
-              {officeTimeData.current?.timeStart && (
+              {officeTimeData?.timeStart && (
                 <div className={styles.content__text}>
                   {getDateFormat(
-                    officeTimeData.current?.timeStart,
+                    officeTimeData?.timeStart,
                     TIME_HOUR,
                     TIME_HMS,
                   )}
@@ -77,10 +77,10 @@ export default function OfficeTime() {
               headStyle={{ fontWeight: 600 }}
               bodyStyle={{ backgroundColor: '#BCEAD5' }}
             >
-              {officeTimeData.current?.timeFinish && (
+              {officeTimeData?.timeFinish && (
                 <h1 className={styles.content__text}>
                   {getDateFormat(
-                    officeTimeData.current?.timeFinish,
+                    officeTimeData?.timeFinish,
                     TIME_HOUR,
                     TIME_HMS,
                   )}
@@ -109,7 +109,7 @@ export default function OfficeTime() {
                   name="timeStart"
                   rules={[{ required: true, message: 'Start time is requied' }]}
                   allowClear
-                  defaultValue={officeTimeData.current?.timeStart}
+                  defaultValue={officeTimeData?.timeStart}
                 />
               </Col>
               <Col span={10}>
@@ -119,7 +119,7 @@ export default function OfficeTime() {
                     { required: true, message: 'Finish time is requied' },
                   ]}
                   allowClear
-                  defaultValue={officeTimeData.current?.timeFinish}
+                  defaultValue={officeTimeData?.timeFinish}
                 />
               </Col>
             </Row>
