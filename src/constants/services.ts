@@ -3,6 +3,8 @@ export const EMPLOYEE = {
   model: {
     hr: 'hr',
     notification: 'notifications',
+    export: 'export',
+    import: 'import',
   },
 };
 

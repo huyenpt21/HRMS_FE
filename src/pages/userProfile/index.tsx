@@ -146,7 +146,7 @@ export default function UserProfile() {
                   name="gender"
                   label="Gender"
                   allowClear
-                  placeholder="Enter address"
+                  placeholder="Choose gender"
                   rules={[{ required: true }]}
                 />
               </Col>
