@@ -1,11 +1,26 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import commonSlice from './slice/common';
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  combineReducers,
+} from '@reduxjs/toolkit';
 
-export const store = configureStore({
-  reducer: {
-    common: commonSlice,
-  },
+import auth from './slice/auth';
+import notification from './slice/notification';
+
+const reducer = combineReducers({
+  auth,
+  notification,
 });
+
+const store = configureStore({
+  reducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+export default store;
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
