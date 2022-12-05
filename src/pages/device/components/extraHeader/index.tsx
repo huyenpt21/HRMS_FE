@@ -11,7 +11,6 @@ import { ACTION_TYPE, DEVICE_MENU } from 'constants/enums/common';
 import {
   DEVICE_HISTORY_STATUS,
   DEVICE_MANAGEMENT_STATUS,
-  DEVICE_REQUEST_STATUS,
 } from 'constants/fixData';
 import { DEVICE } from 'constants/services';
 import { DeviceListQuery } from 'models/device';
@@ -163,23 +162,6 @@ export default function ExtraHeaderDevice({
                         isUsed: value,
                       }));
                     }}
-                  />
-                )}
-                {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST && (
-                  <BasicSelect
-                    options={DEVICE_REQUEST_STATUS}
-                    placeholder="Choose status"
-                    label="Status"
-                    allowClear
-                    showSearch
-                    optionFilterProp="label"
-                    onChange={(value) => {
-                      setStateQuery((prev: any) => ({
-                        ...prev,
-                        isAssigned: value,
-                      }));
-                    }}
-                    defaultValue={stateQuery?.isAssigned ?? undefined}
                   />
                 )}
               </Col>
