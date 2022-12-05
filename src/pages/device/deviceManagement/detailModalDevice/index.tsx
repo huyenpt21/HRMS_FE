@@ -10,7 +10,7 @@ import { useDeviceDetail } from 'hooks/useDevice';
 import { DeviceModel } from 'models/device';
 import { useEffect, useState, useRef } from 'react';
 import styles from './detailModalDevice.module.less';
-import dataDetail from './dataDetail.json';
+// import dataDetail from './dataDetail.json';
 import BasicTag from 'components/BasicTag';
 interface IProps {
   deviceIdRef?: number;
@@ -32,13 +32,13 @@ export default function DetailModalDevice({
     `${DEVICE.model.itSupport}/${DEVICE.service}`,
   );
   useEffect(() => {
-    // if (detailDevice && detailDevice?.data) {
-    const {
-      data: { item },
-    } = dataDetail;
-    deviceForm.setFieldsValue(item);
-    detailDeviceData.current = item;
-    // }
+    if (detailDevice && detailDevice?.data) {
+      const {
+        data: { item },
+      } = detailDevice;
+      deviceForm.setFieldsValue(item);
+      detailDeviceData.current = item;
+    }
   }, [detailDevice]);
   const cancelHandler = () => {
     onCancel();

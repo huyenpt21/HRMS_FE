@@ -52,7 +52,7 @@ import SelectCustomSearch from 'components/SelectCustomSearch';
 import { DEVICE } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
-import detailMock from './detailMock.json';
+// import detailMock from './detailMock.json';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
 import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
 import styles from './requestDetailModal.module.less';
@@ -187,27 +187,6 @@ export default function RequestDetailModal({
         metadata: { message },
         data: { item },
       } = detailRequest;
-      if (message === MESSAGE_RES.SUCCESS && item) {
-        setRequestData(item);
-        requestForm.setFieldsValue(item);
-        requestForm.setFieldsValue({
-          timeRemaining: item?.timeRemaining?.toFixed(2),
-          date: [moment(item.startTime), moment(item.endTime)],
-          time: [moment(item.startTime), moment(item.endTime)],
-        });
-        if (item?.listEvidence) {
-          setEvidenceSource(item?.listEvidence);
-        }
-        setRequestType(item?.requestTypeName);
-        setIsAllowRollback(item?.isAllowRollback);
-        requestIdRefInternal.current = item?.id;
-        remainingTimeRef.current = item?.timeRemaining;
-      }
-    } else {
-      const {
-        metadata: { message },
-        data: { item },
-      } = detailMock;
       if (message === MESSAGE_RES.SUCCESS && item) {
         setRequestData(item);
         requestForm.setFieldsValue(item);
