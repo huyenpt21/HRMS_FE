@@ -45,7 +45,11 @@ export default function HeaderContent({ marginLeft }: IProps) {
         setNotiData(notificationList?.items);
         notificationList?.items?.map((el: NotifcationModel) =>
           notification.info({
-            message: `${el?.userFrom} ${el?.content}`,
+            message: (
+              <div>
+                <b>{el?.userFrom}</b> {el?.content}
+              </div>
+            ),
             onClick: () => {
               el?.redirectUrl && navigate(el?.redirectUrl);
             },
