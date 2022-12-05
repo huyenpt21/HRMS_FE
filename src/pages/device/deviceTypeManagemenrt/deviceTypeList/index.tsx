@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { isEmptyPagination, removeEmptyValueInObject } from 'utils/common';
 import DeviceTypeDetailModal from '../detailModalDeviceType';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 
 export default function DeviceTypeList() {
   const [deviceTypeForm] = Form.useForm();
@@ -102,21 +102,6 @@ export default function DeviceTypeList() {
         metadata: { pagination },
         data: { items: recordsTable },
       } = dataTable;
-      setRecords(recordsTable);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
-    } else {
-      const {
-        metadata: { pagination },
-        data: { items: recordsTable },
-      } = dataMock;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
         // * set the pagination data from API

@@ -24,7 +24,7 @@ import RequestDetailModal from '../detailModal';
 import ExtraTableHeader from '../components/extraHeader';
 import RequestMenuAction from '../components/menuAction';
 import RequestStatus from '../components/statusRequest';
-import dataMock from '../dataMock.json';
+// import dataMock from '../dataMock.json';
 import SvgIcon from 'components/SvgIcon';
 
 export default function SubordinateRequestList() {
@@ -145,22 +145,22 @@ export default function SubordinateRequestList() {
 
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    // if (dataTable && dataTable?.data) {
-    const {
-      metadata: { pagination },
-      data: { items: requestList },
-    } = dataMock;
-    setRecords(requestList);
-    if (!isEmptyPagination(pagination)) {
-      // * set the pagination data from API
-      setPagination((prevPagination: TablePaginationConfig) => ({
-        ...prevPagination,
-        current: pagination.page,
-        pageSize: pagination.limit,
-        total: pagination.totalRecords,
-      }));
+    if (dataTable && dataTable?.data) {
+      const {
+        metadata: { pagination },
+        data: { items: requestList },
+      } = dataTable;
+      setRecords(requestList);
+      if (!isEmptyPagination(pagination)) {
+        // * set the pagination data from API
+        setPagination((prevPagination: TablePaginationConfig) => ({
+          ...prevPagination,
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.totalRecords,
+        }));
+      }
     }
-    // }
   }, [dataTable]);
   const handleTableChange = (
     pagination: TablePaginationConfig,
