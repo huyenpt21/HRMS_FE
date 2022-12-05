@@ -12,15 +12,18 @@
     "items": [
       {
         "id": 1,
-        "deviceTypeName": "DEV"
+        "deviceTypeName": "DEV",
+        "isAllowDelete": 0
       },
       {
         "id": 2,
-        "deviceTypeName": "DEV"
+        "deviceTypeName": "DEV",
+        "isAllowDelete": 1
       },
       {
         "id": 3,
-        "deviceTypeName": "DEV"
+        "deviceTypeName": "DEV",
+        "isAllowDelete": 1
       }
     ]
   }
