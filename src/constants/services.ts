@@ -5,6 +5,7 @@ export const EMPLOYEE = {
     notification: 'notifications',
     export: 'export',
     import: 'import',
+    readNoti: 'read-notifications',
   },
 };
 

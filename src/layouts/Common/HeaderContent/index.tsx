@@ -1,23 +1,30 @@
-import { Badge, Image } from 'antd';
+import { Badge, Image, notification } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Header } from 'antd/lib/layout/layout';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
+import urls from 'constants/url';
 import { useGetUserInfor } from 'hooks/useEmployee';
+import { useReadNotification } from 'hooks/useNotification';
 import { EmployeeModel } from 'models/employee';
+import { NotifcationModel } from 'models/notification';
 import MenuExpand from 'pages/menuExpand';
 import NotificationExpand from 'pages/notificationExpand';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './headerContent.module.less';
 interface IProps {
   marginLeft: number;
 }
 export default function HeaderContent({ marginLeft }: IProps) {
-  const notiNum = 5;
+  const { REACT_APP_API_URL }: any = urls;
+  const navigate = useNavigate();
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
   const [personInfor, setPersonInfor] = useState<EmployeeModel>();
+  const [notiData, setNotiData] = useState<NotifcationModel[]>([]);
   const { data: detailUserInfo } = useGetUserInfor();
+  const { mutate: readNoti } = useReadNotification();
   useEffect(() => {
     if (detailUserInfo && detailUserInfo.data) {
       const {
@@ -29,6 +36,38 @@ export default function HeaderContent({ marginLeft }: IProps) {
       }
     }
   }, [detailUserInfo]);
+
+  useEffect(() => {
+    let url = REACT_APP_API_URL + 'push-notifications';
+    const sse = new EventSource(url);
+
+    sse.addEventListener('user-list-event', (event) => {
+      const notificationList = JSON.parse(event?.data);
+      if (notificationList?.items?.length > 0) {
+        setNotiData(notificationList?.items);
+        notificationList?.items?.map((el: NotifcationModel) =>
+          notification.info({
+            message: (
+              <div>
+                <b>{el?.userFrom}</b> {el?.content}
+              </div>
+            ),
+            onClick: () => {
+              el?.notificationId && readNoti(el?.notificationId);
+              el?.redirectUrl && navigate(el?.redirectUrl);
+            },
+          }),
+        );
+      }
+    });
+
+    sse.onerror = () => {
+      sse.close();
+    };
+    return () => {
+      sse.close();
+    };
+  }, []);
 
   return (
     <>
@@ -64,11 +103,24 @@ export default function HeaderContent({ marginLeft }: IProps) {
               setIsShowMenuExpand(false);
             }}
           >
-            <Badge count={notiNum} size={notiNum >= 10 ? 'small' : 'default'}>
+            {notiData?.length > 0 &&
+              notiData[notiData?.length - 1]?.totalNotificationNotRead && (
+                <Badge
+                  count={
+                    notiData[notiData?.length - 1]?.totalNotificationNotRead
+                  }
+                  size="default"
+                >
+                  <Avatar shape="circle" size="large">
+                    <SvgIcon icon="notification" />
+                  </Avatar>
+                </Badge>
+              )}
+            {!notiData[notiData?.length - 1]?.totalNotificationNotRead && (
               <Avatar shape="circle" size="large">
                 <SvgIcon icon="notification" />
               </Avatar>
-            </Badge>
+            )}
             {isShowNotiExpand && <NotificationExpand />}
           </div>
           <div
