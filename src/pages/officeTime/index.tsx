@@ -46,7 +46,7 @@ export default function OfficeTime() {
       } = officeTime;
       setOfficeTimeData(item);
     }
-  }, []);
+  }, [officeTime]);
   return (
     <div className={styles.container}>
       <div className={styles.main}>

@@ -18,7 +18,7 @@ import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
-import dataMock from './detailMock.json';
+// import dataMock from './detailMock.json';
 import styles from './detailPageRequestNoti.module.less';
 
 export default function DetailPageRequestForNoti() {
@@ -53,24 +53,24 @@ export default function DetailPageRequestForNoti() {
     },
   });
   useEffect(() => {
-    // if (detailRequest && detailRequest?.data) {
-    const {
-      metadata: { message },
-      data: { item },
-    } = dataMock;
-    if (message === MESSAGE_RES.SUCCESS && item) {
-      setRequestData(item);
-      requestForm.setFieldsValue(item);
-      requestForm.setFieldsValue({
-        timeRemaining: item?.timeRemaining?.toFixed(2),
-        date: [moment(item.startTime), moment(item.endTime)],
-        time: [moment(item.startTime), moment(item.endTime)],
-      });
-      if (item?.listEvidence) {
-        setEvidenceSource(item?.listEvidence);
+    if (detailRequest && detailRequest?.data) {
+      const {
+        metadata: { message },
+        data: { item },
+      } = detailRequest;
+      if (message === MESSAGE_RES.SUCCESS && item) {
+        setRequestData(item);
+        requestForm.setFieldsValue(item);
+        requestForm.setFieldsValue({
+          timeRemaining: item?.timeRemaining?.toFixed(2),
+          date: [moment(item.startTime), moment(item.endTime)],
+          time: [moment(item.startTime), moment(item.endTime)],
+        });
+        if (item?.listEvidence) {
+          setEvidenceSource(item?.listEvidence);
+        }
       }
     }
-    // }
   }, [detailRequest]);
   const handleQickActionRequest = (statusValue: string) => {
     requestId &&
