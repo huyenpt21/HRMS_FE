@@ -2,32 +2,34 @@ import { Avatar, List, message } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US } from 'constants/common';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { useGetAllNorification } from 'hooks/useNotification';
 import { NotifcationModel, NotificationQuery } from 'models/notification';
 import VirtualList from 'rc-virtual-list';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addNoti } from 'store/slice/notification';
 import { getDateFormat } from 'utils/common';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 import styles from './notificationExpand.module.less';
 export default function NotificationExpand() {
-  const navigate = useNavigate();
   const ContainerHeight = 400;
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [stateQuery, setStateQuery] = useState<NotificationQuery>({
     limit: 5,
     page: 1,
   });
-  const {
-    data: { items },
-  } = dataMock;
-  const [dataNotiList, setDataNotiList] = useState<NotifcationModel[]>(items);
-
+  // const {
+  //   data: { items },
+  // } = dataMock;
+  const dataNotiList = useAppSelector((state) => state.notification?.notiList);
   const { mutate: dataNotification, isLoading } = useGetAllNorification({
     onSuccess: (res) => {
       const {
         data: { items },
       } = res;
-      setDataNotiList(items);
+      dispatch(addNoti({ newNotiList: items }));
     },
     onError: (res) => {
       const {
@@ -36,6 +38,12 @@ export default function NotificationExpand() {
       message.error(messageRes);
     },
   });
+  useEffect(() => {
+    dataNotification({
+      page: stateQuery.page,
+      limit: 5,
+    });
+  }, []);
   const onScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
     if (
       e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
