@@ -1,14 +1,19 @@
-import { BackwardOutlined } from '@ant-design/icons';
-import { Col, Row } from 'antd';
+import { BackwardOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Col, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker, {
   RangeValue,
 } from 'components/BasicDateRangePicker';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
+import { DATE_TIME, MESSAGE_RES, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
-import { TimeCheckEmployeeInfo, TimeCheckListQuery } from 'models/timeCheck';
+import { useDownloadTimeCheck } from 'hooks/useTimeCheck';
+import {
+  ResTimeCheckModify,
+  TimeCheckEmployeeInfo,
+  TimeCheckListQuery,
+} from 'models/timeCheck';
 import moment from 'moment-timezone';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -36,6 +41,17 @@ export default function ExtraTableTimeCheck({
   const navigate = useNavigate();
   const location = useLocation();
   const [dates, setDates] = useState<RangeValue>(null);
+  const { mutate: downloadFile } = useDownloadTimeCheck({
+    onSuccess: () => {},
+    onError: (response: ResTimeCheckModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (!!message && message !== MESSAGE_RES.SUCCESS) {
+        notification.error({ message: message });
+      }
+    },
+  });
 
   const handleChangeDate = (date: any, dateString: string[]) => {
     let startDate: string | undefined;
@@ -114,6 +130,12 @@ export default function ExtraTableTimeCheck({
     return !!tooLate || !!tooEarly;
   };
 
+  const downloadHandler = () => {
+    delete stateQuery.limit;
+    delete stateQuery.page;
+    downloadFile(stateQuery);
+  };
+
   return (
     <>
       <div className={`header__section ${styles.header}`}>
@@ -125,6 +147,15 @@ export default function ExtraTableTimeCheck({
               type="filled"
               icon={<BackwardOutlined />}
               onClick={handleBackButton}
+            />
+          )}
+          {menuType === MENU_TYPE.ALL && (
+            <BasicButton
+              title="Download"
+              type="outline"
+              icon={<DownloadOutlined />}
+              onClick={downloadHandler}
+              className={styles.btn}
             />
           )}
         </div>
