@@ -11,6 +11,7 @@ export const EMPLOYEE = {
     export: 'export',
     import: 'import',
     readNoti: 'read-notifications',
+    template: 'template',
   },
 };
 

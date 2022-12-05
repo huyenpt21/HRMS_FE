@@ -75,6 +75,27 @@ export const useDownloadEmployeeList = ({
     },
   );
 };
+export const useDownloadTemplate = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResEmployeeModify>) => {
+  return useMutation(
+    () =>
+      fetchApi(
+        {
+          url: `${EMPLOYEE.model.hr}/${EMPLOYEE.model.template}/${EMPLOYEE.model.export}`,
+          options: {
+            method: 'GET',
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+    },
+  );
+};
 export const useUploadEmployeeList = ({
   onError,
   onSuccess,
