@@ -5,6 +5,7 @@ import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
 import urls from 'constants/url';
 import { useGetUserInfor } from 'hooks/useEmployee';
+import { useReadNotification } from 'hooks/useNotification';
 import { EmployeeModel } from 'models/employee';
 import { NotifcationModel } from 'models/notification';
 import MenuExpand from 'pages/menuExpand';
@@ -23,6 +24,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
   const [personInfor, setPersonInfor] = useState<EmployeeModel>();
   const [notiData, setNotiData] = useState<NotifcationModel[]>([]);
   const { data: detailUserInfo } = useGetUserInfor();
+  const { mutate: readNoti } = useReadNotification();
   useEffect(() => {
     if (detailUserInfo && detailUserInfo.data) {
       const {
@@ -51,6 +53,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
               </div>
             ),
             onClick: () => {
+              el?.notificationId && readNoti(el?.notificationId);
               el?.redirectUrl && navigate(el?.redirectUrl);
             },
           }),

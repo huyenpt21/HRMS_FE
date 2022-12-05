@@ -3,7 +3,10 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US } from 'constants/common';
 import { useAppDispatch, useAppSelector } from 'hooks';
-import { useGetAllNorification } from 'hooks/useNotification';
+import {
+  useGetAllNorification,
+  useReadNotification,
+} from 'hooks/useNotification';
 import { NotifcationModel, NotificationQuery } from 'models/notification';
 import VirtualList from 'rc-virtual-list';
 import { useState, useEffect } from 'react';
@@ -24,6 +27,7 @@ export default function NotificationExpand() {
   //   data: { items },
   // } = dataMock;
   const dataNotiList = useAppSelector((state) => state.notification?.notiList);
+  const { mutate: readNoti } = useReadNotification();
   const { mutate: dataNotification, isLoading } = useGetAllNorification({
     onSuccess: (res) => {
       const {
@@ -71,7 +75,10 @@ export default function NotificationExpand() {
           {(item: NotifcationModel, index: number) => (
             <List.Item
               key={index}
-              onClick={() => item?.redirectUrl && navigate(item?.redirectUrl)}
+              onClick={() => {
+                item?.id && readNoti(item?.id);
+                item?.redirectUrl && navigate(item?.redirectUrl);
+              }}
               className={styles.item}
             >
               <List.Item.Meta

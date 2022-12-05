@@ -23,3 +23,16 @@ export const useGetAllNorification = ({
     },
   );
 };
+export const useReadNotification = () => {
+  return useMutation((id: number) =>
+    fetchApi(
+      {
+        url: `${EMPLOYEE.model.readNoti}/${id}`,
+        options: {
+          method: 'PUT',
+        },
+      },
+      undefined,
+    ),
+  );
+};
