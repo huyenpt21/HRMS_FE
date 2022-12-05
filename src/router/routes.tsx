@@ -30,12 +30,20 @@ import OfficeTime from 'pages/officeTime';
 import UpdateSecurityCode from 'pages/payslip/updateSecurityCode';
 import CreateSecurityCode from 'pages/payslip/createSecureCode';
 import DetailPageRequestForNoti from 'pages/requests/detailPageRequestNoti';
+import Login from '../pages/login';
+import PrivateRoute from './PrivateRoute';
 
 export default function RouterElement() {
   let element = useRoutes([
     {
       path: '/',
-      element: <MainLayout />,
+      element: (
+        <PrivateRoute>
+          {/* <PermissionRoute> */}
+          <MainLayout />
+          {/* </PermissionRoute> */}
+        </PrivateRoute>
+      ),
       children: [
         {
           index: true,
@@ -208,6 +216,10 @@ export default function RouterElement() {
     {
       path: '*',
       element: <NotFound />,
+    },
+    {
+      path: 'login',
+      element: <Login />,
     },
     {
       path: '403',
