@@ -5,7 +5,7 @@ export default function PrivateRoute({ children }: any) {
   return (
     <AuthConsumer>
       {({ isAuthenticated }: AppContextInterface) => {
-        if (!!children && isAuthenticated()) {
+        if (!!children && !isAuthenticated()) {
           return children;
         } else {
           return <Login />;
