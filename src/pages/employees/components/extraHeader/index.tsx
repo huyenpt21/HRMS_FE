@@ -17,7 +17,10 @@ import {
   EMPLOYEE,
   POSITION_BY_DEPARTMENT,
 } from 'constants/services';
-import { useDownloadEmployeeList } from 'hooks/useEmployee';
+import {
+  useDownloadEmployeeList,
+  useDownloadTemplate,
+} from 'hooks/useEmployee';
 import { EmployeeListQuery, ResEmployeeModify } from 'models/employee';
 import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
 import styles from './extraHeaderEmployee.module.less';
@@ -42,7 +45,18 @@ export default function ExtraHeaderTable({
       const {
         metadata: { message },
       } = response;
-      if (message !== MESSAGE_RES.SUCCESS) {
+      if (!!message && message !== MESSAGE_RES.SUCCESS) {
+        notification.error({ message: message });
+      }
+    },
+  });
+  const { mutate: downloadTemplate } = useDownloadTemplate({
+    onSuccess: () => {},
+    onError: (response: ResEmployeeModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (!!message && message !== MESSAGE_RES.SUCCESS) {
         notification.error({ message: message });
       }
     },
@@ -70,29 +84,39 @@ export default function ExtraHeaderTable({
         <div className={styles.header__title}>Employee List</div>
         {menuType === EMPLOYEE_MENU.ALL && (
           <span>
-            <BasicButton
-              title="Add Employee"
-              type="filled"
-              icon={<PlusOutlined />}
-              onClick={addEmployeeHandler}
-            />
-            <BasicButton
-              title="Download"
-              type="outline"
-              icon={<DownloadOutlined />}
-              onClick={downloadHandler}
-              className={styles.btn}
-            />
-            <Upload
-              className={styles.btn}
-              action={`${process.env.REACT_APP_API_URL}${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`}
-            >
+            <>
               <BasicButton
-                title="Upload"
-                type="outline"
-                icon={<UploadOutlined />}
+                title="Add Employee"
+                type="filled"
+                icon={<PlusOutlined />}
+                onClick={addEmployeeHandler}
               />
-            </Upload>
+              <BasicButton
+                title="Download"
+                type="outline"
+                icon={<DownloadOutlined />}
+                onClick={downloadHandler}
+                className={styles.btn}
+              />
+              <Upload
+                className={styles.btn}
+                action={`${process.env.REACT_APP_API_URL}${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`}
+              >
+                <BasicButton
+                  title="Upload"
+                  type="outline"
+                  icon={<UploadOutlined />}
+                />
+              </Upload>
+            </>
+            <div
+              className={styles.btn__template}
+              onClick={() => {
+                downloadTemplate();
+              }}
+            >
+              Download template
+            </div>
           </span>
         )}
       </div>
