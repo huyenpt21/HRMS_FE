@@ -63,7 +63,7 @@ export default function NotificationExpand() {
           {(item: NotifcationModel, index: number) => (
             <List.Item
               key={index}
-              onClick={() => navigate(item.redirectUrl)}
+              onClick={() => item?.redirectUrl && navigate(item?.redirectUrl)}
               className={styles.item}
             >
               <List.Item.Meta
