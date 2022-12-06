@@ -40,7 +40,7 @@ export default function CreateSecurityCode() {
         className={styles.main}
       >
         <Row className={styles.header__title}>
-          <h2>Setting security code</h2>
+          <h2>Create security code</h2>
         </Row>
         <Form
           form={settingForm}

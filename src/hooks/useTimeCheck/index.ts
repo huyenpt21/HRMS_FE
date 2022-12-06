@@ -1,5 +1,9 @@
 import { TIME_CHECK } from 'constants/services';
-import initialCustomQuery, { Feature } from 'hooks/useCustomQuery';
+import initialCustomQuery, {
+  Feature,
+  MutationProps,
+  successHandler,
+} from 'hooks/useCustomQuery';
 import {
   ResTimeCheckDetail,
   ResTimeCheckList,
@@ -8,6 +12,8 @@ import {
   TimeCheckListSortFields,
   TimeCheckModel,
 } from 'models/timeCheck';
+import { useMutation } from 'react-query';
+import fetchApi from 'utils/fetch-api';
 
 class TimeCheckList implements Feature<TimeCheckListSortFields> {
   constructor(
@@ -36,3 +42,26 @@ export const {
   ResTimeCheckModify,
   TimeCheckListQuery
 >(TimeCheckListInstance);
+
+export const useDownloadTimeCheck = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResTimeCheckModify>) => {
+  return useMutation(
+    (payload: TimeCheckListQuery) =>
+      fetchApi(
+        {
+          url: `${TIME_CHECK.model.hr}/${TIME_CHECK.service}/${TIME_CHECK.model.export}`,
+          options: {
+            method: 'GET',
+          },
+          payload,
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+    },
+  );
+};

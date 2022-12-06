@@ -32,6 +32,7 @@ import CreateSecurityCode from 'pages/payslip/createSecureCode';
 import DetailPageRequestForNoti from 'pages/requests/detailPageRequestNoti';
 import Login from '../pages/login';
 import PrivateRoute from './PrivateRoute';
+import LoginRedirect from 'pages/login/loginRedirect';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -219,7 +220,10 @@ export default function RouterElement() {
     },
     {
       path: 'login',
-      element: <Login />,
+      children: [
+        { path: '', element: <Login /> },
+        { path: 'oauth2/google', element: <LoginRedirect /> },
+      ],
     },
     {
       path: '403',

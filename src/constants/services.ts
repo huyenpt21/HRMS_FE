@@ -1,8 +1,3 @@
-export const LOGIN_REDIRECT = {
-  service:
-    '/https://api.ms-hrms.software/human-resources-management-system/oauth2/authorization/google?rediect_uri=https://ms-hrms.software/login/oauth2/google',
-};
-
 export const EMPLOYEE = {
   service: 'employee',
   model: {
@@ -44,6 +39,7 @@ export const PAYSLIP = {
     secureCode: 'secure-code',
     correct: 'correct',
     forgot: 'forgot',
+    send: 'send',
   },
 };
 
@@ -68,6 +64,7 @@ export const TIME_CHECK = {
     allEmployee: 'all-employee',
     allSubordinate: 'all-subordinate',
     detail: 'detail-subordinate',
+    export: 'export',
   },
 };
 
@@ -103,5 +100,6 @@ export const LEAVE_BUDGET = {
   model: {
     hr: 'hr',
     manager: 'manager',
+    export: 'export',
   },
 };

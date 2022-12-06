@@ -1,5 +1,5 @@
 import { notification } from 'antd';
-import { LOCALE } from 'constants/common';
+import { ACCESS_TOKEN, LOCALE } from 'constants/common';
 import urls from 'constants/url';
 import queryString from 'query-string';
 
@@ -42,16 +42,12 @@ const fetchApi = async (
         'Content-Type': 'application/json',
       },
     };
-
     const opts: any = Object.assign(defaultOptions, options);
 
     // set token
-    const oidcAuth = localStorage.getItem(
-      `oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`,
-    );
-    if (oidcAuth) {
-      const oidcStorage = JSON.parse(oidcAuth);
-      opts.headers.Authorization = `Bearer ${oidcStorage.access_token}`;
+    const token = localStorage.getItem(ACCESS_TOKEN) || null;
+    if (!!token) {
+      opts.headers.Authorization = `Bearer ${token}`;
     }
 
     // set language
@@ -94,11 +90,6 @@ const fetchApi = async (
     }
     return data;
   } catch (err: any) {
-    // !options?.skipError &&
-    //   notification.error({
-    //     message: 'Oops!',
-    //     description: err.metadata?.message,
-    //   });
     if (err.metadata?.code === 401) {
       localStorage.clear();
       notification.error({

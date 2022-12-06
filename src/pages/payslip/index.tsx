@@ -1,4 +1,4 @@
-import { Col, Divider, Form, notification, Row } from 'antd';
+import { Col, Divider, Form, notification, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
@@ -7,8 +7,10 @@ import {
   useCheckSecureCodeCorrectly,
   useCheckSecureCodeExist,
   useGetPayslip,
+  useSendPayslipToEmail,
 } from 'hooks/usePayslip';
 import {
+  PayslipFilter,
   PayslipModel,
   ResPayslipDetail,
   ResPayslipModify,
@@ -18,32 +20,58 @@ import moment from 'moment-timezone';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './payrollDetail.module.less';
-// import dataCheckExistMock from './dataCheckExistMock.json';
+import dataCheckExistMock from './dataCheckExistMock.json';
+import { SendOutlined } from '@ant-design/icons';
+import { SHAPE_TYPE } from 'constants/enums/common';
+import NotifyPopup from 'components/NotifyPopup';
 // import dataCheckCorrectMock from './dataCheckCorrect.json';
 
 export default function PayslipDetail() {
   const [payslipForm] = Form.useForm();
   const navigate = useNavigate();
   const [isShowPayslip, setIsShowPayslip] = useState(false);
+  const [isShowPopConfirm, setIsShowPopConfirm] = useState(false);
   const payslipDataRef = useRef<PayslipModel>();
+  const dateFilterRef = useRef<PayslipFilter>({
+    month: Number(moment().get('month')),
+    year: Number(moment().get('year')),
+  });
   const { data: secureCodeData } = useCheckSecureCodeExist();
+
   useEffect(() => {
     if (secureCodeData) {
-      // const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
-      //   metadata: any;
-      //   data: boolean;
-      // };
-      // const { data: isSecureCodeExist } = dataMock;
       const { data: isSecureCodeExist } = secureCodeData;
       if (!isSecureCodeExist) {
-        notification.warning({
-          message: 'You do not have a security code',
-          key: '1',
-        });
-        navigate('/setting/security-code/create');
+        setIsShowPopConfirm(true);
+      }
+    } else {
+      const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
+        metadata: any;
+        data: boolean;
+      };
+      const { data: isSecureCodeExist } = dataMock;
+      if (!isSecureCodeExist) {
+        setIsShowPopConfirm(true);
       }
     }
   }, [secureCodeData]);
+  const { mutate: sendPayslipToEmail } = useSendPayslipToEmail({
+    onSuccess: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+        data: isSent,
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS && !!isSent) {
+        notification.success({ message: 'Sent payslip to email successfully' });
+      }
+    },
+    onError: (response: ResPayslipModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({ message: message });
+    },
+  });
   const { mutate: checkSecureCodeCorrect } = useCheckSecureCodeCorrectly({
     onSuccess: (response: ResPayslipModify) => {
       const {
@@ -93,6 +121,10 @@ export default function PayslipDetail() {
   const handleChangeFilterDate = (_: moment.Moment, dateString: string) => {
     const month = Number(dateString.split('/')[0].trim());
     const year = Number(dateString.split('/')[1].trim());
+    dateFilterRef.current = {
+      month: month,
+      year: year,
+    };
     payslipData({ month: month, year: year });
   };
   return (
@@ -249,10 +281,38 @@ export default function PayslipDetail() {
                   {payslipDataRef.current?.actuallyReceived}
                 </Col>
               </Row>
+              <Row gutter={32} className={styles.send__email}>
+                <Tooltip title="Send to email">
+                  <span>
+                    <BasicButton
+                      type="outline"
+                      shape={SHAPE_TYPE.ROUND}
+                      icon={<SendOutlined />}
+                      onClick={() => {
+                        sendPayslipToEmail(dateFilterRef.current);
+                      }}
+                    />
+                  </span>
+                </Tooltip>
+              </Row>
             </div>
           </>
         )}
       </Col>
+      {isShowPopConfirm && (
+        <NotifyPopup
+          title="You do not have a security code"
+          message="Go to setting?"
+          onCancel={() => {
+            setIsShowPopConfirm(false);
+          }}
+          onConfirm={() => {
+            navigate('/setting/security-code/create');
+          }}
+          status="warning"
+          visible={isShowPopConfirm}
+        />
+      )}
     </div>
   );
 }

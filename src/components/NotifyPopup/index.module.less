@@ -6,8 +6,8 @@
   align-items: center;
   .icon {
     svg {
-      height: 4em;
-      width: 4em;
+      height: 3rem;
+      width: 3rem;
     }
     &--error {
       color: @error-color !important;
@@ -19,15 +19,42 @@
       color: @warning-color !important;
     }
   }
+  .btn {
+    &__yes {
+      padding: 0px 20px;
+      color: @success-color !important;
+      border-color: @success-color !important;
+      background-color: @success-background-color !important;
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: #e4ffc9 !important;
+        border-color: @success-color !important;
+      }
+    }
+    &__no {
+      padding: 0px 25px;
+      color: @error-color !important;
+      border-color: @error-color !important;
+      background-color: @error-background-color !important;
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: #fbc6c1 !important;
+        border-color: @error-color !important;
+      }
+    }
+  }
 
   &__title {
     margin-top: 12px;
     font-weight: 500;
-    font-size: 20px;
+    font-size: 18px;
   }
   &__message {
     margin-top: 10px;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 16px;
   }
   &__button {
     display: flex;
