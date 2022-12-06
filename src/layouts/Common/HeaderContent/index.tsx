@@ -40,7 +40,6 @@ export default function HeaderContent({ marginLeft }: IProps) {
   useEffect(() => {
     let url = REACT_APP_API_URL + 'push-notifications';
     const sse = new EventSource(url);
-
     sse.addEventListener('user-list-event', (event) => {
       const notificationList = JSON.parse(event?.data);
       if (notificationList?.items?.length > 0) {
