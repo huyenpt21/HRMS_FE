@@ -9,7 +9,7 @@ import BasicSelect from 'components/BasicSelect';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
-import { MESSAGE_RES } from 'constants/common';
+import { ACCESS_TOKEN, MESSAGE_RES } from 'constants/common';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import { COMMON_STATUS_LIST } from 'constants/fixData';
 import {
@@ -77,6 +77,7 @@ export default function ExtraHeaderTable({
     delete stateQuery.page;
     downloadFile(stateQuery);
   };
+  const token = localStorage.getItem(ACCESS_TOKEN) || null;
 
   return (
     <>
@@ -101,6 +102,7 @@ export default function ExtraHeaderTable({
               <Upload
                 className={styles.btn}
                 action={`${process.env.REACT_APP_API_URL}${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`}
+                headers={{ authorization: 'Bearer ' + token }}
               >
                 <BasicButton
                   title="Upload"
