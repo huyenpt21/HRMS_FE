@@ -219,7 +219,7 @@ export default function RouterElement() {
       element: <NotFound />,
     },
     {
-      path: 'login',
+      path: '',
       children: [
         { path: '', element: <Login /> },
         { path: 'oauth2/google', element: <LoginRedirect /> },

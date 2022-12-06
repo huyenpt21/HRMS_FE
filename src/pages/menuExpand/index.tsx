@@ -27,7 +27,13 @@ export default function MenuExpand() {
             <span className={styles.title}>Setting Security Code</span>
           </div>
         </div>
-        <div className={styles.item}>
+        <div
+          className={styles.item}
+          onClick={() => {
+            localStorage.clear();
+            navigate('/');
+          }}
+        >
           <div className={styles.content}>
             <span className={styles.wrapper}>
               <SvgIcon icon="send-square" color="#000" />
