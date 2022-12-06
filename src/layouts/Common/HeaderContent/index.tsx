@@ -11,6 +11,7 @@ import { NotifcationModel } from 'models/notification';
 import MenuExpand from 'pages/menuExpand';
 import NotificationExpand from 'pages/notificationExpand';
 import { useEffect, useState } from 'react';
+// import EventSource, { EventSourceListener } from 'react-native-sse';
 import { useNavigate } from 'react-router-dom';
 import styles from './headerContent.module.less';
 interface IProps {
@@ -39,6 +40,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
 
   useEffect(() => {
     let url = REACT_APP_API_URL + 'push-notifications';
+    // const token = localStorage.getItem(ACCESS_TOKEN) || null;
     const sse = new EventSource(url);
     sse.addEventListener('user-list-event', (event) => {
       const notificationList = JSON.parse(event?.data);
@@ -66,6 +68,47 @@ export default function HeaderContent({ marginLeft }: IProps) {
     return () => {
       sse.close();
     };
+    // const sse = new EventSource(url, {
+    //   headers: {
+    //     Authorization: {
+    //       toString: function () {
+    //         return 'Bearer ' + token;
+    //       },
+    //     },
+    //   },
+    // });
+    // // const sse = new EventSource(url);
+    // const listener: EventSourceListener = (event) => {
+    //   if (event.type === 'open') {
+    //   } else if (event.type === 'message') {
+    //     if (event && event?.data) {
+    //       const notificationList = JSON.parse(event?.data);
+    //       if (notificationList?.items?.length > 0) {
+    //         setNotiData(notificationList?.items);
+    //         notificationList?.items?.map((el: NotifcationModel) =>
+    //           notification.info({
+    //             message: (
+    //               <div>
+    //                 <b>{el?.userFrom}</b> {el?.content}
+    //               </div>
+    //             ),
+    //             onClick: () => {
+    //               el?.notificationId && readNoti(el?.notificationId);
+    //               el?.redirectUrl && navigate(el?.redirectUrl);
+    //             },
+    //           }),
+    //         );
+    //       }
+    //     }
+    //   } else if (event.type === 'error') {
+    //     sse.close();
+    //   } else if (event.type === 'exception') {
+    //     sse.close();
+    //   }
+    // };
+    // sse.addEventListener('open', listener);
+    // sse.addEventListener('message', listener);
+    // sse.addEventListener('error', listener);
   }, []);
 
   return (

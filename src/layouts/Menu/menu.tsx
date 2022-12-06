@@ -68,13 +68,13 @@ export const menus: MenuItemType[] = [
         path: '/human-resource/subordinate-benefits',
       },
       {
-        title: 'All Borrow Device History',
+        title: 'All Device History',
         key: 'all-borrow-device-history',
         path: '/human-resource/borrow-device-history',
       },
       {
         // eslint-disable-next-line quotes
-        title: "Subordinate's Borrow Device History",
+        title: "Subordinate's Device History",
         key: 'sub-borrow-device-history',
         path: '/human-resource/sub-borrow-device-history',
       },
