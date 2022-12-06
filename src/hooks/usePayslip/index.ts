@@ -130,3 +130,22 @@ export const useUpdateSecurityCode = ({
     },
   );
 };
+export const useSendPayslipToEmail = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResPayslipModify>) => {
+  return useMutation(
+    (payload: PayslipFilter) =>
+      fetchApi(
+        {
+          url: `${PAYSLIP.service}/${PAYSLIP.model.send}`,
+          payload,
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+    },
+  );
+};

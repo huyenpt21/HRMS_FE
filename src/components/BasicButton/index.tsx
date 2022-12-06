@@ -4,7 +4,7 @@ import { ReactNode, MouseEvent } from 'react';
 import styles from './index.module.less';
 
 export interface IButtonProps {
-  title: string;
+  title?: string;
   type: 'filled' | 'outline';
   disabled?: boolean;
   block?: boolean;
