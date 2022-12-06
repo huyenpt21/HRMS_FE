@@ -17,7 +17,7 @@ interface IProps {
   onCancel: () => void;
   afterClose?: () => void;
   onTryAgain?: () => void;
-  onDelete: () => void;
+  onConfirm: () => void;
   labelBtnDelete?: string;
   loading?: boolean;
 }
@@ -32,7 +32,7 @@ const NotifyPopup = ({
   className,
   closable,
   onTryAgain,
-  onDelete,
+  onConfirm,
   labelBtnDelete,
   loading,
 }: IProps) => {
@@ -46,7 +46,6 @@ const NotifyPopup = ({
       closable={closable}
       onCancel={onCancel}
       afterClose={afterClose}
-      centered
     >
       {status === 'success' && (
         <div className={styles.content}>
@@ -85,13 +84,18 @@ const NotifyPopup = ({
           <div className={styles.content__title}> {title} </div>
           <div className={styles.content__message}> {message} </div>
           <div className={styles.content__button}>
-            <BasicButton title={'Cancel'} type="outline" onClick={onCancel} />
             <BasicButton
-              title={labelBtnDelete ?? 'Delete'}
-              type="filled"
-              onClick={onDelete}
+              title={'No'}
+              type="outline"
+              onClick={onCancel}
+              className={styles.btn__no}
+            />
+            <BasicButton
+              title={labelBtnDelete ?? 'Yes'}
+              type="outline"
+              onClick={onConfirm}
               loading={loading}
-              danger
+              className={styles.btn__yes}
             />
           </div>
         </div>

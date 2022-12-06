@@ -16,7 +16,7 @@ export default function Login() {
           className={styles.logo}
         />
         <h1 className={styles.title}>Welcome to Minswap</h1>
-        <a href="https://api.ms-hrms.software/human-resources-management-system/oauth2/authorization/google?rediect_uri=https://ms-hrms.software/login/oauth2/google">
+        <a href="https://api.ms-hrms.software/human-resources-management-system/oauth2/authorization/google?redirect_uri=https://ms-hrms.software/login/oauth2/google">
           <BasicButton
             icon={
               <SvgIcon

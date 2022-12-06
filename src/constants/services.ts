@@ -44,6 +44,7 @@ export const PAYSLIP = {
     secureCode: 'secure-code',
     correct: 'correct',
     forgot: 'forgot',
+    send: 'send',
   },
 };
 

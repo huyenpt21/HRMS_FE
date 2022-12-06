@@ -3,13 +3,46 @@ import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import { MESSAGE_RES } from 'constants/common';
 import {
+  useCheckSecureCodeExist,
   useForgotSecureCodeExist,
   useUpdateSecurityCode,
 } from 'hooks/usePayslip';
 import { ResPayslipModify, SercurityCode } from 'models/payslip';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import dataCheckExistMock from '../dataCheckExistMock.json';
 import styles from '../payrollDetail.module.less';
+
 export default function UpdateSecurityCode() {
   const [settingForm] = Form.useForm();
+  const navigate = useNavigate();
+  const { data: secureCodeData } = useCheckSecureCodeExist();
+  useEffect(() => {
+    if (secureCodeData) {
+      const { data: isSecureCodeExist } = secureCodeData;
+      if (!isSecureCodeExist) {
+        notification.warning({
+          message: 'You do not have a security code',
+          key: '1',
+        });
+        navigate('/setting/security-code/create');
+      }
+    } else {
+      const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
+        metadata: any;
+        data: boolean;
+      };
+      const { data: isSecureCodeExist } = dataMock;
+      if (!isSecureCodeExist) {
+        notification.warning({
+          message: 'You do not have a security code',
+          key: '1',
+        });
+        navigate('/setting/security-code/create');
+      }
+    }
+  }, [secureCodeData]);
+
   const { mutate: updateSecureCode } = useUpdateSecurityCode({
     onSuccess: (response: ResPayslipModify) => {
       const {
@@ -66,7 +99,7 @@ export default function UpdateSecurityCode() {
         className={styles.main}
       >
         <Row className={styles.header__title}>
-          <h2>Setting security code</h2>
+          <h2>Update security code</h2>
         </Row>
         <Form
           form={settingForm}
