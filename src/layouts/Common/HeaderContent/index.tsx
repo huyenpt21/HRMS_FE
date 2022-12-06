@@ -2,7 +2,7 @@ import { Badge, Image, notification } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Header } from 'antd/lib/layout/layout';
 import SvgIcon from 'components/SvgIcon';
-import { MESSAGE_RES } from 'constants/common';
+import { ACCESS_TOKEN, MESSAGE_RES } from 'constants/common';
 import urls from 'constants/url';
 import { useGetUserInfor } from 'hooks/useEmployee';
 import { useReadNotification } from 'hooks/useNotification';
@@ -39,6 +39,9 @@ export default function HeaderContent({ marginLeft }: IProps) {
 
   useEffect(() => {
     let url = REACT_APP_API_URL + 'push-notifications';
+    // set token
+    const token = localStorage.getItem(ACCESS_TOKEN) || null;
+    console.log(token);
     const sse = new EventSource(url);
     sse.addEventListener('user-list-event', (event) => {
       const notificationList = JSON.parse(event?.data);

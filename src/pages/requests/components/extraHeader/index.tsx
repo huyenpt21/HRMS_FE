@@ -95,6 +95,7 @@ const ExtraTableHeader = ({
               defaultStartDate={stateQuery?.createDateFrom}
               defaultEndDate={stateQuery?.createDateTo}
               isUseDefaultValue={!!stateQuery?.createDateFrom}
+              allowClear
             />
           </Col>
 

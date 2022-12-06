@@ -56,6 +56,7 @@ export default function UserProfile() {
     formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
     if (imageFile) {
       formValues.avatarImg = await uploadImage();
+      setIsUploadingImage(false);
     }
     updateUserInfo(formValues);
   };
