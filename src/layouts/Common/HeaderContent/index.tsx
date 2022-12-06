@@ -52,7 +52,6 @@ export default function HeaderContent({ marginLeft }: IProps) {
     });
     const listener: EventSourceListener = (event) => {
       if (event.type === 'open') {
-        console.log('Open SSE connection.');
       } else if (event.type === 'message') {
         if (event && event?.data) {
           const notificationList = JSON.parse(event?.data);
