@@ -32,6 +32,6 @@ export type DeviceListQuery = QueryParams<DeviceListSortFields> &
 
 export type ResDeviceList = ResponseData<{ items: DeviceModel[] }, Pagination>;
 
-export type ResDeviceDetail = ResponseData<{ item: DeviceModel }, {}>;
+export type ResDeviceDetail = ResponseData<any, {}>;
 
 export type ResDeviceModify = ResponseData<{}, {}>;

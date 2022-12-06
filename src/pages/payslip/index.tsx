@@ -20,10 +20,10 @@ import moment from 'moment-timezone';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './payrollDetail.module.less';
-import dataCheckExistMock from './dataCheckExistMock.json';
 import { SendOutlined } from '@ant-design/icons';
 import { SHAPE_TYPE } from 'constants/enums/common';
 import NotifyPopup from 'components/NotifyPopup';
+// import dataCheckExistMock from './dataCheckExistMock.json';
 // import dataCheckCorrectMock from './dataCheckCorrect.json';
 
 export default function PayslipDetail() {
@@ -44,16 +44,17 @@ export default function PayslipDetail() {
       if (!isSecureCodeExist) {
         setIsShowPopConfirm(true);
       }
-    } else {
-      const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
-        metadata: any;
-        data: boolean;
-      };
-      const { data: isSecureCodeExist } = dataMock;
-      if (!isSecureCodeExist) {
-        setIsShowPopConfirm(true);
-      }
     }
+    // else {
+    //   const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
+    //     metadata: any;
+    //     data: boolean;
+    //   };
+    //   const { data: isSecureCodeExist } = dataMock;
+    //   if (!isSecureCodeExist) {
+    //     setIsShowPopConfirm(true);
+    //   }
+    // }
   }, [secureCodeData]);
   const { mutate: sendPayslipToEmail } = useSendPayslipToEmail({
     onSuccess: (response: ResPayslipModify) => {
