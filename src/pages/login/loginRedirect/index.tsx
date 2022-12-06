@@ -9,7 +9,6 @@ export default function LoginRedirect() {
   const accessToken = search.get('token');
   useEffect(() => {
     if (accessToken) {
-      console.log(accessToken);
       localStorage.setItem(ACCESS_TOKEN, accessToken);
       navigate('/');
     }

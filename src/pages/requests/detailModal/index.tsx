@@ -166,8 +166,8 @@ export default function RequestDetailModal({
       if (message === 'Success') {
         requestForm.setFieldsValue({
           timeRemaining: item?.timeRemaining?.toFixed(2),
-          timeRemainingMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
-          timeRemainingYear: item?.otTimeRemainingOfYear?.toFixed(2),
+          otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
+          otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
         });
         remainingTimeRef.current = item?.timeRemaining;
       }
@@ -518,7 +518,7 @@ export default function RequestDetailModal({
                       <Col span="6">
                         <BasicInput
                           label="Remaining Time Month"
-                          name="timeRemainingMonth"
+                          name="otTimeRemainingOfMonth"
                           disabled
                           suffix={'hours'}
                         />
@@ -526,7 +526,7 @@ export default function RequestDetailModal({
                       <Col span="6">
                         <BasicInput
                           label="Remaining Time Year"
-                          name="timeRemainingYear"
+                          name="otTimeRemainingOfYear"
                           disabled
                           suffix={'hours'}
                         />
@@ -554,7 +554,7 @@ export default function RequestDetailModal({
               <Col span={24}>
                 {remainingTimeRef.current === 0 ||
                   (requestType === REQUEST_TYPE_KEY.LEAVE && (
-                    <div>
+                    <div className={styles.notice}>
                       * Notice: This person have used up all the holidays this
                       year
                     </div>
