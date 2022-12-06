@@ -1,13 +1,17 @@
-import { Col, Form, Row } from 'antd';
+import { Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import CommonModal from 'components/CommonModal';
 import SelectCustomSearch from 'components/SelectCustomSearch';
-import { validateMessages } from 'constants/common';
+import { MESSAGE_RES, validateMessages } from 'constants/common';
 import { ACTION_TYPE, STATUS_COLORS } from 'constants/enums/common';
 import { DEVICE } from 'constants/services';
-import { useDeviceDetail } from 'hooks/useDevice';
-import { DeviceModel } from 'models/device';
+import {
+  useAddDeviceModal,
+  useDeviceDetail,
+  useUpdateDevice,
+} from 'hooks/useDevice';
+import { DeviceModel, ResDeviceModify } from 'models/device';
 import { useEffect, useState, useRef } from 'react';
 import styles from './detailModalDevice.module.less';
 // import dataDetail from './dataDetail.json';
@@ -27,6 +31,44 @@ export default function DetailModalDevice({
   const [deviceForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
   const detailDeviceData = useRef<DeviceModel>();
+  const { mutate: createDevice } = useAddDeviceModal(
+    {
+      onSuccess: (response: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === MESSAGE_RES.SUCCESS) {
+          notification.success({ message: 'Create device successfully' });
+        }
+      },
+      onError: (response: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({ message: message });
+      },
+    },
+    `${DEVICE.model.itSupport}/${DEVICE.service}`,
+  );
+  const { mutate: updateDevice } = useUpdateDevice(
+    {
+      onSuccess: (response: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === MESSAGE_RES.SUCCESS) {
+          notification.success({ message: 'Create device successfully' });
+        }
+      },
+      onError: (response: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({ message: message });
+      },
+    },
+    `${DEVICE.model.itSupport}/${DEVICE.service}`,
+  );
   const { data: detailDevice } = useDeviceDetail(
     deviceIdRef,
     `${DEVICE.model.itSupport}/${DEVICE.service}`,
@@ -34,10 +76,10 @@ export default function DetailModalDevice({
   useEffect(() => {
     if (detailDevice && detailDevice?.data) {
       const {
-        data: { item },
+        data: { deviceDto },
       } = detailDevice;
-      deviceForm.setFieldsValue(item);
-      detailDeviceData.current = item;
+      deviceForm.setFieldsValue(deviceDto);
+      detailDeviceData.current = deviceDto;
     }
   }, [detailDevice]);
   const cancelHandler = () => {
@@ -45,7 +87,12 @@ export default function DetailModalDevice({
     deviceForm.resetFields();
   };
   const submitHandler = (formValue: DeviceModel) => {
-    console.log(formValue);
+    if (actionModal === ACTION_TYPE.CREATE) {
+      createDevice(formValue);
+    }
+    if (actionModal === ACTION_TYPE.EDIT) {
+      updateDevice({ uid: deviceIdRef, body: formValue });
+    }
   };
   return (
     <CommonModal
@@ -80,7 +127,7 @@ export default function DetailModalDevice({
           <Row gutter={32}>
             <Col span={actionModal === ACTION_TYPE.CREATE ? 24 : 18}>
               <SelectCustomSearch
-                url={`${DEVICE.service}-${DEVICE.model.masterData}`}
+                url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
                 name="deviceTypeId"
                 label="Device Type"
                 dataName="items"
