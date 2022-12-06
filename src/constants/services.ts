@@ -1,8 +1,3 @@
-export const LOGIN_REDIRECT = {
-  service:
-    'oauth2/authorization/google?rediect_uri=https://ms-hrms.software/login/oauth2/google',
-};
-
 export const EMPLOYEE = {
   service: 'employee',
   model: {

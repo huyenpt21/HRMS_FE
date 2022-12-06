@@ -1,11 +1,9 @@
 import { Image } from 'antd';
 import BasicButton from 'components/BasicButton';
-// import { useLogin } from 'hooks/useLogin';
 import styles from './login.module.less';
 import logo from '../../assets/img/logo-1.png';
 import SvgIcon from 'components/SvgIcon';
 export default function Login() {
-  // const { mutate: login } = useLogin();
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -27,9 +25,6 @@ export default function Login() {
             }
             title="Sign in with Google"
             type="outline"
-            // onClick={() => {
-            //   login();
-            // }}
             className={styles.btn__login}
           />
         </a>
