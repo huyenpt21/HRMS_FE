@@ -1,4 +1,4 @@
-import { Col, notification, Row, Tooltip } from 'antd';
+import { Col, notification, Row } from 'antd';
 import { SorterResult, TablePaginationConfig } from 'antd/lib/table/interface';
 import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
@@ -114,16 +114,7 @@ export default function SignatureProfileList() {
       };
     });
     columns.push({
-      title: (
-        <div>
-          <Tooltip
-            title="Can not edit or delete signature profile that were registered"
-            placement="topRight"
-          >
-            Action <SvgIcon icon="infor" size={18} />
-          </Tooltip>
-        </div>
-      ),
+      title: 'Action',
       key: 'action',
       dataIndex: 'action',
       width: 100,

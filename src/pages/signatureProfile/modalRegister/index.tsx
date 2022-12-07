@@ -11,7 +11,6 @@ import {
   SignatureRegister,
 } from 'models/signatureProfile';
 import styles from './signatureRegister.module.less';
-// import detailMock from './detailMock.json';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -59,7 +58,7 @@ export default function SignatureRegisterModal({
   return (
     <CommonModal
       open={isVisible}
-      title={'ASSIGN DEVICE INFORMATION'}
+      title={'REGISTER SIGNATURE INFORMATION'}
       onCancel={cancelHandler}
       footer={false}
       width={850}
@@ -103,7 +102,7 @@ export default function SignatureRegisterModal({
               onClick={cancelHandler}
             />
             <BasicButton
-              title="Assign"
+              title="Register"
               type="filled"
               className={styles['btn--save']}
               htmlType={'submit'}
