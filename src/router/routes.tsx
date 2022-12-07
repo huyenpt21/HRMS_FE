@@ -33,6 +33,7 @@ import DetailPageRequestForNoti from 'pages/requests/detailPageRequestNoti';
 import Login from '../pages/login';
 import PrivateRoute from './PrivateRoute';
 import LoginRedirect from 'pages/login/loginRedirect';
+import SignatureProfileList from 'pages/signatureProfile';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -84,6 +85,10 @@ export default function RouterElement() {
         {
           path: 'human-resource',
           children: [
+            {
+              path: 'signature-profile',
+              element: <SignatureProfileList />,
+            },
             {
               path: 'subordinates',
               element: <SubordinateList />,
