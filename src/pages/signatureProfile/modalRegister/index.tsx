@@ -91,6 +91,7 @@ export default function SignatureRegisterModal({
                 label="Employe"
                 placeholder="Choose employee"
                 name="personId"
+                rules={[{ required: true }]}
               />
             </Col>
           </Row>
