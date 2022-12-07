@@ -49,15 +49,19 @@ export default function ExtraHeaderDevice({
         break;
       }
       case DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY: {
-        returnObject.titlePage = 'All Borrow Device History';
+        returnObject.titlePage = 'All Employee Device History';
         break;
       }
       case DEVICE_MENU.MY_BORROW_DEVICE_HISTORY: {
-        returnObject.titlePage = 'My Borrow Device History';
+        returnObject.titlePage = 'My Device History';
         break;
       }
       case DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST: {
-        returnObject.titlePage = 'All Request Borrow Device List';
+        returnObject.titlePage = 'Device Request List';
+        break;
+      }
+      case DEVICE_MENU.SUBORDINATE: {
+        returnObject.titlePage = 'Subordinate Device History';
         break;
       }
     }

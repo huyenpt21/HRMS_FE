@@ -168,7 +168,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
         <div className={styles.header__title}>
           {menuType === MENU_TYPE.SUBORDINATE
             ? 'Subordinate Benefit Budget'
-            : 'All Benefit Budget'}
+            : 'All Employee Benefit Budget'}
         </div>
         <BasicButton
           title="Download"

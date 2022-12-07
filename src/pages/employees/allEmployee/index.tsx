@@ -138,7 +138,7 @@ export default function AllEmployeeList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 80,
+      width: 100,
       align: 'center',
       render: (_, record: EmployeeModel) => {
         return <MenuAction record={record} onClickMenu={menuActionHandler} />;

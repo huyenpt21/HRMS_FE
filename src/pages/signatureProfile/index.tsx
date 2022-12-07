@@ -121,7 +121,11 @@ export default function SignatureProfileList() {
       align: 'center',
       render: (_, record: SignatureProfileModel) => {
         return (
-          <SignatureMenuTable record={record} onClickMenu={menuActionHandler} />
+          <SignatureMenuTable
+            record={record}
+            onClickMenu={menuActionHandler}
+            setIsShowDetailModal={setIsShowDetailModal}
+          />
         );
       },
     });

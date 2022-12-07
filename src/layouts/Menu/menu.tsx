@@ -46,17 +46,17 @@ export const menus: MenuItemType[] = [
     icon: <TeamOutlined style={{ fontSize: '22px' }} />,
     children: [
       {
-        title: 'Signature Profile List',
+        title: 'Signature Profile',
         key: 'signature-profile',
         path: '/human-resource/signature-profile',
       },
       {
-        title: 'All Employee List',
+        title: 'All Employee',
         key: 'all-employee',
         path: '/human-resource/all-employees',
       },
       {
-        title: 'Subordinate List',
+        title: 'Subordinate',
         key: 'mySubordinate',
         path: '/human-resource/subordinates',
       },
@@ -73,7 +73,7 @@ export const menus: MenuItemType[] = [
         path: '/human-resource/subordinate-benefits',
       },
       {
-        title: 'All Device History',
+        title: 'All Employee Device History',
         key: 'all-borrow-device-history',
         path: '/human-resource/borrow-device-history',
       },

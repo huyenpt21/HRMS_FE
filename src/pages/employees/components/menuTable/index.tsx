@@ -17,26 +17,8 @@ export default function MenuAction({ record, onClickMenu }: IProps) {
         e.stopPropagation();
       }}
     >
-      <Tooltip title="Edit">
-        <span
-          onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
-          className="cursor-pointer"
-        >
-          <SvgIcon icon="edit-border" />
-        </span>
-      </Tooltip>
-      {!!record.isActive && (
-        <Tooltip title="Deactive">
-          <span
-            onClick={() => onClickMenu(record, MENU_OPTION_KEY.DEACTIVE)}
-            className="cursor-pointer"
-          >
-            <SvgIcon icon="close-circle" />
-          </span>
-        </Tooltip>
-      )}
       {!record.isActive && (
-        <Tooltip title="Active">
+        <Tooltip title="Active" placement="left">
           <span
             onClick={() => onClickMenu(record, MENU_OPTION_KEY.ACTIVE)}
             className="cursor-pointer"
@@ -45,6 +27,24 @@ export default function MenuAction({ record, onClickMenu }: IProps) {
           </span>
         </Tooltip>
       )}
+      {!!record.isActive && (
+        <Tooltip title="Inactivate" placement="left">
+          <span
+            onClick={() => onClickMenu(record, MENU_OPTION_KEY.DEACTIVE)}
+            className="cursor-pointer"
+          >
+            <SvgIcon icon="close-circle" />
+          </span>
+        </Tooltip>
+      )}
+      <Tooltip title="Edit" placement="right">
+        <span
+          onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
+          className="cursor-pointer"
+        >
+          <SvgIcon icon="edit-border" />
+        </span>
+      </Tooltip>
     </div>
   );
 }

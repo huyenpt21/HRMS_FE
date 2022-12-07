@@ -72,11 +72,17 @@ export default function ExtraHeaderTable({
     downloadFile(url, outputFilename);
     refetch && refetch();
   };
+  const getByTitle = () => {
+    if (menuType === EMPLOYEE_MENU.ALL) {
+      return 'All Employee list';
+    }
+    return 'Subordinate list';
+  };
 
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Employee List</div>
+        <div className={styles.header__title}>{getByTitle()}</div>
         {menuType === EMPLOYEE_MENU.ALL && (
           <span>
             <div>

@@ -24,7 +24,7 @@ export default function SignatureMenuTable({
       }}
     >
       {!record.isRegistered && (
-        <Tooltip title="Assign device">
+        <Tooltip title="Register" placement="right">
           <span
             onClick={() => {
               setIsShowDetailModal && setIsShowDetailModal(true);
