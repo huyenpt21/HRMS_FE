@@ -45,16 +45,6 @@ export default function PayslipDetail() {
         setIsShowPopConfirm(true);
       }
     }
-    // else {
-    //   const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
-    //     metadata: any;
-    //     data: boolean;
-    //   };
-    //   const { data: isSecureCodeExist } = dataMock;
-    //   if (!isSecureCodeExist) {
-    //     setIsShowPopConfirm(true);
-    //   }
-    // }
   }, [secureCodeData]);
   const { mutate: sendPayslipToEmail } = useSendPayslipToEmail({
     onSuccess: (response: ResPayslipModify) => {
@@ -81,6 +71,8 @@ export default function PayslipDetail() {
       } = response;
       if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCorrect) {
         setIsShowPayslip(true);
+      } else {
+        notification.error({ message: 'Incorrect security code' });
       }
     },
     onError: (response: ResPayslipModify) => {

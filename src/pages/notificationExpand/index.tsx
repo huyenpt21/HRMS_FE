@@ -2,23 +2,21 @@ import { Avatar, List, message } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US } from 'constants/common';
-import { useAppDispatch, useAppSelector } from 'hooks';
 import {
   useGetAllNorification,
   useReadNotification,
 } from 'hooks/useNotification';
 import { NotifcationModel, NotificationQuery } from 'models/notification';
 import VirtualList from 'rc-virtual-list';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addNoti } from 'store/slice/notification';
 import { getDateFormat } from 'utils/common';
 // import dataMock from './dataMock.json';
 import styles from './notificationExpand.module.less';
 export default function NotificationExpand() {
   const ContainerHeight = 400;
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const [stateQuery, setStateQuery] = useState<NotificationQuery>({
     limit: 5,
     page: 1,
@@ -26,14 +24,14 @@ export default function NotificationExpand() {
   // const {
   //   data: { items },
   // } = dataMock;
-  const dataNotiList = useAppSelector((state) => state.notification?.notiList);
+  const [dataNotiList, setDataNotiList] = useState<NotifcationModel[]>([]);
   const { mutate: readNoti } = useReadNotification();
   const { mutate: dataNotification, isLoading } = useGetAllNorification({
     onSuccess: (res) => {
       const {
         data: { items },
       } = res;
-      dispatch(addNoti({ newNotiList: items }));
+      setDataNotiList((prev: NotifcationModel[]) => [...prev, ...items]);
     },
     onError: (res) => {
       const {
