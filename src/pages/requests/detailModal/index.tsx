@@ -62,6 +62,7 @@ import {
   disabledRangeTime,
 } from './function';
 import styles from './requestDetailModal.module.less';
+import NoticeRemainingTime from '../components/noticeRemainingTime';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -91,7 +92,7 @@ export default function RequestDetailModal({
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
   const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
-  const remainingTimeRef = useRef<number | undefined>();
+  const remainingTimeRef = useRef<RequestRemainingTime>();
   const officeTimeRef = useRef<OfficeTime>();
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
@@ -177,7 +178,7 @@ export default function RequestDetailModal({
           otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
           otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
         });
-        remainingTimeRef.current = item?.timeRemaining;
+        remainingTimeRef.current = item;
       }
     },
     onError: (response: ResRequestModify) => {
@@ -198,10 +199,25 @@ export default function RequestDetailModal({
       if (message === MESSAGE_RES.SUCCESS && item) {
         setRequestData(item);
         requestForm.setFieldsValue(item);
+        // ! check
+        if (
+          item?.requestTypeName === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+          item.requestTypeName === REQUEST_TYPE_KEY.MATERNITY
+        ) {
+          requestForm.setFieldsValue({
+            date: moment(item.startTime),
+            time: [moment(item.startTime), moment(item.endTime)],
+          });
+        } else {
+          requestForm.setFieldsValue({
+            date: [moment(item.startTime), moment(item.endTime)],
+            time: [moment(item.startTime), moment(item.endTime)],
+          });
+        }
         requestForm.setFieldsValue({
           timeRemaining: item?.timeRemaining?.toFixed(2),
-          date: [moment(item.startTime), moment(item.endTime)],
-          time: [moment(item.startTime), moment(item.endTime)],
+          otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
+          otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
         });
         if (item?.listEvidence) {
           setEvidenceSource(item?.listEvidence);
@@ -209,7 +225,12 @@ export default function RequestDetailModal({
         setRequestType(item?.requestTypeName);
         setIsAllowRollback(item?.isAllowRollback);
         requestIdRefInternal.current = item?.id;
-        remainingTimeRef.current = item?.timeRemaining;
+        const timeRemaining: RequestRemainingTime = {
+          timeRemaining: item?.timeRemaining,
+          otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth,
+          otTimeRemainingOfYear: item?.otTimeRemainingOfYear,
+        };
+        remainingTimeRef.current = timeRemaining;
       }
     }
   }, [detailRequest]);
@@ -339,7 +360,8 @@ export default function RequestDetailModal({
   };
 
   const handleChangeRequestType = (value: number, options: SelectBoxType) => {
-    remainingTimeRef.current = -1;
+    //! check
+    // remainingTimeRef.current = -1;
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
     if (
@@ -418,7 +440,7 @@ export default function RequestDetailModal({
               {requestStatus === STATUS.PENDING && (
                 <>
                   {requestType === REQUEST_TYPE_KEY.LEAVE && (
-                    <Col span="4">
+                    <Col span="6">
                       <BasicInput
                         label="Remaining Time"
                         name="timeRemaining"
@@ -466,29 +488,11 @@ export default function RequestDetailModal({
             </Row>
             <Row gutter={20}>
               <Col span={24}>
-                {remainingTimeRef.current === 0 ||
-                  (requestType === REQUEST_TYPE_KEY.LEAVE && (
-                    <div className={styles.notice}>
-                      * Notice: This person have used up all the holidays this
-                      year
-                    </div>
-                  ))}
-                {requestType === REQUEST_TYPE_KEY.OT && (
-                  <>
-                    {remainingTimeRef.current === 0 && (
-                      <div className={styles.notice}>
-                        * Notice: This person have used up all the over time
-                        this year
-                      </div>
-                    )}
-                    {remainingTimeRef.current === 0 && (
-                      <div className={styles.notice}>
-                        * Notice: This person have used up all the over time
-                        this month
-                      </div>
-                    )}
-                  </>
-                )}
+                <NoticeRemainingTime
+                  remainingTimeRef={remainingTimeRef.current}
+                  requestType={requestType}
+                  tabType={tabType}
+                />
               </Col>
             </Row>
             {(requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
@@ -657,7 +661,11 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingCreate || isUploadingImage}
-                    disabled={remainingTimeRef.current === 0}
+                    disabled={
+                      remainingTimeRef.current?.timeRemaining === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfMonth === 0
+                    }
                   />
                 )}
                 {actionModal === ACTION_TYPE.EDIT && (
@@ -667,7 +675,11 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingUpdate || isUploadingImage}
-                    disabled={remainingTimeRef.current === 0}
+                    disabled={
+                      remainingTimeRef.current?.timeRemaining === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfMonth === 0
+                    }
                   />
                 )}
               </div>
@@ -693,25 +705,30 @@ export default function RequestDetailModal({
                   )}
                   {tabType === REQUEST_MENU.SUBORDINATE && (
                     <>
-                      {!(remainingTimeRef.current === 0) && (
-                        <BasicButton
-                          title="Approve"
-                          type="outline"
-                          className={styles['btn--approve']}
-                          onClick={() => {
-                            handleQickActionRequest(STATUS.APPROVED);
-                          }}
-                        />
+                      {(remainingTimeRef.current?.timeRemaining === 0 ||
+                        remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
+                        remainingTimeRef.current?.otTimeRemainingOfMonth ===
+                          0) && (
+                        <>
+                          <BasicButton
+                            title="Approve"
+                            type="outline"
+                            className={styles['btn--approve']}
+                            onClick={() => {
+                              handleQickActionRequest(STATUS.APPROVED);
+                            }}
+                          />
+                          <BasicButton
+                            title="Reject"
+                            type="outline"
+                            className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                            danger
+                            onClick={() => {
+                              handleQickActionRequest(STATUS.REJECTED);
+                            }}
+                          />
+                        </>
                       )}
-                      <BasicButton
-                        title="Reject"
-                        type="outline"
-                        className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                        danger
-                        onClick={() => {
-                          handleQickActionRequest(STATUS.REJECTED);
-                        }}
-                      />
                     </>
                   )}
                 </div>

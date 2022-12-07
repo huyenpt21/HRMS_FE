@@ -115,7 +115,7 @@ export default function RequestMenuAction({
         <>
           {requestStatus === STATUS.PENDING && (
             <>
-              <Tooltip title="Approve">
+              <Tooltip title="Approve" placement="left">
                 <span
                   onClick={() =>
                     actionRequestHandler(record.id, REQUEST_ACTION_TYPE.APPROVE)
@@ -125,7 +125,7 @@ export default function RequestMenuAction({
                   <SvgIcon icon="accept-circle" />
                 </span>
               </Tooltip>
-              <Tooltip title="Reject">
+              <Tooltip title="Reject" placement="right">
                 <span
                   onClick={() =>
                     actionRequestHandler(record.id, REQUEST_ACTION_TYPE.REJECT)
