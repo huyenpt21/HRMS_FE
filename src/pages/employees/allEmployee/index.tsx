@@ -218,14 +218,6 @@ export default function AllEmployeeList() {
       sort,
       dir,
     }));
-
-    // * set filter to state query
-    const filterKey: any = Object.keys(filters)[0];
-    const filterValues: any = Object.values(filters)[0];
-    setStateQuery((prev: EmployeeListQuery) => ({
-      ...prev,
-      [filterKey]: filterValues,
-    }));
   };
 
   const cancelModalHandler = () => {

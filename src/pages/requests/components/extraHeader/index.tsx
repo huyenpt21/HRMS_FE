@@ -82,11 +82,11 @@ const ExtraTableHeader = ({
             <Col xs={24} sm={10} md={12} lg={6} xl={4} xxl={4}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-                placeholder="Search..."
+                placeholder="Name, roll number"
                 allowClear
                 setStateQuery={setStateQuery}
                 keyParam="search"
-                label="Employee Name"
+                label="Search"
                 defaultValue={stateQuery?.search}
               />
             </Col>

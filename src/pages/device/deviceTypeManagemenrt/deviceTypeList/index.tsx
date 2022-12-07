@@ -1,4 +1,5 @@
 import { Form, TablePaginationConfig, Tooltip } from 'antd';
+import { SorterResult } from 'antd/lib/table/interface';
 import BasicInput from 'components/BasicInput';
 import CommonTable from 'components/CommonTable';
 import SvgIcon from 'components/SvgIcon';
@@ -45,7 +46,11 @@ export default function DeviceTypeList() {
 
   //  * get data header and content table
   const header: HeaderTableFields[] = DeviceTypeHeader;
-  const { data: dataTable, isLoading } = useDeviceList(
+  const {
+    data: dataTable,
+    isLoading,
+    refetch,
+  } = useDeviceList(
     stateQuery,
     `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
   );
@@ -87,6 +92,7 @@ export default function DeviceTypeList() {
               editingKey={editingKey}
               setEditingKey={setEditingKey}
               stateQuery={stateQuery}
+              refetch={refetch}
             />
           );
         }
@@ -164,6 +170,18 @@ export default function DeviceTypeList() {
       }),
     };
   });
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: any,
+    sorter: SorterResult<object>,
+  ) => {
+    // * set changing of pagination to state query
+    setStateQuery((prev: DeviceListQuery) => ({
+      ...prev,
+      page: pagination.current,
+      limit: pagination.pageSize,
+    }));
+  };
   return (
     <>
       <Form form={deviceTypeForm} component={false}>
@@ -187,6 +205,7 @@ export default function DeviceTypeList() {
           rowKey={(record: DeviceModel) => record.id}
           loading={isLoading}
           isShowScroll
+          onChange={handleTableChange}
         />
       </Form>
       {isShowDetailModal && (

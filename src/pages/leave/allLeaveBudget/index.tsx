@@ -192,6 +192,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
           <ExtraHeaderLeaveBudget
             stateQuery={stateQuery}
             setStateQuery={setStateQuery}
+            menuType={MENU_TYPE.ALL}
           />
         }
         stateQuery={stateQuery}

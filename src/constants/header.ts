@@ -202,8 +202,8 @@ export const AllTimeCheckHeader = [
   },
   {
     title: 'Employee Name',
-    key: 'personName',
-    dataIndex: 'personName',
+    key: 'fullName',
+    dataIndex: 'fullName',
   },
   {
     title: 'MON',
