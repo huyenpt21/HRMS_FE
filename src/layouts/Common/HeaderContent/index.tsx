@@ -38,36 +38,37 @@ export default function HeaderContent({ marginLeft }: IProps) {
   }, [detailUserInfo]);
 
   useEffect(() => {
-    let url = REACT_APP_API_URL + 'push-notifications';
-    // const token = localStorage.getItem(ACCESS_TOKEN) || null;
-    const sse = new EventSource(url);
-    sse.addEventListener('user-list-event', (event) => {
-      const notificationList = JSON.parse(event?.data);
-      if (notificationList?.items?.length > 0) {
-        setNotiData(notificationList?.items);
-        notificationList?.items?.map((el: NotifcationModel) =>
-          notification.info({
-            message: (
-              <div>
-                <b>{el?.userFrom}</b> {el?.content}
-              </div>
-            ),
-            onClick: () => {
-              el?.notificationId && readNoti(el?.notificationId);
-              el?.redirectUrl && navigate(el?.redirectUrl);
-            },
-          }),
-        );
-      }
-    });
+    if (personInfor?.email) {
+      let url = REACT_APP_API_URL + 'push-notifications/' + personInfor?.email;
+      const sse = new EventSource(url);
+      sse.addEventListener('user-list-event', (event) => {
+        const notificationList = JSON.parse(event?.data);
+        if (notificationList?.items?.length > 0) {
+          setNotiData(notificationList?.items);
+          notificationList?.items?.map((el: NotifcationModel) =>
+            notification.info({
+              message: (
+                <div>
+                  <b>{el?.userFrom}</b> {el?.content}
+                </div>
+              ),
+              onClick: () => {
+                el?.notificationId && readNoti(el?.notificationId);
+                el?.redirectUrl && navigate(el?.redirectUrl);
+              },
+            }),
+          );
+        }
+      });
 
-    sse.onerror = () => {
-      sse.close();
-    };
-    return () => {
-      sse.close();
-    };
-  }, []);
+      sse.onerror = () => {
+        sse.close();
+      };
+      return () => {
+        sse.close();
+      };
+    }
+  }, [detailUserInfo]);
 
   return (
     <>
