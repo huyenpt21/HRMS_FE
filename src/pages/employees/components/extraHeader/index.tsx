@@ -29,6 +29,7 @@ interface IProps {
   menuType: string;
   setStateQuery: Dispatch<SetStateAction<EmployeeListQuery>>;
   stateQuery: EmployeeListQuery;
+  refetch?: () => {};
 }
 export default function ExtraHeaderTable({
   setIsShowDetailModal,
@@ -36,6 +37,7 @@ export default function ExtraHeaderTable({
   menuType,
   setStateQuery,
   stateQuery,
+  refetch,
 }: IProps) {
   const token = localStorage.getItem(ACCESS_TOKEN) || null;
 
@@ -68,6 +70,7 @@ export default function ExtraHeaderTable({
       DATE_TIME,
     )}.xlsx`;
     downloadFile(url, outputFilename);
+    refetch && refetch();
   };
 
   return (
@@ -97,6 +100,7 @@ export default function ExtraHeaderTable({
                 onChange={(info) => {
                   if (info.file.status === 'done') {
                     if (info.file.response?.data === 'OK') {
+                      refetch && refetch();
                       notification.success({
                         message: info.file.response?.metadata?.message,
                       });

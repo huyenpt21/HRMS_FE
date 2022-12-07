@@ -257,6 +257,7 @@ export default function AllEmployeeList() {
             setStateQuery={setStateQuery}
             menuType={EMPLOYEE_MENU.ALL}
             stateQuery={stateQuery}
+            refetch={refetch}
           />
         }
         stateQuery={stateQuery}
