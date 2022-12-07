@@ -64,6 +64,8 @@ export const useDownloadEmployeeList = ({
           url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.export}`,
           options: {
             method: 'GET',
+            responseType: 'arraybuffer',
+            // 'Content-Type': 'blob',
           },
           payload,
         },
@@ -75,77 +77,6 @@ export const useDownloadEmployeeList = ({
     },
   );
 };
-export const useDownloadTemplate = ({
-  onError,
-  onSuccess,
-}: MutationProps<ResEmployeeModify>) => {
-  return useMutation(
-    () =>
-      fetchApi(
-        {
-          url: `${EMPLOYEE.model.hr}/${EMPLOYEE.model.template}/${EMPLOYEE.model.export}`,
-          options: {
-            method: 'GET',
-          },
-        },
-        undefined,
-      ),
-    {
-      onError: (error: any) => onError?.(error),
-      onSuccess: successHandler(onSuccess),
-    },
-  );
-};
-export const useUploadEmployeeList = ({
-  onError,
-  onSuccess,
-}: MutationProps<ResEmployeeModify>) => {
-  // const queryClient = useQueryClient();
-  return useMutation(
-    (formData: any) =>
-      fetchApi(
-        {
-          url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`,
-          options: {
-            method: 'POST',
-            body: formData,
-            headers: {
-              'Content-Type': `multipart/form-data; ${formData.getBoundary()}`,
-            },
-          },
-        },
-        undefined,
-      ),
-    {
-      onError: (error: any) => onError?.(error),
-      onSuccess: successHandler(onSuccess),
-      // onSettled: () => {
-      //   queryClient.invalidateQueries(['employee-list-all']);
-      // },
-    },
-  );
-};
-
-// export const useUploadEmployeeList = () => {
-//   return useMutation((formData: any) =>
-//     axios({
-//       method: 'post',
-//       url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`,
-//       data: formData,
-//       headers: {
-//         'Content-Type': `multipart/form-data; ${formData.getBoundary()}`,
-//       },
-//     })
-//       .then(function (response) {
-//         //handle success
-//         console.log(response);
-//       })
-//       .catch(function (response) {
-//         //handle error
-//         console.log(response);
-//       }),
-//   );
-// };
 
 export const useUpdateUserInfor = ({
   onError,

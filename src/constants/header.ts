@@ -202,8 +202,8 @@ export const AllTimeCheckHeader = [
   },
   {
     title: 'Employee Name',
-    key: 'personName',
-    dataIndex: 'personName',
+    key: 'fullName',
+    dataIndex: 'fullName',
   },
   {
     title: 'MON',
@@ -257,7 +257,7 @@ export const DepartmentHeader = [
 
 export const DeviceTypeHeader = [
   {
-    title: 'Divice Type Name',
+    title: 'Device Type Name',
     key: 'deviceTypeName',
     dataIndex: 'deviceTypeName',
     editable: true,
@@ -466,5 +466,27 @@ export const MyOTBudgetListHeader = [
     title: 'Year Remaining',
     key: 'remainOfYear',
     dataIndex: 'remainOfYear',
+  },
+];
+export const SignatureProfileListHeader = [
+  {
+    title: 'No',
+    key: 'id',
+    dataIndex: 'id',
+  },
+  {
+    title: 'Signature ID',
+    key: 'idSignature',
+    dataIndex: 'idSignature',
+  },
+  {
+    title: 'Employee Name',
+    key: 'employeeName',
+    dataIndex: 'employeeName',
+  },
+  {
+    title: 'Status',
+    key: 'isRegistered',
+    dataIndex: 'isRegistered',
   },
 ];

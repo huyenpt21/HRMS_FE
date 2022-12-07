@@ -20,7 +20,7 @@ import {
   REQUEST_TYPE_KEY,
   STATUS,
 } from 'constants/enums/common';
-import { REQUEST_TYPE_LIST } from 'constants/fixData';
+import { REQUEST_MATERNITY_OPTION, REQUEST_TYPE_LIST } from 'constants/fixData';
 import {
   deleteObject,
   getDownloadURL,
@@ -43,9 +43,8 @@ import {
 } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
-import { getDateFormat, getRange, TimeCombine } from 'utils/common';
+import { getDateFormat, TimeCombine } from 'utils/common';
 
-import { RangePickerProps } from 'antd/lib/date-picker';
 import BasicDatePicker from 'components/BasicDatePicker';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
@@ -55,7 +54,15 @@ import RollbackModal from '../components/rollbackModal';
 // import detailMock from './detailMock.json';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
 import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
+import {
+  disableDateOT,
+  disabledDate,
+  disabledDateForgotCheckInOut,
+  disabledDateMaternity,
+  disabledRangeTime,
+} from './function';
 import styles from './requestDetailModal.module.less';
+import NoticeRemainingTime from '../components/noticeRemainingTime';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -85,7 +92,7 @@ export default function RequestDetailModal({
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
   const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
-  const remainingTimeRef = useRef<number | undefined>();
+  const remainingTimeRef = useRef<RequestRemainingTime>();
   const officeTimeRef = useRef<OfficeTime>();
   const { mutate: createRequest, isLoading: loadingCreate } =
     useAddRequestModal({
@@ -109,6 +116,7 @@ export default function RequestDetailModal({
         notification.error({
           message: message,
         });
+        cancelHandler();
       },
     });
   const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
@@ -132,6 +140,7 @@ export default function RequestDetailModal({
       notification.error({
         message: message,
       });
+      cancelHandler();
     },
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
@@ -169,7 +178,7 @@ export default function RequestDetailModal({
           otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
           otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
         });
-        remainingTimeRef.current = item?.timeRemaining;
+        remainingTimeRef.current = item;
       }
     },
     onError: (response: ResRequestModify) => {
@@ -190,10 +199,25 @@ export default function RequestDetailModal({
       if (message === MESSAGE_RES.SUCCESS && item) {
         setRequestData(item);
         requestForm.setFieldsValue(item);
+        // ! check
+        if (
+          item?.requestTypeName === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+          item.requestTypeName === REQUEST_TYPE_KEY.MATERNITY
+        ) {
+          requestForm.setFieldsValue({
+            date: moment(item.startTime),
+            time: [moment(item.startTime), moment(item.endTime)],
+          });
+        } else {
+          requestForm.setFieldsValue({
+            date: [moment(item.startTime), moment(item.endTime)],
+            time: [moment(item.startTime), moment(item.endTime)],
+          });
+        }
         requestForm.setFieldsValue({
           timeRemaining: item?.timeRemaining?.toFixed(2),
-          date: [moment(item.startTime), moment(item.endTime)],
-          time: [moment(item.startTime), moment(item.endTime)],
+          otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
+          otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
         });
         if (item?.listEvidence) {
           setEvidenceSource(item?.listEvidence);
@@ -201,7 +225,12 @@ export default function RequestDetailModal({
         setRequestType(item?.requestTypeName);
         setIsAllowRollback(item?.isAllowRollback);
         requestIdRefInternal.current = item?.id;
-        remainingTimeRef.current = item?.timeRemaining;
+        const timeRemaining: RequestRemainingTime = {
+          timeRemaining: item?.timeRemaining,
+          otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth,
+          otTimeRemainingOfYear: item?.otTimeRemainingOfYear,
+        };
+        remainingTimeRef.current = timeRemaining;
       }
     }
   }, [detailRequest]);
@@ -253,18 +282,21 @@ export default function RequestDetailModal({
         }
         break;
       }
-      case REQUEST_TYPE_KEY.DEVICE: {
-        if (actionModal === ACTION_TYPE.ASSIGN) {
-          formValues.requestId = requestIdRef;
-          delete formValues.deviceTypeId;
-        }
-        break;
+      case REQUEST_TYPE_KEY.MATERNITY: {
+        formValues.startTime = getDateFormat(
+          moment(formValues.date).startOf('days'),
+          DATE_TIME,
+        );
+        formValues.endTime = getDateFormat(
+          moment(formValues.date)
+            .add(formValues.periodTime, 'months')
+            .endOf('days'),
+          DATE_TIME,
+        );
       }
     }
-    if (actionModal !== ACTION_TYPE.ASSIGN) {
-      const urlImage = await uploadImage();
-      formValues.listEvidence = [...urlImage, ...evidenceSource];
-    }
+    const urlImage = await uploadImage();
+    formValues.listEvidence = [...urlImage, ...evidenceSource];
     delete formValues.date;
     delete formValues.time;
     delete formValues.timeRemaining;
@@ -324,12 +356,12 @@ export default function RequestDetailModal({
         notification.error({
           message: 'Delete file error',
         });
-        console.error(error);
       });
   };
 
   const handleChangeRequestType = (value: number, options: SelectBoxType) => {
-    remainingTimeRef.current = -1;
+    //! check
+    // remainingTimeRef.current = -1;
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
     if (
@@ -364,102 +396,6 @@ export default function RequestDetailModal({
       };
       remainingTimeRequest(data);
     }
-  };
-  const disabledDate = (current: moment.Moment) => {
-    // if start date haven't selected -> disable past date to curent date
-    //disable weekend
-    const weekend = moment(current).day() === 0 || moment(current).day() === 6;
-    if (!dateSelected) {
-      return (current && current < moment().endOf('day')) || !!weekend;
-    }
-    //disable next years
-    const tooLate = current > moment(dateSelected[0]).endOf('years');
-    //disable previous years and past dates and current dates
-    const tooEarly =
-      current < moment(dateSelected[1]).startOf('years') ||
-      current < moment().endOf('days');
-    return !!tooLate || !!tooEarly || !!weekend;
-  };
-
-  const disableDateOT = (current: moment.Moment) => {
-    if (!dateSelected) {
-      return false;
-    }
-    const hourStartSelected = moment(dateSelected[0]).get('hours');
-    const hourEndSelected = moment(dateSelected[1]).get('hours');
-    //disable next month
-    const tooLate = current > moment(dateSelected[0]).endOf('months');
-    //disable previous month
-    const tooEarly = current < moment(dateSelected[1]).startOf('months');
-    const onlyTwoDaysNext =
-      current > moment(dateSelected[0]).add(1, 'days') &&
-      hourStartSelected >= 22;
-    const onlyTwoDaysPrev =
-      current < moment(dateSelected[1]).subtract(1, 'days').startOf('days') &&
-      hourEndSelected <= 4;
-    const onlyOneDaynext =
-      current >= moment(dateSelected[0]).endOf('days') &&
-      hourStartSelected <= 4;
-    const onlyOneDayPrev =
-      current <= moment(dateSelected[1]).startOf('days') &&
-      hourEndSelected >= 22;
-    return (
-      !!tooLate ||
-      !!tooEarly ||
-      !!onlyTwoDaysNext ||
-      !!onlyTwoDaysPrev ||
-      !!onlyOneDaynext ||
-      !!onlyOneDayPrev
-    );
-  };
-
-  const disabledDateForgotCheckInOut = (current: moment.Moment) => {
-    return current >= moment().startOf('days');
-  };
-
-  const disabledRangeTime: RangePickerProps['disabledTime'] = (value, type) => {
-    const hourStart = Number(officeTimeRef.current?.timeStart?.split(':')[0]);
-    const hourEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[0]);
-    const minuteStart = Number(officeTimeRef.current?.timeStart?.split(':')[1]);
-    const minuteEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[1]);
-    if (requestType === REQUEST_TYPE_KEY.OT) {
-      return {
-        disabledHours: () => {
-          if (dateSelected) {
-            if (type === 'end') {
-              if (
-                value?.get('dates') === moment(dateSelected[0]).get('dates') &&
-                moment(dateSelected[0]).get('hours') >= 22
-              ) {
-                return getRange(0, 22);
-              }
-              return getRange(5, 24);
-            }
-            if (type === 'start') {
-              if (
-                value?.get('dates') === moment(dateSelected[1]).get('dates') &&
-                moment(dateSelected[1]).get('hours') <= 4
-              ) {
-                return getRange(5, 24);
-              }
-              return getRange(0, 22);
-            }
-          }
-          return getRange(5, 22);
-        },
-      };
-    }
-    return {
-      disabledHours: () => [
-        ...getRange(0, hourStart),
-        ...getRange(hourEnd + 1, 24),
-      ],
-      disabledMinutes: (selectedHour) => {
-        if (selectedHour === hourStart) return getRange(0, minuteStart);
-        if (selectedHour === hourEnd) return getRange(minuteEnd + 1, 60);
-        return [];
-      },
-    };
   };
 
   return (
@@ -504,7 +440,7 @@ export default function RequestDetailModal({
               {requestStatus === STATUS.PENDING && (
                 <>
                   {requestType === REQUEST_TYPE_KEY.LEAVE && (
-                    <Col span="4">
+                    <Col span="6">
                       <BasicInput
                         label="Remaining Time"
                         name="timeRemaining"
@@ -552,29 +488,11 @@ export default function RequestDetailModal({
             </Row>
             <Row gutter={20}>
               <Col span={24}>
-                {remainingTimeRef.current === 0 ||
-                  (requestType === REQUEST_TYPE_KEY.LEAVE && (
-                    <div className={styles.notice}>
-                      * Notice: This person have used up all the holidays this
-                      year
-                    </div>
-                  ))}
-                {requestType === REQUEST_TYPE_KEY.OT && (
-                  <>
-                    {remainingTimeRef.current === 0 && (
-                      <div className={styles.notice}>
-                        * Notice: This person have used up all the over time
-                        this year
-                      </div>
-                    )}
-                    {remainingTimeRef.current === 0 && (
-                      <div className={styles.notice}>
-                        * Notice: This person have used up all the over time
-                        this month
-                      </div>
-                    )}
-                  </>
-                )}
+                <NoticeRemainingTime
+                  remainingTimeRef={remainingTimeRef.current}
+                  requestType={requestType}
+                  tabType={tabType}
+                />
               </Col>
             </Row>
             {(requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
@@ -588,7 +506,9 @@ export default function RequestDetailModal({
                       label="Applicable Date"
                       rules={[{ required: true }]}
                       allowClear
-                      disabledDate={disabledDateForgotCheckInOut}
+                      disabledDate={(current) =>
+                        disabledDateForgotCheckInOut(current)
+                      }
                     />
                   )}
                   {(requestType === REQUEST_TYPE_KEY.LEAVE ||
@@ -600,7 +520,9 @@ export default function RequestDetailModal({
                       placeholder={['From', 'To']}
                       allowClear
                       onChange={handleChangeDate}
-                      disabledDate={disabledDate}
+                      disabledDate={(current) =>
+                        disabledDate(current, dateSelected)
+                      }
                       onCalendarChange={(values: RangeValue) => {
                         setDateSelected(values);
                       }}
@@ -614,8 +536,39 @@ export default function RequestDetailModal({
                     placeholder={['From', 'To']}
                     name="time"
                     disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
-                    disableTime={disabledRangeTime}
+                    disableTime={(value, type) =>
+                      disabledRangeTime(
+                        value,
+                        type,
+                        requestType,
+                        dateSelected,
+                        officeTimeRef.current,
+                      )
+                    }
                     hideDisabledOptions
+                  />
+                </Col>
+              </Row>
+            )}
+            {requestType === REQUEST_TYPE_KEY.MATERNITY && (
+              <Row gutter={20}>
+                <Col span={12}>
+                  <BasicDatePicker
+                    name="date"
+                    label="Start Date"
+                    rules={[{ required: true }]}
+                    allowClear
+                    disabledDate={(current) => disabledDateMaternity(current)}
+                  />
+                </Col>
+                <Col span={12}>
+                  <BasicSelect
+                    options={REQUEST_MATERNITY_OPTION}
+                    name="periodTime"
+                    label="Period time"
+                    rules={[{ required: true }]}
+                    allowClear
+                    placeholder="Choose period time"
                   />
                 </Col>
               </Row>
@@ -635,8 +588,18 @@ export default function RequestDetailModal({
                       ],
                     }}
                     format={DATE_TIME_US}
-                    disabledDate={disableDateOT}
-                    disabledTime={disabledRangeTime}
+                    disabledDate={(current) =>
+                      disableDateOT(current, dateSelected)
+                    }
+                    disabledTime={(value, type) =>
+                      disabledRangeTime(
+                        value,
+                        type,
+                        requestType,
+                        dateSelected,
+                        officeTimeRef.current,
+                      )
+                    }
                     onCalendarChange={(values: RangeValue) => {
                       setDateSelected(values);
                     }}
@@ -698,7 +661,11 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingCreate || isUploadingImage}
-                    disabled={remainingTimeRef.current === 0}
+                    disabled={
+                      remainingTimeRef.current?.timeRemaining === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfMonth === 0
+                    }
                   />
                 )}
                 {actionModal === ACTION_TYPE.EDIT && (
@@ -708,7 +675,11 @@ export default function RequestDetailModal({
                     className={styles['btn--save']}
                     htmlType={'submit'}
                     loading={loadingUpdate || isUploadingImage}
-                    disabled={remainingTimeRef.current === 0}
+                    disabled={
+                      remainingTimeRef.current?.timeRemaining === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
+                      remainingTimeRef.current?.otTimeRemainingOfMonth === 0
+                    }
                   />
                 )}
               </div>
@@ -734,25 +705,30 @@ export default function RequestDetailModal({
                   )}
                   {tabType === REQUEST_MENU.SUBORDINATE && (
                     <>
-                      {!(remainingTimeRef.current === 0) && (
-                        <BasicButton
-                          title="Approve"
-                          type="outline"
-                          className={styles['btn--approve']}
-                          onClick={() => {
-                            handleQickActionRequest(STATUS.APPROVED);
-                          }}
-                        />
+                      {(remainingTimeRef.current?.timeRemaining === 0 ||
+                        remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
+                        remainingTimeRef.current?.otTimeRemainingOfMonth ===
+                          0) && (
+                        <>
+                          <BasicButton
+                            title="Approve"
+                            type="outline"
+                            className={styles['btn--approve']}
+                            onClick={() => {
+                              handleQickActionRequest(STATUS.APPROVED);
+                            }}
+                          />
+                          <BasicButton
+                            title="Reject"
+                            type="outline"
+                            className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                            danger
+                            onClick={() => {
+                              handleQickActionRequest(STATUS.REJECTED);
+                            }}
+                          />
+                        </>
                       )}
-                      <BasicButton
-                        title="Reject"
-                        type="outline"
-                        className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                        danger
-                        onClick={() => {
-                          handleQickActionRequest(STATUS.REJECTED);
-                        }}
-                      />
                     </>
                   )}
                 </div>

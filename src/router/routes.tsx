@@ -33,6 +33,7 @@ import DetailPageRequestForNoti from 'pages/requests/detailPageRequestNoti';
 import Login from '../pages/login';
 import PrivateRoute from './PrivateRoute';
 import LoginRedirect from 'pages/login/loginRedirect';
+import SignatureProfileList from 'pages/signatureProfile';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -63,7 +64,7 @@ export default function RouterElement() {
                 },
               ],
             },
-            { path: 'time-attendance', element: <MyTimeCheck /> },
+            { path: 'time-check', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
             {
@@ -84,6 +85,10 @@ export default function RouterElement() {
         {
           path: 'human-resource',
           children: [
+            {
+              path: 'signature-profile',
+              element: <SignatureProfileList />,
+            },
             {
               path: 'subordinates',
               element: <SubordinateList />,
@@ -152,7 +157,7 @@ export default function RouterElement() {
           ],
         },
         {
-          path: 'time-attendance',
+          path: 'time-check',
           children: [
             {
               path: 'all',
@@ -219,7 +224,7 @@ export default function RouterElement() {
       element: <NotFound />,
     },
     {
-      path: 'login',
+      path: '',
       children: [
         { path: '', element: <Login /> },
         { path: 'oauth2/google', element: <LoginRedirect /> },

@@ -1,19 +1,16 @@
 import { BackwardOutlined, DownloadOutlined } from '@ant-design/icons';
-import { Col, notification, Row } from 'antd';
+import { Col, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker, {
   RangeValue,
 } from 'components/BasicDateRangePicker';
+import { downloadFile } from 'components/DownloadFile';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_TIME, MESSAGE_RES, US_DATE_FORMAT } from 'constants/common';
+import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
-import { useDownloadTimeCheck } from 'hooks/useTimeCheck';
-import {
-  ResTimeCheckModify,
-  TimeCheckEmployeeInfo,
-  TimeCheckListQuery,
-} from 'models/timeCheck';
+import { TIME_CHECK } from 'constants/services';
+import { TimeCheckEmployeeInfo, TimeCheckListQuery } from 'models/timeCheck';
 import moment from 'moment-timezone';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -41,17 +38,6 @@ export default function ExtraTableTimeCheck({
   const navigate = useNavigate();
   const location = useLocation();
   const [dates, setDates] = useState<RangeValue>(null);
-  const { mutate: downloadFile } = useDownloadTimeCheck({
-    onSuccess: () => {},
-    onError: (response: ResTimeCheckModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (!!message && message !== MESSAGE_RES.SUCCESS) {
-        notification.error({ message: message });
-      }
-    },
-  });
 
   const handleChangeDate = (date: any, dateString: string[]) => {
     let startDate: string | undefined;
@@ -103,19 +89,19 @@ export default function ExtraTableTimeCheck({
     let title = '';
     switch (menuType) {
       case MENU_TYPE.MINE: {
-        title = 'My Attendance';
+        title = 'My Time Check';
         break;
       }
       case MENU_TYPE.ALL: {
-        title = 'All Attendance';
+        title = 'All Employee Time Check';
         break;
       }
       case MENU_TYPE.SUBORDINATE: {
-        title = 'Subordinate Attendance';
+        title = 'Subordinate Time Check';
         break;
       }
       case MENU_TYPE.DETAIL: {
-        title = 'Detail Attendance';
+        title = 'Detail Time Check';
       }
     }
     return title;
@@ -131,9 +117,14 @@ export default function ExtraTableTimeCheck({
   };
 
   const downloadHandler = () => {
+    let url = `${TIME_CHECK.model.hr}/${TIME_CHECK.service}/${TIME_CHECK.model.export}`;
+    const outputFilename = `timecheck-${getDateFormat(
+      moment(),
+      DATE_TIME,
+    )}.xlsx`;
     delete stateQuery.limit;
     delete stateQuery.page;
-    downloadFile(stateQuery);
+    downloadFile(url, outputFilename, stateQuery);
   };
 
   return (
@@ -197,7 +188,7 @@ export default function ExtraTableTimeCheck({
             <Col xs={24} sm={18} md={8} xl={8} xxl={6}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-                placeholder="Search..."
+                placeholder="Name, roll number"
                 allowClear
                 setStateQuery={setStateQuery}
                 keyParam="search"
@@ -206,7 +197,7 @@ export default function ExtraTableTimeCheck({
             </Col>
             <Col xs={24} sm={18} md={10} xl={8} xxl={6}>
               <BasicDatePicker
-                label="Date"
+                label="Filter date"
                 picker="week"
                 format={`${getDateFormat(
                   stateQuery.startDate,

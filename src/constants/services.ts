@@ -103,3 +103,7 @@ export const LEAVE_BUDGET = {
     export: 'export',
   },
 };
+
+export const SIGNATURE_PROFILE = {
+  service: 'register-signature',
+};

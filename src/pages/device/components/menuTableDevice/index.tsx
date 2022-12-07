@@ -2,18 +2,23 @@ import { Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { DEVICE_MENU, MENU_OPTION_KEY } from 'constants/enums/common';
 import { DeviceModel } from 'models/device';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, MutableRefObject } from 'react';
 interface IProps {
   record: DeviceModel;
-  onClickMenu: (itemSelected: DeviceModel, actionType: MENU_OPTION_KEY) => void;
+  onClickMenu?: (
+    itemSelected: DeviceModel,
+    actionType: MENU_OPTION_KEY,
+  ) => void;
   menuType: DEVICE_MENU;
   setIsShowDetailModal?: Dispatch<SetStateAction<any>>;
+  deviceRequestIdRef?: MutableRefObject<number | undefined>;
 }
 export default function DeviceMenuTable({
   record,
   onClickMenu,
   menuType,
   setIsShowDetailModal,
+  deviceRequestIdRef,
 }: IProps) {
   return (
     <div
@@ -26,7 +31,9 @@ export default function DeviceMenuTable({
         <>
           <Tooltip title="Edit" placement="left">
             <span
-              onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
+              onClick={() =>
+                onClickMenu && onClickMenu(record, MENU_OPTION_KEY.EDIT)
+              }
               className="cursor-pointer"
             >
               <SvgIcon icon="edit-border" />
@@ -35,7 +42,9 @@ export default function DeviceMenuTable({
           {!record.isUsed && (
             <Popconfirm
               title="Are you sure?"
-              onConfirm={() => onClickMenu(record, MENU_OPTION_KEY.DELETE)}
+              onConfirm={() =>
+                onClickMenu && onClickMenu(record, MENU_OPTION_KEY.DELETE)
+              }
               okText="Yes"
               cancelText="No"
             >
@@ -51,7 +60,9 @@ export default function DeviceMenuTable({
       {menuType === DEVICE_MENU.MY_BORROW_DEVICE_HISTORY && (
         <Popconfirm
           title="Are you sure?"
-          onConfirm={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
+          onConfirm={() =>
+            onClickMenu && onClickMenu(record, MENU_OPTION_KEY.EDIT)
+          }
           okText="Yes"
           cancelText="No"
         >
@@ -67,6 +78,9 @@ export default function DeviceMenuTable({
           <span
             onClick={() => {
               setIsShowDetailModal && setIsShowDetailModal(true);
+              if (deviceRequestIdRef) {
+                deviceRequestIdRef.current = record.id;
+              }
             }}
             className="cursor-pointer"
           >

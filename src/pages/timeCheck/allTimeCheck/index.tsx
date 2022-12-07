@@ -13,7 +13,7 @@ import {
   TimeCheckModel,
 } from 'models/timeCheck';
 import moment from 'moment-timezone';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
@@ -75,14 +75,14 @@ export default function AllTimeCheck() {
       if (el.key === 'rollNumber') {
         el.width = 150;
       }
-      if (el.key === 'personName') {
+      if (el.key === 'fullName') {
         el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = 230;
       }
       if (
         el.key !== 'rollNumber' &&
-        el.key !== 'personName' &&
+        el.key !== 'fullName' &&
         el.key !== 'requestTypeName'
       ) {
         el.width = 150;
@@ -94,7 +94,7 @@ export default function AllTimeCheck() {
         title: () => {
           if (
             el.key !== 'rollNumber' &&
-            el.key !== 'personName' &&
+            el.key !== 'fullName' &&
             el.key !== 'requestTypeName'
           ) {
             var days = [];
@@ -186,11 +186,9 @@ export default function AllTimeCheck() {
     let sort = stateQuery.sort;
     let dir = stateQuery.dir;
 
-    //! delete this after integrate api
     if (sorter.order) {
       const sortField = sorter.field as TimeCheckListSortFields;
       const sortDirections = sorter.order === 'ascend' ? 'asc' : 'desc';
-
       sort = `${sortField}`;
       dir = sortDirections;
     }

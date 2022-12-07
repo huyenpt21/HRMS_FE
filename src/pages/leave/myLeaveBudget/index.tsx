@@ -132,6 +132,7 @@ export default function MyLeaveBudget() {
           <ExtraHeaderLeaveBudget
             stateQuery={stateQuery}
             setStateQuery={setStateQuery}
+            menuType={MENU_TYPE.MINE}
           />
         }
         stateQuery={stateQuery}

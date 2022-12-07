@@ -190,7 +190,11 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
       extra={
         <ExtraHeaderDevice
           setStateQuery={setStateQuery}
-          menuType={DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY}
+          menuType={
+            menuType === MENU_TYPE.ALL
+              ? DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY
+              : DEVICE_MENU.SUBORDINATE
+          }
         />
       }
       stateQuery={stateQuery}

@@ -12,6 +12,7 @@ export enum STATUS {
   ASSIGNED = 'Assigned',
   RETURNED = 'Returned',
   AVAILABLE = 'Available',
+  REGISTERED = 'Registered',
 }
 export enum MENU_OPTION_KEY {
   EDIT = 'edit',
@@ -120,6 +121,7 @@ export enum REQUEST_TYPE_KEY {
   DEVICE = 'device',
   OTHER = 'other',
   FORGOT_CHECK_IN_OUT = 'forgotCheckInOut',
+  MATERNITY = 'maternity',
 }
 
 export enum MENU_TYPE {

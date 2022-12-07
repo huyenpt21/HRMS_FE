@@ -6,12 +6,7 @@ import {
   DATE_TIME_US,
   paginationConfig,
 } from 'constants/common';
-import {
-  ACTION_TYPE,
-  DEVICE_MENU,
-  MENU_OPTION_KEY,
-  STATUS,
-} from 'constants/enums/common';
+import { ACTION_TYPE, DEVICE_MENU, STATUS } from 'constants/enums/common';
 import { BorrowDeviceListHeader } from 'constants/header';
 import { REQUEST } from 'constants/services';
 import { useRequestList } from 'hooks/useRequestList';
@@ -138,9 +133,9 @@ export default function BorrowDeviceRequest() {
           return (
             <DeviceMenuTable
               record={record}
-              onClickMenu={menuActionHandler}
               menuType={DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST}
               setIsShowDetailModal={setIsShowDetailModal}
+              deviceRequestIdRef={requestIdRef}
             />
           );
         }
@@ -169,10 +164,6 @@ export default function BorrowDeviceRequest() {
       }
     }
   }, [dataTable]);
-  const menuActionHandler = (
-    record: DeviceModel,
-    action: MENU_OPTION_KEY,
-  ) => {};
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,

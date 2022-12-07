@@ -19,9 +19,9 @@ export const menus: MenuItemType[] = [
         path: '/emp-self-service/request',
       },
       {
-        title: 'My Attendance',
-        key: 'my-attendance',
-        path: '/emp-self-service/time-attendance',
+        title: 'My Time Check',
+        key: 'my-time-check',
+        path: '/emp-self-service/time-check',
       },
       {
         title: 'My Benefit Budget',
@@ -46,12 +46,17 @@ export const menus: MenuItemType[] = [
     icon: <TeamOutlined style={{ fontSize: '22px' }} />,
     children: [
       {
-        title: 'All Employee List',
+        title: 'Signature Profile',
+        key: 'signature-profile',
+        path: '/human-resource/signature-profile',
+      },
+      {
+        title: 'All Employee',
         key: 'all-employee',
         path: '/human-resource/all-employees',
       },
       {
-        title: 'Subordinate List',
+        title: 'Subordinate',
         key: 'mySubordinate',
         path: '/human-resource/subordinates',
       },
@@ -68,7 +73,7 @@ export const menus: MenuItemType[] = [
         path: '/human-resource/subordinate-benefits',
       },
       {
-        title: 'All Device History',
+        title: 'All Employee Device History',
         key: 'all-borrow-device-history',
         path: '/human-resource/borrow-device-history',
       },
@@ -120,19 +125,19 @@ export const menus: MenuItemType[] = [
     ],
   },
   {
-    title: 'Time Attendance',
-    key: 'time-attendance',
+    title: 'Time Check',
+    key: 'time-check',
     icon: 'calendar-search',
     children: [
       {
         title: 'Subordinate Attendence',
-        key: 'sub-attendance',
-        path: '/time-attendance/subordinate',
+        key: 'sub-time-check',
+        path: '/time-check/subordinate',
       },
       {
         title: 'All Employee Attendence',
-        key: 'all-employee-attendance',
-        path: '/time-attendance/all',
+        key: 'all-employee-time-check',
+        path: '/time-check/all',
       },
     ],
   },

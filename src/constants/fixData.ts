@@ -104,6 +104,16 @@ export const COMMON_STATUS_LIST: SelectBoxType[] = [
     label: 'Inactive',
   },
 ];
+export const SIGNATURE_STATUS_LIST: SelectBoxType[] = [
+  {
+    value: COMMON_STATUS.ACTIVE,
+    label: 'Registered',
+  },
+  {
+    value: COMMON_STATUS.INACTIVE,
+    label: 'Pending',
+  },
+];
 
 export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   {
@@ -119,7 +129,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   {
     // eslint-disable-next-line quotes
     label: "Children's Sickness",
-    type: REQUEST_TYPE_KEY.OTHER,
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 3,
   },
   {
@@ -129,7 +139,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Maternity Leave',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.MATERNITY,
     value: 5,
   },
   {
@@ -164,6 +174,24 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
 ];
 
+export const MY_REQUEST_STATUS_LIST: SelectBoxType[] = [
+  {
+    label: STATUS.PENDING,
+    value: STATUS.PENDING,
+  },
+  {
+    label: STATUS.APPROVED,
+    value: STATUS.APPROVED,
+  },
+  {
+    label: STATUS.REJECTED,
+    value: STATUS.REJECTED,
+  },
+  {
+    label: STATUS.CANCELLED,
+    value: STATUS.CANCELLED,
+  },
+];
 export const REQUEST_STATUS_LIST: SelectBoxType[] = [
   {
     label: STATUS.PENDING,
@@ -196,5 +224,20 @@ export const DEVICE_HISTORY_STATUS: SelectBoxType[] = [
   {
     label: 'Using',
     value: COMMON_STATUS.INACTIVE,
+  },
+];
+export const PERIOD_TIME = {
+  M4: 4,
+  M6: 6,
+};
+
+export const REQUEST_MATERNITY_OPTION: SelectBoxType[] = [
+  {
+    label: '4 months',
+    value: PERIOD_TIME.M4,
+  },
+  {
+    label: '6 months',
+    value: PERIOD_TIME.M6,
   },
 ];

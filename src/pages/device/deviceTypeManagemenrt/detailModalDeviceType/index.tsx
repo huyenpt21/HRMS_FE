@@ -24,6 +24,7 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
         } = response;
         if (message === MESSAGE_RES.SUCCESS) {
           notification.success({ message: 'Create deviceType successfully' });
+          onCancel();
         }
       },
       onError: (response: ResDeviceModify) => {
@@ -31,9 +32,10 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
           metadata: { message },
         } = response;
         notification.error({ message: message });
+        onCancel();
       },
     },
-    `${DEVICE.model.deviceType}`,
+    `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
   );
 
   const cancelHandler = () => {
@@ -59,13 +61,13 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
           requiredMark
           validateMessages={validateMessages()}
           onFinish={submitHandler}
-          initialValues={{ deviceTypeName: [''] }}
+          initialValues={{ deviceTypeNames: [''] }}
         >
           <Col>
             <h4>Add new device type name</h4>
           </Col>
 
-          <Form.List name="deviceTypeName">
+          <Form.List name="deviceTypeNames">
             {(fields, { add, remove }, { errors }) => {
               if (fields.length === 0) {
                 add();
