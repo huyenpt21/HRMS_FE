@@ -130,12 +130,12 @@ export const menus: MenuItemType[] = [
     icon: 'calendar-search',
     children: [
       {
-        title: 'Subordinate Attendence',
+        title: 'Subordinate Time Check',
         key: 'sub-time-check',
         path: '/time-check/subordinate',
       },
       {
-        title: 'All Employee Attendence',
+        title: 'All Employee Time Check',
         key: 'all-employee-time-check',
         path: '/time-check/all',
       },

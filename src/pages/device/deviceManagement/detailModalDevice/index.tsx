@@ -76,10 +76,10 @@ export default function DetailModalDevice({
   useEffect(() => {
     if (detailDevice && detailDevice?.data) {
       const {
-        data: { deviceDto },
+        data: { deviceDetailDto },
       } = detailDevice;
-      deviceForm.setFieldsValue(deviceDto);
-      detailDeviceData.current = deviceDto;
+      deviceForm.setFieldsValue(deviceDetailDto);
+      detailDeviceData.current = deviceDetailDto;
     }
   }, [detailDevice]);
   const cancelHandler = () => {
