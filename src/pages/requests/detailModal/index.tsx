@@ -20,7 +20,7 @@ import {
   REQUEST_TYPE_KEY,
   STATUS,
 } from 'constants/enums/common';
-import { REQUEST_TYPE_LIST } from 'constants/fixData';
+import { REQUEST_MATERNITY_OPTION, REQUEST_TYPE_LIST } from 'constants/fixData';
 import {
   deleteObject,
   getDownloadURL,
@@ -109,6 +109,7 @@ export default function RequestDetailModal({
         notification.error({
           message: message,
         });
+        cancelHandler();
       },
     });
   const { mutate: updateRequest, isLoading: loadingUpdate } = useUpdateRequest({
@@ -132,6 +133,7 @@ export default function RequestDetailModal({
       notification.error({
         message: message,
       });
+      cancelHandler();
     },
   });
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
@@ -260,6 +262,18 @@ export default function RequestDetailModal({
         }
         break;
       }
+      case REQUEST_TYPE_KEY.MATERNITY: {
+        formValues.startTime = getDateFormat(
+          moment(formValues.date).startOf('days'),
+          DATE_TIME,
+        );
+        formValues.endTime = getDateFormat(
+          moment(formValues.date)
+            .add(formValues.periodTime, 'months')
+            .endOf('days'),
+          DATE_TIME,
+        );
+      }
     }
     if (actionModal !== ACTION_TYPE.ASSIGN) {
       const urlImage = await uploadImage();
@@ -324,7 +338,6 @@ export default function RequestDetailModal({
         notification.error({
           message: 'Delete file error',
         });
-        console.error(error);
       });
   };
 
@@ -332,6 +345,7 @@ export default function RequestDetailModal({
     remainingTimeRef.current = -1;
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
+    console.log(2222, options?.type);
     if (
       options?.type === REQUEST_TYPE_KEY.LEAVE ||
       options?.type === REQUEST_TYPE_KEY.OT
@@ -415,6 +429,10 @@ export default function RequestDetailModal({
 
   const disabledDateForgotCheckInOut = (current: moment.Moment) => {
     return current >= moment().startOf('days');
+  };
+
+  const disabledDateMaternity = (current: moment.Moment) => {
+    return current <= moment().startOf('days');
   };
 
   const disabledRangeTime: RangePickerProps['disabledTime'] = (value, type) => {
@@ -616,6 +634,29 @@ export default function RequestDetailModal({
                     disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
                     disableTime={disabledRangeTime}
                     hideDisabledOptions
+                  />
+                </Col>
+              </Row>
+            )}
+            {requestType === REQUEST_TYPE_KEY.MATERNITY && (
+              <Row gutter={20}>
+                <Col span={12}>
+                  <BasicDatePicker
+                    name="date"
+                    label="Start Date"
+                    rules={[{ required: true }]}
+                    allowClear
+                    disabledDate={disabledDateMaternity}
+                  />
+                </Col>
+                <Col span={12}>
+                  <BasicSelect
+                    options={REQUEST_MATERNITY_OPTION}
+                    name="periodTime"
+                    label="Period time"
+                    rules={[{ required: true }]}
+                    allowClear
+                    placeholder="Choose period time"
                   />
                 </Col>
               </Row>
