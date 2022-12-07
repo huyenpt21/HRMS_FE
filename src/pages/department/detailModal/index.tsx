@@ -11,7 +11,11 @@ import {
   useDepartmentDetail,
   useUpdateDepartment,
 } from 'hooks/useDepartment';
-import { DepartmentModel, ResDepartmentModify } from 'models/department';
+import {
+  DepartmentModel,
+  PositionModel,
+  ResDepartmentModify,
+} from 'models/department';
 import { useEffect, useRef, useState } from 'react';
 import styles from './detailDepartment.module.less';
 // import detailMock from './detailMock.json';
@@ -21,7 +25,6 @@ interface IProps {
   refetchList?: () => void;
   action: ACTION_TYPE;
   departmentId?: number;
-  viewType?: string;
 }
 export default function DepartmentDetailModal({
   isVisible,
@@ -29,17 +32,11 @@ export default function DepartmentDetailModal({
   refetchList,
   action,
   departmentId,
-  viewType,
 }: IProps) {
   const [departmentForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
-  const [positionList, setPositionList] = useState<string[] | undefined>([
-    'ssssss',
-    'aaaaa',
-    'bbbbb',
-  ]);
+  const [positionList, setPositionList] = useState<PositionModel[]>();
   const totalMembers = useRef<number | undefined>(0);
-
   const { data: detailDepartment } = useDepartmentDetail(departmentId);
 
   const { mutate: createDepartment } = useAddDepartmentModal({
@@ -50,12 +47,15 @@ export default function DepartmentDetailModal({
       if (message === MESSAGE_RES.SUCCESS) {
         notification.success({ message: 'Create department successfully' });
       }
+      onCancel();
+      refetchList && refetchList();
     },
     onError: (response: ResDepartmentModify) => {
       const {
         metadata: { message },
       } = response;
       notification.error({ message: message });
+      // onCancel();
     },
   });
 
@@ -85,7 +85,7 @@ export default function DepartmentDetailModal({
       if (message === MESSAGE_RES.SUCCESS && department) {
         departmentForm.setFieldsValue(department);
         setPositionList(department?.listPosition);
-        totalMembers.current = department?.total;
+        totalMembers.current = department?.totalEmployee;
       }
     }
   }, [detailDepartment]);
@@ -97,7 +97,18 @@ export default function DepartmentDetailModal({
 
   const submitHandler = (formValues: DepartmentModel) => {
     if (actionModal === ACTION_TYPE.CREATE) {
-      createDepartment(formValues);
+      const positions: string[] = [];
+      if (formValues?.listPosition) {
+        formValues?.listPosition.forEach((el: PositionModel) => {
+          if (!!el?.positionName?.trim()) {
+            positions.push(el.positionName);
+          }
+        });
+      }
+      const submitObject: any = {};
+      submitObject.departmentName = formValues?.departmentName;
+      submitObject.listPosition = positions;
+      createDepartment(submitObject);
     }
     if (actionModal === ACTION_TYPE.EDIT) {
       updateDepartment({ uid: departmentId, body: formValues });
@@ -119,7 +130,6 @@ export default function DepartmentDetailModal({
           validateMessages={validateMessages()}
           onFinish={submitHandler}
           disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
-          initialValues={{ listPosition: [''] }}
         >
           <Col span={24}>
             <BasicInput
@@ -130,11 +140,13 @@ export default function DepartmentDetailModal({
               allowClear
             />
           </Col>
-          <Col>
-            <h4 className={styles.mb_24}>
-              Total members: {totalMembers.current}
-            </h4>
-          </Col>
+          {actionModal !== ACTION_TYPE.CREATE && (
+            <Col>
+              <h4 className={styles.mb_24}>
+                Total members: {totalMembers.current}
+              </h4>
+            </Col>
+          )}
           <Col>
             <h4>Position in department</h4>
           </Col>
@@ -142,36 +154,40 @@ export default function DepartmentDetailModal({
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
             <Form.List name="listPosition">
               {(fields, { add, remove }, { errors }) => {
-                if (fields.length === 0) {
-                  add();
-                }
                 return (
                   <>
-                    {fields.map(({ key, name, ...restFields }) => (
-                      <Row key={key} className={styles.position__container}>
-                        <Col span={22}>
+                    {fields.map((field, index) => (
+                      <Row
+                        key={field.key}
+                        className={styles.position__container}
+                      >
+                        <Col span={0}>
                           <BasicInput
-                            {...restFields}
-                            key={key}
-                            name={[name]}
+                            name={[index, 'id']}
                             className={styles.input}
                             allowClear
                             placeholder="Enter position name"
                           />
                         </Col>
-                        {fields.length > 1 && (
-                          <span
-                            onClick={() => remove(name)}
-                            className={styles['icon--delete']}
-                          >
-                            <SvgIcon
-                              icon="approve-waitting"
-                              size={24}
-                              color="#3c6d73"
-                              className={styles['cursor-pointer']}
-                            />
-                          </span>
-                        )}
+                        <Col span={22}>
+                          <BasicInput
+                            name={[index, 'positionName']}
+                            className={styles.input}
+                            allowClear
+                            placeholder="Enter position name"
+                          />
+                        </Col>
+                        <span
+                          onClick={() => remove(field.name)}
+                          className={styles['icon--delete']}
+                        >
+                          <SvgIcon
+                            icon="approve-waitting"
+                            size={24}
+                            color="#3c6d73"
+                            className={styles['cursor-pointer']}
+                          />
+                        </span>
                       </Row>
                     ))}
                     <div className={styles.btn__add}>
@@ -197,8 +213,8 @@ export default function DepartmentDetailModal({
           {actionModal === ACTION_TYPE.VIEW_DETAIL && (
             <ul className={styles.position__list}>
               {positionList &&
-                positionList.map((el: string, index: number) => (
-                  <li key={index}>{el}</li>
+                positionList.map((el: PositionModel, index: number) => (
+                  <li key={index}>{el?.positionName}</li>
                 ))}
             </ul>
           )}

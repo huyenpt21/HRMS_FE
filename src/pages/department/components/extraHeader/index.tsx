@@ -26,7 +26,10 @@ export default function ExtraHeaderDepartment({
           title="Add Department"
           type="filled"
           icon={<PlusOutlined />}
-          onClick={() => setIsShowDetailModal(true)}
+          onClick={() => {
+            setIsShowDetailModal(true);
+            modalAction.current = ACTION_TYPE.CREATE;
+          }}
         />
       </div>
       <div className={styles.header__container}>

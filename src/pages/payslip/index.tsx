@@ -135,7 +135,7 @@ export default function PayslipDetail() {
         sm={20}
         md={20}
         lg={20}
-        xl={14}
+        xl={16}
         xxl={12}
         className={styles.main}
       >
@@ -180,8 +180,14 @@ export default function PayslipDetail() {
           <>
             <div className={styles.header__section}>
               <div className={styles.header__title}>Payslip</div>
-              <Row gutter={32}>
-                <Col span={12} className={styles.left__side}>
+              <Row gutter={32} className={styles.header__content}>
+                <Col
+                  sm={10}
+                  md={10}
+                  xl={8}
+                  xxl={8}
+                  className={styles.left__side}
+                >
                   <BasicDatePicker
                     name="date"
                     picker="month"
@@ -193,19 +199,9 @@ export default function PayslipDetail() {
                     }
                   />
                 </Col>
-                <Col span={12} className={styles.text__bold}>
-                  <Row gutter={32}>
-                    <Col span="12">Full name:</Col>
-                    <Col span="12" className={styles.text_right}>
-                      {payslipDataRef.current?.personName}
-                    </Col>
-                  </Row>
-                  <Row gutter={32}>
-                    <Col span="12">Roll number:</Col>
-                    <Col span="12" className={styles.text_right}>
-                      {payslipDataRef.current?.rollNumber}
-                    </Col>
-                  </Row>
+                <Col className={styles.text__bold}>
+                  <Row>Full name: {payslipDataRef.current?.personName}</Row>
+                  <Row>Roll number: {payslipDataRef.current?.rollNumber}</Row>
                 </Col>
               </Row>
             </div>
@@ -264,13 +260,6 @@ export default function PayslipDetail() {
                     {payslipDataRef.current?.socialInsurance}
                   </Col>
                 </Row>
-                <Divider />
-                <Row gutter={32}>
-                  <Col span="12">Fine amount:</Col>
-                  <Col span="12" className={styles.text_right}>
-                    {payslipDataRef.current?.fineAmount}
-                  </Col>
-                </Row>
               </div>
               <Divider />
               <Row
@@ -300,7 +289,7 @@ export default function PayslipDetail() {
           </>
         )}
       </Col>
-      {isShowPopConfirm && (
+      {!isShowPopConfirm && (
         <NotifyPopup
           title="You do not have a security code"
           message="Go to setting?"
