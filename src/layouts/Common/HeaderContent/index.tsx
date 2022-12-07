@@ -38,7 +38,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
   }, [detailUserInfo]);
 
   useEffect(() => {
-    if (personInfor?.email) {
+    if (!!personInfor?.email) {
       let url = REACT_APP_API_URL + 'push-notifications/' + personInfor?.email;
       const sse = new EventSource(url);
       sse.addEventListener('user-list-event', (event) => {
@@ -68,7 +68,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
         sse.close();
       };
     }
-  }, [detailUserInfo]);
+  }, [personInfor]);
 
   return (
     <>
