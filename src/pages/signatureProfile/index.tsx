@@ -28,6 +28,7 @@ import {
 import SignatureMenuTable from './components/signatureMenuTable';
 import SignatureStatus from './components/signatureStatus';
 import dataMock from './dataMock.json';
+import SignatureRegisterModal from './modalRegister';
 import styles from './signatureProfile.module.less';
 
 export default function SignatureProfileList() {
@@ -35,7 +36,8 @@ export default function SignatureProfileList() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<SignatureProfileModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const deviceIdRef = useRef<number | undefined>();
+  const signatureIdRef = useRef<string | undefined>();
+  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   // * defailt filters
   const defaultFilter: SignatureProfileListQuery = {
@@ -174,7 +176,7 @@ export default function SignatureProfileList() {
   ) => {
     switch (action) {
       case MENU_OPTION_KEY.EDIT: {
-        deviceIdRef.current = record?.id;
+        signatureIdRef.current = record?.idSignature;
         modalAction.current = ACTION_TYPE.EDIT;
         break;
       }
@@ -196,13 +198,18 @@ export default function SignatureProfileList() {
     }));
   };
 
-  const rowClickHandler = (deviceId: number) => {
+  const rowClickHandler = (idSignature?: string) => {
     return {
       onClick: () => {
-        deviceIdRef.current = deviceId;
+        signatureIdRef.current = idSignature;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
+        setIsShowDetailModal(true);
       },
     };
+  };
+  const cancelModalHandler = () => {
+    setIsShowDetailModal(false);
+    signatureIdRef.current = undefined;
   };
   return (
     <>
@@ -253,10 +260,18 @@ export default function SignatureProfileList() {
         loading={isLoading}
         isShowScroll
         onRow={(record: SignatureProfileModel) => {
-          return rowClickHandler(record.id);
+          return rowClickHandler(record?.idSignature);
         }}
         className={'cursor-pointer'}
       />
+      {isShowDetailModal && (
+        <SignatureRegisterModal
+          isVisible={isShowDetailModal}
+          onCancel={cancelModalHandler}
+          refetchList={refetch}
+          signatureIdRef={signatureIdRef.current}
+        />
+      )}
     </>
   );
 }

@@ -11,9 +11,9 @@ export interface SignatureProfileListFilter {
   isRegister?: number;
 }
 
-export interface SignatureProfileEmployeeInfo {
-  personName?: string;
-  rollNumber?: string;
+export interface SignatureRegister {
+  idSignature?: string;
+  personId?: string;
 }
 
 export type SignatureProfileListSortFields = 'personName';
