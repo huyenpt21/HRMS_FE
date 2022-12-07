@@ -33,7 +33,7 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
         notification.error({ message: message });
       },
     },
-    `${DEVICE.model.deviceType}`,
+    `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
   );
 
   const cancelHandler = () => {
@@ -59,13 +59,13 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
           requiredMark
           validateMessages={validateMessages()}
           onFinish={submitHandler}
-          initialValues={{ deviceTypeName: [''] }}
+          initialValues={{ deviceTypeNames: [''] }}
         >
           <Col>
             <h4>Add new device type name</h4>
           </Col>
 
-          <Form.List name="deviceTypeName">
+          <Form.List name="deviceTypeNames">
             {(fields, { add, remove }, { errors }) => {
               if (fields.length === 0) {
                 add();

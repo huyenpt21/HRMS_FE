@@ -6,10 +6,11 @@ import {
 import { Col, notification, Row, Upload } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicSelect from 'components/BasicSelect';
+import { downloadFile } from 'components/DownloadFile';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import SvgIcon from 'components/SvgIcon';
-import { ACCESS_TOKEN, MESSAGE_RES } from 'constants/common';
+import { ACCESS_TOKEN, DATE_TIME } from 'constants/common';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import { COMMON_STATUS_LIST } from 'constants/fixData';
 import {
@@ -17,12 +18,10 @@ import {
   EMPLOYEE,
   POSITION_BY_DEPARTMENT,
 } from 'constants/services';
-import {
-  useDownloadEmployeeList,
-  useDownloadTemplate,
-} from 'hooks/useEmployee';
-import { EmployeeListQuery, ResEmployeeModify } from 'models/employee';
+import { EmployeeListQuery } from 'models/employee';
+import moment from 'moment-timezone';
 import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
+import { getDateFormat } from 'utils/common';
 import styles from './extraHeaderEmployee.module.less';
 interface IProps {
   setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
@@ -38,46 +37,38 @@ export default function ExtraHeaderTable({
   setStateQuery,
   stateQuery,
 }: IProps) {
+  const token = localStorage.getItem(ACCESS_TOKEN) || null;
+
   const departmentIdRef = useRef<number>(-1);
-  const { mutate: downloadFile } = useDownloadEmployeeList({
-    onSuccess: () => {},
-    onError: (response: ResEmployeeModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (!!message && message !== MESSAGE_RES.SUCCESS) {
-        notification.error({ message: message });
-      }
-    },
-  });
-  const { mutate: downloadTemplate } = useDownloadTemplate({
-    onSuccess: () => {},
-    onError: (response: ResEmployeeModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (!!message && message !== MESSAGE_RES.SUCCESS) {
-        notification.error({ message: message });
-      }
-    },
-  });
   const addEmployeeHandler = () => {
     setIsShowDetailModal(true);
     modalAction.current = ACTION_TYPE.CREATE;
   };
   const handleChangeFilter = (value: number, fieldName: string) => {
-    setStateQuery((prev: any) => ({
+    setStateQuery((prev: EmployeeListQuery) => ({
       ...prev,
       [fieldName]: value,
     }));
   };
 
-  const downloadHandler = () => {
+  const downloadHandler = async () => {
+    let url = `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.export}`;
+    const outputFilename = `employee-${getDateFormat(
+      moment(),
+      DATE_TIME,
+    )}.xlsx`;
     delete stateQuery.limit;
     delete stateQuery.page;
-    downloadFile(stateQuery);
+    downloadFile(url, outputFilename, stateQuery);
   };
-  const token = localStorage.getItem(ACCESS_TOKEN) || null;
+  const downloadTemplateHandler = async () => {
+    let url = `${EMPLOYEE.model.hr}/${EMPLOYEE.model.template}/${EMPLOYEE.model.export}`;
+    const outputFilename = `template-${getDateFormat(
+      moment(),
+      DATE_TIME,
+    )}.xlsx`;
+    downloadFile(url, outputFilename);
+  };
 
   return (
     <>
@@ -85,7 +76,7 @@ export default function ExtraHeaderTable({
         <div className={styles.header__title}>Employee List</div>
         {menuType === EMPLOYEE_MENU.ALL && (
           <span>
-            <>
+            <div>
               <BasicButton
                 title="Add Employee"
                 type="filled"
@@ -103,6 +94,20 @@ export default function ExtraHeaderTable({
                 className={styles.btn}
                 action={`${process.env.REACT_APP_API_URL}${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.import}`}
                 headers={{ authorization: 'Bearer ' + token }}
+                onChange={(info) => {
+                  if (info.file.status === 'done') {
+                    if (info.file.response?.data === 'OK') {
+                      notification.success({
+                        message: info.file.response?.metadata?.message,
+                      });
+                    } else {
+                      notification.error({
+                        message: info.file.response?.metadata?.message,
+                      });
+                    }
+                  }
+                }}
+                showUploadList={false}
               >
                 <BasicButton
                   title="Upload"
@@ -110,12 +115,10 @@ export default function ExtraHeaderTable({
                   icon={<UploadOutlined />}
                 />
               </Upload>
-            </>
+            </div>
             <div
               className={styles.btn__template}
-              onClick={() => {
-                downloadTemplate();
-              }}
+              onClick={downloadTemplateHandler}
             >
               Download template
             </div>

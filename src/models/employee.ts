@@ -42,4 +42,4 @@ export type ResEmployeeList = ResponseData<
 
 export type ResEmployeeDetail = ResponseData<{ item: EmployeeModel }, {}>;
 
-export type ResEmployeeModify = ResponseData<{}, {}>;
+export type ResEmployeeModify = any;
