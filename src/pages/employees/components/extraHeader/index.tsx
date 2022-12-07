@@ -74,9 +74,9 @@ export default function ExtraHeaderTable({
   };
   const getByTitle = () => {
     if (menuType === EMPLOYEE_MENU.ALL) {
-      return 'All Employee list';
+      return 'All Employee List';
     }
-    return 'Subordinate list';
+    return 'Subordinate List';
   };
 
   return (

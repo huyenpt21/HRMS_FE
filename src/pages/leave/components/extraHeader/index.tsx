@@ -38,6 +38,7 @@ export default function ExtraHeaderLeaveBudget({
                 onChange={(_: moment.Moment, dateString: string) =>
                   setStateQuery((prev: any) => ({ ...prev, year: dateString }))
                 }
+                inputReadOnly
               />
             </Col>
           )}
@@ -55,6 +56,7 @@ export default function ExtraHeaderLeaveBudget({
                     year: value?.get('year'),
                   }));
                 }}
+                inputReadOnly
               />
             </Col>
           )}
