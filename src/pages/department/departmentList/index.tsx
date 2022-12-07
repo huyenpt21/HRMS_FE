@@ -182,6 +182,7 @@ export default function DepartmentList() {
   const cancelModalHandler = () => {
     setIsShowDetailModal(false);
     departmentId.current = undefined;
+    modalAction.current = ACTION_TYPE.CREATE;
   };
 
   return (

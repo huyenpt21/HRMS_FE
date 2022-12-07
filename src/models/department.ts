@@ -2,9 +2,14 @@ import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
 export interface DepartmentModel extends Resource {
   departmentName?: string;
-  listPosition?: string[];
-  total?: number;
+  listPosition?: PositionModel[];
+  totalEmployee?: number;
   isAllowDelete?: number;
+}
+
+export interface PositionModel {
+  id?: number;
+  positionName?: string;
 }
 
 export interface DepartmentListFilter {
