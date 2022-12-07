@@ -43,9 +43,8 @@ import {
 } from 'models/request';
 import moment from 'moment-timezone';
 import { useEffect, useRef, useState } from 'react';
-import { getDateFormat, getRange, TimeCombine } from 'utils/common';
+import { getDateFormat, TimeCombine } from 'utils/common';
 
-import { RangePickerProps } from 'antd/lib/date-picker';
 import BasicDatePicker from 'components/BasicDatePicker';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
@@ -55,6 +54,13 @@ import RollbackModal from '../components/rollbackModal';
 // import detailMock from './detailMock.json';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
 import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
+import {
+  disableDateOT,
+  disabledDate,
+  disabledDateForgotCheckInOut,
+  disabledDateMaternity,
+  disabledRangeTime,
+} from './function';
 import styles from './requestDetailModal.module.less';
 interface IProps {
   isVisible: boolean;
@@ -255,13 +261,6 @@ export default function RequestDetailModal({
         }
         break;
       }
-      case REQUEST_TYPE_KEY.DEVICE: {
-        if (actionModal === ACTION_TYPE.ASSIGN) {
-          formValues.requestId = requestIdRef;
-          delete formValues.deviceTypeId;
-        }
-        break;
-      }
       case REQUEST_TYPE_KEY.MATERNITY: {
         formValues.startTime = getDateFormat(
           moment(formValues.date).startOf('days'),
@@ -275,10 +274,8 @@ export default function RequestDetailModal({
         );
       }
     }
-    if (actionModal !== ACTION_TYPE.ASSIGN) {
-      const urlImage = await uploadImage();
-      formValues.listEvidence = [...urlImage, ...evidenceSource];
-    }
+    const urlImage = await uploadImage();
+    formValues.listEvidence = [...urlImage, ...evidenceSource];
     delete formValues.date;
     delete formValues.time;
     delete formValues.timeRemaining;
@@ -345,7 +342,6 @@ export default function RequestDetailModal({
     remainingTimeRef.current = -1;
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
-    console.log(2222, options?.type);
     if (
       options?.type === REQUEST_TYPE_KEY.LEAVE ||
       options?.type === REQUEST_TYPE_KEY.OT
@@ -378,106 +374,6 @@ export default function RequestDetailModal({
       };
       remainingTimeRequest(data);
     }
-  };
-  const disabledDate = (current: moment.Moment) => {
-    // if start date haven't selected -> disable past date to curent date
-    //disable weekend
-    const weekend = moment(current).day() === 0 || moment(current).day() === 6;
-    if (!dateSelected) {
-      return (current && current < moment().endOf('day')) || !!weekend;
-    }
-    //disable next years
-    const tooLate = current > moment(dateSelected[0]).endOf('years');
-    //disable previous years and past dates and current dates
-    const tooEarly =
-      current < moment(dateSelected[1]).startOf('years') ||
-      current < moment().endOf('days');
-    return !!tooLate || !!tooEarly || !!weekend;
-  };
-
-  const disableDateOT = (current: moment.Moment) => {
-    if (!dateSelected) {
-      return false;
-    }
-    const hourStartSelected = moment(dateSelected[0]).get('hours');
-    const hourEndSelected = moment(dateSelected[1]).get('hours');
-    //disable next month
-    const tooLate = current > moment(dateSelected[0]).endOf('months');
-    //disable previous month
-    const tooEarly = current < moment(dateSelected[1]).startOf('months');
-    const onlyTwoDaysNext =
-      current > moment(dateSelected[0]).add(1, 'days') &&
-      hourStartSelected >= 22;
-    const onlyTwoDaysPrev =
-      current < moment(dateSelected[1]).subtract(1, 'days').startOf('days') &&
-      hourEndSelected <= 4;
-    const onlyOneDaynext =
-      current >= moment(dateSelected[0]).endOf('days') &&
-      hourStartSelected <= 4;
-    const onlyOneDayPrev =
-      current <= moment(dateSelected[1]).startOf('days') &&
-      hourEndSelected >= 22;
-    return (
-      !!tooLate ||
-      !!tooEarly ||
-      !!onlyTwoDaysNext ||
-      !!onlyTwoDaysPrev ||
-      !!onlyOneDaynext ||
-      !!onlyOneDayPrev
-    );
-  };
-
-  const disabledDateForgotCheckInOut = (current: moment.Moment) => {
-    return current >= moment().startOf('days');
-  };
-
-  const disabledDateMaternity = (current: moment.Moment) => {
-    return current <= moment().startOf('days');
-  };
-
-  const disabledRangeTime: RangePickerProps['disabledTime'] = (value, type) => {
-    const hourStart = Number(officeTimeRef.current?.timeStart?.split(':')[0]);
-    const hourEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[0]);
-    const minuteStart = Number(officeTimeRef.current?.timeStart?.split(':')[1]);
-    const minuteEnd = Number(officeTimeRef.current?.timeFinish?.split(':')[1]);
-    if (requestType === REQUEST_TYPE_KEY.OT) {
-      return {
-        disabledHours: () => {
-          if (dateSelected) {
-            if (type === 'end') {
-              if (
-                value?.get('dates') === moment(dateSelected[0]).get('dates') &&
-                moment(dateSelected[0]).get('hours') >= 22
-              ) {
-                return getRange(0, 22);
-              }
-              return getRange(5, 24);
-            }
-            if (type === 'start') {
-              if (
-                value?.get('dates') === moment(dateSelected[1]).get('dates') &&
-                moment(dateSelected[1]).get('hours') <= 4
-              ) {
-                return getRange(5, 24);
-              }
-              return getRange(0, 22);
-            }
-          }
-          return getRange(5, 22);
-        },
-      };
-    }
-    return {
-      disabledHours: () => [
-        ...getRange(0, hourStart),
-        ...getRange(hourEnd + 1, 24),
-      ],
-      disabledMinutes: (selectedHour) => {
-        if (selectedHour === hourStart) return getRange(0, minuteStart);
-        if (selectedHour === hourEnd) return getRange(minuteEnd + 1, 60);
-        return [];
-      },
-    };
   };
 
   return (
@@ -606,7 +502,9 @@ export default function RequestDetailModal({
                       label="Applicable Date"
                       rules={[{ required: true }]}
                       allowClear
-                      disabledDate={disabledDateForgotCheckInOut}
+                      disabledDate={(current) =>
+                        disabledDateForgotCheckInOut(current)
+                      }
                     />
                   )}
                   {(requestType === REQUEST_TYPE_KEY.LEAVE ||
@@ -618,7 +516,9 @@ export default function RequestDetailModal({
                       placeholder={['From', 'To']}
                       allowClear
                       onChange={handleChangeDate}
-                      disabledDate={disabledDate}
+                      disabledDate={(current) =>
+                        disabledDate(current, dateSelected)
+                      }
                       onCalendarChange={(values: RangeValue) => {
                         setDateSelected(values);
                       }}
@@ -632,7 +532,15 @@ export default function RequestDetailModal({
                     placeholder={['From', 'To']}
                     name="time"
                     disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
-                    disableTime={disabledRangeTime}
+                    disableTime={(value, type) =>
+                      disabledRangeTime(
+                        value,
+                        type,
+                        requestType,
+                        dateSelected,
+                        officeTimeRef.current,
+                      )
+                    }
                     hideDisabledOptions
                   />
                 </Col>
@@ -646,7 +554,7 @@ export default function RequestDetailModal({
                     label="Start Date"
                     rules={[{ required: true }]}
                     allowClear
-                    disabledDate={disabledDateMaternity}
+                    disabledDate={(current) => disabledDateMaternity(current)}
                   />
                 </Col>
                 <Col span={12}>
@@ -676,8 +584,18 @@ export default function RequestDetailModal({
                       ],
                     }}
                     format={DATE_TIME_US}
-                    disabledDate={disableDateOT}
-                    disabledTime={disabledRangeTime}
+                    disabledDate={(current) =>
+                      disableDateOT(current, dateSelected)
+                    }
+                    disabledTime={(value, type) =>
+                      disabledRangeTime(
+                        value,
+                        type,
+                        requestType,
+                        dateSelected,
+                        officeTimeRef.current,
+                      )
+                    }
                     onCalendarChange={(values: RangeValue) => {
                       setDateSelected(values);
                     }}
