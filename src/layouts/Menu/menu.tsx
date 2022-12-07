@@ -19,9 +19,9 @@ export const menus: MenuItemType[] = [
         path: '/emp-self-service/request',
       },
       {
-        title: 'My Attendance',
-        key: 'my-attendance',
-        path: '/emp-self-service/time-attendance',
+        title: 'My Time Check',
+        key: 'my-time-check',
+        path: '/emp-self-service/time-check',
       },
       {
         title: 'My Benefit Budget',
@@ -125,19 +125,19 @@ export const menus: MenuItemType[] = [
     ],
   },
   {
-    title: 'Time Attendance',
-    key: 'time-attendance',
+    title: 'Time Check',
+    key: 'time-check',
     icon: 'calendar-search',
     children: [
       {
         title: 'Subordinate Attendence',
-        key: 'sub-attendance',
-        path: '/time-attendance/subordinate',
+        key: 'sub-time-check',
+        path: '/time-check/subordinate',
       },
       {
         title: 'All Employee Attendence',
-        key: 'all-employee-attendance',
-        path: '/time-attendance/all',
+        key: 'all-employee-time-check',
+        path: '/time-check/all',
       },
     ],
   },

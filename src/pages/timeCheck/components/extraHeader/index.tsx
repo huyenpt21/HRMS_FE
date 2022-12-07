@@ -89,19 +89,19 @@ export default function ExtraTableTimeCheck({
     let title = '';
     switch (menuType) {
       case MENU_TYPE.MINE: {
-        title = 'My Attendance';
+        title = 'My Time Check';
         break;
       }
       case MENU_TYPE.ALL: {
-        title = 'All Attendance';
+        title = 'All Employee Time Check';
         break;
       }
       case MENU_TYPE.SUBORDINATE: {
-        title = 'Subordinate Attendance';
+        title = 'Subordinate Time Check';
         break;
       }
       case MENU_TYPE.DETAIL: {
-        title = 'Detail Attendance';
+        title = 'Detail Time Check';
       }
     }
     return title;
