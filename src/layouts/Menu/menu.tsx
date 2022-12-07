@@ -46,6 +46,11 @@ export const menus: MenuItemType[] = [
     icon: <TeamOutlined style={{ fontSize: '22px' }} />,
     children: [
       {
+        title: 'Signature Profile List',
+        key: 'signature-profile',
+        path: '/human-resource/signature-profile',
+      },
+      {
         title: 'All Employee List',
         key: 'all-employee',
         path: '/human-resource/all-employees',

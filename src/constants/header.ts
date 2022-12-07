@@ -468,3 +468,25 @@ export const MyOTBudgetListHeader = [
     dataIndex: 'remainOfYear',
   },
 ];
+export const SignatureProfileListHeader = [
+  {
+    title: 'No',
+    key: 'id',
+    dataIndex: 'id',
+  },
+  {
+    title: 'Signature ID',
+    key: 'idSignature',
+    dataIndex: 'idSignature',
+  },
+  {
+    title: 'Employee Name',
+    key: 'employeeName',
+    dataIndex: 'employeeName',
+  },
+  {
+    title: 'Status',
+    key: 'isRegistered',
+    dataIndex: 'isRegistered',
+  },
+];

@@ -104,6 +104,16 @@ export const COMMON_STATUS_LIST: SelectBoxType[] = [
     label: 'Inactive',
   },
 ];
+export const SIGNATURE_STATUS_LIST: SelectBoxType[] = [
+  {
+    value: COMMON_STATUS.ACTIVE,
+    label: 'Registered',
+  },
+  {
+    value: COMMON_STATUS.INACTIVE,
+    label: 'Pending',
+  },
+];
 
 export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   {

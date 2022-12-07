@@ -72,7 +72,7 @@ export default function AllDiviceList() {
       const {
         metadata: { message },
       } = response;
-      notification.success({
+      notification.error({
         message: message,
       });
     },

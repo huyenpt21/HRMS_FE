@@ -136,7 +136,7 @@ export default function ExtraHeaderTable({
           </span>
         )}
       </div>
-      <div className={styles.header__container}>
+      <div>
         <Row gutter={10} className={styles.filter__section}>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <InputDebounce
