@@ -72,11 +72,17 @@ export default function ExtraHeaderTable({
     downloadFile(url, outputFilename);
     refetch && refetch();
   };
+  const getByTitle = () => {
+    if (menuType === EMPLOYEE_MENU.ALL) {
+      return 'All Employee List';
+    }
+    return 'Subordinate List';
+  };
 
   return (
     <>
       <div className={styles.header__section}>
-        <div className={styles.header__title}>Employee List</div>
+        <div className={styles.header__title}>{getByTitle()}</div>
         {menuType === EMPLOYEE_MENU.ALL && (
           <span>
             <div>
@@ -141,11 +147,12 @@ export default function ExtraHeaderTable({
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <InputDebounce
               suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Search..."
+              placeholder="Name, roll number"
               allowClear
               setStateQuery={setStateQuery}
               keyParam="search"
               defaultValue={stateQuery?.search}
+              label="Search"
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
@@ -161,6 +168,7 @@ export default function ExtraHeaderTable({
               }}
               apiName="department-master-data"
               defaultValue={stateQuery?.departmentId ?? undefined}
+              label="Department"
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
@@ -176,6 +184,7 @@ export default function ExtraHeaderTable({
               }}
               refetchValue={departmentIdRef.current}
               defaultValue={stateQuery?.positionId ?? undefined}
+              label="Position"
             />
           </Col>
           <Col span={4}>
@@ -189,6 +198,7 @@ export default function ExtraHeaderTable({
                 handleChangeFilter(value, 'isActive');
               }}
               defaultValue={stateQuery?.isActive ?? undefined}
+              label="Request Status"
             />
           </Col>
         </Row>

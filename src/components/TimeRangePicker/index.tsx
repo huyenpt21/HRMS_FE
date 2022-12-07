@@ -3,7 +3,7 @@ import moment from 'moment';
 import { TIME_HOUR } from 'constants/common';
 import styles from './index.module.less';
 
-type EventValue<DateType> = DateType | null;
+export type EventValue<DateType> = DateType | null;
 type RangeType = 'start' | 'end';
 type DisabledTimes = {
   disabledHours?: (() => number[]) | undefined;

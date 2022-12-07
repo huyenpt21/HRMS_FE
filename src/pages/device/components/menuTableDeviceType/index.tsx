@@ -14,6 +14,7 @@ interface IProps {
   editingKey: number;
   setEditingKey: Dispatch<SetStateAction<number>>;
   stateQuery: DeviceListQuery;
+  refetch: () => {};
 }
 export default function MenuTableDeviceType({
   record,
@@ -21,25 +22,30 @@ export default function MenuTableDeviceType({
   editingKey,
   setEditingKey,
   stateQuery,
+  refetch,
 }: IProps) {
-  const { mutate: updateDeviceType } = useUpdateDevice({
-    onSuccess: (res: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = res;
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({
-          message: 'UPdate device type name successfully',
-        });
-      }
+  const { mutate: updateDeviceType } = useUpdateDevice(
+    {
+      onSuccess: (res: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = res;
+        if (message === MESSAGE_RES.SUCCESS) {
+          notification.success({
+            message: 'Update device type name successfully',
+          });
+          refetch();
+        }
+      },
+      onError: (res: ResDeviceModify) => {
+        const {
+          metadata: { message },
+        } = res;
+        notification.error({ message: message });
+      },
     },
-    onError: (res: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = res;
-      notification.error({ message: message });
-    },
-  });
+    `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
+  );
   const { mutate: deleteDeviceType } = useDeleteDevice(
     {
       onSuccess: (res: ResDeviceModify) => {
@@ -55,9 +61,10 @@ export default function MenuTableDeviceType({
           metadata: { message },
         } = res;
         notification.error({ message: message });
+        refetch();
       },
     },
-    `${DEVICE.model.deviceType}`,
+    `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
   );
   const handleEdit = (record: DeviceModel & { id: React.Key }) => {
     form.setFieldsValue({ ...record });

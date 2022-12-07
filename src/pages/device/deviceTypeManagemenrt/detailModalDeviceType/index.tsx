@@ -24,6 +24,7 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
         } = response;
         if (message === MESSAGE_RES.SUCCESS) {
           notification.success({ message: 'Create deviceType successfully' });
+          onCancel();
         }
       },
       onError: (response: ResDeviceModify) => {
@@ -31,6 +32,7 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
           metadata: { message },
         } = response;
         notification.error({ message: message });
+        onCancel();
       },
     },
     `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,

@@ -22,6 +22,7 @@ interface Props {
   renderExtraFooter?: () => React.ReactNode;
   defaultPickerValue?: moment.Moment;
   value?: moment.Moment;
+  inputReadOnly?: boolean;
 }
 
 const BasicDatePicker = ({
@@ -41,6 +42,7 @@ const BasicDatePicker = ({
   renderExtraFooter,
   defaultPickerValue,
   value,
+  inputReadOnly,
 }: Props) => {
   const isRequired = rules
     ? rules.filter((r: any) => r.required === true).length > 0
@@ -71,6 +73,7 @@ const BasicDatePicker = ({
         renderExtraFooter={renderExtraFooter}
         defaultPickerValue={defaultPickerValue}
         value={value}
+        inputReadOnly={inputReadOnly}
       />
     </Form.Item>
   );

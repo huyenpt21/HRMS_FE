@@ -129,7 +129,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   {
     // eslint-disable-next-line quotes
     label: "Children's Sickness",
-    type: REQUEST_TYPE_KEY.OTHER,
+    type: REQUEST_TYPE_KEY.LEAVE,
     value: 3,
   },
   {
@@ -139,7 +139,7 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
   {
     label: 'Maternity Leave',
-    type: REQUEST_TYPE_KEY.LEAVE,
+    type: REQUEST_TYPE_KEY.MATERNITY,
     value: 5,
   },
   {
@@ -224,5 +224,20 @@ export const DEVICE_HISTORY_STATUS: SelectBoxType[] = [
   {
     label: 'Using',
     value: COMMON_STATUS.INACTIVE,
+  },
+];
+export const PERIOD_TIME = {
+  M4: 4,
+  M6: 6,
+};
+
+export const REQUEST_MATERNITY_OPTION: SelectBoxType[] = [
+  {
+    label: '4 months',
+    value: PERIOD_TIME.M4,
+  },
+  {
+    label: '6 months',
+    value: PERIOD_TIME.M6,
   },
 ];

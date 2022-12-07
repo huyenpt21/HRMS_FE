@@ -121,6 +121,7 @@ export enum REQUEST_TYPE_KEY {
   DEVICE = 'device',
   OTHER = 'other',
   FORGOT_CHECK_IN_OUT = 'forgotCheckInOut',
+  MATERNITY = 'maternity',
 }
 
 export enum MENU_TYPE {

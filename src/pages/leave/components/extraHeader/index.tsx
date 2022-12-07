@@ -3,6 +3,7 @@ import BasicDatePicker from 'components/BasicDatePicker';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { YEAR_MONTH_NUM } from 'constants/common';
+import { MENU_TYPE } from 'constants/enums/common';
 import { LeaveBudgetListQuery } from 'models/leaveBudget';
 import moment from 'moment-timezone';
 import { Dispatch, SetStateAction } from 'react';
@@ -10,24 +11,29 @@ import styles from './extraHeaderEmployee.module.less';
 interface IProps {
   setStateQuery: Dispatch<SetStateAction<LeaveBudgetListQuery>>;
   stateQuery?: LeaveBudgetListQuery;
+  menuType: MENU_TYPE;
 }
 export default function ExtraHeaderLeaveBudget({
   setStateQuery,
   stateQuery,
+  menuType,
 }: IProps) {
   return (
     <>
       <div className={styles.header__container}>
         <Row gutter={10} className={styles.filter__section}>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
-            <InputDebounce
-              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Search..."
-              allowClear
-              setStateQuery={setStateQuery}
-              keyParam="search"
-            />
-          </Col>
+          {menuType !== MENU_TYPE.MINE && (
+            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
+              <InputDebounce
+                suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
+                placeholder="Name, roll number"
+                allowClear
+                setStateQuery={setStateQuery}
+                keyParam="search"
+                label="Search"
+              />
+            </Col>
+          )}
           {Number(stateQuery?.requestTypeId) !== 7 && (
             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
               <BasicDatePicker
@@ -38,6 +44,8 @@ export default function ExtraHeaderLeaveBudget({
                 onChange={(_: moment.Moment, dateString: string) =>
                   setStateQuery((prev: any) => ({ ...prev, year: dateString }))
                 }
+                inputReadOnly
+                label="Filter By Year"
               />
             </Col>
           )}
@@ -55,6 +63,8 @@ export default function ExtraHeaderLeaveBudget({
                     year: value?.get('year'),
                   }));
                 }}
+                inputReadOnly
+                label="Filter By Month"
               />
             </Col>
           )}

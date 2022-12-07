@@ -21,6 +21,7 @@ export interface RequestModel extends Resource {
   requestId?: number;
   otTimeRemainingOfMonth?: number;
   otTimeRemainingOfYear?: number;
+  periodTime?: number;
 }
 
 export interface OfficeTime {
@@ -34,8 +35,8 @@ export interface RequestStatus {
 
 export interface RequestRemainingTime {
   requestTypeId?: number;
-  month: number;
-  year: number;
+  month?: number;
+  year?: number;
   timeRemaining?: number;
   otTimeRemainingOfMonth?: number;
   otTimeRemainingOfYear?: number;

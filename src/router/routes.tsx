@@ -64,7 +64,7 @@ export default function RouterElement() {
                 },
               ],
             },
-            { path: 'time-attendance', element: <MyTimeCheck /> },
+            { path: 'time-check', element: <MyTimeCheck /> },
             { path: 'benefit-budget', element: <MyLeaveBudget /> },
             { path: 'payslip', element: <PayslipDetail /> },
             {
@@ -157,7 +157,7 @@ export default function RouterElement() {
           ],
         },
         {
-          path: 'time-attendance',
+          path: 'time-check',
           children: [
             {
               path: 'all',

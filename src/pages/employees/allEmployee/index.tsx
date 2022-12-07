@@ -138,7 +138,7 @@ export default function AllEmployeeList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 80,
+      width: 100,
       align: 'center',
       render: (_, record: EmployeeModel) => {
         return <MenuAction record={record} onClickMenu={menuActionHandler} />;
@@ -217,14 +217,6 @@ export default function AllEmployeeList() {
       limit: pagination.pageSize,
       sort,
       dir,
-    }));
-
-    // * set filter to state query
-    const filterKey: any = Object.keys(filters)[0];
-    const filterValues: any = Object.values(filters)[0];
-    setStateQuery((prev: EmployeeListQuery) => ({
-      ...prev,
-      [filterKey]: filterValues,
     }));
   };
 

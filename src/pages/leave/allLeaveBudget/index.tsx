@@ -168,14 +168,16 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
         <div className={styles.header__title}>
           {menuType === MENU_TYPE.SUBORDINATE
             ? 'Subordinate Benefit Budget'
-            : 'All Benefit Budget'}
+            : 'All Employee Benefit Budget'}
         </div>
-        <BasicButton
-          title="Download"
-          type="outline"
-          icon={<DownloadOutlined />}
-          onClick={downloadHandler}
-        />
+        {menuType === MENU_TYPE.ALL && (
+          <BasicButton
+            title="Download"
+            type="outline"
+            icon={<DownloadOutlined />}
+            onClick={downloadHandler}
+          />
+        )}
       </div>
       <div className={styles.menu}>
         <MenuRequestType
@@ -192,6 +194,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
           <ExtraHeaderLeaveBudget
             stateQuery={stateQuery}
             setStateQuery={setStateQuery}
+            menuType={MENU_TYPE.ALL}
           />
         }
         stateQuery={stateQuery}

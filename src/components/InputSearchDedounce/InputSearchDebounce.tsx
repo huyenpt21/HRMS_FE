@@ -54,9 +54,11 @@ export default function InputDebounce(props: IInputProps) {
     }));
   };
   const changeSearchHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    searchDebounce(() => {
-      submitSearch(e.target.value);
-    });
+    if (!!e.target.value.trim()) {
+      searchDebounce(() => {
+        submitSearch(e.target.value);
+      });
+    }
   };
   return (
     <Form.Item label={props.label ? props.label : ''}>

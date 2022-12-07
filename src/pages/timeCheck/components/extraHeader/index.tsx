@@ -89,19 +89,19 @@ export default function ExtraTableTimeCheck({
     let title = '';
     switch (menuType) {
       case MENU_TYPE.MINE: {
-        title = 'My Attendance';
+        title = 'My Time Check';
         break;
       }
       case MENU_TYPE.ALL: {
-        title = 'All Attendance';
+        title = 'All Employee Time Check';
         break;
       }
       case MENU_TYPE.SUBORDINATE: {
-        title = 'Subordinate Attendance';
+        title = 'Subordinate Time Check';
         break;
       }
       case MENU_TYPE.DETAIL: {
-        title = 'Detail Attendance';
+        title = 'Detail Time Check';
       }
     }
     return title;
@@ -188,7 +188,7 @@ export default function ExtraTableTimeCheck({
             <Col xs={24} sm={18} md={8} xl={8} xxl={6}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-                placeholder="Search..."
+                placeholder="Name, roll number"
                 allowClear
                 setStateQuery={setStateQuery}
                 keyParam="search"
@@ -197,7 +197,7 @@ export default function ExtraTableTimeCheck({
             </Col>
             <Col xs={24} sm={18} md={10} xl={8} xxl={6}>
               <BasicDatePicker
-                label="Date"
+                label="Filter date"
                 picker="week"
                 format={`${getDateFormat(
                   stateQuery.startDate,
