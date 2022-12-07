@@ -7,7 +7,11 @@ import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME } from 'constants/common';
 import { ACTION_TYPE, REQUEST_MENU } from 'constants/enums/common';
-import { REQUEST_STATUS_LIST, REQUEST_TYPE_LIST } from 'constants/fixData';
+import {
+  MY_REQUEST_STATUS_LIST,
+  REQUEST_STATUS_LIST,
+  REQUEST_TYPE_LIST,
+} from 'constants/fixData';
 import { RequestListQuery } from 'models/request';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { getStartEndDateFormat } from 'utils/common';
@@ -115,7 +119,11 @@ const ExtraTableHeader = ({
           </Col>
           <Col xs={24} sm={12} md={12} lg={4} xl={4} xxl={4}>
             <BasicSelect
-              options={REQUEST_STATUS_LIST}
+              options={
+                tabType === REQUEST_MENU.MY_REQUEST
+                  ? MY_REQUEST_STATUS_LIST
+                  : REQUEST_STATUS_LIST
+              }
               placeholder="Choose status"
               label="Status"
               allowClear

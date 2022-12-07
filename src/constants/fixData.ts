@@ -174,6 +174,24 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
   },
 ];
 
+export const MY_REQUEST_STATUS_LIST: SelectBoxType[] = [
+  {
+    label: STATUS.PENDING,
+    value: STATUS.PENDING,
+  },
+  {
+    label: STATUS.APPROVED,
+    value: STATUS.APPROVED,
+  },
+  {
+    label: STATUS.REJECTED,
+    value: STATUS.REJECTED,
+  },
+  {
+    label: STATUS.CANCELLED,
+    value: STATUS.CANCELLED,
+  },
+];
 export const REQUEST_STATUS_LIST: SelectBoxType[] = [
   {
     label: STATUS.PENDING,
