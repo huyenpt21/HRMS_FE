@@ -53,7 +53,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
                 </div>
               ),
               onClick: () => {
-                el?.notificationId && readNoti(el?.notificationId);
+                el?.id && readNoti(el?.id);
                 el?.redirectUrl && navigate(el?.redirectUrl);
               },
             }),
