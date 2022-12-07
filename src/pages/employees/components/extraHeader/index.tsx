@@ -109,6 +109,13 @@ export default function ExtraHeaderTable({
                         message: info.file.response?.metadata?.message,
                       });
                     }
+                  } else {
+                    if (info.file.response?.metadata?.message) {
+                      notification.error({
+                        message: info.file.response?.metadata?.message,
+                        key: '1',
+                      });
+                    }
                   }
                 }}
                 showUploadList={false}
