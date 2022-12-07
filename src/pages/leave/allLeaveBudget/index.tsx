@@ -1,27 +1,25 @@
 import { DownloadOutlined } from '@ant-design/icons';
-import { notification, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import BasicButton from 'components/BasicButton';
 import CommonTable from 'components/CommonTable';
-import { MESSAGE_RES, paginationConfig } from 'constants/common';
+import { downloadFile } from 'components/DownloadFile';
+import { DATE_TIME, paginationConfig } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { LeaveBudgetListHeader, OTBudgetListHeader } from 'constants/header';
 import { LEAVE_BUDGET } from 'constants/services';
-import {
-  useDownloadLeaveBudget,
-  useLeaveBudgetList,
-} from 'hooks/useLeaveBudget';
+import { useLeaveBudgetList } from 'hooks/useLeaveBudget';
 import { HeaderTableFields } from 'models/common';
 import {
   LeaveBudgetListQuery,
   LeaveBudgetListSortFields,
   LeaveBudgetModel,
-  ResLeaveBudgetModify,
 } from 'models/leaveBudget';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
+  getDateFormat,
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
@@ -77,18 +75,6 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
       : `${LEAVE_BUDGET.model.hr}/${LEAVE_BUDGET.service}`,
     menuType === MENU_TYPE.SUBORDINATE ? 'subordinate-budget' : 'all-budget',
   );
-  // * Download file
-  const { mutate: downloadFile } = useDownloadLeaveBudget({
-    onSuccess: () => {},
-    onError: (response: ResLeaveBudgetModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (!!message && message !== MESSAGE_RES.SUCCESS) {
-        notification.error({ message: message });
-      }
-    },
-  });
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -164,10 +150,17 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
       dir,
     }));
   };
+
+  // * Download file
   const downloadHandler = () => {
+    let url = `${LEAVE_BUDGET.model.hr}/${LEAVE_BUDGET.service}/${LEAVE_BUDGET.model.export}`;
+    const outputFilename = `leave-budget-${getDateFormat(
+      moment(),
+      DATE_TIME,
+    )}.xlsx`;
     delete stateQuery.limit;
     delete stateQuery.page;
-    downloadFile(stateQuery);
+    downloadFile(url, outputFilename, stateQuery);
   };
   return (
     <>
