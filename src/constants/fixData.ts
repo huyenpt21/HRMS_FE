@@ -15,10 +15,10 @@ export const URL_PATH = {
 };
 
 export const USER_ROLES = {
-  EMPLOYEE: 1,
-  HR: 2,
-  IT_SUPPORT: 3,
-  MANAGER: 4,
+  HR: 1,
+  MANAGER: 2,
+  EMPLOYEE: 3,
+  IT_SUPPORT: 5,
 };
 
 export const RANKING_LIST: SelectBoxType[] = [

@@ -1,24 +1,66 @@
 import { Menu } from 'antd';
 import SvgIcon from 'components/SvgIcon';
-import { useAppSelector } from 'hooks';
+import { MESSAGE_RES } from 'constants/common';
+import { useAppDispatch } from 'hooks';
+import { useGetUserRoles } from 'hooks/useEmployee';
+import { EmployeeRoles } from 'models/employee';
 import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { menus } from './menu';
+import { login } from 'store/slice/auth';
+import {
+  menuEmployee,
+  menuHR,
+  menuHrManager,
+  menuItSupport,
+  menuItSupportManager,
+  menuManager,
+  menus,
+  menuSubEmployee,
+} from './menu';
 
 export default function MenuSidebar({ collapsed }: IMenuCProps) {
   const [openKeys, setOpenKeys] = useState<any>([]);
-  // const [activeMenu, setActiveMenu] = useState<any>(undefined);
-  const activeMenu = useRef<any>();
+  const [activeMenu, setActiveMenu] = useState<any>(undefined);
+  // const activeMenu = useRef<any>();
   const router = useLocation();
-  const userRoles = useAppSelector((state) => state.auth.roles);
-  console.log(222, userRoles);
-  // switch (userRoles) {
-  //   case USER_ROLES.EMPLOYEE: {
-  //   }
-  // }
-  const menuList: MenuItemType[] = menus;
-
+  const disPatch = useAppDispatch();
+  const [userRoles, setUserRoles] = useState<EmployeeRoles[]>([]);
+  const { data: getUserRole } = useGetUserRoles();
+  useEffect(() => {
+    if (getUserRole && getUserRole.data) {
+      const {
+        metadata: { message },
+        data: { items: userRoles },
+      } = getUserRole;
+      if (message === MESSAGE_RES.SUCCESS && !!userRoles.length) {
+        setUserRoles(userRoles);
+        disPatch(login({ userRoles: userRoles }));
+      }
+    }
+  }, [getUserRole]);
+  let roles: number[] = [];
+  let menuList: MenuItemType[] = [];
+  userRoles?.forEach((role: EmployeeRoles) => {
+    if (role.roleId) {
+      roles.push(role?.roleId);
+    }
+  });
+  if (roles.length >= 4) {
+    menuList = menus;
+  } else if (roles.toString() === [1, 2, 3].toString()) {
+    menuList = [...menuEmployee, ...menuHrManager];
+  } else if (roles.toString() === [2, 3, 5].toString()) {
+    menuList = [...menuEmployee, ...menuItSupportManager, ...menuSubEmployee];
+  } else if (roles.toString() === [2, 3].toLocaleString()) {
+    menuList = [...menuEmployee, ...menuManager, ...menuSubEmployee];
+  } else if (roles.toString() === [1, 3].toLocaleString()) {
+    menuList = [...menuEmployee, ...menuHR];
+  } else if (roles.toString() === [3, 5].toString()) {
+    menuList = [...menuEmployee, ...menuItSupport, ...menuSubEmployee];
+  } else if (roles.toString() === [3].toString()) {
+    menuList = [...menuEmployee, ...menuSubEmployee];
+  }
   const menuItems: MenuItem[] = useMemo(() => {
     return menuList.map((menu: MenuItemType) => {
       return menu?.children?.length
@@ -35,7 +77,8 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
                 subMenu?.path && (
                   <NavLink to={subMenu.path}>
                     {({ isActive }) => {
-                      if (isActive) activeMenu.current = subMenu.key;
+                      // if (isActive) activeMenu.current = subMenu.key;
+                      if (isActive) setActiveMenu(subMenu.key);
                       return <span>{subMenu.title}</span>;
                     }}
                   </NavLink>
@@ -48,7 +91,8 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
             menu?.path && (
               <NavLink to={menu.path}>
                 {({ isActive }) => {
-                  if (isActive) activeMenu.current = menu.key;
+                  // if (isActive) activeMenu.current = menu.key;
+                  if (isActive) setActiveMenu(menu.key);
                   return <span>{menu.title}</span>;
                 }}
               </NavLink>
@@ -80,12 +124,13 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
     if (menus && menus.length) {
       menuActive(pathname);
     }
-  }, [menus, router.pathname, collapsed, activeMenu.current]);
+  }, [menus, router.pathname, collapsed, activeMenu]);
   return (
     <Menu
       theme="light"
       openKeys={openKeys}
-      selectedKeys={[activeMenu.current]}
+      activeKey={activeMenu}
+      selectedKeys={[activeMenu]}
       mode="inline"
       onOpenChange={onOpenChange}
       triggerSubMenuAction="click"
