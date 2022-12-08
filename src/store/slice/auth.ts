@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { EmployeeModel, EmployeeRoles } from 'models/employee';
+import { EmployeeModel } from 'models/employee';
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     isLoggedIn: false,
     user: {} as EmployeeModel | undefined,
-    roles: [] as EmployeeRoles[],
+    roles: [] as number[],
   },
   reducers: {
     login: (state, action) => {

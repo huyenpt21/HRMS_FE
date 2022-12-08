@@ -2,7 +2,9 @@ import { Card, Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import TimeComponent from 'components/TimePicker';
 import { MESSAGE_RES, TIME_HMS, TIME_HOUR } from 'constants/common';
+import { useGetUserRoles } from 'hooks/useEmployee';
 import { useGetOfficeTime, useUpdateOfficeTime } from 'hooks/useOfficeTime';
+import { EmployeeRoles } from 'models/employee';
 import { OfficeTimelModel, ResOfficeTimelModify } from 'models/officeTime';
 import { useEffect, useState } from 'react';
 import { getDateFormat } from 'utils/common';
@@ -11,7 +13,23 @@ import styles from './officeTime.module.less';
 export default function OfficeTime() {
   const [officeTimeData, setOfficeTimeData] = useState<OfficeTimelModel>();
   const [isShowEditing, setIsShowEditting] = useState(false);
+  const [isRoleHr, setIsRoleHr] = useState(false);
   const { data: officeTime } = useGetOfficeTime();
+  const { data: getUserRole } = useGetUserRoles();
+  useEffect(() => {
+    if (getUserRole && getUserRole.data) {
+      const {
+        metadata: { message },
+        data: { items },
+      } = getUserRole;
+      if (message === MESSAGE_RES.SUCCESS && items.length) {
+        const isHr = items.find((el: EmployeeRoles) => el.roleId === 1);
+        if (isHr) {
+          setIsRoleHr(true);
+        }
+      }
+    }
+  }, [getUserRole]);
   const { mutate: updateOfficeTime } = useUpdateOfficeTime({
     onSuccess: (response: ResOfficeTimelModify) => {
       const {
@@ -89,15 +107,17 @@ export default function OfficeTime() {
             </Card>
           </Col>
         </Row>
-        <Row className={styles.btn__edit}>
-          {!isShowEditing && (
-            <BasicButton
-              title={'Edit'}
-              type="outline"
-              onClick={() => setIsShowEditting(true)}
-            />
-          )}
-        </Row>
+        {isRoleHr && (
+          <Row className={styles.btn__edit}>
+            {!isShowEditing && (
+              <BasicButton
+                title={'Edit'}
+                type="outline"
+                onClick={() => setIsShowEditting(true)}
+              />
+            )}
+          </Row>
+        )}
         {isShowEditing && (
           <Form onFinish={submitHandler}>
             <Row className={styles.btn__edit}>

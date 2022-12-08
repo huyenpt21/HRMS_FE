@@ -22,43 +22,44 @@ import {
 export default function MenuSidebar({ collapsed }: IMenuCProps) {
   const [openKeys, setOpenKeys] = useState<any>([]);
   const [activeMenu, setActiveMenu] = useState<any>(undefined);
-  // const activeMenu = useRef<any>();
   const router = useLocation();
   const disPatch = useAppDispatch();
-  const [userRoles, setUserRoles] = useState<EmployeeRoles[]>([]);
+  const [userRoles, setUserRoles] = useState<number[]>([]);
   const { data: getUserRole } = useGetUserRoles();
   useEffect(() => {
     if (getUserRole && getUserRole.data) {
       const {
         metadata: { message },
-        data: { items: userRoles },
+        data: { items },
       } = getUserRole;
-      if (message === MESSAGE_RES.SUCCESS && !!userRoles.length) {
-        setUserRoles(userRoles);
-        disPatch(login({ userRoles: userRoles }));
+      if (message === MESSAGE_RES.SUCCESS && items.length) {
+        let roles: number[] = [];
+        items?.forEach((role: EmployeeRoles) => {
+          if (role.roleId) {
+            roles.push(role?.roleId);
+          }
+        });
+        setUserRoles(roles);
+        disPatch(login({ userRoles: roles }));
       }
     }
   }, [getUserRole]);
-  let roles: number[] = [];
+
   let menuList: MenuItemType[] = [];
-  userRoles?.forEach((role: EmployeeRoles) => {
-    if (role.roleId) {
-      roles.push(role?.roleId);
-    }
-  });
-  if (roles.length >= 4) {
+
+  if (userRoles.length >= 4) {
     menuList = menus;
-  } else if (roles.toString() === [1, 2, 3].toString()) {
+  } else if (userRoles.toString() === [1, 2, 3].toString()) {
     menuList = [...menuEmployee, ...menuHrManager];
-  } else if (roles.toString() === [2, 3, 5].toString()) {
+  } else if (userRoles.toString() === [2, 3, 5].toString()) {
     menuList = [...menuEmployee, ...menuItSupportManager, ...menuSubEmployee];
-  } else if (roles.toString() === [2, 3].toLocaleString()) {
+  } else if (userRoles.toString() === [2, 3].toLocaleString()) {
     menuList = [...menuEmployee, ...menuManager, ...menuSubEmployee];
-  } else if (roles.toString() === [1, 3].toLocaleString()) {
+  } else if (userRoles.toString() === [1, 3].toLocaleString()) {
     menuList = [...menuEmployee, ...menuHR];
-  } else if (roles.toString() === [3, 5].toString()) {
+  } else if (userRoles.toString() === [3, 5].toString()) {
     menuList = [...menuEmployee, ...menuItSupport, ...menuSubEmployee];
-  } else if (roles.toString() === [3].toString()) {
+  } else if (userRoles.toString() === [3].toString()) {
     menuList = [...menuEmployee, ...menuSubEmployee];
   }
   const menuItems: MenuItem[] = useMemo(() => {
@@ -77,7 +78,6 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
                 subMenu?.path && (
                   <NavLink to={subMenu.path}>
                     {({ isActive }) => {
-                      // if (isActive) activeMenu.current = subMenu.key;
                       if (isActive) setActiveMenu(subMenu.key);
                       return <span>{subMenu.title}</span>;
                     }}
@@ -91,7 +91,6 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
             menu?.path && (
               <NavLink to={menu.path}>
                 {({ isActive }) => {
-                  // if (isActive) activeMenu.current = menu.key;
                   if (isActive) setActiveMenu(menu.key);
                   return <span>{menu.title}</span>;
                 }}
