@@ -65,7 +65,7 @@ export default function DeviceAssignModal({
         });
       },
     },
-    `${REQUEST.model.itSupport}/${REQUEST.model.itSupport}/${REQUEST.model.assign}`,
+    `${REQUEST.model.itSupport}/${REQUEST.model.assign}`,
   );
 
   useEffect(() => {

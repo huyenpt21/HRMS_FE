@@ -31,7 +31,7 @@ export default function DetailModalDevice({
   const [deviceForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
   const detailDeviceData = useRef<DeviceModel>();
-  const { mutate: createDevice } = useAddDeviceModal(
+  const { mutate: createDevice, isLoading } = useAddDeviceModal(
     {
       onSuccess: (response: ResDeviceModify) => {
         const {
@@ -39,6 +39,7 @@ export default function DetailModalDevice({
         } = response;
         if (message === MESSAGE_RES.SUCCESS) {
           notification.success({ message: 'Create device successfully' });
+          onCancel();
         }
       },
       onError: (response: ResDeviceModify) => {
@@ -50,7 +51,7 @@ export default function DetailModalDevice({
     },
     `${DEVICE.model.itSupport}/${DEVICE.service}`,
   );
-  const { mutate: updateDevice } = useUpdateDevice(
+  const { mutate: updateDevice, isLoading: loadingUpdate } = useUpdateDevice(
     {
       onSuccess: (response: ResDeviceModify) => {
         const {
@@ -205,6 +206,7 @@ export default function DetailModalDevice({
                     type="filled"
                     className={styles['btn--save']}
                     htmlType={'submit'}
+                    loading={isLoading}
                   />
                 )}
                 {actionModal === ACTION_TYPE.EDIT && (
@@ -213,6 +215,7 @@ export default function DetailModalDevice({
                     type="filled"
                     className={styles['btn--save']}
                     htmlType={'submit'}
+                    loading={loadingUpdate}
                   />
                 )}
               </>

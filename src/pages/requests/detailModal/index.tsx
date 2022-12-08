@@ -1,4 +1,4 @@
-import { Col, Form, notification, Row } from 'antd';
+import { Col, Form, notification, Popconfirm, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker, {
   RangeValue,
@@ -29,6 +29,7 @@ import {
 } from 'firebase/storage';
 import {
   useAddRequestModal,
+  useCancelRequest,
   useChangeStatusRequest,
   useGetRemainingTime,
   useRequestDetail,
@@ -63,6 +64,7 @@ import {
 } from './function';
 import styles from './requestDetailModal.module.less';
 import NoticeRemainingTime from '../components/noticeRemainingTime';
+import Loading from 'components/loading';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -143,7 +145,9 @@ export default function RequestDetailModal({
       cancelHandler();
     },
   });
-  const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
+  const { data: detailRequest, isLoading: loadingGetDetail } = useRequestDetail(
+    requestIdRef || 0,
+  );
   const { data: officeTimeData } = useGetOfficeTime();
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
@@ -190,6 +194,30 @@ export default function RequestDetailModal({
       });
     },
   });
+  const { mutate: cancelRequest } = useCancelRequest({
+    onSuccess: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === 'Success') {
+        notification.success({
+          message: 'Cancel request successfully',
+        });
+        refetchList();
+        onCancel();
+      }
+    },
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
+      refetchList();
+      onCancel();
+    },
+  });
   useEffect(() => {
     if (detailRequest && detailRequest?.data) {
       const {
@@ -199,7 +227,6 @@ export default function RequestDetailModal({
       if (message === MESSAGE_RES.SUCCESS && item) {
         setRequestData(item);
         requestForm.setFieldsValue(item);
-        // ! check
         if (
           item?.requestTypeName === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
           item.requestTypeName === REQUEST_TYPE_KEY.MATERNITY
@@ -409,343 +436,376 @@ export default function RequestDetailModal({
         closeIcon
       >
         <>
-          <Form
-            form={requestForm}
-            layout="vertical"
-            requiredMark
-            validateMessages={validateMessages()}
-            onFinish={submitHandler}
-            disabled={
-              actionModal === ACTION_TYPE.VIEW_DETAIL ||
-              requestStatus !== STATUS.PENDING
-            }
-          >
-            {actionModal !== ACTION_TYPE.CREATE && (
-              <FixDataHeaderRequest requestData={requestData} />
-            )}
-            <Row gutter={20}>
-              <Col span="12">
-                <BasicSelect
-                  options={REQUEST_TYPE_LIST}
-                  label="Request Type"
-                  rules={[{ required: true }]}
-                  placeholder="Choose request type"
-                  name="requestTypeId"
-                  allowClear
-                  showSearch
-                  optionFilterProp="label"
-                  onChange={handleChangeRequestType}
-                />
-              </Col>
-              {requestStatus === STATUS.PENDING && (
-                <>
-                  {requestType === REQUEST_TYPE_KEY.LEAVE && (
-                    <Col span="6">
-                      <BasicInput
-                        label="Remaining Time"
-                        name="timeRemaining"
-                        disabled
-                        suffix={'days'}
-                      />
-                    </Col>
-                  )}
-                  {requestType === REQUEST_TYPE_KEY.OT && (
-                    <>
-                      <Col span="6">
-                        <BasicInput
-                          label="Remaining Time Month"
-                          name="otTimeRemainingOfMonth"
-                          disabled
-                          suffix={'hours'}
-                        />
-                      </Col>
-                      <Col span="6">
-                        <BasicInput
-                          label="Remaining Time Year"
-                          name="otTimeRemainingOfYear"
-                          disabled
-                          suffix={'hours'}
-                        />
-                      </Col>
-                    </>
-                  )}
-                </>
-              )}
-              {requestType === REQUEST_TYPE_KEY.DEVICE && (
-                <Col span="12">
-                  <SelectCustomSearch
-                    url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
-                    dataName="items"
-                    apiName="device-type-master-data"
-                    label="Device Type"
-                    rules={[{ required: true }]}
-                    placeholder="Choose device type"
-                    name="deviceTypeId"
-                    allowClear
-                  />
-                </Col>
-              )}
-            </Row>
-            <Row gutter={20}>
-              <Col span={24}>
-                <NoticeRemainingTime
-                  remainingTimeRef={remainingTimeRef.current}
-                  requestType={requestType}
-                  tabType={tabType}
-                />
-              </Col>
-            </Row>
-            {(requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
-              requestType === REQUEST_TYPE_KEY.LEAVE ||
-              requestType === REQUEST_TYPE_KEY.OTHER) && (
-              <Row gutter={20}>
-                <Col span="12">
-                  {requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
-                    <BasicDatePicker
-                      name="date"
-                      label="Applicable Date"
-                      rules={[{ required: true }]}
-                      allowClear
-                      disabledDate={(current) =>
-                        disabledDateForgotCheckInOut(current)
-                      }
-                    />
-                  )}
-                  {(requestType === REQUEST_TYPE_KEY.LEAVE ||
-                    requestType === REQUEST_TYPE_KEY.OTHER) && (
-                    <BasicDateRangePicker
-                      name="date"
-                      label="Applicable Date"
-                      rules={[{ required: true }]}
-                      placeholder={['From', 'To']}
-                      allowClear
-                      onChange={handleChangeDate}
-                      disabledDate={(current) =>
-                        disabledDate(current, dateSelected)
-                      }
-                      onCalendarChange={(values: RangeValue) => {
-                        setDateSelected(values);
-                      }}
-                    />
-                  )}
-                </Col>
-                <Col span="12">
-                  <TimeRangePicker
-                    label="Applicable Time"
-                    rules={[{ required: true }]}
-                    placeholder={['From', 'To']}
-                    name="time"
-                    disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
-                    disableTime={(value, type) =>
-                      disabledRangeTime(
-                        value,
-                        type,
-                        requestType,
-                        dateSelected,
-                        officeTimeRef.current,
-                      )
-                    }
-                    hideDisabledOptions
-                  />
-                </Col>
-              </Row>
-            )}
-            {requestType === REQUEST_TYPE_KEY.MATERNITY && (
-              <Row gutter={20}>
-                <Col span={12}>
-                  <BasicDatePicker
-                    name="date"
-                    label="Start Date"
-                    rules={[{ required: true }]}
-                    allowClear
-                    disabledDate={(current) => disabledDateMaternity(current)}
-                  />
-                </Col>
-                <Col span={12}>
-                  <BasicSelect
-                    options={REQUEST_MATERNITY_OPTION}
-                    name="periodTime"
-                    label="Period time"
-                    rules={[{ required: true }]}
-                    allowClear
-                    placeholder="Choose period time"
-                  />
-                </Col>
-              </Row>
-            )}
-            {requestType === REQUEST_TYPE_KEY.OT && (
-              <Row gutter={20}>
-                <Col span="16">
-                  <BasicDateRangePicker
-                    name="date"
-                    label="Applicable Date"
-                    rules={[{ required: true }]}
-                    placeholder={['From', 'To']}
-                    showTime={{
-                      defaultValue: [
-                        moment('00:00', 'HH:mm'),
-                        moment('00:00', 'HH:mm'),
-                      ],
-                    }}
-                    format={DATE_TIME_US}
-                    disabledDate={(current) =>
-                      disableDateOT(current, dateSelected)
-                    }
-                    disabledTime={(value, type) =>
-                      disabledRangeTime(
-                        value,
-                        type,
-                        requestType,
-                        dateSelected,
-                        officeTimeRef.current,
-                      )
-                    }
-                    onCalendarChange={(values: RangeValue) => {
-                      setDateSelected(values);
-                    }}
-                    allowClear
-                    hideDisabledOptions
-                  />
-                </Col>
-              </Row>
-            )}
-            <Row gutter={20}>
-              <Col span={24}>
-                <BasicInput
-                  type="textarea"
-                  rows={3}
-                  placeholder="Enter your reason . . ."
-                  label="Reason"
-                  name="reason"
-                  allowClear
-                  rules={[{ whitespace: true }]}
-                />
-              </Col>
-            </Row>
-            {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
-              <Row gutter={20}>
-                <Col span={24}>
-                  <Form.Item
-                    label="Evidence"
-                    className={styles.form__upload}
-                    name="evidence"
-                  >
-                    <UploadFilePictureWall
-                      fileUpload={imageFileList}
-                      setFileUpload={setImageFileList}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            )}
-            {(actionModal === ACTION_TYPE.VIEW_DETAIL ||
-              actionModal === ACTION_TYPE.EDIT) && (
-              <MultipleImagePreview
-                src={evidenceSource}
-                allowRemove={actionModal === ACTION_TYPE.EDIT}
-                handleRemoveFile={handleRemoveFile}
-              />
-            )}
-            {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
-              <div className={styles['modal__footer']}>
-                <BasicButton
-                  title="Cancel"
-                  type="outline"
-                  className={styles['btn--cancel']}
-                  onClick={cancelHandler}
-                />
-                {actionModal === ACTION_TYPE.CREATE && (
-                  <BasicButton
-                    title="Send"
-                    type="filled"
-                    className={styles['btn--save']}
-                    htmlType={'submit'}
-                    loading={loadingCreate || isUploadingImage}
-                    disabled={
-                      remainingTimeRef.current?.timeRemaining === 0 ||
-                      remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
-                      remainingTimeRef.current?.otTimeRemainingOfMonth === 0
-                    }
-                  />
+          {loadingGetDetail && <Loading />}
+          {!loadingGetDetail && (
+            <>
+              <Form
+                form={requestForm}
+                layout="vertical"
+                requiredMark
+                validateMessages={validateMessages()}
+                onFinish={submitHandler}
+                disabled={
+                  actionModal === ACTION_TYPE.VIEW_DETAIL ||
+                  requestStatus !== STATUS.PENDING
+                }
+              >
+                {actionModal !== ACTION_TYPE.CREATE && (
+                  <FixDataHeaderRequest requestData={requestData} />
                 )}
-                {actionModal === ACTION_TYPE.EDIT && (
-                  <BasicButton
-                    title="Update"
-                    type="filled"
-                    className={styles['btn--save']}
-                    htmlType={'submit'}
-                    loading={loadingUpdate || isUploadingImage}
-                    disabled={
-                      remainingTimeRef.current?.timeRemaining === 0 ||
-                      remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
-                      remainingTimeRef.current?.otTimeRemainingOfMonth === 0
-                    }
-                  />
-                )}
-              </div>
-            )}
-          </Form>
-          {actionModal === ACTION_TYPE.VIEW_DETAIL && (
-            <div className={styles['modal__footer']}>
-              <BasicButton
-                title="Cancel"
-                type="outline"
-                className={styles['btn--cancel']}
-                onClick={cancelHandler}
-              />
-              {requestStatus === STATUS.PENDING && (
-                <div>
-                  {tabType === REQUEST_MENU.MY_REQUEST && (
-                    <BasicButton
-                      title="Edit"
-                      type="filled"
-                      className={styles['btn--save']}
-                      onClick={() => setActionModal(ACTION_TYPE.EDIT)}
+                <Row gutter={20}>
+                  <Col span="12">
+                    <BasicSelect
+                      options={REQUEST_TYPE_LIST}
+                      label="Request Type"
+                      rules={[{ required: true }]}
+                      placeholder="Choose request type"
+                      name="requestTypeId"
+                      allowClear
+                      showSearch
+                      optionFilterProp="label"
+                      onChange={handleChangeRequestType}
                     />
-                  )}
-                  {tabType === REQUEST_MENU.SUBORDINATE && (
+                  </Col>
+                  {requestStatus === STATUS.PENDING && (
                     <>
-                      {(remainingTimeRef.current?.timeRemaining === 0 ||
-                        remainingTimeRef.current?.otTimeRemainingOfYear === 0 ||
-                        remainingTimeRef.current?.otTimeRemainingOfMonth ===
-                          0) && (
+                      {requestType === REQUEST_TYPE_KEY.LEAVE && (
+                        <Col span="6">
+                          <BasicInput
+                            label="Remaining Time"
+                            name="timeRemaining"
+                            disabled
+                            suffix={'days'}
+                          />
+                        </Col>
+                      )}
+                      {requestType === REQUEST_TYPE_KEY.OT && (
                         <>
-                          <BasicButton
-                            title="Approve"
-                            type="outline"
-                            className={styles['btn--approve']}
-                            onClick={() => {
-                              handleQickActionRequest(STATUS.APPROVED);
-                            }}
-                          />
-                          <BasicButton
-                            title="Reject"
-                            type="outline"
-                            className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                            danger
-                            onClick={() => {
-                              handleQickActionRequest(STATUS.REJECTED);
-                            }}
-                          />
+                          <Col span="6">
+                            <BasicInput
+                              label="Remaining Time Month"
+                              name="otTimeRemainingOfMonth"
+                              disabled
+                              suffix={'hours'}
+                            />
+                          </Col>
+                          <Col span="6">
+                            <BasicInput
+                              label="Remaining Time Year"
+                              name="otTimeRemainingOfYear"
+                              disabled
+                              suffix={'hours'}
+                            />
+                          </Col>
                         </>
                       )}
                     </>
                   )}
-                </div>
-              )}
-              {(requestStatus === STATUS.APPROVED ||
-                requestStatus === STATUS.REJECTED) &&
-                !!isAllowRollback &&
-                tabType === REQUEST_MENU.SUBORDINATE && (
-                  <BasicButton
-                    title="Roll back"
-                    type="outline"
-                    className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                    danger
-                    onClick={() => setIsShowRollbackModal(true)}
+                  {requestType === REQUEST_TYPE_KEY.DEVICE && (
+                    <Col span="12">
+                      <SelectCustomSearch
+                        url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
+                        dataName="items"
+                        apiName="device-type-master-data"
+                        label="Device Type"
+                        rules={[{ required: true }]}
+                        placeholder="Choose device type"
+                        name="deviceTypeId"
+                        allowClear
+                      />
+                    </Col>
+                  )}
+                </Row>
+                <Row gutter={20}>
+                  <Col span={24}>
+                    <NoticeRemainingTime
+                      remainingTimeRef={remainingTimeRef.current}
+                      requestType={requestType}
+                      tabType={tabType}
+                    />
+                  </Col>
+                </Row>
+                {(requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+                  requestType === REQUEST_TYPE_KEY.LEAVE ||
+                  requestType === REQUEST_TYPE_KEY.OTHER) && (
+                  <Row gutter={20}>
+                    <Col span="12">
+                      {requestType === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
+                        <BasicDatePicker
+                          name="date"
+                          label="Applicable Date"
+                          rules={[{ required: true }]}
+                          allowClear
+                          disabledDate={(current) =>
+                            disabledDateForgotCheckInOut(current)
+                          }
+                        />
+                      )}
+                      {(requestType === REQUEST_TYPE_KEY.LEAVE ||
+                        requestType === REQUEST_TYPE_KEY.OTHER) && (
+                        <BasicDateRangePicker
+                          name="date"
+                          label="Applicable Date"
+                          rules={[{ required: true }]}
+                          placeholder={['From', 'To']}
+                          allowClear
+                          onChange={handleChangeDate}
+                          disabledDate={(current) =>
+                            disabledDate(current, dateSelected)
+                          }
+                          onCalendarChange={(values: RangeValue) => {
+                            setDateSelected(values);
+                          }}
+                        />
+                      )}
+                    </Col>
+                    <Col span="12">
+                      <TimeRangePicker
+                        label="Applicable Time"
+                        rules={[{ required: true }]}
+                        placeholder={['From', 'To']}
+                        name="time"
+                        disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+                        disableTime={(value, type) =>
+                          disabledRangeTime(
+                            value,
+                            type,
+                            requestType,
+                            dateSelected,
+                            officeTimeRef.current,
+                          )
+                        }
+                        hideDisabledOptions
+                      />
+                    </Col>
+                  </Row>
+                )}
+                {requestType === REQUEST_TYPE_KEY.MATERNITY && (
+                  <Row gutter={20}>
+                    <Col span={12}>
+                      <BasicDatePicker
+                        name="date"
+                        label="Start Date"
+                        rules={[{ required: true }]}
+                        allowClear
+                        disabledDate={(current) =>
+                          disabledDateMaternity(current)
+                        }
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <BasicSelect
+                        options={REQUEST_MATERNITY_OPTION}
+                        name="periodTime"
+                        label="Period time"
+                        rules={[{ required: true }]}
+                        allowClear
+                        placeholder="Choose period time"
+                      />
+                    </Col>
+                  </Row>
+                )}
+                {requestType === REQUEST_TYPE_KEY.OT && (
+                  <Row gutter={20}>
+                    <Col span="16">
+                      <BasicDateRangePicker
+                        name="date"
+                        label="Applicable Date"
+                        rules={[{ required: true }]}
+                        placeholder={['From', 'To']}
+                        showTime={{
+                          defaultValue: [
+                            moment('00:00', 'HH:mm'),
+                            moment('00:00', 'HH:mm'),
+                          ],
+                        }}
+                        format={DATE_TIME_US}
+                        disabledDate={(current) =>
+                          disableDateOT(current, dateSelected)
+                        }
+                        disabledTime={(value, type) =>
+                          disabledRangeTime(
+                            value,
+                            type,
+                            requestType,
+                            dateSelected,
+                            officeTimeRef.current,
+                          )
+                        }
+                        onCalendarChange={(values: RangeValue) => {
+                          setDateSelected(values);
+                        }}
+                        allowClear
+                        hideDisabledOptions
+                      />
+                    </Col>
+                  </Row>
+                )}
+                <Row gutter={20}>
+                  <Col span={24}>
+                    <BasicInput
+                      type="textarea"
+                      rows={3}
+                      placeholder="Enter your reason . . ."
+                      label="Reason"
+                      name="reason"
+                      allowClear
+                      rules={[{ whitespace: true }]}
+                    />
+                  </Col>
+                </Row>
+                {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
+                  <Row gutter={20}>
+                    <Col span={24}>
+                      <Form.Item
+                        label="Evidence"
+                        className={styles.form__upload}
+                        name="evidence"
+                      >
+                        <UploadFilePictureWall
+                          fileUpload={imageFileList}
+                          setFileUpload={setImageFileList}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                )}
+                {(actionModal === ACTION_TYPE.VIEW_DETAIL ||
+                  actionModal === ACTION_TYPE.EDIT) && (
+                  <MultipleImagePreview
+                    src={evidenceSource}
+                    allowRemove={actionModal === ACTION_TYPE.EDIT}
+                    handleRemoveFile={handleRemoveFile}
                   />
                 )}
-            </div>
+                {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
+                  <div className={styles['modal__footer']}>
+                    <BasicButton
+                      title="Cancel"
+                      type="outline"
+                      className={styles['btn--cancel']}
+                      onClick={cancelHandler}
+                    />
+                    {actionModal === ACTION_TYPE.CREATE && (
+                      <BasicButton
+                        title="Send"
+                        type="filled"
+                        className={styles['btn--save']}
+                        htmlType={'submit'}
+                        loading={loadingCreate || isUploadingImage}
+                        disabled={
+                          (remainingTimeRef.current?.timeRemaining === 0 ||
+                            remainingTimeRef.current?.otTimeRemainingOfYear ===
+                              0 ||
+                            remainingTimeRef.current?.otTimeRemainingOfMonth ===
+                              0) &&
+                          (requestType === REQUEST_TYPE_KEY.LEAVE ||
+                            requestType === REQUEST_TYPE_KEY.OT)
+                        }
+                      />
+                    )}
+                    {actionModal === ACTION_TYPE.EDIT && (
+                      <BasicButton
+                        title="Update"
+                        type="filled"
+                        className={styles['btn--save']}
+                        htmlType={'submit'}
+                        loading={loadingUpdate || isUploadingImage}
+                        disabled={
+                          (remainingTimeRef.current?.timeRemaining === 0 ||
+                            remainingTimeRef.current?.otTimeRemainingOfYear ===
+                              0 ||
+                            remainingTimeRef.current?.otTimeRemainingOfMonth ===
+                              0) &&
+                          (requestType === REQUEST_TYPE_KEY.LEAVE ||
+                            requestType === REQUEST_TYPE_KEY.OT)
+                        }
+                      />
+                    )}
+                  </div>
+                )}
+              </Form>
+              {actionModal === ACTION_TYPE.VIEW_DETAIL && (
+                <div className={styles['modal__footer']}>
+                  <BasicButton
+                    title="Cancel"
+                    type="outline"
+                    className={styles['btn--cancel']}
+                    onClick={cancelHandler}
+                  />
+                  {requestStatus === STATUS.PENDING && (
+                    <div>
+                      {tabType === REQUEST_MENU.MY_REQUEST && (
+                        <>
+                          <BasicButton
+                            title="Edit"
+                            type="outline"
+                            className={styles['btn--save']}
+                            onClick={() => setActionModal(ACTION_TYPE.EDIT)}
+                          />
+                          {requestIdRef && (
+                            <Popconfirm
+                              title="Are you sure?"
+                              onConfirm={() => cancelRequest(requestIdRef)}
+                              okText="Yes"
+                              cancelText="No"
+                            >
+                              <BasicButton
+                                title="Cancel"
+                                type="outline"
+                                className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                                danger
+                              />
+                            </Popconfirm>
+                          )}
+                        </>
+                      )}
+                      {tabType === REQUEST_MENU.SUBORDINATE && (
+                        <>
+                          {(remainingTimeRef.current?.timeRemaining === 0 ||
+                            remainingTimeRef.current?.otTimeRemainingOfYear ===
+                              0 ||
+                            remainingTimeRef.current?.otTimeRemainingOfMonth ===
+                              0) && (
+                            <>
+                              <BasicButton
+                                title="Approve"
+                                type="outline"
+                                className={styles['btn--approve']}
+                                onClick={() => {
+                                  handleQickActionRequest(STATUS.APPROVED);
+                                }}
+                              />
+                              <BasicButton
+                                title="Reject"
+                                type="outline"
+                                className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                                danger
+                                onClick={() => {
+                                  handleQickActionRequest(STATUS.REJECTED);
+                                }}
+                              />
+                            </>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {(requestStatus === STATUS.APPROVED ||
+                    requestStatus === STATUS.REJECTED) &&
+                    !!isAllowRollback &&
+                    tabType === REQUEST_MENU.SUBORDINATE && (
+                      <BasicButton
+                        title="Roll back"
+                        type="outline"
+                        className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                        danger
+                        onClick={() => setIsShowRollbackModal(true)}
+                      />
+                    )}
+                </div>
+              )}
+            </>
           )}
         </>
       </CommonModal>

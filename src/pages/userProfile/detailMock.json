@@ -5,20 +5,29 @@
   },
   "data": {
     "item": {
-      "id": 1,
-      "fullName": "Nguyen Van A",
-      "dateOfBirth": "1998-10-02",
+      "avatarImg": null,
+      "salaryBasic": "10000000",
+      "salaryBonus": "14000000",
+      "id": 4,
+      "fullName": "Phạm Thị Huyền 2",
+      "dateOfBirth": "1988-10-04",
       "gender": 1,
-      "phoneNumber": "0123455567",
-      "citizenIdentification": "02665454565650",
-      "address": "Ha Noi - Viet Nam",
-      "rollNumber": "MS0001",
-      "email": "anvms0001@minswap.com",
-      "managerName": "MS0003",
-      "departmentName": "DEV",
-      "positionName": "Tester",
-      "rankingName": "Fresher",
-      "onBoardDate": "2021/05/21"
+      "phoneNumber": "0339287634",
+      "citizenIdentification": "009838293489",
+      "address": "162 Cau Giay, Ha Noi",
+      "rollNumber": "NV006",
+      "email": "huyenpthe140045@fpt.edu.vn",
+      "departmentId": 13,
+      "departmentName": "Human resource",
+      "positionId": 3,
+      "positionName": "Fullstack Developer",
+      "rankId": 1,
+      "rankingName": "Intern",
+      "onBoardDate": "2022-05-04",
+      "isActive": 1,
+      "managerId": 2,
+      "managerName": "Hoàng Thị Kim Anh",
+      "isManager": null
     }
   }
 }

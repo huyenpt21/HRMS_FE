@@ -280,18 +280,6 @@ export default function EmployeeDetailModal({
               <Row gutter={12}>
                 <Col span={12}>
                   <SelectCustomSearch
-                    url={MANAGER_LIST.service}
-                    dataName="items"
-                    name="managerId"
-                    label="Manager"
-                    rules={[{ required: true }]}
-                    allowClear
-                    placeholder="Choose manager"
-                    apiName="manager-master-data"
-                  />
-                </Col>
-                <Col span={12}>
-                  <SelectCustomSearch
                     url={DEPARTMENT.model.masterData}
                     dataName="items"
                     name="departmentId"
@@ -301,9 +289,27 @@ export default function EmployeeDetailModal({
                     placeholder="Choose department"
                     onChangeHandle={(value) => {
                       setDepartmentId(value);
-                      employeeForm.setFieldValue('positionId', undefined);
+                      employeeForm.setFieldsValue({
+                        positionId: undefined,
+                        managerId: undefined,
+                      });
                     }}
                     apiName="department-master-data"
+                  />
+                </Col>
+                <Col span={12}>
+                  <SelectCustomSearch
+                    url={`${MANAGER_LIST.service}?departmentId=${departmentId}`}
+                    dataName="items"
+                    name="managerId"
+                    label="Manager"
+                    rules={[{ required: true }]}
+                    allowClear
+                    placeholder="Choose manager"
+                    apiName="manager-master-data"
+                    isCallApi={false}
+                    refetchValue={departmentId}
+                    disabled={!departmentId}
                   />
                 </Col>
               </Row>

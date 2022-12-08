@@ -78,7 +78,7 @@ export default function CreateSecurityCode() {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('currentSecureCode') === value) {
+                  if (!value || getFieldValue('newSecureCode') === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(

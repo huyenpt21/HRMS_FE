@@ -54,7 +54,7 @@ export default function InputDebounce(props: IInputProps) {
     }));
   };
   const changeSearchHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!!e.target.value.trim()) {
+    if (!!e.target.value.trim() || e.target.value === '') {
       searchDebounce(() => {
         submitSearch(e.target.value);
       });

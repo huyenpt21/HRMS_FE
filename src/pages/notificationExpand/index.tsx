@@ -11,21 +11,26 @@ import VirtualList from 'rc-virtual-list';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDateFormat } from 'utils/common';
-// import dataMock from './dataMock.json';
 import styles from './notificationExpand.module.less';
-export default function NotificationExpand() {
+interface IProps {
+  refecthUnreadNotif: () => {};
+}
+export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
   const ContainerHeight = 400;
   const navigate = useNavigate();
-  // const dispatch = useAppDispatch();
   const [stateQuery, setStateQuery] = useState<NotificationQuery>({
     limit: 5,
     page: 1,
   });
-  // const {
-  //   data: { items },
-  // } = dataMock;
+
   const [dataNotiList, setDataNotiList] = useState<NotifcationModel[]>([]);
-  const { mutate: readNoti } = useReadNotification();
+  const { mutate: readNoti } = useReadNotification({
+    onSuccess: (res) => {
+      if (res?.data === 'OK') {
+        refecthUnreadNotif();
+      }
+    },
+  });
   const { mutate: dataNotification, isLoading } = useGetAllNorification({
     onSuccess: (res) => {
       const {

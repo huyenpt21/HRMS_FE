@@ -8,19 +8,13 @@ const Loading = ({ text }: Props) => {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        margin: '30%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Spin tip={text} size="large" />
-      </div>
+      <Spin tip={text} size="large" />
     </div>
   );
 };

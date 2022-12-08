@@ -55,7 +55,7 @@ export const useChangeStatusRequest = ({
     ({ uid, body }: UpdateProps<RequestStatus>) =>
       fetchApi(
         {
-          url: `${REQUEST.service}/${REQUEST.model.status}/${uid}`,
+          url: `${REQUEST.model.manager}/${REQUEST.service}/${REQUEST.model.status}/${uid}`,
           options: {
             method: 'PUT',
             body: JSON.stringify(body),

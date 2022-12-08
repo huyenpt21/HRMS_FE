@@ -1,5 +1,5 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { Modal, Upload, UploadFile } from 'antd';
+import { message, Modal, Upload, UploadFile } from 'antd';
 import { RcFile, UploadProps } from 'antd/lib/upload';
 import { useState, Dispatch, SetStateAction } from 'react';
 
@@ -28,7 +28,6 @@ export default function UploadFilePictureWall({
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile);
     }
-
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
     setPreviewTitle(
@@ -36,30 +35,36 @@ export default function UploadFilePictureWall({
     );
   };
   const handleChange: UploadProps['onChange'] = ({ file, fileList, event }) => {
-    if (file.status === 'removed') {
-      const newFileList = fileUpload.filter((el: any) => {
-        return el.name !== file.name;
-      });
-      setFileUpload(newFileList);
-    } else {
-      setFileUpload((prev: any) => {
-        return [...prev, file];
-      });
+    if (file.type?.split('/')[0] === 'image') {
+      if (file.status === 'removed') {
+        const newFileList = fileUpload.filter((el: any) => {
+          return el.name !== file.name;
+        });
+        setFileUpload(newFileList);
+      } else {
+        setFileUpload((prev: any) => {
+          return [...prev, file];
+        });
+      }
+      setFileList(fileList);
     }
-    setFileList(fileList);
   };
   return (
     <>
       <Upload.Dragger
-        action="http://localhost:3000/"
+        action={undefined}
         listType="picture-card"
         fileList={fileList}
         multiple
         accept="image/*"
         onPreview={handlePreview}
         onChange={handleChange}
-        beforeUpload={() => {
-          return false;
+        beforeUpload={(file) => {
+          const isImage = file.type.split('/')[0] === 'image';
+          if (!isImage) {
+            message.error(`${file.name} is not a image file`);
+          }
+          return !isImage;
         }}
       >
         <div>

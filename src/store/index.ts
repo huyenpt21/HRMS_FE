@@ -6,11 +6,9 @@ import {
 } from '@reduxjs/toolkit';
 
 import auth from './slice/auth';
-import notification from './slice/notification';
 
 const reducer = combineReducers({
   auth,
-  notification,
 });
 
 const store = configureStore({

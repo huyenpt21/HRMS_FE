@@ -132,6 +132,7 @@ export default function SubordinateTimeCheck() {
                       ) : (
                         '-'
                       )}
+                      -
                       {data?.timeOut ? (
                         <span
                           className={

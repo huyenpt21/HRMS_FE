@@ -134,7 +134,13 @@ export default function RouterElement() {
           children: [
             {
               path: 'my-request',
-              element: <MyRequestList />,
+              children: [
+                { path: '', element: <MyRequestList /> },
+                {
+                  path: 'detail/:requestId',
+                  element: <DetailPageRequestForNoti />,
+                },
+              ],
             },
             {
               path: 'subordinate',

@@ -12,7 +12,8 @@ import {
 import { GENDER_LIST } from 'constants/fixData';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storageFirebase } from 'firebaseSetup';
-import { useGetUserInfor, useUpdateUserInfor } from 'hooks/useEmployee';
+import { useAppSelector } from 'hooks';
+import { useUpdateUserInfor } from 'hooks/useEmployee';
 import { EmployeeModel } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
@@ -23,10 +24,10 @@ import styles from './userProfile.module.less';
 
 export default function UserProfile() {
   const [userProfileForm] = Form.useForm();
+  const userInfor = useAppSelector((state) => state.auth.user);
   const [imageFile, setImageFile] = useState<any>(undefined);
   const [personInfor, setPersonInfor] = useState<EmployeeModel>();
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
-  const { data: detailUserInfo } = useGetUserInfor();
   const { mutate: updateUserInfo, isLoading } = useUpdateUserInfor({
     onSuccess: (res) => {
       const {
@@ -38,20 +39,14 @@ export default function UserProfile() {
     },
   });
   useEffect(() => {
-    if (detailUserInfo && detailUserInfo.data) {
-      const {
-        metadata: { message },
-        data: { item: userInfo },
-      } = detailUserInfo;
-      if (message === MESSAGE_RES.SUCCESS && userInfo) {
-        setPersonInfor(userInfo);
-        userProfileForm.setFieldsValue(userInfo);
-        userProfileForm.setFieldsValue({
-          dateOfBirth: moment(userInfo.dateOfBirth),
-        });
-      }
+    if (userInfor) {
+      setPersonInfor(userInfor);
+      userProfileForm.setFieldsValue(userInfor);
+      userProfileForm.setFieldsValue({
+        dateOfBirth: moment(userInfor.dateOfBirth),
+      });
     }
-  }, [detailUserInfo]);
+  }, [userInfor]);
   const submitHandler = async (formValues: EmployeeModel) => {
     formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
     if (imageFile) {
