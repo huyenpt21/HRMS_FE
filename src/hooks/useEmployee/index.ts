@@ -53,31 +53,6 @@ export const useGetUserInfor = () =>
     ),
   );
 
-export const useDownloadEmployeeList = ({
-  onError,
-  onSuccess,
-}: MutationProps<ResEmployeeModify>) => {
-  return useMutation(
-    (payload: EmployeeListQuery) =>
-      fetchApi(
-        {
-          url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.export}`,
-          options: {
-            method: 'GET',
-            responseType: 'arraybuffer',
-            // 'Content-Type': 'blob',
-          },
-          payload,
-        },
-        undefined,
-      ),
-    {
-      onError: (error: any) => onError?.(error),
-      onSuccess: successHandler(onSuccess),
-    },
-  );
-};
-
 export const useUpdateUserInfor = ({
   onError,
   onSuccess,

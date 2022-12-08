@@ -7,6 +7,7 @@ export const EMPLOYEE = {
     import: 'import',
     readNoti: 'read-notifications',
     template: 'template',
+    unread: 'unread',
   },
 };
 

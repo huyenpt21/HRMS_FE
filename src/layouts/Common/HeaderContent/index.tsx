@@ -5,7 +5,10 @@ import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
 import urls from 'constants/url';
 import { useGetUserInfor } from 'hooks/useEmployee';
-import { useReadNotification } from 'hooks/useNotification';
+import {
+  useGetUnReadNotifications,
+  useReadNotification,
+} from 'hooks/useNotification';
 import { EmployeeModel } from 'models/employee';
 import { NotifcationModel } from 'models/notification';
 import MenuExpand from 'pages/menuExpand';
@@ -24,7 +27,15 @@ export default function HeaderContent({ marginLeft }: IProps) {
   const [personInfor, setPersonInfor] = useState<EmployeeModel>();
   const [notiData, setNotiData] = useState<NotifcationModel[]>([]);
   const { data: detailUserInfo } = useGetUserInfor();
-  const { mutate: readNoti } = useReadNotification();
+  const { data: unreadNotifs, refetch: refetchGetUnreadNotifs } =
+    useGetUnReadNotifications();
+  const { mutate: readNoti } = useReadNotification({
+    onSuccess: (res) => {
+      if (res?.data === 'OK') {
+        refetchGetUnreadNotifs();
+      }
+    },
+  });
   useEffect(() => {
     if (detailUserInfo && detailUserInfo.data) {
       const {
@@ -36,6 +47,17 @@ export default function HeaderContent({ marginLeft }: IProps) {
       }
     }
   }, [detailUserInfo]);
+  useEffect(() => {
+    if (unreadNotifs && unreadNotifs.data) {
+      const {
+        metadata: { message },
+        data: { items },
+      } = unreadNotifs;
+      if (message === MESSAGE_RES.SUCCESS) {
+        setNotiData(items);
+      }
+    }
+  }, [unreadNotifs]);
 
   useEffect(() => {
     if (!!personInfor?.email) {
@@ -81,17 +103,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
       >
         <div className={styles.container}>
           <div className={styles['user__avt']}>
-            <Avatar
-              size={50}
-              src={
-                <Image
-                  src={
-                    personInfor?.avatarImg ??
-                    'https://joeschmoe.io/api/v1/random'
-                  }
-                />
-              }
-            />
+            <Avatar size={50} src={<Image src={personInfor?.avatarImg} />} />
           </div>
           <div className={styles['user__infor']}>
             <div className={styles.user__name}>{personInfor?.fullName}</div>
@@ -122,7 +134,9 @@ export default function HeaderContent({ marginLeft }: IProps) {
                 <SvgIcon icon="notification" />
               </Avatar>
             )}
-            {isShowNotiExpand && <NotificationExpand />}
+            {isShowNotiExpand && (
+              <NotificationExpand refecthUnreadNotif={refetchGetUnreadNotifs} />
+            )}
           </div>
           <div
             className={styles.menu__expand}

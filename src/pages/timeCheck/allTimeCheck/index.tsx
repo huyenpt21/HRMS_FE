@@ -132,6 +132,7 @@ export default function AllTimeCheck() {
                       ) : (
                         '-'
                       )}
+                      -
                       {data?.timeOut ? (
                         <span
                           className={
