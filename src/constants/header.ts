@@ -475,9 +475,9 @@ export const SignatureProfileListHeader = [
     dataIndex: 'id',
   },
   {
-    title: 'Signature ID',
-    key: 'idSignature',
-    dataIndex: 'idSignature',
+    title: 'Register Date',
+    key: 'registerDate',
+    dataIndex: 'registerDate',
   },
   {
     title: 'Employee Name',

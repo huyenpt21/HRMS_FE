@@ -1,14 +1,10 @@
 import { Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
-import { MENU_OPTION_KEY } from 'constants/enums/common';
 import { SignatureProfileModel } from 'models/signatureProfile';
 import { Dispatch, SetStateAction } from 'react';
 interface IProps {
   record: SignatureProfileModel;
-  onClickMenu: (
-    itemSelected: SignatureProfileModel,
-    actionType: MENU_OPTION_KEY,
-  ) => void;
+  onClickMenu: (itemSelected: SignatureProfileModel) => void;
   setIsShowDetailModal?: Dispatch<SetStateAction<any>>;
 }
 export default function SignatureMenuTable({
@@ -38,7 +34,7 @@ export default function SignatureMenuTable({
       {!!record.isRegistered && (
         <Popconfirm
           title="Are you sure?"
-          onConfirm={() => onClickMenu(record, MENU_OPTION_KEY.DELETE)}
+          onConfirm={() => onClickMenu(record)}
           okText="Yes"
           cancelText="No"
         >

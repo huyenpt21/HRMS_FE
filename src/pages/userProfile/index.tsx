@@ -45,7 +45,6 @@ export default function UserProfile() {
       userProfileForm.setFieldsValue({
         dateOfBirth: moment(userInfor.dateOfBirth),
       });
-      console.log(2222, userInfor);
     }
   }, [userInfor]);
   const submitHandler = async (formValues: EmployeeModel) => {

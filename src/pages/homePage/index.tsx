@@ -16,7 +16,7 @@ export default function HomePage() {
         metadata: { message },
         data: { item: userInfo },
       } = detailUserInfo;
-      if (message === MESSAGE_RES.SUCCESS && userInfo) {
+      if (message === MESSAGE_RES.SUCCESS && !!userInfo) {
         disPatch(login({ newUserInfor: userInfo }));
         setUserDetail(userInfo);
       }

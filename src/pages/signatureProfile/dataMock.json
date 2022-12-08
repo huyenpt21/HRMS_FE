@@ -14,13 +14,16 @@
       {
         "id": 1,
         "idSignature": "tesst register 7",
+        "registerDate": "2022-11-12 17:00:00",
         "employeeName": "hahah",
         "isRegistered": 1
       },
       {
         "id": 2,
         "idSignature": "tesst register 8",
-        "isRegistered": 0
+        "registerDate": "2022-11-12 17:00:00",
+        "isRegistered": 0,
+        "employeeName": "hahah"
       }
     ]
   }

@@ -1,11 +1,11 @@
 import { Col, notification, Row } from 'antd';
-import { SorterResult, TablePaginationConfig } from 'antd/lib/table/interface';
+import { TablePaginationConfig } from 'antd/lib/table/interface';
 import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { MESSAGE_RES, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, MENU_OPTION_KEY, STATUS } from 'constants/enums/common';
+import { DATE_TIME, MESSAGE_RES, paginationConfig } from 'constants/common';
+import { ACTION_TYPE, STATUS } from 'constants/enums/common';
 import { SIGNATURE_STATUS_LIST } from 'constants/fixData';
 import { SignatureProfileListHeader } from 'constants/header';
 import {
@@ -21,13 +21,14 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
+  getDateFormat,
   isEmptyPagination,
   removeEmptyValueInObject,
   sortInforWithDir,
 } from 'utils/common';
 import SignatureMenuTable from './components/signatureMenuTable';
 import SignatureStatus from './components/signatureStatus';
-import dataMock from './dataMock.json';
+// import dataMock from './dataMock.json';
 import SignatureRegisterModal from './modalRegister';
 import styles from './signatureProfile.module.less';
 
@@ -89,7 +90,7 @@ export default function SignatureProfileList() {
       // * enable sort in column
       if (el.key === 'id') {
         el.width = 60;
-      } else if (el.key === 'idSignature') {
+      } else if (el.key === 'registerDate') {
         el.width = 300;
         el.sorter = true;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
@@ -106,6 +107,9 @@ export default function SignatureProfileList() {
             if (el.key === 'isRegistered') {
               if (data) return <SignatureStatus data={STATUS.REGISTERED} />;
               return <SignatureStatus data={STATUS.PENDING} />;
+            }
+            if (el.key === 'registerDate') {
+              return getDateFormat(data, DATE_TIME);
             }
             return <div>{data}</div>;
           }
@@ -148,43 +152,12 @@ export default function SignatureProfileList() {
           total: pagination.totalRecords,
         }));
       }
-    } else {
-      const {
-        metadata: { pagination },
-        data: { items: recordsTable },
-      } = dataMock;
-      setRecords(recordsTable);
-      if (!isEmptyPagination(pagination)) {
-        // * set the pagination data from API
-        setPagination((prevPagination: TablePaginationConfig) => ({
-          ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
-        }));
-      }
     }
   }, [dataTable, stateQuery, isError]);
-  const menuActionHandler = (
-    record: SignatureProfileModel,
-    action: MENU_OPTION_KEY,
-  ) => {
-    switch (action) {
-      case MENU_OPTION_KEY.EDIT: {
-        signatureIdRef.current = record?.idSignature;
-        modalAction.current = ACTION_TYPE.EDIT;
-        break;
-      }
-      case MENU_OPTION_KEY.DELETE: {
-        record?.idSignature && deleteSignature(record?.idSignature);
-      }
-    }
+  const menuActionHandler = (record: SignatureProfileModel) => {
+    record?.idSignature && deleteSignature(record?.idSignature);
   };
-  const handleTableChange = (
-    pagination: TablePaginationConfig,
-    filters: any,
-    sorter: SorterResult<object>,
-  ) => {
+  const handleTableChange = (pagination: TablePaginationConfig) => {
     // * set changing of pagination to state query
     setStateQuery((prev: SignatureProfileListQuery) => ({
       ...prev,
