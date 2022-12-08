@@ -4,7 +4,8 @@ import { Header } from 'antd/lib/layout/layout';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
 import urls from 'constants/url';
-import { useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
+import { useGetUserInfor } from 'hooks/useEmployee';
 import {
   useGetUnReadNotifications,
   useReadNotification,
@@ -15,6 +16,7 @@ import MenuExpand from 'pages/menuExpand';
 import NotificationExpand from 'pages/notificationExpand';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from 'store/slice/auth';
 import styles from './headerContent.module.less';
 interface IProps {
   marginLeft: number;
@@ -22,13 +24,24 @@ interface IProps {
 export default function HeaderContent({ marginLeft }: IProps) {
   const { REACT_APP_API_URL }: any = urls;
   const navigate = useNavigate();
-  const detailUserInfo = useAppSelector((state) => state.auth.user);
+  const disPatch = useAppDispatch();
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
   const [personInfor, setPersonInfor] = useState<EmployeeModel>();
   const [notiData, setNotiData] = useState<NotifcationModel[]>([]);
-  // const { data: detailUserInfo } = useGetUserInfor();
-  // const { data: getUserRole } = useGetUserRoles();
+  const { data: detailUserInfo } = useGetUserInfor();
+  useEffect(() => {
+    if (detailUserInfo && detailUserInfo.data) {
+      const {
+        metadata: { message },
+        data: { item: userInfo },
+      } = detailUserInfo;
+      if (message === MESSAGE_RES.SUCCESS && !!userInfo) {
+        disPatch(login({ newUserInfor: userInfo }));
+        setPersonInfor(userInfo);
+      }
+    }
+  }, [detailUserInfo]);
   const { data: unreadNotifs, refetch: refetchGetUnreadNotifs } =
     useGetUnReadNotifications();
   const { mutate: readNoti } = useReadNotification({
@@ -38,11 +51,6 @@ export default function HeaderContent({ marginLeft }: IProps) {
       }
     },
   });
-  useEffect(() => {
-    if (detailUserInfo) {
-      setPersonInfor(detailUserInfo);
-    }
-  }, [detailUserInfo]);
   useEffect(() => {
     if (unreadNotifs && unreadNotifs.data) {
       const {
