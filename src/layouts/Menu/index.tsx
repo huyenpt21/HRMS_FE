@@ -1,13 +1,11 @@
 import { Menu } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
-import { useAppDispatch } from 'hooks';
 import { useGetUserRoles } from 'hooks/useEmployee';
 import { EmployeeRoles } from 'models/employee';
 import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
 import { useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { login } from 'store/slice/auth';
 import {
   menuEmployee,
   menuHR,
@@ -23,7 +21,6 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
   const [openKeys, setOpenKeys] = useState<any>([]);
   const [activeMenu, setActiveMenu] = useState<any>(undefined);
   const router = useLocation();
-  const disPatch = useAppDispatch();
   const [userRoles, setUserRoles] = useState<number[]>([]);
   const { data: getUserRole } = useGetUserRoles();
   useEffect(() => {
@@ -40,7 +37,6 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
           }
         });
         setUserRoles(roles);
-        disPatch(login({ userRoles: roles }));
       }
     }
   }, [getUserRole]);
