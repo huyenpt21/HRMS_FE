@@ -21,6 +21,7 @@ export interface EmployeeModel extends Resource {
   positionName?: string;
   rankingName?: string;
   avatarImg?: string;
+  roles?: EmployeeRoles[];
 }
 
 export interface EmployeeListFilter {
@@ -28,6 +29,11 @@ export interface EmployeeListFilter {
   departmentId?: number;
   positionId?: number;
   isActive?: number;
+}
+
+export interface EmployeeRoles {
+  roleId?: number;
+  roleName?: string;
 }
 
 export type EmployeeListFields = 'code' | 'email' | 'position' | 'department';

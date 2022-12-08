@@ -1,7 +1,8 @@
 import { Menu } from 'antd';
 import SvgIcon from 'components/SvgIcon';
+import { useAppSelector } from 'hooks';
 import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
-import { useMemo, useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { menus } from './menu';
 
@@ -10,6 +11,12 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
   // const [activeMenu, setActiveMenu] = useState<any>(undefined);
   const activeMenu = useRef<any>();
   const router = useLocation();
+  const userRoles = useAppSelector((state) => state.auth.roles);
+  console.log(222, userRoles);
+  // switch (userRoles) {
+  //   case USER_ROLES.EMPLOYEE: {
+  //   }
+  // }
   const menuList: MenuItemType[] = menus;
 
   const menuItems: MenuItem[] = useMemo(() => {
@@ -70,7 +77,6 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
   };
   useEffect(() => {
     const { pathname } = router;
-
     if (menus && menus.length) {
       menuActive(pathname);
     }

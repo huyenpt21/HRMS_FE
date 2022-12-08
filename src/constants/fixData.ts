@@ -14,6 +14,13 @@ export const URL_PATH = {
   subordinateRequestList: 'request/subordinate/list',
 };
 
+export const USER_ROLES = {
+  EMPLOYEE: 1,
+  HR: 2,
+  IT_SUPPORT: 3,
+  MANAGER: 4,
+};
+
 export const RANKING_LIST: SelectBoxType[] = [
   {
     label: 'Intern',

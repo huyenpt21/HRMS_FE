@@ -13,8 +13,8 @@ export const EMPLOYEE = {
 
 export const USER_INFO = {
   service: 'user-info',
-  modle: {
-    user: 'user',
+  model: {
+    roles: 'roles',
   },
 };
 export const EMPLOYEE_CHANGE_STATUS = {

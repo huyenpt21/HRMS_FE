@@ -53,6 +53,16 @@ export const useGetUserInfor = () =>
     ),
   );
 
+export const useGetUserRoles = () =>
+  useQuery(['user-roles'], () =>
+    fetchApi(
+      {
+        url: USER_INFO.model.roles,
+      },
+      undefined,
+    ),
+  );
+
 export const useUpdateUserInfor = ({
   onError,
   onSuccess,

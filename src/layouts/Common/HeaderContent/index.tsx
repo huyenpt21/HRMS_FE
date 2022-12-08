@@ -4,7 +4,7 @@ import { Header } from 'antd/lib/layout/layout';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
 import urls from 'constants/url';
-import { useGetUserInfor } from 'hooks/useEmployee';
+import { useAppSelector } from 'hooks';
 import {
   useGetUnReadNotifications,
   useReadNotification,
@@ -22,11 +22,13 @@ interface IProps {
 export default function HeaderContent({ marginLeft }: IProps) {
   const { REACT_APP_API_URL }: any = urls;
   const navigate = useNavigate();
+  const detailUserInfo = useAppSelector((state) => state.auth.user);
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
   const [personInfor, setPersonInfor] = useState<EmployeeModel>();
   const [notiData, setNotiData] = useState<NotifcationModel[]>([]);
-  const { data: detailUserInfo } = useGetUserInfor();
+  // const { data: detailUserInfo } = useGetUserInfor();
+  // const { data: getUserRole } = useGetUserRoles();
   const { data: unreadNotifs, refetch: refetchGetUnreadNotifs } =
     useGetUnReadNotifications();
   const { mutate: readNoti } = useReadNotification({
@@ -37,14 +39,8 @@ export default function HeaderContent({ marginLeft }: IProps) {
     },
   });
   useEffect(() => {
-    if (detailUserInfo && detailUserInfo.data) {
-      const {
-        metadata: { message },
-        data: { item: userInfo },
-      } = detailUserInfo;
-      if (message === MESSAGE_RES.SUCCESS && userInfo) {
-        setPersonInfor(userInfo);
-      }
+    if (detailUserInfo) {
+      setPersonInfor(detailUserInfo);
     }
   }, [detailUserInfo]);
   useEffect(() => {
