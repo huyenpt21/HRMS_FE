@@ -56,6 +56,15 @@ export default function RequestMenuAction({
         refetchList();
       }
     },
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
+      refetchList();
+    },
   });
   const { mutate: cancelRequest } = useCancelRequest({
     onSuccess: (response: ResRequestModify) => {
@@ -68,6 +77,15 @@ export default function RequestMenuAction({
         });
         refetchList();
       }
+    },
+    onError: (response: ResRequestModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      notification.error({
+        message: message,
+      });
+      refetchList();
     },
   });
   const actionRequestHandler = (
