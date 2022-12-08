@@ -8,12 +8,12 @@ const Loading = ({ text }: Props) => {
   return (
     <div
       style={{
-        minHeight: '80vh',
+        minHeight: '100%',
       }}
     >
       <div
         style={{
-          minHeight: '80vh',
+          minHeight: '100%',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',

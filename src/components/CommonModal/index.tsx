@@ -37,7 +37,9 @@ const CommonModal = ({
       closeIcon={closeIcon ? closeIcon : <CloseOutlined />}
       width={width}
       open={open}
-      className={className}
+      className={
+        className ? `${className} container__modal` : 'container__modal'
+      }
       footer={footer}
       closable={closable}
       onCancel={onCancel}

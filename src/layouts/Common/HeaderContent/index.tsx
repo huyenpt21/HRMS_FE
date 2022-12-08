@@ -117,7 +117,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
             }}
           >
             {notiData?.length > 0 &&
-              notiData[notiData?.length - 1]?.totalNotificationNotRead && (
+              !!notiData[notiData?.length - 1]?.totalNotificationNotRead && (
                 <Badge
                   count={
                     notiData[notiData?.length - 1]?.totalNotificationNotRead
