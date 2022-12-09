@@ -43,14 +43,20 @@ export const {
   EmployeeListQuery
 >(EmployeeListInstance);
 
-export const useGetUserInfor = () =>
-  useQuery(['user-infor'], () =>
-    fetchApi(
-      {
-        url: USER_INFO.service,
-      },
-      undefined,
-    ),
+export const useGetuserInfo = (token: string) =>
+  useQuery(
+    ['user-infor'],
+    () =>
+      fetchApi(
+        {
+          url: USER_INFO.service,
+        },
+        undefined,
+      ),
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!token,
+    },
   );
 
 export const useGetUserRoles = (token: string) =>

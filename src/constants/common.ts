@@ -1,5 +1,8 @@
 import { TablePaginationConfig } from 'antd';
 export const ACCESS_TOKEN = 'at';
+export const USER_INFO = 'userInfo';
+export const USER_ROLES = 'userRoles';
+export const USER_MENU = 'userMenu';
 
 export enum SortDir {
   ASC = 'asc',

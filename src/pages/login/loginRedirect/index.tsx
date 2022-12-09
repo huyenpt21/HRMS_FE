@@ -1,24 +1,20 @@
 import Loading from 'components/loading';
-import { ACCESS_TOKEN, MESSAGE_RES } from 'constants/common';
-import { useAppDispatch } from 'hooks';
-import { useGetUserRoles } from 'hooks/useEmployee';
 import {
-  menuEmployee,
-  menuHR,
-  menuHrManager,
-  menuItSupport,
-  menuItSupportManager,
-  menuManager,
-  menus,
-  menuSubEmployee,
-} from 'layouts/Menu/menu';
+  ACCESS_TOKEN,
+  MESSAGE_RES,
+  USER_INFO,
+  USER_ROLES,
+} from 'constants/common';
+import { useAppDispatch } from 'hooks';
+import { useGetuserInfo, useGetUserRoles } from 'hooks/useEmployee';
+
 import { EmployeeRoles } from 'models/employee';
-import { MenuItemType } from 'models/menu';
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getUserMenu, getUserRoles } from 'store/slice/auth';
+import { getUserInfo, getUserRoles } from 'store/slice/auth';
 export default function LoginRedirect() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [search] = useSearchParams();
   const accessToken = search.get('token');
   useEffect(() => {
@@ -28,10 +24,21 @@ export default function LoginRedirect() {
       navigate('/403');
     }
   }, []);
-  const dispatch = useAppDispatch();
   const acLocal = localStorage.getItem(ACCESS_TOKEN);
-  console.log(acLocal);
   const { data: getUserRole } = useGetUserRoles(acLocal ?? '');
+  const { data: detailUserInfo } = useGetuserInfo(acLocal ?? '');
+  useEffect(() => {
+    if (detailUserInfo && detailUserInfo.data) {
+      const {
+        metadata: { message },
+        data: { item: userInfo },
+      } = detailUserInfo;
+      if (message === MESSAGE_RES.SUCCESS && !!userInfo) {
+        dispatch(getUserInfo({ newUserInfor: userInfo }));
+        localStorage.setItem(USER_INFO, JSON.stringify(userInfo));
+      }
+    }
+  }, [detailUserInfo]);
   useEffect(() => {
     if (getUserRole && getUserRole.data) {
       const {
@@ -47,28 +54,7 @@ export default function LoginRedirect() {
           }
         });
         dispatch(getUserRoles({ userRoles: userRoles }));
-        //* get list of menu
-        let menuList: MenuItemType[] = [];
-        if (userRoles.length >= 4) {
-          menuList = menus;
-        } else if (userRoles.toString() === [1, 2, 3].toString()) {
-          menuList = [...menuEmployee, ...menuHrManager];
-        } else if (userRoles.toString() === [2, 3, 5].toString()) {
-          menuList = [
-            ...menuEmployee,
-            ...menuItSupportManager,
-            ...menuSubEmployee,
-          ];
-        } else if (userRoles.toString() === [2, 3].toLocaleString()) {
-          menuList = [...menuEmployee, ...menuManager, ...menuSubEmployee];
-        } else if (userRoles.toString() === [1, 3].toLocaleString()) {
-          menuList = [...menuEmployee, ...menuHR];
-        } else if (userRoles.toString() === [3, 5].toString()) {
-          menuList = [...menuEmployee, ...menuItSupport, ...menuSubEmployee];
-        } else if (userRoles.toString() === [3].toString()) {
-          menuList = [...menuEmployee, ...menuSubEmployee];
-        }
-        dispatch(getUserMenu({ userMenu: menuList }));
+        localStorage.setItem(USER_ROLES, JSON.stringify(userRoles));
       }
       navigate('/');
     }
