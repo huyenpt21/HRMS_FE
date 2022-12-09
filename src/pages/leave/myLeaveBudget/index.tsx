@@ -52,7 +52,7 @@ export default function MyLeaveBudget() {
       : MyOTBudgetListHeader;
 
   // * get data table from API
-  const { data: dataTable } = useLeaveBudgetList(stateQuery);
+  const { data: dataTable, isLoading } = useLeaveBudgetList(stateQuery);
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * eanble sort in column & custom width
@@ -138,6 +138,7 @@ export default function MyLeaveBudget() {
         stateQuery={stateQuery}
         rowKey={(record: LeaveBudgetModel) => record.id}
         className={`cursor-pointer ${styles.table}`}
+        loading={isLoading}
       />
     </>
   );

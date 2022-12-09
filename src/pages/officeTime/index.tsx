@@ -1,5 +1,6 @@
 import { Card, Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
+import Loading from 'components/loading';
 import TimeComponent from 'components/TimePicker';
 import { MESSAGE_RES, TIME_HMS, TIME_HOUR } from 'constants/common';
 import { useGetUserRoles } from 'hooks/useEmployee';
@@ -14,7 +15,7 @@ export default function OfficeTime() {
   const [officeTimeData, setOfficeTimeData] = useState<OfficeTimelModel>();
   const [isShowEditing, setIsShowEditting] = useState(false);
   const [isRoleHr, setIsRoleHr] = useState(false);
-  const { data: officeTime } = useGetOfficeTime();
+  const { data: officeTime, isLoading } = useGetOfficeTime();
   const { data: getUserRole } = useGetUserRoles();
   useEffect(() => {
     if (getUserRole && getUserRole.data) {
@@ -71,42 +72,46 @@ export default function OfficeTime() {
         <Row className={styles.header__section}>
           <h2 className={styles.header__title}>Office Time</h2>
         </Row>
-        <Row className={styles.content__section}>
-          <Col span={10}>
-            <Card
-              title="Start"
-              headStyle={{ fontWeight: 600 }}
-              bodyStyle={{ backgroundColor: '#FFEFD6' }}
-            >
-              {officeTimeData?.timeStart && (
-                <div className={styles.content__text}>
-                  {getDateFormat(
-                    officeTimeData?.timeStart,
-                    TIME_HOUR,
-                    TIME_HMS,
-                  )}
-                </div>
-              )}
-            </Card>
-          </Col>
-          <Col span={10}>
-            <Card
-              title="Finish"
-              headStyle={{ fontWeight: 600 }}
-              bodyStyle={{ backgroundColor: '#BCEAD5' }}
-            >
-              {officeTimeData?.timeFinish && (
-                <h1 className={styles.content__text}>
-                  {getDateFormat(
-                    officeTimeData?.timeFinish,
-                    TIME_HOUR,
-                    TIME_HMS,
-                  )}
-                </h1>
-              )}
-            </Card>
-          </Col>
-        </Row>
+        {isLoading && <Loading />}
+        {!isLoading && (
+          <Row className={styles.content__section}>
+            <Col span={10}>
+              <Card
+                title="Start"
+                headStyle={{ fontWeight: 600 }}
+                bodyStyle={{ backgroundColor: '#FFEFD6' }}
+              >
+                {officeTimeData?.timeStart && (
+                  <div className={styles.content__text}>
+                    {getDateFormat(
+                      officeTimeData?.timeStart,
+                      TIME_HOUR,
+                      TIME_HMS,
+                    )}
+                  </div>
+                )}
+              </Card>
+            </Col>
+            <Col span={10}>
+              <Card
+                title="Finish"
+                headStyle={{ fontWeight: 600 }}
+                bodyStyle={{ backgroundColor: '#BCEAD5' }}
+              >
+                {officeTimeData?.timeFinish && (
+                  <h1 className={styles.content__text}>
+                    {getDateFormat(
+                      officeTimeData?.timeFinish,
+                      TIME_HOUR,
+                      TIME_HMS,
+                    )}
+                  </h1>
+                )}
+              </Card>
+            </Col>
+          </Row>
+        )}
+
         {isRoleHr && (
           <Row className={styles.btn__edit}>
             {!isShowEditing && (

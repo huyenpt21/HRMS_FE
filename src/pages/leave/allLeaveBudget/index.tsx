@@ -68,7 +68,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
       : OTBudgetListHeader;
 
   // * get data table from API
-  const { data: dataTable } = useLeaveBudgetList(
+  const { data: dataTable, isLoading } = useLeaveBudgetList(
     stateQuery,
     menuType === MENU_TYPE.SUBORDINATE
       ? `${LEAVE_BUDGET.model.manager}/${LEAVE_BUDGET.service}`
@@ -201,6 +201,7 @@ export default function SubordinateLeaveBudget({ menuType }: IProps) {
         rowKey={(record: LeaveBudgetModel) => record.id}
         isShowScroll
         className={`cursor-pointer ${styles.table}`}
+        loading={isLoading}
       />
     </>
   );
