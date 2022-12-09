@@ -694,13 +694,12 @@ export default function RequestDetailModal({
                         htmlType={'submit'}
                         loading={loadingCreate || isUploadingImage}
                         disabled={
-                          (remainingTimeRef.current?.timeRemaining === 0 ||
+                          (remainingTimeRef.current?.timeRemaining === 0 &&
+                            requestType === REQUEST_TYPE_KEY.LEAVE) ||
+                          (requestType === REQUEST_TYPE_KEY.OT &&
                             remainingTimeRef.current?.otTimeRemainingOfYear ===
-                              0 ||
-                            remainingTimeRef.current?.otTimeRemainingOfMonth ===
-                              0) &&
-                          (requestType === REQUEST_TYPE_KEY.LEAVE ||
-                            requestType === REQUEST_TYPE_KEY.OT)
+                              0) ||
+                          remainingTimeRef.current?.otTimeRemainingOfMonth === 0
                         }
                       />
                     )}
@@ -712,13 +711,13 @@ export default function RequestDetailModal({
                         htmlType={'submit'}
                         loading={loadingUpdate || isUploadingImage}
                         disabled={
-                          (remainingTimeRef.current?.timeRemaining === 0 ||
-                            remainingTimeRef.current?.otTimeRemainingOfYear ===
+                          (requestType === REQUEST_TYPE_KEY.LEAVE &&
+                            remainingTimeRef.current?.timeRemaining === 0) ||
+                          (requestType === REQUEST_TYPE_KEY.OT &&
+                            (remainingTimeRef.current?.otTimeRemainingOfYear ===
                               0 ||
-                            remainingTimeRef.current?.otTimeRemainingOfMonth ===
-                              0) &&
-                          (requestType === REQUEST_TYPE_KEY.LEAVE ||
-                            requestType === REQUEST_TYPE_KEY.OT)
+                              remainingTimeRef.current
+                                ?.otTimeRemainingOfMonth === 0))
                         }
                       />
                     )}
