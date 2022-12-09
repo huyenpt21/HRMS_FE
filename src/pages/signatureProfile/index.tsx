@@ -10,7 +10,7 @@ import { SIGNATURE_STATUS_LIST } from 'constants/fixData';
 import { SignatureProfileListHeader } from 'constants/header';
 import {
   useDeleteSignature,
-  useGteSignatureList,
+  useSignatureList,
 } from 'hooks/useSignatureProfile';
 import { HeaderTableFields } from 'models/common';
 import {
@@ -63,7 +63,7 @@ export default function SignatureProfileList() {
     isError,
     data: dataTable,
     refetch,
-  } = useGteSignatureList(stateQuery);
+  } = useSignatureList(stateQuery);
   const { mutate: deleteSignature } = useDeleteSignature({
     onSuccess: (response: ResSignatureProfileModify) => {
       const {
@@ -102,7 +102,7 @@ export default function SignatureProfileList() {
       return {
         ...el,
         render: (data: any, record: SignatureProfileModel) => {
-          if (data !== null && data !== undefined && !!data) {
+          if (data !== null && data !== undefined && data !== '') {
             if (el.key === 'isRegistered') {
               if (data) return <SignatureStatus data={STATUS.REGISTERED} />;
               return <SignatureStatus data={STATUS.PENDING} />;
@@ -155,7 +155,12 @@ export default function SignatureProfileList() {
     }
   }, [dataTable, stateQuery, isError]);
   const menuActionHandler = (record: SignatureProfileModel) => {
-    record?.personId && deleteSignature(record?.personId);
+    record?.registeredDate &&
+      record?.personId &&
+      deleteSignature({
+        personId: record?.personId,
+        registeredDate: record?.registeredDate,
+      });
   };
   const handleTableChange = (pagination: TablePaginationConfig) => {
     // * set changing of pagination to state query

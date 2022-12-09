@@ -1,6 +1,6 @@
-import { Pagination, QueryParams, ResponseData } from './common';
+import { Pagination, QueryParams, Resource, ResponseData } from './common';
 
-export interface SignatureProfileModel {
+export interface SignatureProfileModel extends Resource {
   employeeName?: string;
   registeredDate?: string;
   isRegistered?: number;
@@ -24,7 +24,7 @@ export type SignatureProfileListQuery =
 
 export type ResSignatureProfileList = ResponseData<
   {
-    SignatureProfileList: SignatureProfileModel[];
+    item: SignatureProfileModel[];
   },
   Pagination
 >;
