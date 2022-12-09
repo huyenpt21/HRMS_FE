@@ -90,18 +90,18 @@ const fetchApi = async (
     }
     return data;
   } catch (err: any) {
-    if (err.metadata?.code === 401) {
-      localStorage.clear();
+    notification.error({
+      message: 'Oops! Something went wrong',
+      description: err.error,
+    });
+    if (err.status === 500) {
       notification.error({
-        message: 'Error!',
-        description: err.metadata?.message,
+        message: 'Opps! Something went wrong',
+        description: err.error,
         maxCount: 1,
       });
-      window.location.reload();
     }
-
     if (cb) cb(err);
-
     throw err;
   }
 };

@@ -80,7 +80,7 @@ export default function DepartmentList() {
       return {
         ...el,
         render: (data: any, record: DepartmentModel) => {
-          if (data) {
+          if (data !== null && data !== undefined) {
             return <div>{data}</div>;
           }
           return <span>-</span>;
