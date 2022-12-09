@@ -1,4 +1,4 @@
-import { Col, Form, notification, Popconfirm, Row } from 'antd';
+import { Col, Form, notification, Popconfirm, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker, {
   RangeValue,
@@ -749,13 +749,18 @@ export default function RequestDetailModal({
                               onConfirm={() => cancelRequest(requestIdRef)}
                               okText="Yes"
                               cancelText="No"
+                              placement="bottom"
                             >
-                              <BasicButton
-                                title="Cancel"
-                                type="outline"
-                                className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                                danger
-                              />
+                              <Tooltip title="Cancel request">
+                                <span>
+                                  <BasicButton
+                                    title="Cancel"
+                                    type="outline"
+                                    className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                                    danger
+                                  />
+                                </span>
+                              </Tooltip>
                             </Popconfirm>
                           )}
                         </>
