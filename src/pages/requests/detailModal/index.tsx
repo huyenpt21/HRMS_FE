@@ -170,54 +170,56 @@ export default function RequestDetailModal({
       });
     },
   });
-  const { mutate: remainingTimeRequest } = useGetRemainingTime({
-    onSuccess: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-        data: { item },
-      } = response;
-      if (message === 'Success') {
-        requestForm.setFieldsValue({
-          timeRemaining: item?.timeRemaining?.toFixed(2),
-          otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
-          otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
+  const { mutate: remainingTimeRequest, isLoading: loadingGetRemaining } =
+    useGetRemainingTime({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+          data: { item },
+        } = response;
+        if (message === 'Success') {
+          requestForm.setFieldsValue({
+            timeRemaining: item?.timeRemaining?.toFixed(2),
+            otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
+            otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
+          });
+          remainingTimeRef.current = item;
+        }
+      },
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({
+          message: message,
         });
-        remainingTimeRef.current = item;
-      }
-    },
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({
-        message: message,
-      });
-    },
-  });
-  const { mutate: cancelRequest } = useCancelRequest({
-    onSuccess: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === 'Success') {
-        notification.success({
-          message: 'Cancel request successfully',
+      },
+    });
+  const { mutate: cancelRequest, isLoading: loadingCancelRequest } =
+    useCancelRequest({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === 'Success') {
+          notification.success({
+            message: 'Cancel request successfully',
+          });
+          refetchList();
+          onCancel();
+        }
+      },
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({
+          message: message,
         });
         refetchList();
         onCancel();
-      }
-    },
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({
-        message: message,
-      });
-      refetchList();
-      onCancel();
-    },
-  });
+      },
+    });
   useEffect(() => {
     if (detailRequest && detailRequest?.data) {
       const {
@@ -387,8 +389,6 @@ export default function RequestDetailModal({
   };
 
   const handleChangeRequestType = (value: number, options: SelectBoxType) => {
-    //! check
-    // remainingTimeRef.current = -1;
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
     if (
@@ -436,8 +436,8 @@ export default function RequestDetailModal({
         closeIcon
       >
         <>
-          {loadingGetDetail && <Loading />}
-          {!loadingGetDetail && (
+          {(loadingGetDetail || loadingGetRemaining) && <Loading />}
+          {!(loadingGetDetail || loadingGetRemaining) && (
             <>
               <Form
                 form={requestForm}
@@ -685,6 +685,7 @@ export default function RequestDetailModal({
                       type="outline"
                       className={styles['btn--cancel']}
                       onClick={cancelHandler}
+                      loading={loadingCancelRequest}
                     />
                     {actionModal === ACTION_TYPE.CREATE && (
                       <BasicButton
