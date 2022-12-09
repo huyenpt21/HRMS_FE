@@ -41,6 +41,7 @@ export default function PayslipDetail() {
   useEffect(() => {
     if (secureCodeData) {
       const { data: isSecureCodeExist } = secureCodeData;
+      console.log(2222, isSecureCodeExist);
       if (!isSecureCodeExist) {
         setIsShowPopConfirm(true);
       }
@@ -281,7 +282,7 @@ export default function PayslipDetail() {
           </>
         )}
       </Col>
-      {!isShowPopConfirm && (
+      {isShowPopConfirm && (
         <NotifyPopup
           title="You do not have a security code"
           message="Go to setting?"
