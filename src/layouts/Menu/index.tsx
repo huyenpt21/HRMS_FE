@@ -5,7 +5,7 @@ import { useGetUserRoles } from 'hooks/useEmployee';
 import { EmployeeRoles } from 'models/employee';
 import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
 import { useEffect, useMemo, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   menuEmployee,
   menuHR,
@@ -21,6 +21,7 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
   const [openKeys, setOpenKeys] = useState<any>([]);
   const [activeMenu, setActiveMenu] = useState<any>(undefined);
   const router = useLocation();
+  const navigate = useNavigate();
   const [userRoles, setUserRoles] = useState<number[]>([]);
   const { data: getUserRole } = useGetUserRoles();
   useEffect(() => {
@@ -40,9 +41,7 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
       }
     }
   }, [getUserRole]);
-
   let menuList: MenuItemType[] = [];
-
   if (userRoles.length >= 4) {
     menuList = menus;
   } else if (userRoles.toString() === [1, 2, 3].toString()) {
@@ -57,6 +56,22 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
     menuList = [...menuEmployee, ...menuItSupport, ...menuSubEmployee];
   } else if (userRoles.toString() === [3].toString()) {
     menuList = [...menuEmployee, ...menuSubEmployee];
+  }
+  const urlPathInMenu: (string | undefined)[] = menuList.flatMap(
+    (item: MenuItemType) => {
+      if (item?.children) {
+        return item?.children.flatMap((el: MenuItemType) => {
+          return el?.path;
+        });
+      }
+      return item?.path;
+    },
+  );
+  const isAllowAccess = !!urlPathInMenu.find((item?: string) => {
+    return router.pathname?.includes(item ?? '');
+  });
+  if (!isAllowAccess) {
+    navigate('/403');
   }
   const menuItems: MenuItem[] = useMemo(() => {
     return menuList.map((menu: MenuItemType) => {

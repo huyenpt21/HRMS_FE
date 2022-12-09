@@ -1,22 +1,11 @@
-import {
-  configureStore,
-  ThunkAction,
-  Action,
-  combineReducers,
-} from '@reduxjs/toolkit';
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 
 import auth from './slice/auth';
 
-const reducer = combineReducers({
-  auth,
-});
-
 const store = configureStore({
-  reducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+  reducer: {
+    auth: auth,
+  },
 });
 export default store;
 

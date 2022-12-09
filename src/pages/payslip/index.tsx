@@ -1,8 +1,11 @@
+import { SendOutlined } from '@ant-design/icons';
 import { Col, Divider, Form, notification, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
+import NotifyPopup from 'components/NotifyPopup';
 import { MESSAGE_RES, YEAR_MONTH_NUM } from 'constants/common';
+import { SHAPE_TYPE } from 'constants/enums/common';
 import {
   useCheckSecureCodeCorrectly,
   useCheckSecureCodeExist,
@@ -17,12 +20,9 @@ import {
   SercurityCode,
 } from 'models/payslip';
 import moment from 'moment-timezone';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './payrollDetail.module.less';
-import { SendOutlined } from '@ant-design/icons';
-import { SHAPE_TYPE } from 'constants/enums/common';
-import NotifyPopup from 'components/NotifyPopup';
 // import dataCheckExistMock from './dataCheckExistMock.json';
 // import dataCheckCorrectMock from './dataCheckCorrect.json';
 
@@ -37,11 +37,9 @@ export default function PayslipDetail() {
     year: Number(moment().get('year')),
   });
   const { data: secureCodeData } = useCheckSecureCodeExist();
-
   useEffect(() => {
     if (secureCodeData) {
       const { data: isSecureCodeExist } = secureCodeData;
-      console.log(2222, isSecureCodeExist);
       if (!isSecureCodeExist) {
         setIsShowPopConfirm(true);
       }
