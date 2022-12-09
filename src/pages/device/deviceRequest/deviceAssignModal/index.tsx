@@ -89,7 +89,6 @@ export default function DeviceAssignModal({
   const submitHandler = (formValues: DeviceModel) => {
     delete formValues.deviceTypeId;
     formValues.requestId = requestIdRef;
-    formValues.deviceId = requestIdRef;
     assignDevice(formValues);
   };
   return (

@@ -470,14 +470,9 @@ export const MyOTBudgetListHeader = [
 ];
 export const SignatureProfileListHeader = [
   {
-    title: 'No',
-    key: 'id',
-    dataIndex: 'id',
-  },
-  {
     title: 'Register Date',
-    key: 'registerDate',
-    dataIndex: 'registerDate',
+    key: 'registeredDate',
+    dataIndex: 'registeredDate',
   },
   {
     title: 'Employee Name',

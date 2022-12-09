@@ -106,5 +106,8 @@ export const LEAVE_BUDGET = {
 };
 
 export const SIGNATURE_PROFILE = {
-  service: 'register-signature',
+  service: 'signature_register',
+  model: {
+    hr: 'hr',
+  },
 };

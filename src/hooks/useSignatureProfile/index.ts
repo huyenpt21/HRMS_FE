@@ -12,7 +12,7 @@ export const useGteSignatureList = (payload: SignatureProfileListQuery) =>
   useQuery(['get-signature-profile-list'], () =>
     fetchApi(
       {
-        url: SIGNATURE_PROFILE.service,
+        url: `${SIGNATURE_PROFILE.model.hr}/${SIGNATURE_PROFILE.service}`,
         payload,
       },
       undefined,
@@ -24,10 +24,10 @@ export const useDeleteSignature = ({
   onSuccess,
 }: MutationProps<ResSignatureProfileModify>) => {
   return useMutation(
-    (id: string) =>
+    (id: number) =>
       fetchApi(
         {
-          url: `${SIGNATURE_PROFILE.service}/${id}`,
+          url: `${SIGNATURE_PROFILE.model.hr}/${SIGNATURE_PROFILE.service}/${id}`,
           options: {
             method: 'DELETE',
           },
@@ -48,7 +48,7 @@ export const useRegisterSignature = ({
     (body: SignatureRegister) =>
       fetchApi(
         {
-          url: `${SIGNATURE_PROFILE.service}`,
+          url: `${SIGNATURE_PROFILE.model.hr}/${SIGNATURE_PROFILE.service}`,
           options: {
             method: 'POST',
             body: JSON.stringify(body),

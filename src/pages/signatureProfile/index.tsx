@@ -5,7 +5,7 @@ import CommonTable from 'components/CommonTable';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME, MESSAGE_RES, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, STATUS } from 'constants/enums/common';
+import { STATUS } from 'constants/enums/common';
 import { SIGNATURE_STATUS_LIST } from 'constants/fixData';
 import { SignatureProfileListHeader } from 'constants/header';
 import {
@@ -24,7 +24,6 @@ import {
   getDateFormat,
   isEmptyPagination,
   removeEmptyValueInObject,
-  sortInforWithDir,
 } from 'utils/common';
 import SignatureMenuTable from './components/signatureMenuTable';
 import SignatureStatus from './components/signatureStatus';
@@ -37,9 +36,8 @@ export default function SignatureProfileList() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<SignatureProfileModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const signatureIdRef = useRef<string | undefined>();
+  const registeredDateRef = useRef<string | undefined>();
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
-  const modalAction = useRef(ACTION_TYPE.CREATE);
   // * defailt filters
   const defaultFilter: SignatureProfileListQuery = {
     page: searchParams.get('page')
@@ -50,9 +48,12 @@ export default function SignatureProfileList() {
       : paginationConfig.pageSize,
     sort: searchParams.get('sort') ?? undefined,
     dir: searchParams.get('dir') ?? undefined,
+    isRegistered: searchParams.get('isRegistered')
+      ? Number(searchParams.get('isRegistered'))
+      : undefined,
   };
   // * state query
-  const [stateQuery, setStateQuery] = useState(
+  const [stateQuery, setStateQuery] = useState<SignatureProfileListQuery>(
     removeEmptyValueInObject(defaultFilter),
   );
   //  * get data header and content table
@@ -90,10 +91,8 @@ export default function SignatureProfileList() {
       // * enable sort in column
       if (el.key === 'id') {
         el.width = 60;
-      } else if (el.key === 'registerDate') {
+      } else if (el.key === 'registeredDate') {
         el.width = 300;
-        el.sorter = true;
-        el.sortOrder = sortInforWithDir(el.key, stateQuery);
       } else if (el.key === 'employeeName') {
         el.width = 300;
       } else if (el.key === 'isRegistered') {
@@ -103,12 +102,12 @@ export default function SignatureProfileList() {
       return {
         ...el,
         render: (data: any, record: SignatureProfileModel) => {
-          if (data !== null && data !== undefined) {
+          if (data !== null && data !== undefined && !!data) {
             if (el.key === 'isRegistered') {
               if (data) return <SignatureStatus data={STATUS.REGISTERED} />;
               return <SignatureStatus data={STATUS.PENDING} />;
             }
-            if (el.key === 'registerDate') {
+            if (el.key === 'registeredDate') {
               return getDateFormat(data, DATE_TIME);
             }
             return <div>{data}</div>;
@@ -129,6 +128,7 @@ export default function SignatureProfileList() {
             record={record}
             onClickMenu={menuActionHandler}
             setIsShowDetailModal={setIsShowDetailModal}
+            registeredDateRef={registeredDateRef}
           />
         );
       },
@@ -140,7 +140,7 @@ export default function SignatureProfileList() {
     if (dataTable && dataTable.data) {
       const {
         metadata: { pagination },
-        data: { items: recordsTable },
+        data: { item: recordsTable },
       } = dataTable;
       setRecords(recordsTable);
       if (!isEmptyPagination(pagination)) {
@@ -155,7 +155,7 @@ export default function SignatureProfileList() {
     }
   }, [dataTable, stateQuery, isError]);
   const menuActionHandler = (record: SignatureProfileModel) => {
-    record?.idSignature && deleteSignature(record?.idSignature);
+    record?.personId && deleteSignature(record?.personId);
   };
   const handleTableChange = (pagination: TablePaginationConfig) => {
     // * set changing of pagination to state query
@@ -165,19 +165,9 @@ export default function SignatureProfileList() {
       limit: pagination.pageSize,
     }));
   };
-
-  const rowClickHandler = (idSignature?: string) => {
-    return {
-      onClick: () => {
-        signatureIdRef.current = idSignature;
-        modalAction.current = ACTION_TYPE.VIEW_DETAIL;
-        setIsShowDetailModal(true);
-      },
-    };
-  };
   const cancelModalHandler = () => {
+    registeredDateRef.current = undefined;
     setIsShowDetailModal(false);
-    signatureIdRef.current = undefined;
   };
   return (
     <>
@@ -214,22 +204,19 @@ export default function SignatureProfileList() {
                   onChange={(value) => {
                     setStateQuery((prev: SignatureProfileListQuery) => ({
                       ...prev,
-                      isRegister: value,
+                      isRegistered: value,
                     }));
                   }}
-                  defaultValue={stateQuery?.isActive ?? undefined}
+                  defaultValue={stateQuery?.isRegistered}
                 />
               </Col>
             </Row>
           </>
         }
         stateQuery={stateQuery}
-        rowKey={(record: SignatureProfileModel) => record.id}
+        rowKey={(record: SignatureProfileModel) => record?.registeredDate}
         loading={isLoading}
         isShowScroll
-        onRow={(record: SignatureProfileModel) => {
-          return rowClickHandler(record?.idSignature);
-        }}
         className={'cursor-pointer'}
       />
       {isShowDetailModal && (
@@ -237,7 +224,7 @@ export default function SignatureProfileList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           refetchList={refetch}
-          signatureIdRef={signatureIdRef.current}
+          registeredDateRef={registeredDateRef.current}
         />
       )}
     </>

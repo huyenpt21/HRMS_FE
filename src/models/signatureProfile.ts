@@ -1,14 +1,15 @@
-import { Pagination, QueryParams, Resource, ResponseData } from './common';
+import { Pagination, QueryParams, ResponseData } from './common';
 
-export interface SignatureProfileModel extends Resource {
-  idSignature?: string;
+export interface SignatureProfileModel {
   employeeName?: string;
+  registeredDate?: string;
   isRegistered?: number;
+  personId?: number;
 }
 
 export interface SignatureProfileListFilter {
   search?: string;
-  isRegister?: number;
+  isRegistered?: number;
 }
 
 export interface SignatureRegister {

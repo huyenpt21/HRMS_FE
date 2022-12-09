@@ -15,13 +15,13 @@ interface IProps {
   isVisible: boolean;
   onCancel: () => void;
   refetchList: () => void;
-  signatureIdRef?: string;
+  registeredDateRef?: string;
 }
 export default function SignatureRegisterModal({
   isVisible,
   onCancel,
   refetchList,
-  signatureIdRef,
+  registeredDateRef,
 }: IProps) {
   const [registerSignatureForm] = Form.useForm();
   const { mutate: registerSignature, isLoading } = useRegisterSignature({
@@ -77,15 +77,15 @@ export default function SignatureRegisterModal({
               <BasicInput
                 label="Signature Profile"
                 placeholder="Cannot find device type"
-                name="idSignature"
+                name="registeredDate"
                 disabled={true}
-                defaultValue={signatureIdRef}
-                initialValueForm={signatureIdRef}
+                defaultValue={registeredDateRef}
+                initialValueForm={registeredDateRef}
               />
             </Col>
             <Col span="12">
               <SelectCustomSearch
-                url={`${EMPLOYEE.service}/${DEVICE.model.masterData}`}
+                url={`${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${DEVICE.model.masterData}`}
                 dataName="items"
                 apiName="employe-list-all-master-data"
                 label="Employe"
