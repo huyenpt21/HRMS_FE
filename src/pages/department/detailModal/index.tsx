@@ -130,6 +130,7 @@ export default function DepartmentDetailModal({
           validateMessages={validateMessages()}
           onFinish={submitHandler}
           disabled={actionModal === ACTION_TYPE.VIEW_DETAIL}
+          initialValues={{ listPosition: [''] }}
         >
           <Col span={24}>
             <BasicInput
@@ -152,7 +153,18 @@ export default function DepartmentDetailModal({
           </Col>
 
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
-            <Form.List name="listPosition">
+            <Form.List
+              name="listPosition"
+              // rules={[
+              //   {
+              //     validator: async (_, names) => {
+              //       if (!names || names.length < 1) {
+              //         return Promise.reject(new Error('At least 1 position'));
+              //       }
+              //     },
+              //   },
+              // ]}
+            >
               {(fields, { add, remove }, { errors }) => {
                 return (
                   <>
@@ -175,19 +187,31 @@ export default function DepartmentDetailModal({
                             className={styles.input}
                             allowClear
                             placeholder="Enter position name"
+                            rules={
+                              fields.length === 1
+                                ? [
+                                    {
+                                      required: true,
+                                      message: 'Create at least 1 positioin',
+                                    },
+                                  ]
+                                : undefined
+                            }
                           />
                         </Col>
-                        <span
-                          onClick={() => remove(field.name)}
-                          className={styles['icon--delete']}
-                        >
-                          <SvgIcon
-                            icon="approve-waitting"
-                            size={24}
-                            color="#3c6d73"
-                            className={styles['cursor-pointer']}
-                          />
-                        </span>
+                        {fields.length > 1 && (
+                          <span
+                            onClick={() => remove(field.name)}
+                            className={styles['icon--delete']}
+                          >
+                            <SvgIcon
+                              icon="approve-waitting"
+                              size={24}
+                              color="#3c6d73"
+                              className={styles['cursor-pointer']}
+                            />
+                          </span>
+                        )}
                       </Row>
                     ))}
                     <div className={styles.btn__add}>
