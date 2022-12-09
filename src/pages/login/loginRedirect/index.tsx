@@ -9,7 +9,7 @@ import { useAppDispatch } from 'hooks';
 import { useGetuserInfo, useGetUserRoles } from 'hooks/useEmployee';
 
 import { EmployeeRoles } from 'models/employee';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getUserInfo, getUserRoles } from 'store/slice/auth';
 export default function LoginRedirect() {
@@ -17,14 +17,15 @@ export default function LoginRedirect() {
   const dispatch = useAppDispatch();
   const [search] = useSearchParams();
   const accessToken = search.get('token');
+  const [acLocal, setAcLocal] = useState<string | null>();
   useEffect(() => {
     if (!!accessToken) {
       localStorage.setItem(ACCESS_TOKEN, accessToken);
+      setAcLocal(localStorage.getItem(ACCESS_TOKEN));
     } else {
       navigate('/403');
     }
   }, []);
-  const acLocal = localStorage.getItem(ACCESS_TOKEN);
   const { data: getUserRole } = useGetUserRoles(acLocal ?? '');
   const { data: detailUserInfo } = useGetuserInfo(acLocal ?? '');
   useEffect(() => {
@@ -56,8 +57,15 @@ export default function LoginRedirect() {
         dispatch(getUserRoles({ userRoles: userRoles }));
         localStorage.setItem(USER_ROLES, JSON.stringify(userRoles));
       }
-      navigate('/');
     }
   }, [getUserRole, acLocal]);
+  useEffect(() => {
+    if (
+      !!localStorage.getItem(USER_ROLES) &&
+      !!localStorage.getItem(USER_INFO)
+    ) {
+      navigate('/');
+    }
+  }, [getUserRole, detailUserInfo]);
   return <Loading />;
 }
