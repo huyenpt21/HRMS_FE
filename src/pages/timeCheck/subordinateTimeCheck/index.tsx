@@ -7,11 +7,7 @@ import { AllTimeCheckHeader } from 'constants/header';
 import { TIME_CHECK } from 'constants/services';
 import { useTimeCheckList } from 'hooks/useTimeCheck';
 import { HeaderTableFields } from 'models/common';
-import {
-  TimeCheckListQuery,
-  TimeCheckListSortFields,
-  TimeCheckModel,
-} from 'models/timeCheck';
+import { TimeCheckListQuery, TimeCheckModel } from 'models/timeCheck';
 import moment from 'moment-timezone';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -186,16 +182,6 @@ export default function SubordinateTimeCheck() {
   ) => {
     let sort = stateQuery.sort;
     let dir = stateQuery.dir;
-
-    //! delete this after integrate api
-    if (sorter.order) {
-      const sortField = sorter.field as TimeCheckListSortFields;
-      const sortDirections = sorter.order === 'ascend' ? 'asc' : 'desc';
-
-      sort = `${sortField}`;
-      dir = sortDirections;
-    }
-
     // * set changing of pagination to state query
     setStateQuery((prev: TimeCheckListQuery) => ({
       ...prev,
@@ -211,7 +197,7 @@ export default function SubordinateTimeCheck() {
         timeCheckIdRef.current = record.id;
         navigate(
           {
-            pathname: `/time-attendance/subordinate/detail/${record.id}`,
+            pathname: `/time-check/subordinate/detail/${record.id}`,
             search: `startDate=${stateQuery.startDate}&endDate=${stateQuery.endDate}`,
           },
           { replace: true },
