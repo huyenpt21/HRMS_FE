@@ -3,34 +3,27 @@ import BasicButton from 'components/BasicButton';
 import Loading from 'components/loading';
 import TimeComponent from 'components/TimePicker';
 import { MESSAGE_RES, TIME_HMS, TIME_HOUR } from 'constants/common';
-import { useGetUserRoles } from 'hooks/useEmployee';
+import { useAppSelector } from 'hooks';
 import { useGetOfficeTime, useUpdateOfficeTime } from 'hooks/useOfficeTime';
-import { EmployeeRoles } from 'models/employee';
 import { OfficeTimelModel, ResOfficeTimelModify } from 'models/officeTime';
 import { useEffect, useState } from 'react';
 import { getDateFormat } from 'utils/common';
 import styles from './officeTime.module.less';
 
 export default function OfficeTime() {
+  const userRoles = useAppSelector((state) => state.auth.roles);
   const [officeTimeData, setOfficeTimeData] = useState<OfficeTimelModel>();
   const [isShowEditing, setIsShowEditting] = useState(false);
   const [isRoleHr, setIsRoleHr] = useState(false);
   const { data: officeTime, isLoading } = useGetOfficeTime();
-  const { data: getUserRole } = useGetUserRoles();
   useEffect(() => {
-    if (getUserRole && getUserRole.data) {
-      const {
-        metadata: { message },
-        data: { items },
-      } = getUserRole;
-      if (message === MESSAGE_RES.SUCCESS && items.length) {
-        const isHr = items.find((el: EmployeeRoles) => el.roleId === 1);
-        if (isHr) {
-          setIsRoleHr(true);
-        }
+    if (userRoles) {
+      const isHr = userRoles.find((el: number) => el === 1);
+      if (isHr) {
+        setIsRoleHr(true);
       }
     }
-  }, [getUserRole]);
+  }, [userRoles]);
   const { mutate: updateOfficeTime } = useUpdateOfficeTime({
     onSuccess: (response: ResOfficeTimelModify) => {
       const {

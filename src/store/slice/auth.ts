@@ -1,25 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { EmployeeModel } from 'models/employee';
+import { MenuItemType } from 'models/menu';
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    isLoggedIn: false,
     user: {} as EmployeeModel | undefined,
     roles: [] as number[],
+    menus: [] as MenuItemType[],
   },
   reducers: {
-    login: (state, action) => {
-      state.user = { ...state.user, ...action.payload.newUserInfor };
+    getUserRoles: (state, action) => {
       state.roles = action.payload.userRoles;
-      state.isLoggedIn = true;
     },
-    logout: (state) => {
-      state.user = undefined;
-      state.isLoggedIn = false;
+    getUserInfo: (state, action) => {
+      state.user = action.payload.newUserInfor;
+    },
+    getUserMenu: (state, action) => {
+      state.menus = action.payload.userMenu;
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { getUserRoles, getUserInfo, getUserMenu } = authSlice.actions;
 export default authSlice.reducer;

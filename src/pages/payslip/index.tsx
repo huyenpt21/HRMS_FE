@@ -6,6 +6,7 @@ import BasicInput from 'components/BasicInput';
 import NotifyPopup from 'components/NotifyPopup';
 import { MESSAGE_RES, YEAR_MONTH_NUM } from 'constants/common';
 import { SHAPE_TYPE } from 'constants/enums/common';
+import { useAppSelector } from 'hooks';
 import {
   useCheckSecureCodeCorrectly,
   useCheckSecureCodeExist,
@@ -29,6 +30,8 @@ import styles from './payrollDetail.module.less';
 export default function PayslipDetail() {
   const [payslipForm] = Form.useForm();
   const navigate = useNavigate();
+  const userRoles = useAppSelector((state) => state.auth.roles);
+  console.log(3333, userRoles);
   const [isShowPayslip, setIsShowPayslip] = useState(false);
   const [isShowPopConfirm, setIsShowPopConfirm] = useState(false);
   const payslipDataRef = useRef<PayslipModel>();

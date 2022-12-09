@@ -16,7 +16,7 @@ import MenuExpand from 'pages/menuExpand';
 import NotificationExpand from 'pages/notificationExpand';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from 'store/slice/auth';
+import { getUserInfo } from 'store/slice/auth';
 import styles from './headerContent.module.less';
 interface IProps {
   marginLeft: number;
@@ -37,7 +37,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
         data: { item: userInfo },
       } = detailUserInfo;
       if (message === MESSAGE_RES.SUCCESS && !!userInfo) {
-        disPatch(login({ newUserInfor: userInfo }));
+        disPatch(getUserInfo({ newUserInfor: userInfo }));
         setPersonInfor(userInfo);
       }
     }

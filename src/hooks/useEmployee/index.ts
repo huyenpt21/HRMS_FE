@@ -53,14 +53,20 @@ export const useGetUserInfor = () =>
     ),
   );
 
-export const useGetUserRoles = () =>
-  useQuery(['user-roles'], () =>
-    fetchApi(
-      {
-        url: USER_INFO.model.roles,
-      },
-      undefined,
-    ),
+export const useGetUserRoles = (token: string) =>
+  useQuery(
+    ['user-roles'],
+    () =>
+      fetchApi(
+        {
+          url: USER_INFO.model.roles,
+        },
+        undefined,
+      ),
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!token,
+    },
   );
 
 export const useUpdateUserInfor = ({
