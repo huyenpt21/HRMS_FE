@@ -12,18 +12,73 @@
     "items": [
       {
         "id": 1,
-        "departmentName": "DEV",
-        "total": 4
+        "departmentName": "IT Support",
+        "totalEmployee": 7,
+        "listPosition": [],
+        "isAllowDelete": 1
       },
       {
         "id": 2,
-        "departmentName": "DEV",
-        "total": 4
+        "departmentName": "DEV 123",
+        "totalEmployee": 23,
+        "listPosition": [],
+        "isAllowDelete": 1
       },
       {
-        "id": 3,
-        "departmentName": "DEV",
-        "total": 4
+        "id": 4,
+        "departmentName": "Development",
+        "totalEmployee": 14,
+        "listPosition": [],
+        "isAllowDelete": 1
+      },
+      {
+        "id": 11,
+        "departmentName": "Marketing",
+        "totalEmployee": 1,
+        "listPosition": [],
+        "isAllowDelete": 1
+      },
+      {
+        "id": 12,
+        "departmentName": "Business   ",
+        "totalEmployee": 0,
+        "listPosition": [],
+        "isAllowDelete": 0
+      },
+      {
+        "id": 13,
+        "departmentName": "Human resource",
+        "totalEmployee": 3,
+        "listPosition": [],
+        "isAllowDelete": 0
+      },
+      {
+        "id": 24,
+        "departmentName": "aa",
+        "totalEmployee": 0,
+        "listPosition": [],
+        "isAllowDelete": 0
+      },
+      {
+        "id": 25,
+        "departmentName": "ddd",
+        "totalEmployee": 0,
+        "listPosition": [],
+        "isAllowDelete": 0
+      },
+      {
+        "id": 26,
+        "departmentName": "1111",
+        "totalEmployee": 0,
+        "listPosition": [],
+        "isAllowDelete": 0
+      },
+      {
+        "id": 27,
+        "departmentName": "gggsdfsf",
+        "totalEmployee": 0,
+        "listPosition": [],
+        "isAllowDelete": 0
       }
     ]
   }
