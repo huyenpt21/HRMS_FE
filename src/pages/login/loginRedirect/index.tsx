@@ -10,8 +10,9 @@ export default function LoginRedirect() {
   useEffect(() => {
     if (accessToken) {
       localStorage.setItem(ACCESS_TOKEN, accessToken);
+      navigate('/');
     }
-    navigate('/');
+    navigate('/403');
   }, [accessToken]);
   return <Loading />;
 }
