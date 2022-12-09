@@ -90,12 +90,14 @@ const fetchApi = async (
     }
     return data;
   } catch (err: any) {
-    notification.error({
-      message: 'Oops! Something went wrong',
-      description: err.error,
-      maxCount: 1,
-      key: '1',
-    });
+    if (err?.status === 500) {
+      notification.error({
+        message: 'Oops! Something went wrong',
+        description: err.error,
+        maxCount: 1,
+        key: '1',
+      });
+    }
     if (cb) cb(err);
     throw err;
   }
