@@ -93,14 +93,9 @@ const fetchApi = async (
     notification.error({
       message: 'Oops! Something went wrong',
       description: err.error,
+      maxCount: 1,
+      key: '1',
     });
-    if (err.status === 500) {
-      notification.error({
-        message: 'Opps! Something went wrong',
-        description: err.error,
-        maxCount: 1,
-      });
-    }
     if (cb) cb(err);
     throw err;
   }
