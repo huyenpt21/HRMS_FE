@@ -103,15 +103,12 @@ export default function DepartmentList() {
       width: 100,
       align: 'center',
       render: (_, record: DepartmentModel) => {
-        if (record?.isAllowDelete) {
-          return (
-            <MenuTableDepartment
-              record={record}
-              onClickMenu={menuActionHandler}
-            />
-          );
-        }
-        return <span>-</span>;
+        return (
+          <MenuTableDepartment
+            record={record}
+            onClickMenu={menuActionHandler}
+          />
+        );
       },
     });
     setColumnsHeader(columns);

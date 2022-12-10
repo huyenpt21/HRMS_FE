@@ -10,6 +10,7 @@ export interface DepartmentModel extends Resource {
 export interface PositionModel {
   id?: number;
   positionName?: string;
+  isAllowDelete?: number;
 }
 
 export interface DepartmentListFilter {

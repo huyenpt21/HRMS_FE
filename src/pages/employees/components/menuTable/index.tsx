@@ -1,4 +1,4 @@
-import { Tooltip } from 'antd';
+import { Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { MENU_OPTION_KEY } from 'constants/enums/common';
 import { EmployeeModel } from 'models/employee';
@@ -18,24 +18,36 @@ export default function MenuAction({ record, onClickMenu }: IProps) {
       }}
     >
       {!record.isActive && (
-        <Tooltip title="Active" placement="left">
-          <span
-            onClick={() => onClickMenu(record, MENU_OPTION_KEY.ACTIVE)}
-            className="cursor-pointer"
-          >
-            <SvgIcon icon="accept-circle" />
-          </span>
-        </Tooltip>
+        <Popconfirm
+          title="Are you sure?"
+          onConfirm={() =>
+            onClickMenu && onClickMenu(record, MENU_OPTION_KEY.ACTIVE)
+          }
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tooltip title="Active" placement="left">
+            <span className="cursor-pointer">
+              <SvgIcon icon="accept-circle" />
+            </span>
+          </Tooltip>
+        </Popconfirm>
       )}
       {!!record.isActive && (
-        <Tooltip title="Inactivate" placement="left">
-          <span
-            onClick={() => onClickMenu(record, MENU_OPTION_KEY.DEACTIVE)}
-            className="cursor-pointer"
-          >
-            <SvgIcon icon="close-circle" />
-          </span>
-        </Tooltip>
+        <Popconfirm
+          title="Are you sure?"
+          onConfirm={() =>
+            onClickMenu && onClickMenu(record, MENU_OPTION_KEY.DEACTIVE)
+          }
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tooltip title="Inactivate" placement="left">
+            <span className="cursor-pointer">
+              <SvgIcon icon="close-circle" />
+            </span>
+          </Tooltip>
+        </Popconfirm>
       )}
       <Tooltip title="Edit" placement="right">
         <span

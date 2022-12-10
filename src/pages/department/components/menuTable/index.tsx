@@ -1,11 +1,11 @@
-import { Tooltip } from 'antd';
+import { Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { MENU_OPTION_KEY } from 'constants/enums/common';
-import { EmployeeModel } from 'models/employee';
+import { DepartmentModel } from 'models/department';
 interface IProps {
-  record: EmployeeModel;
+  record: DepartmentModel;
   onClickMenu: (
-    itemSelected: EmployeeModel,
+    itemSelected: DepartmentModel,
     actionType: MENU_OPTION_KEY,
   ) => void;
 }
@@ -25,14 +25,22 @@ export default function MenuTableDepartment({ record, onClickMenu }: IProps) {
           <SvgIcon icon="edit-border" />
         </span>
       </Tooltip>
-      <Tooltip title="Delete" placement="right">
-        <span
-          onClick={() => onClickMenu(record, MENU_OPTION_KEY.DELETE)}
-          className="cursor-pointer"
+      {!!record?.isAllowDelete && (
+        <Popconfirm
+          title="Are you sure?"
+          onConfirm={() =>
+            onClickMenu && onClickMenu(record, MENU_OPTION_KEY.DELETE)
+          }
+          okText="Yes"
+          cancelText="No"
         >
-          <SvgIcon icon="close-circle" />
-        </span>
-      </Tooltip>
+          <Tooltip title="Delete" placement="right">
+            <span className="cursor-pointer">
+              <SvgIcon icon="close-circle" />
+            </span>
+          </Tooltip>
+        </Popconfirm>
+      )}
     </div>
   );
 }

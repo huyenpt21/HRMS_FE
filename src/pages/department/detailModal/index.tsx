@@ -35,10 +35,11 @@ export default function DepartmentDetailModal({
 }: IProps) {
   const [departmentForm] = Form.useForm();
   const [actionModal, setActionModal] = useState(action);
-  const [positionList, setPositionList] = useState<PositionModel[]>();
+  const [positionList, setPositionList] = useState<PositionModel[] | undefined>(
+    [],
+  );
   const totalMembers = useRef<number | undefined>(0);
   const { data: detailDepartment } = useDepartmentDetail(departmentId);
-
   const { mutate: createDepartment } = useAddDepartmentModal({
     onSuccess: (response: ResDepartmentModify) => {
       const {
@@ -55,10 +56,9 @@ export default function DepartmentDetailModal({
         metadata: { message },
       } = response;
       notification.error({ message: message });
-      // onCancel();
+      onCancel();
     },
   });
-
   const { mutate: updateDepartment } = useUpdateDepartment({
     onSuccess: (response: ResDepartmentModify) => {
       const {
@@ -75,7 +75,6 @@ export default function DepartmentDetailModal({
       notification.error({ message: message });
     },
   });
-
   useEffect(() => {
     if (detailDepartment && detailDepartment.data) {
       const {
@@ -89,12 +88,10 @@ export default function DepartmentDetailModal({
       }
     }
   }, [detailDepartment]);
-
   const cancelHandler = () => {
     onCancel();
     departmentForm.resetFields();
   };
-
   const submitHandler = (formValues: DepartmentModel) => {
     if (actionModal === ACTION_TYPE.CREATE) {
       const positions: string[] = [];
@@ -153,18 +150,7 @@ export default function DepartmentDetailModal({
           </Col>
 
           {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
-            <Form.List
-              name="listPosition"
-              // rules={[
-              //   {
-              //     validator: async (_, names) => {
-              //       if (!names || names.length < 1) {
-              //         return Promise.reject(new Error('At least 1 position'));
-              //       }
-              //     },
-              //   },
-              // ]}
-            >
+            <Form.List name="listPosition">
               {(fields, { add, remove }, { errors }) => {
                 return (
                   <>
@@ -174,12 +160,7 @@ export default function DepartmentDetailModal({
                         className={styles.position__container}
                       >
                         <Col span={0}>
-                          <BasicInput
-                            name={[index, 'id']}
-                            className={styles.input}
-                            allowClear
-                            placeholder="Enter position name"
-                          />
+                          <BasicInput name={[index, 'id']} />
                         </Col>
                         <Col span={22}>
                           <BasicInput
@@ -199,19 +180,21 @@ export default function DepartmentDetailModal({
                             }
                           />
                         </Col>
-                        {fields.length > 1 && (
-                          <span
-                            onClick={() => remove(field.name)}
-                            className={styles['icon--delete']}
-                          >
-                            <SvgIcon
-                              icon="approve-waitting"
-                              size={24}
-                              color="#3c6d73"
-                              className={styles['cursor-pointer']}
-                            />
-                          </span>
-                        )}
+                        {fields.length > 1 &&
+                          positionList &&
+                          !!positionList[field.key]?.isAllowDelete && (
+                            <span
+                              onClick={() => remove(field.name)}
+                              className={styles['icon--delete']}
+                            >
+                              <SvgIcon
+                                icon="approve-waitting"
+                                size={24}
+                                color="#3c6d73"
+                                className={styles['cursor-pointer']}
+                              />
+                            </span>
+                          )}
                       </Row>
                     ))}
                     <div className={styles.btn__add}>
