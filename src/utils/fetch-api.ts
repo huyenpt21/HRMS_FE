@@ -90,7 +90,7 @@ const fetchApi = async (
     }
     return data;
   } catch (err: any) {
-    if (err?.status === 500) {
+    if (err?.status === 500 || err?.metadata?.code === 500) {
       notification.error({
         message: 'Oops! Something went wrong',
         description: err.error,
