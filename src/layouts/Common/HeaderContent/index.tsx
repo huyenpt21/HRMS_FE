@@ -70,7 +70,6 @@ export default function HeaderContent({ marginLeft }: IProps) {
           );
         }
       });
-
       sse.onerror = () => {
         sse.close();
       };

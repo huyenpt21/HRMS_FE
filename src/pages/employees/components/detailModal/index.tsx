@@ -146,7 +146,7 @@ export default function EmployeeDetailModal({
         >
           <Row gutter={36}>
             <Col span={11} className={styles.column}>
-              <h2>Personnal Information</h2>
+              <div className={styles.header__title}>Personnal Information</div>
               <Row gutter={12}>
                 <Col span={12}>
                   <BasicInput
@@ -172,7 +172,7 @@ export default function EmployeeDetailModal({
                     name="gender"
                     label="Gender"
                     allowClear
-                    placeholder="Enter address"
+                    placeholder="Choose gender"
                     rules={[{ required: true }]}
                   />
                 </Col>
@@ -227,7 +227,7 @@ export default function EmployeeDetailModal({
               </Row>
             </Col>
             <Col span={13}>
-              <h2>Working Information</h2>
+              <div className={styles.header__title}>Working Information</div>
               {(actionModal === ACTION_TYPE.EDIT ||
                 actionModal === ACTION_TYPE.VIEW_DETAIL) && (
                 <Row gutter={12} className={styles['infor--header']}>
