@@ -180,6 +180,7 @@ export default function ExtraTableTimeCheck({
               onCalendarChange={(values: RangeValue) => setDates(values)}
               disabledDate={disableDate}
               allowClear
+              inputReadOnly={false}
             />
           </Col>
         )}

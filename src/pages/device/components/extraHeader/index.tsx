@@ -143,6 +143,7 @@ export default function ExtraHeaderDevice({
                 defaultEndDate={stateQuery?.approvalDateTo}
                 isUseDefaultValue={!!stateQuery?.approvalDateFrom}
                 allowClear
+                inputReadOnly={false}
               />
             </Col>
           )}

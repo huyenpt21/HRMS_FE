@@ -100,6 +100,7 @@ const ExtraTableHeader = ({
               defaultEndDate={stateQuery?.createDateTo}
               isUseDefaultValue={!!stateQuery?.createDateFrom}
               allowClear
+              inputReadOnly={false}
             />
           </Col>
 

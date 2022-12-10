@@ -39,6 +39,7 @@ interface IProps {
     type: RangeType,
   ) => DisabledTimes;
   hideDisabledOptions?: boolean;
+  inputReadOnly?: boolean;
 }
 
 const { RangePicker } = DatePicker;
@@ -80,6 +81,7 @@ const BasicDateRangePicker = (props: IProps) => {
           allowClear={props.allowClear}
           disabledTime={props.disabledTime}
           hideDisabledOptions={props.hideDisabledOptions}
+          inputReadOnly={props.inputReadOnly}
         />
       </Form.Item>
     </span>
