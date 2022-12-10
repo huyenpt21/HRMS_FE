@@ -129,7 +129,7 @@ export default function RequestDetailModal({
 
       if (message === 'Success') {
         notification.success({
-          message: 'Send request successfully',
+          message: 'Update request successfully',
         });
         refetchList();
         cancelHandler();
@@ -415,7 +415,12 @@ export default function RequestDetailModal({
   };
 
   const handleChangeDate = (dates: [moment.Moment, moment.Moment]) => {
-    if (dates) {
+    const isCurrentMonth =
+      moment(dates[0]).get('month') === moment().get('month') &&
+      moment(dates[1]).get('month') === moment().get('month') &&
+      moment(dates[0]).get('year') === moment().get('year') &&
+      moment(dates[1]).get('year') === moment().get('year');
+    if (dates && !isCurrentMonth) {
       const data: RequestRemainingTime = {
         requestTypeId: requestIdRefInternal.current,
         month: moment(dates[0]).get('month') + 1,
@@ -767,31 +772,43 @@ export default function RequestDetailModal({
                       )}
                       {tabType === REQUEST_MENU.SUBORDINATE && (
                         <>
-                          {(remainingTimeRef.current?.timeRemaining === 0 ||
-                            remainingTimeRef.current?.otTimeRemainingOfYear ===
-                              0 ||
-                            remainingTimeRef.current?.otTimeRemainingOfMonth ===
-                              0) && (
-                            <>
-                              <BasicButton
-                                title="Approve"
-                                type="outline"
-                                className={styles['btn--approve']}
-                                onClick={() => {
-                                  handleQickActionRequest(STATUS.APPROVED);
-                                }}
-                              />
-                              <BasicButton
-                                title="Reject"
-                                type="outline"
-                                className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                                danger
-                                onClick={() => {
-                                  handleQickActionRequest(STATUS.REJECTED);
-                                }}
-                              />
-                            </>
-                          )}
+                          <BasicButton
+                            title="Approve"
+                            type="outline"
+                            className={styles['btn--approve']}
+                            onClick={() => {
+                              handleQickActionRequest(STATUS.APPROVED);
+                            }}
+                            disabled={
+                              (requestType === REQUEST_TYPE_KEY.LEAVE &&
+                                remainingTimeRef.current?.timeRemaining ===
+                                  0) ||
+                              (requestType === REQUEST_TYPE_KEY.OT &&
+                                (remainingTimeRef.current
+                                  ?.otTimeRemainingOfYear === 0 ||
+                                  remainingTimeRef.current
+                                    ?.otTimeRemainingOfMonth === 0))
+                            }
+                          />
+                          <BasicButton
+                            title="Reject"
+                            type="outline"
+                            className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                            danger
+                            onClick={() => {
+                              handleQickActionRequest(STATUS.REJECTED);
+                            }}
+                            disabled={
+                              (requestType === REQUEST_TYPE_KEY.LEAVE &&
+                                remainingTimeRef.current?.timeRemaining ===
+                                  0) ||
+                              (requestType === REQUEST_TYPE_KEY.OT &&
+                                (remainingTimeRef.current
+                                  ?.otTimeRemainingOfYear === 0 ||
+                                  remainingTimeRef.current
+                                    ?.otTimeRemainingOfMonth === 0))
+                            }
+                          />
                         </>
                       )}
                     </div>

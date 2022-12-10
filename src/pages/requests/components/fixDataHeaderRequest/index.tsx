@@ -44,13 +44,14 @@ export default function FixDataHeaderRequest({ requestData }: IPops) {
           <span>Status:</span>{' '}
           <RequestStatus data={requestData?.status ?? ''} />
         </Col>
-
-        <Col span={8}>
-          <span>Approved Time:</span>
-          <span className={styles['text--bold']}>
-            {getDateFormat(requestData?.createDate, DATE_TIME_US)}
-          </span>
-        </Col>
+        {!!requestData?.approvalDate && (
+          <Col span={8}>
+            <span>Approved Time:</span>
+            <span className={styles['text--bold']}>
+              {getDateFormat(requestData?.createDate, DATE_TIME_US)}
+            </span>
+          </Col>
+        )}
       </Row>
     </>
   );

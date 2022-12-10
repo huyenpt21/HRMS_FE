@@ -31,7 +31,6 @@ export default function DetailPageRequestForNoti() {
   const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
 
   const { data: detailRequest, refetch } = useRequestDetail(requestId || -1);
-
   const { mutate: statusRequest } = useChangeStatusRequest({
     onSuccess: (response: ResRequestModify) => {
       const {
@@ -109,13 +108,7 @@ export default function DetailPageRequestForNoti() {
           />
         </Row>
         <Divider />
-        <Form
-          form={requestForm}
-          layout="vertical"
-          requiredMark
-          // onFinish={submitHandler}
-          disabled={true}
-        >
+        <Form form={requestForm} layout="vertical" requiredMark disabled={true}>
           <Row gutter={20}>
             <Col span={24} className={styles.notice}>
               {requestData?.timeRemaining === 0 &&
@@ -173,7 +166,7 @@ export default function DetailPageRequestForNoti() {
                     <Col span="6">
                       <BasicInput
                         label="Remaining Time Month"
-                        name="timeRemainingMonth"
+                        name="otTimeRemainingOfMonth"
                         disabled
                         suffix={'hours'}
                       />
@@ -181,7 +174,7 @@ export default function DetailPageRequestForNoti() {
                     <Col span="6">
                       <BasicInput
                         label="Remaining Time Year"
-                        name="timeRemainingYear"
+                        name="otTimeRemainingOfYear"
                         disabled
                         suffix={'hours'}
                       />
@@ -266,30 +259,44 @@ export default function DetailPageRequestForNoti() {
           </Row>
           <MultipleImagePreview src={evidenceSource} />
           {menuType === 'request-center' &&
-            !(
-              requestData?.timeRemaining === 0 ||
-              requestData?.otTimeRemainingOfMonth === 0 ||
-              requestData?.otTimeRemainingOfYear === 0
-            ) && (
-              <Row gutter={20} className={styles['modal__footer']}>
-                <BasicButton
-                  title="Approve"
-                  type="outline"
-                  className={styles['btn--approve']}
-                  onClick={() => {
-                    handleQickActionRequest(STATUS.APPROVED);
-                  }}
-                />
-                <BasicButton
-                  title="Reject"
-                  type="outline"
-                  className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                  danger
-                  onClick={() => {
-                    handleQickActionRequest(STATUS.REJECTED);
-                  }}
-                />
-              </Row>
+            requestData?.status === STATUS.PENDING && (
+              <>
+                <Row gutter={20} className={styles['modal__footer']}>
+                  <BasicButton
+                    title="Approve"
+                    type="outline"
+                    className={styles['btn--approve']}
+                    onClick={() => {
+                      handleQickActionRequest(STATUS.APPROVED);
+                    }}
+                    disabled={
+                      (requestData?.requestTypeName ===
+                        REQUEST_TYPE_KEY.LEAVE &&
+                        requestData?.timeRemaining === 0) ||
+                      (requestData?.requestTypeName === REQUEST_TYPE_KEY.OT &&
+                        (requestData?.otTimeRemainingOfYear === 0 ||
+                          requestData?.otTimeRemainingOfMonth === 0))
+                    }
+                  />
+                  <BasicButton
+                    title="Reject"
+                    type="outline"
+                    className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                    danger
+                    onClick={() => {
+                      handleQickActionRequest(STATUS.REJECTED);
+                    }}
+                    disabled={
+                      (requestData?.requestTypeName ===
+                        REQUEST_TYPE_KEY.LEAVE &&
+                        requestData?.timeRemaining === 0) ||
+                      (requestData?.requestTypeName === REQUEST_TYPE_KEY.OT &&
+                        (requestData?.otTimeRemainingOfYear === 0 ||
+                          requestData?.otTimeRemainingOfMonth === 0))
+                    }
+                  />
+                </Row>
+              </>
             )}
         </Form>
       </Col>

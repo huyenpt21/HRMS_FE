@@ -8,14 +8,16 @@ export const disabledDate = (
   current: moment.Moment,
   dateSelected?: RangeValue,
 ) => {
-  // if start date haven't selected -> disable past date to curent date
+  //disable next years
+  const tooLate = current > moment().endOf('year');
+  // if start date haven't selected -> disable past date to curent date and next year
   //disable weekend
   const weekend = moment(current).day() === 0 || moment(current).day() === 6;
   if (!dateSelected) {
-    return (current && current < moment().endOf('day')) || !!weekend;
+    return (
+      (current && current < moment().endOf('day')) || !!weekend || !!tooLate
+    );
   }
-  //disable next years
-  const tooLate = current > moment(dateSelected[0]).endOf('years');
   //disable previous years and past dates and current dates
   const tooEarly =
     current < moment(dateSelected[1]).startOf('years') ||
@@ -28,7 +30,7 @@ export const disableDateOT = (
   dateSelected?: RangeValue,
 ) => {
   if (!dateSelected) {
-    return false;
+    return current < moment().startOf('months');
   }
   const hourStartSelected = moment(dateSelected[0]).get('hours');
   const hourEndSelected = moment(dateSelected[1]).get('hours');
@@ -56,7 +58,9 @@ export const disableDateOT = (
 };
 
 export const disabledDateForgotCheckInOut = (current: moment.Moment) => {
-  return current >= moment().startOf('days');
+  return (
+    current >= moment().startOf('days') || current <= moment().startOf('months')
+  );
 };
 
 export const disabledDateMaternity = (current: moment.Moment) => {
