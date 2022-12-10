@@ -63,57 +63,59 @@ export default function OfficeTime() {
     <div className={styles.container}>
       <div className={styles.main}>
         <Row className={styles.header__section}>
-          <h2 className={styles.header__title}>Office Time</h2>
+          <div className={styles.header__title}>Office Time</div>
         </Row>
         {isLoading && <Loading />}
         {!isLoading && (
-          <Row className={styles.content__section}>
-            <Col span={10}>
-              <Card
-                title="Start"
-                headStyle={{ fontWeight: 600 }}
-                bodyStyle={{ backgroundColor: '#FFEFD6' }}
-              >
-                {officeTimeData?.timeStart && (
-                  <div className={styles.content__text}>
-                    {getDateFormat(
-                      officeTimeData?.timeStart,
-                      TIME_HOUR,
-                      TIME_HMS,
-                    )}
-                  </div>
+          <>
+            <Row className={styles.content__section}>
+              <Col span={10}>
+                <Card
+                  title="Start"
+                  headStyle={{ fontWeight: 600 }}
+                  bodyStyle={{ backgroundColor: '#FFEFD6' }}
+                >
+                  {officeTimeData?.timeStart && (
+                    <div className={styles.content__text}>
+                      {getDateFormat(
+                        officeTimeData?.timeStart,
+                        TIME_HOUR,
+                        TIME_HMS,
+                      )}
+                    </div>
+                  )}
+                </Card>
+              </Col>
+              <Col span={10}>
+                <Card
+                  title="Finish"
+                  headStyle={{ fontWeight: 600 }}
+                  bodyStyle={{ backgroundColor: '#BCEAD5' }}
+                >
+                  {officeTimeData?.timeFinish && (
+                    <div className={styles.content__text}>
+                      {getDateFormat(
+                        officeTimeData?.timeFinish,
+                        TIME_HOUR,
+                        TIME_HMS,
+                      )}
+                    </div>
+                  )}
+                </Card>
+              </Col>
+            </Row>
+            {isRoleHr && (
+              <Row className={styles.btn__edit}>
+                {!isShowEditing && (
+                  <BasicButton
+                    title={'Edit'}
+                    type="outline"
+                    onClick={() => setIsShowEditting(true)}
+                  />
                 )}
-              </Card>
-            </Col>
-            <Col span={10}>
-              <Card
-                title="Finish"
-                headStyle={{ fontWeight: 600 }}
-                bodyStyle={{ backgroundColor: '#BCEAD5' }}
-              >
-                {officeTimeData?.timeFinish && (
-                  <h1 className={styles.content__text}>
-                    {getDateFormat(
-                      officeTimeData?.timeFinish,
-                      TIME_HOUR,
-                      TIME_HMS,
-                    )}
-                  </h1>
-                )}
-              </Card>
-            </Col>
-          </Row>
-        )}
-        {isRoleHr && (
-          <Row className={styles.btn__edit}>
-            {!isShowEditing && (
-              <BasicButton
-                title={'Edit'}
-                type="outline"
-                onClick={() => setIsShowEditting(true)}
-              />
+              </Row>
             )}
-          </Row>
+          </>
         )}
         {isShowEditing && (
           <Form onFinish={submitHandler}>
