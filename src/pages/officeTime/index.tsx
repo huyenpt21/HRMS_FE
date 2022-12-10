@@ -72,8 +72,11 @@ export default function OfficeTime() {
               <Col span={10}>
                 <Card
                   title="Start"
-                  headStyle={{ fontWeight: 600 }}
-                  bodyStyle={{ backgroundColor: '#FFEFD6' }}
+                  headStyle={{ fontWeight: 600, color: 'rgba(0, 0, 0, 0.8)' }}
+                  bodyStyle={{
+                    backgroundColor: '#FFEFD6',
+                    color: 'rgba(0, 0, 0, 0.8)',
+                  }}
                 >
                   {officeTimeData?.timeStart && (
                     <div className={styles.content__text}>
@@ -89,8 +92,11 @@ export default function OfficeTime() {
               <Col span={10}>
                 <Card
                   title="Finish"
-                  headStyle={{ fontWeight: 600 }}
-                  bodyStyle={{ backgroundColor: '#BCEAD5' }}
+                  headStyle={{ fontWeight: 600, color: 'rgba(0, 0, 0, 0.8)' }}
+                  bodyStyle={{
+                    backgroundColor: '#BCEAD5',
+                    color: 'rgba(0, 0, 0, 0.8)',
+                  }}
                 >
                   {officeTimeData?.timeFinish && (
                     <div className={styles.content__text}>

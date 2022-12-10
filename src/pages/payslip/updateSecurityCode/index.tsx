@@ -105,7 +105,7 @@ export default function UpdateSecurityCode() {
         className={styles.main}
       >
         <Row className={styles.header__title}>
-          <h2>Update security code</h2>
+          <div>Update security code</div>
         </Row>
         <Form
           form={settingForm}
