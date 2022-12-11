@@ -65,7 +65,7 @@ export default function OfficeTime() {
         <Row className={styles.header__section}>
           <div className={styles.header__title}>Office Time</div>
         </Row>
-        {isLoading && <Loading />}
+        {isLoading && <Loading text="Working on it..." />}
         {!isLoading && (
           <>
             <Row className={styles.content__section}>

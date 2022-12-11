@@ -48,7 +48,7 @@ export default function FixDataHeaderRequest({ requestData }: IPops) {
           <Col span={8}>
             <span>Approved Time:</span>
             <span className={styles['text--bold']}>
-              {getDateFormat(requestData?.createDate, DATE_TIME_US)}
+              {getDateFormat(requestData?.approvalDate, DATE_TIME_US)}
             </span>
           </Col>
         )}

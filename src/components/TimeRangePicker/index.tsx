@@ -2,6 +2,7 @@ import { Form, TimePicker } from 'antd';
 import moment from 'moment';
 import { TIME_HOUR } from 'constants/common';
 import styles from './index.module.less';
+import SvgIcon from 'components/SvgIcon';
 
 export type EventValue<DateType> = DateType | null;
 type RangeType = 'start' | 'end';
@@ -69,7 +70,7 @@ const TimeRangePicker = ({
           disabled={disabled}
           onChange={onChange}
           disabledTime={disableTime}
-          suffixIcon={null}
+          suffixIcon={<SvgIcon icon="timer-start" size={20} color="#aaa" />}
           placeholder={placeholder}
           hideDisabledOptions={hideDisabledOptions}
         />

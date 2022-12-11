@@ -441,7 +441,9 @@ export default function RequestDetailModal({
         closeIcon
       >
         <>
-          {(loadingGetDetail || loadingGetRemaining) && <Loading />}
+          {(loadingGetDetail || loadingGetRemaining) && (
+            <Loading text="Working on it..." />
+          )}
           {!(loadingGetDetail || loadingGetRemaining) && (
             <>
               <Form

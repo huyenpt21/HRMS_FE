@@ -68,7 +68,7 @@ export default function DetailDeviceRequest() {
 
   return (
     <>
-      {isLoading && <Loading />}
+      {isLoading && <Loading text="Working on it..." />}
       {!isLoading && (
         <Row className={styles.container}>
           <Col

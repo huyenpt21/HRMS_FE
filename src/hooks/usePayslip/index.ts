@@ -32,7 +32,7 @@ export const useGetPayslip = ({
   );
 };
 export const useCheckSecureCodeExist = () =>
-  useQuery(['get-office-time'], () =>
+  useQuery(['check-secure-code-exist'], () =>
     fetchApi(
       {
         url: PAYSLIP.model.secureCode,

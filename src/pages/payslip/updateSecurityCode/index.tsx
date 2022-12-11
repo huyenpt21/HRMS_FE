@@ -11,7 +11,7 @@ import {
 import { ResPayslipModify, SercurityCode } from 'models/payslip';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import dataCheckExistMock from '../dataCheckExistMock.json';
+// import dataCheckExistMock from '../dataCheckExistMock.json';
 import styles from '../payrollDetail.module.less';
 
 export default function UpdateSecurityCode() {
@@ -22,19 +22,6 @@ export default function UpdateSecurityCode() {
   useEffect(() => {
     if (secureCodeData) {
       const { data: isSecureCodeExist } = secureCodeData;
-      if (!isSecureCodeExist) {
-        notification.warning({
-          message: 'You do not have a security code',
-          key: '1',
-        });
-        navigate('/setting/security-code/create');
-      }
-    } else {
-      const dataMock: { metadata: any; data: boolean } = dataCheckExistMock as {
-        metadata: any;
-        data: boolean;
-      };
-      const { data: isSecureCodeExist } = dataMock;
       if (!isSecureCodeExist) {
         notification.warning({
           message: 'You do not have a security code',
@@ -115,7 +102,7 @@ export default function UpdateSecurityCode() {
           className={styles.login__payslip}
         >
           {(loadingSendEmail || loadingCheckExistCode || loadingUpdateCode) && (
-            <Loading />
+            <Loading text="Working on it..." />
           )}
           {!loadingSendEmail &&
             !loadingCheckExistCode &&

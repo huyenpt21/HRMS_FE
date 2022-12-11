@@ -67,5 +67,5 @@ export default function LoginRedirect() {
       navigate('/');
     }
   }, [getUserRole, detailUserInfo]);
-  return <Loading />;
+  return <Loading text="Loading" />;
 }

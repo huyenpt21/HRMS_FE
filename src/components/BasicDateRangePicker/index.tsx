@@ -1,4 +1,5 @@
 import { DatePicker, Form } from 'antd';
+import SvgIcon from 'components/SvgIcon';
 import { US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
 import { Dispatch, SetStateAction } from 'react';
@@ -71,7 +72,7 @@ const BasicDateRangePicker = (props: IProps) => {
               : undefined
           }
           onChange={props.onChange}
-          suffixIcon={null}
+          suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
           size="large"
           disabled={props.disabled}
           disabledDate={props.disabledDate}

@@ -5,12 +5,13 @@ import BasicDatePicker from 'components/BasicDatePicker';
 import BasicDateRangePicker from 'components/BasicDateRangePicker';
 import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
+import Loading from 'components/loading';
 import MultipleImagePreview from 'components/MultipleImagePreview';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import TimeRangePicker from 'components/TimeRangePicker';
 import { DATE_TIME_US, MESSAGE_RES } from 'constants/common';
 import { REQUEST_TYPE_KEY, STATUS } from 'constants/enums/common';
-import { REQUEST_TYPE_LIST } from 'constants/fixData';
+import { REQUEST_MATERNITY_OPTION, REQUEST_TYPE_LIST } from 'constants/fixData';
 import { DEVICE } from 'constants/services';
 import { useChangeStatusRequest, useRequestDetail } from 'hooks/useRequestList';
 import { RequestModel, ResRequestModify } from 'models/request';
@@ -30,27 +31,32 @@ export default function DetailPageRequestForNoti() {
   const [requestData, setRequestData] = useState<RequestModel>();
   const [evidenceSource, setEvidenceSource] = useState<string[]>([]);
 
-  const { data: detailRequest, refetch } = useRequestDetail(requestId || -1);
-  const { mutate: statusRequest } = useChangeStatusRequest({
-    onSuccess: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === 'Success') {
-        notification.success({
-          message: 'Responding request successfully',
+  const {
+    data: detailRequest,
+    isLoading: loadingDetail,
+    refetch,
+  } = useRequestDetail(requestId || -1);
+  const { mutate: statusRequest, isLoading: loadingChangeStatus } =
+    useChangeStatusRequest({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === 'Success') {
+          notification.success({
+            message: 'Responding request successfully',
+          });
+        }
+      },
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        notification.error({
+          message: message,
         });
-      }
-    },
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      notification.error({
-        message: message,
-      });
-    },
-  });
+      },
+    });
   useEffect(() => {
     if (detailRequest && detailRequest?.data) {
       const {
@@ -60,11 +66,30 @@ export default function DetailPageRequestForNoti() {
       if (message === MESSAGE_RES.SUCCESS && item) {
         setRequestData(item);
         requestForm.setFieldsValue(item);
-        requestForm.setFieldsValue({
-          timeRemaining: item?.timeRemaining?.toFixed(2),
-          date: [moment(item.startTime), moment(item.endTime)],
-          time: [moment(item.startTime), moment(item.endTime)],
-        });
+        if (
+          item?.requestTypeName === REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+          item.requestTypeName === REQUEST_TYPE_KEY.MATERNITY
+        ) {
+          requestForm.setFieldsValue({
+            date: moment(item.startTime),
+            time: [moment(item.startTime), moment(item.endTime)],
+          });
+        } else {
+          requestForm.setFieldsValue({
+            date: [moment(item.startTime), moment(item.endTime)],
+            time: [moment(item.startTime), moment(item.endTime)],
+          });
+        }
+        if (
+          item?.requestTypeName === REQUEST_TYPE_KEY.LEAVE ||
+          item?.requestTypeName === REQUEST_TYPE_KEY.LEAVE
+        ) {
+          requestForm.setFieldsValue({
+            timeRemaining: item?.timeRemaining?.toFixed(2),
+            otTimeRemainingOfMonth: item?.otTimeRemainingOfMonth?.toFixed(2),
+            otTimeRemainingOfYear: item?.otTimeRemainingOfYear?.toFixed(2),
+          });
+        }
         if (item?.listEvidence) {
           setEvidenceSource(item?.listEvidence);
         }
@@ -108,197 +133,231 @@ export default function DetailPageRequestForNoti() {
           />
         </Row>
         <Divider />
-        <Form form={requestForm} layout="vertical" requiredMark disabled={true}>
-          <Row gutter={20}>
-            <Col span={24} className={styles.notice}>
-              {requestData?.timeRemaining === 0 &&
-                requestData?.requestTypeName === REQUEST_TYPE_KEY.LEAVE && (
-                  <div>
-                    * Notice: This person have used up all the holidays this
-                    year
-                  </div>
-                )}
-              {requestData?.requestTypeName === REQUEST_TYPE_KEY.OT && (
-                <>
-                  {requestData?.otTimeRemainingOfYear === 0 && (
-                    <div className={styles.notice}>
-                      * Notice: This person have used up all the over time this
+        {(loadingDetail || loadingChangeStatus) && (
+          <Loading text="Working on it..." />
+        )}
+        {!loadingDetail && !loadingChangeStatus && (
+          <Form
+            form={requestForm}
+            layout="vertical"
+            requiredMark
+            disabled={true}
+          >
+            <Row gutter={20}>
+              <Col span={24} className={styles.notice}>
+                {requestData?.timeRemaining === 0 &&
+                  requestData?.requestTypeName === REQUEST_TYPE_KEY.LEAVE && (
+                    <div>
+                      * Notice: This person have used up all the holidays this
                       year
                     </div>
                   )}
-                  {requestData?.otTimeRemainingOfMonth === 0 && (
-                    <div className={styles.notice}>
-                      * Notice: This person have used up all the over time this
-                      month
-                    </div>
+                {requestData?.requestTypeName === REQUEST_TYPE_KEY.OT && (
+                  <>
+                    {requestData?.otTimeRemainingOfYear === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this year
+                      </div>
+                    )}
+                    {requestData?.otTimeRemainingOfMonth === 0 && (
+                      <div className={styles.notice}>
+                        * Notice: This person have used up all the over time
+                        this month
+                      </div>
+                    )}
+                  </>
+                )}
+              </Col>
+            </Row>
+            <FixDataHeaderRequest requestData={requestData} />
+            <Row gutter={20}>
+              <Col span="12">
+                <BasicSelect
+                  options={REQUEST_TYPE_LIST}
+                  label="Request Type"
+                  placeholder="Choose request type"
+                  name="requestTypeId"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                />
+              </Col>
+              {requestData?.status === STATUS.PENDING && (
+                <>
+                  {requestData?.requestTypeName === REQUEST_TYPE_KEY.LEAVE && (
+                    <Col span="4">
+                      <BasicInput
+                        label="Remaining Time"
+                        name="timeRemaining"
+                        disabled
+                        suffix={'days'}
+                      />
+                    </Col>
+                  )}
+                  {requestData?.requestTypeName === REQUEST_TYPE_KEY.OT && (
+                    <>
+                      <Col span="6">
+                        <BasicInput
+                          label="Remaining Time Month"
+                          name="otTimeRemainingOfMonth"
+                          disabled
+                          suffix={'hours'}
+                        />
+                      </Col>
+                      <Col span="6">
+                        <BasicInput
+                          label="Remaining Time Year"
+                          name="otTimeRemainingOfYear"
+                          disabled
+                          suffix={'hours'}
+                        />
+                      </Col>
+                    </>
                   )}
                 </>
               )}
-            </Col>
-          </Row>
-          <FixDataHeaderRequest requestData={requestData} />
-          <Row gutter={20}>
-            <Col span="12">
-              <BasicSelect
-                options={REQUEST_TYPE_LIST}
-                label="Request Type"
-                placeholder="Choose request type"
-                name="requestTypeId"
-                allowClear
-                showSearch
-                optionFilterProp="label"
-              />
-            </Col>
-            {requestData?.status === STATUS.PENDING && (
-              <>
-                {requestData?.requestTypeName === REQUEST_TYPE_KEY.LEAVE && (
-                  <Col span="4">
-                    <BasicInput
-                      label="Remaining Time"
-                      name="timeRemaining"
-                      disabled
-                      suffix={'days'}
+              {requestData?.requestTypeName === REQUEST_TYPE_KEY.DEVICE && (
+                <Col span="12">
+                  <SelectCustomSearch
+                    url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
+                    dataName="items"
+                    apiName="device-type-master-data"
+                    label="Device Type"
+                    placeholder="Choose device type"
+                    name="deviceTypeId"
+                    allowClear
+                  />
+                </Col>
+              )}
+            </Row>
+            {(requestData?.requestTypeName ===
+              REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT ||
+              requestData?.requestTypeName === REQUEST_TYPE_KEY.LEAVE ||
+              requestData?.requestTypeName === REQUEST_TYPE_KEY.OTHER) && (
+              <Row gutter={20}>
+                <Col span="12">
+                  {requestData?.requestTypeName ===
+                    REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
+                    <BasicDatePicker
+                      name="date"
+                      label="Applicable Date"
+                      allowClear
                     />
-                  </Col>
-                )}
-                {requestData?.requestTypeName === REQUEST_TYPE_KEY.OT && (
-                  <>
-                    <Col span="6">
-                      <BasicInput
-                        label="Remaining Time Month"
-                        name="otTimeRemainingOfMonth"
-                        disabled
-                        suffix={'hours'}
-                      />
-                    </Col>
-                    <Col span="6">
-                      <BasicInput
-                        label="Remaining Time Year"
-                        name="otTimeRemainingOfYear"
-                        disabled
-                        suffix={'hours'}
-                      />
-                    </Col>
-                  </>
-                )}
-              </>
-            )}
-            {requestData?.requestTypeName === REQUEST_TYPE_KEY.DEVICE && (
-              <Col span="12">
-                <SelectCustomSearch
-                  url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
-                  dataName="items"
-                  apiName="device-type-master-data"
-                  label="Device Type"
-                  placeholder="Choose device type"
-                  name="deviceTypeId"
-                  allowClear
-                />
-              </Col>
-            )}
-          </Row>
-          {requestData?.requestTypeName !== REQUEST_TYPE_KEY.OT && (
-            <Row gutter={20}>
-              <Col span="12">
-                {requestData?.requestTypeName ===
-                  REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT && (
-                  <BasicDatePicker
-                    name="date"
-                    label="Applicable Date"
-                    allowClear
-                  />
-                )}
-                {(requestData?.requestTypeName === REQUEST_TYPE_KEY.LEAVE ||
-                  requestData?.requestTypeName === REQUEST_TYPE_KEY.OTHER) && (
-                  <BasicDateRangePicker
-                    name="date"
-                    label="Applicable Date"
-                    placeholder={['From', 'To']}
-                    allowClear
-                  />
-                )}
-              </Col>
-              {requestData?.requestTypeName !== REQUEST_TYPE_KEY.DEVICE && (
+                  )}
+                  {(requestData?.requestTypeName === REQUEST_TYPE_KEY.LEAVE ||
+                    requestData?.requestTypeName ===
+                      REQUEST_TYPE_KEY.OTHER) && (
+                    <BasicDateRangePicker
+                      name="date"
+                      label="Applicable Date"
+                      placeholder={['From', 'To']}
+                      allowClear
+                    />
+                  )}
+                </Col>
                 <Col span="12">
                   <TimeRangePicker
                     label="Applicable Time"
                     placeholder={['From', 'To']}
                     name="time"
+                    disabled
                   />
                 </Col>
-              )}
-            </Row>
-          )}
-          {requestData?.requestTypeName === REQUEST_TYPE_KEY.OT && (
+              </Row>
+            )}
+            {requestData?.requestTypeName === REQUEST_TYPE_KEY.MATERNITY && (
+              <Row gutter={20}>
+                <Col span={12}>
+                  <BasicDatePicker
+                    name="date"
+                    label="Start Date"
+                    rules={[{ required: true }]}
+                    allowClear
+                  />
+                </Col>
+                <Col span={12}>
+                  <BasicSelect
+                    options={REQUEST_MATERNITY_OPTION}
+                    name="periodTime"
+                    label="Period time"
+                    rules={[{ required: true }]}
+                    allowClear
+                  />
+                </Col>
+              </Row>
+            )}
+            {requestData?.requestTypeName === REQUEST_TYPE_KEY.OT && (
+              <Row gutter={20}>
+                <Col span="16">
+                  <BasicDateRangePicker
+                    name="date"
+                    label="Applicable Date"
+                    placeholder={['From', 'To']}
+                    showTime={{
+                      defaultValue: [
+                        moment('00:00', 'HH:mm'),
+                        moment('00:00', 'HH:mm'),
+                      ],
+                    }}
+                    format={DATE_TIME_US}
+                  />
+                </Col>
+              </Row>
+            )}
             <Row gutter={20}>
-              <Col span="16">
-                <BasicDateRangePicker
-                  name="date"
-                  label="Applicable Date"
-                  placeholder={['From', 'To']}
-                  showTime={{
-                    defaultValue: [
-                      moment('00:00', 'HH:mm'),
-                      moment('00:00', 'HH:mm'),
-                    ],
-                  }}
-                  format={DATE_TIME_US}
+              <Col span={24}>
+                <BasicInput
+                  type="textarea"
+                  rows={3}
+                  label="Reason"
+                  name="reason"
                 />
               </Col>
             </Row>
-          )}
-          <Row gutter={20}>
-            <Col span={24}>
-              <BasicInput
-                type="textarea"
-                rows={3}
-                label="Reason"
-                name="reason"
-              />
-            </Col>
-          </Row>
-          <MultipleImagePreview src={evidenceSource} />
-          {menuType === 'request-center' &&
-            requestData?.status === STATUS.PENDING && (
-              <>
-                <Row gutter={20} className={styles['modal__footer']}>
-                  <BasicButton
-                    title="Approve"
-                    type="outline"
-                    className={styles['btn--approve']}
-                    onClick={() => {
-                      handleQickActionRequest(STATUS.APPROVED);
-                    }}
-                    disabled={
-                      (requestData?.requestTypeName ===
-                        REQUEST_TYPE_KEY.LEAVE &&
-                        requestData?.timeRemaining === 0) ||
-                      (requestData?.requestTypeName === REQUEST_TYPE_KEY.OT &&
-                        (requestData?.otTimeRemainingOfYear === 0 ||
-                          requestData?.otTimeRemainingOfMonth === 0))
-                    }
-                  />
-                  <BasicButton
-                    title="Reject"
-                    type="outline"
-                    className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                    danger
-                    onClick={() => {
-                      handleQickActionRequest(STATUS.REJECTED);
-                    }}
-                    disabled={
-                      (requestData?.requestTypeName ===
-                        REQUEST_TYPE_KEY.LEAVE &&
-                        requestData?.timeRemaining === 0) ||
-                      (requestData?.requestTypeName === REQUEST_TYPE_KEY.OT &&
-                        (requestData?.otTimeRemainingOfYear === 0 ||
-                          requestData?.otTimeRemainingOfMonth === 0))
-                    }
-                  />
-                </Row>
-              </>
-            )}
-        </Form>
+            <MultipleImagePreview src={evidenceSource} />
+            {menuType === 'request-center' &&
+              requestData?.status === STATUS.PENDING && (
+                <>
+                  <Row gutter={20} className={styles['modal__footer']}>
+                    <BasicButton
+                      title="Approve"
+                      type="outline"
+                      className={styles['btn--approve']}
+                      onClick={() => {
+                        handleQickActionRequest(STATUS.APPROVED);
+                      }}
+                      disabled={
+                        (requestData?.requestTypeName ===
+                          REQUEST_TYPE_KEY.LEAVE &&
+                          requestData?.timeRemaining === 0) ||
+                        (requestData?.requestTypeName === REQUEST_TYPE_KEY.OT &&
+                          (requestData?.otTimeRemainingOfYear === 0 ||
+                            requestData?.otTimeRemainingOfMonth === 0))
+                      }
+                    />
+                    <BasicButton
+                      title="Reject"
+                      type="outline"
+                      className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                      danger
+                      onClick={() => {
+                        handleQickActionRequest(STATUS.REJECTED);
+                      }}
+                      disabled={
+                        (requestData?.requestTypeName ===
+                          REQUEST_TYPE_KEY.LEAVE &&
+                          requestData?.timeRemaining === 0) ||
+                        (requestData?.requestTypeName === REQUEST_TYPE_KEY.OT &&
+                          (requestData?.otTimeRemainingOfYear === 0 ||
+                            requestData?.otTimeRemainingOfMonth === 0))
+                      }
+                    />
+                  </Row>
+                </>
+              )}
+          </Form>
+        )}
       </Col>
     </Row>
   );

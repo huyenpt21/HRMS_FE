@@ -3,9 +3,9 @@ import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import {
   DATE_TIME,
-  DATE_TIME_US,
   paginationConfig,
   TIME_HOUR,
+  US_DATE_FORMAT,
 } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { MyTimeCheckHeader } from 'constants/header';
@@ -89,7 +89,7 @@ export default function MyTimeCheck() {
         render: (data: any, record: TimeCheckModel) => {
           if (data) {
             if (el.key === 'date') {
-              return <span>{getDateFormat(data, DATE_TIME_US)}</span>;
+              return <span>{getDateFormat(data, US_DATE_FORMAT)}</span>;
             }
             if (el.key === 'timeIn') {
               return (
