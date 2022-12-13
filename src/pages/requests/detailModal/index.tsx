@@ -441,10 +441,20 @@ export default function RequestDetailModal({
         closeIcon
       >
         <>
-          {(loadingGetDetail || loadingGetRemaining) && (
-            <Loading text="Working on it..." />
-          )}
-          {!(loadingGetDetail || loadingGetRemaining) && (
+          {(loadingGetDetail ||
+            loadingGetRemaining ||
+            loadingCreate ||
+            isUploadingImage ||
+            loadingUpdate ||
+            loadingCancelRequest) && <Loading text="Working on it..." />}
+          {!(
+            loadingGetDetail ||
+            loadingGetRemaining ||
+            loadingCreate ||
+            isUploadingImage ||
+            loadingUpdate ||
+            loadingCancelRequest
+          ) && (
             <>
               <Form
                 form={requestForm}
@@ -700,7 +710,6 @@ export default function RequestDetailModal({
                         type="filled"
                         className={styles['btn--save']}
                         htmlType={'submit'}
-                        loading={loadingCreate || isUploadingImage}
                         disabled={
                           (remainingTimeRef.current?.timeRemaining === 0 &&
                             requestType === REQUEST_TYPE_KEY.LEAVE) ||
@@ -717,7 +726,6 @@ export default function RequestDetailModal({
                         type="filled"
                         className={styles['btn--save']}
                         htmlType={'submit'}
-                        loading={loadingUpdate || isUploadingImage}
                         disabled={
                           (requestType === REQUEST_TYPE_KEY.LEAVE &&
                             remainingTimeRef.current?.timeRemaining === 0) ||
