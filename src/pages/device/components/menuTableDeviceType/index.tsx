@@ -41,7 +41,11 @@ export default function MenuTableDeviceType({
         const {
           metadata: { message },
         } = res;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
       },
     },
     `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
@@ -60,7 +64,11 @@ export default function MenuTableDeviceType({
         const {
           metadata: { message },
         } = res;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
         refetch();
       },
     },

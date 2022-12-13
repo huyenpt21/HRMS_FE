@@ -49,7 +49,9 @@ export default function UpdateSecurityCode() {
         const {
           metadata: { message },
         } = response;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({ message: message });
+        }
       },
     });
   const { mutate: forgotSecureCode, isLoading: loadingSendEmail } =
@@ -69,7 +71,9 @@ export default function UpdateSecurityCode() {
         const {
           metadata: { message },
         } = response;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({ message: message });
+        }
       },
     });
 

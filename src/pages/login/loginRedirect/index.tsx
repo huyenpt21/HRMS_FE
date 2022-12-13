@@ -25,7 +25,7 @@ export default function LoginRedirect() {
     } else {
       navigate('/403');
     }
-  }, []);
+  }, [accessToken]);
   const { data: getUserRole } = useGetUserRoles(acLocal ?? '');
   const { data: detailUserInfo } = useGetuserInfo(acLocal ?? '');
   useEffect(() => {

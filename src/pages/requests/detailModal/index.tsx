@@ -115,9 +115,9 @@ export default function RequestDetailModal({
         const {
           metadata: { message },
         } = response;
-        notification.error({
-          message: message,
-        });
+        if (message) {
+          notification.error({ message: message });
+        }
         cancelHandler();
       },
     });
@@ -139,9 +139,9 @@ export default function RequestDetailModal({
       const {
         metadata: { message },
       } = response;
-      notification.error({
-        message: message,
-      });
+      if (message) {
+        notification.error({ message: message });
+      }
       cancelHandler();
     },
   });
@@ -165,9 +165,9 @@ export default function RequestDetailModal({
       const {
         metadata: { message },
       } = response;
-      notification.error({
-        message: message,
-      });
+      if (message) {
+        notification.error({ message: message });
+      }
     },
   });
   const { mutate: remainingTimeRequest, isLoading: loadingGetRemaining } =
@@ -190,9 +190,9 @@ export default function RequestDetailModal({
         const {
           metadata: { message },
         } = response;
-        notification.error({
-          message: message,
-        });
+        if (message) {
+          notification.error({ message: message });
+        }
       },
     });
   const { mutate: cancelRequest, isLoading: loadingCancelRequest } =
@@ -213,9 +213,9 @@ export default function RequestDetailModal({
         const {
           metadata: { message },
         } = response;
-        notification.error({
-          message: message,
-        });
+        if (message) {
+          notification.error({ message: message });
+        }
         refetchList();
         onCancel();
       },

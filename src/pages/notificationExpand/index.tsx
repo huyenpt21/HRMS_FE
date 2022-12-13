@@ -1,4 +1,4 @@
-import { Avatar, List, message } from 'antd';
+import { Avatar, List, notification } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME_US } from 'constants/common';
@@ -40,9 +40,13 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
     },
     onError: (res) => {
       const {
-        metadat: { messageRes },
+        metadat: { message },
       } = res;
-      message.error(messageRes);
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
   useEffect(() => {

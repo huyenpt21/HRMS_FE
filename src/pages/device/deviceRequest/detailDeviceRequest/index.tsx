@@ -39,7 +39,11 @@ export default function DetailDeviceRequest() {
       const {
         metadata: { message },
       } = response;
-      notification.error({ message: message });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
   useEffect(() => {

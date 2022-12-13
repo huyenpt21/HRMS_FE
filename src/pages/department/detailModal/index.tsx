@@ -55,7 +55,11 @@ export default function DepartmentDetailModal({
       const {
         metadata: { message },
       } = response;
-      notification.error({ message: message });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
       onCancel();
     },
   });
@@ -72,7 +76,11 @@ export default function DepartmentDetailModal({
       const {
         metadata: { message },
       } = response;
-      notification.error({ message: message });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
   useEffect(() => {

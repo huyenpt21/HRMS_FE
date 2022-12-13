@@ -46,7 +46,11 @@ export default function DetailModalDevice({
         const {
           metadata: { message },
         } = response;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
       },
     },
     `${DEVICE.model.itSupport}/${DEVICE.service}`,
@@ -65,7 +69,11 @@ export default function DetailModalDevice({
         const {
           metadata: { message },
         } = response;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
       },
     },
     `${DEVICE.model.itSupport}/${DEVICE.service}`,

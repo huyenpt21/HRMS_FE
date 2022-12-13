@@ -60,7 +60,11 @@ export default function PayslipDetail() {
       const {
         metadata: { message },
       } = response;
-      notification.error({ message: message });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
   const { mutate: checkSecureCodeCorrect, isLoading: loadingCheckSecuCode } =
@@ -80,7 +84,11 @@ export default function PayslipDetail() {
         const {
           metadata: { message },
         } = response;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
       },
     });
   useEffect(() => {
@@ -105,7 +113,11 @@ export default function PayslipDetail() {
       const {
         metadata: { message },
       } = response;
-      notification.error({ message: message });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
 

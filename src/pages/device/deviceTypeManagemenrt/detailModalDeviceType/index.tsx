@@ -31,7 +31,11 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
         const {
           metadata: { message },
         } = response;
-        notification.error({ message: message });
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
         onCancel();
       },
     },

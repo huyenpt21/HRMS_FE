@@ -41,9 +41,11 @@ export default function OfficeTime() {
       const {
         metadata: { message },
       } = response;
-      notification.error({
-        message: message,
-      });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
   const submitHandler = (value: OfficeTimelModel) => {

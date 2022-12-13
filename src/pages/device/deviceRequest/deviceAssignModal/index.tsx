@@ -36,9 +36,11 @@ export default function DeviceAssignModal({
       const {
         metadata: { message },
       } = response;
-      notification.error({
-        message: message,
-      });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
   const { mutate: assignDevice, isLoading } = useAddRequestModal(
@@ -60,9 +62,11 @@ export default function DeviceAssignModal({
         const {
           metadata: { message },
         } = response;
-        notification.error({
-          message: message,
-        });
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
       },
     },
     `${REQUEST.model.itSupport}/${REQUEST.model.assign}`,

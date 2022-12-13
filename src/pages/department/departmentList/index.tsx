@@ -65,7 +65,11 @@ export default function DepartmentList() {
       const {
         metadata: { message },
       } = response;
-      notification.error({ message: message });
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
     },
   });
 

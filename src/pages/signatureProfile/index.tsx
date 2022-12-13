@@ -80,9 +80,9 @@ export default function SignatureProfileList() {
       const {
         metadata: { message },
       } = response;
-      notification.error({
-        message: message,
-      });
+      if (message) {
+        notification.error({ message: message });
+      }
     },
   });
   // * render header and data in table

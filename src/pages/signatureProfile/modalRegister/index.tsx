@@ -42,9 +42,9 @@ export default function SignatureRegisterModal({
       const {
         metadata: { message },
       } = response;
-      notification.error({
-        message: message,
-      });
+      if (message) {
+        notification.error({ message: message });
+      }
     },
   });
 

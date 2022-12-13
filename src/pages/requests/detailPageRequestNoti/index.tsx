@@ -52,9 +52,9 @@ export default function DetailPageRequestForNoti() {
         const {
           metadata: { message },
         } = response;
-        notification.error({
-          message: message,
-        });
+        if (message) {
+          notification.error({ message: message });
+        }
       },
     });
   useEffect(() => {
