@@ -24,30 +24,31 @@ export default function OfficeTime() {
       }
     }
   }, [userRoles]);
-  const { mutate: updateOfficeTime } = useUpdateOfficeTime({
-    onSuccess: (response: ResOfficeTimelModify) => {
-      const {
-        metadata: { message },
-      } = response;
+  const { mutate: updateOfficeTime, isLoading: loadingUpdate } =
+    useUpdateOfficeTime({
+      onSuccess: (response: ResOfficeTimelModify) => {
+        const {
+          metadata: { message },
+        } = response;
 
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({
-          message: 'Update office successfully',
-        });
-        setIsShowEditting(false);
-      }
-    },
-    onError: (response: ResOfficeTimelModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({
-          message: message,
-        });
-      }
-    },
-  });
+        if (message === MESSAGE_RES.SUCCESS) {
+          notification.success({
+            message: 'Update office successfully',
+          });
+          setIsShowEditting(false);
+        }
+      },
+      onError: (response: ResOfficeTimelModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message) {
+          notification.error({
+            message: message,
+          });
+        }
+      },
+    });
   const submitHandler = (value: OfficeTimelModel) => {
     value.timeStart = getDateFormat(value.timeStart, TIME_HMS);
     value.timeFinish = getDateFormat(value.timeFinish, TIME_HMS);
@@ -67,8 +68,8 @@ export default function OfficeTime() {
         <Row className={styles.header__section}>
           <div className={styles.header__title}>Office Time</div>
         </Row>
-        {isLoading && <Loading text="Working on it..." />}
-        {!isLoading && (
+        {(isLoading || loadingUpdate) && <Loading text="Working on it..." />}
+        {!isLoading && !loadingUpdate && (
           <>
             <Row className={styles.content__section}>
               <Col span={10}>
@@ -123,34 +124,40 @@ export default function OfficeTime() {
                 )}
               </Row>
             )}
+            {isShowEditing && (
+              <Form onFinish={submitHandler}>
+                <Row className={styles.btn__edit}>
+                  <BasicButton
+                    title={'Save'}
+                    htmlType="submit"
+                    type="outline"
+                  />
+                </Row>
+                <Row className={styles.content__section}>
+                  <Col span={10}>
+                    <TimeComponent
+                      name="timeStart"
+                      rules={[
+                        { required: true, message: 'Start time is requied' },
+                      ]}
+                      allowClear
+                      defaultValue={officeTimeData?.timeStart}
+                    />
+                  </Col>
+                  <Col span={10}>
+                    <TimeComponent
+                      name="timeFinish"
+                      rules={[
+                        { required: true, message: 'Finish time is requied' },
+                      ]}
+                      allowClear
+                      defaultValue={officeTimeData?.timeFinish}
+                    />
+                  </Col>
+                </Row>
+              </Form>
+            )}
           </>
-        )}
-        {isShowEditing && (
-          <Form onFinish={submitHandler}>
-            <Row className={styles.btn__edit}>
-              <BasicButton title={'Save'} htmlType="submit" type="outline" />
-            </Row>
-            <Row className={styles.content__section}>
-              <Col span={10}>
-                <TimeComponent
-                  name="timeStart"
-                  rules={[{ required: true, message: 'Start time is requied' }]}
-                  allowClear
-                  defaultValue={officeTimeData?.timeStart}
-                />
-              </Col>
-              <Col span={10}>
-                <TimeComponent
-                  name="timeFinish"
-                  rules={[
-                    { required: true, message: 'Finish time is requied' },
-                  ]}
-                  allowClear
-                  defaultValue={officeTimeData?.timeFinish}
-                />
-              </Col>
-            </Row>
-          </Form>
         )}
       </div>
     </div>
