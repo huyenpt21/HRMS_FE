@@ -21,7 +21,8 @@
         "endTime": "2022-10-26 01:30:00",
         "reason": "Don't know",
         "status": "Rejected",
-        "approvalDate": "2022-10-06 00:00:00"
+        "approvalDate": "2022-10-06 00:00:00",
+        "isAllowRollback": 1
       },
       {
         "id": 2,
@@ -33,7 +34,8 @@
         "endTime": "2022-10-26 01:30:00",
         "reason": "Don't know",
         "status": "Approved",
-        "approvalDate": "2022-10-06 00:00:00"
+        "approvalDate": "2022-10-06 00:00:00",
+        "isAllowRollback": 1
       },
       {
         "id": 4,
@@ -45,7 +47,8 @@
         "endTime": "2022-10-26 01:30:00",
         "reason": "Don't know",
         "status": "Pending",
-        "approvalDate": "2022-10-06 00:00:00"
+        "approvalDate": "2022-10-06 00:00:00",
+        "isAllowRollback": 1
       }
     ]
   }

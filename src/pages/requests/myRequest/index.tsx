@@ -187,7 +187,8 @@ export default function MyRequestList() {
   };
   const rowClickHandler = (record: RequestModel) => {
     return {
-      onClick: () => {
+      onClick: (e: any) => {
+        e.stopPropagation();
         requestIdRef.current = record.id;
         modalAction.current = ACTION_TYPE.VIEW_DETAIL;
         setIsShowDetailModal(true);

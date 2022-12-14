@@ -316,7 +316,6 @@ export default function PayslipDetail() {
           onConfirm={() => {
             navigate('/setting/security-code/create');
           }}
-          status="warning"
           visible={isShowPopConfirm}
         />
       )}

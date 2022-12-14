@@ -1,106 +1,62 @@
-import {
-  CheckCircleOutlined,
-  ExclamationCircleOutlined,
-} from '@ant-design/icons';
-import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import BasicButton from 'components/BasicButton';
+import CommonModal from 'components/CommonModal';
+import Loading from 'components/loading';
 import styles from './index.module.less';
 
 interface IProps {
-  status: 'success' | 'warning' | 'error';
   title: string;
   message?: string;
   visible: boolean;
-  className?: string;
-  closable?: boolean;
   width?: string | number;
   onCancel: () => void;
-  afterClose?: () => void;
-  onTryAgain?: () => void;
   onConfirm: () => void;
-  labelBtnDelete?: string;
-  loading?: boolean;
+  isLoading?: boolean;
 }
 const NotifyPopup = ({
-  status,
   title,
   message,
   visible,
   width,
   onCancel,
-  afterClose,
-  className,
-  closable,
-  onTryAgain,
   onConfirm,
-  labelBtnDelete,
-  loading,
+  isLoading,
 }: IProps) => {
   return (
-    <Modal
+    <CommonModal
       closeIcon={<></>}
       width={width ?? 350}
-      visible={visible}
-      className={`mainModal ${className}`}
+      open={visible}
       footer={false}
-      closable={closable}
       onCancel={onCancel}
-      afterClose={afterClose}
     >
-      {status === 'success' && (
-        <div className={styles.content}>
-          <CheckCircleOutlined
-            className={`${styles.icon} ${styles['icon--success']}`}
-          />
-          <div className={styles.content__title}> {title} </div>
-          <div className={styles.content__message}> {message} </div>
-          <div className={styles.content__button}>
-            <BasicButton title={'Close'} type="outline" onClick={onCancel} />
-          </div>
-        </div>
-      )}
-      {status === 'error' && (
-        <div className={styles.content}>
-          <ExclamationCircleOutlined
-            className={`${styles.icon} ${styles['icon--error']}`}
-          />
-          <div className={styles.content__title}> {title} </div>
-          <div className={styles.content__message}> {message} </div>
-          <div className={styles.content__button}>
-            <BasicButton title={'Cancel'} type="outline" onClick={onCancel} />
-            <BasicButton
-              title={'Try again'}
-              type="filled"
-              onClick={onTryAgain}
+      <>
+        {isLoading && <Loading text="Working on it..." />}
+        {!isLoading && (
+          <div className={styles.content}>
+            <ExclamationCircleOutlined
+              className={`${styles.icon} ${styles['icon--warning']}`}
             />
+            <div className={styles.content__title}> {title} </div>
+            <div className={styles.content__message}> {message} </div>
+            <div className={styles.content__button}>
+              <BasicButton
+                title={'No'}
+                type="outline"
+                onClick={onCancel}
+                className={styles.btn__no}
+              />
+              <BasicButton
+                title={'Yes'}
+                type="outline"
+                onClick={onConfirm}
+                className={styles.btn__yes}
+              />
+            </div>
           </div>
-        </div>
-      )}
-      {status === 'warning' && (
-        <div className={styles.content}>
-          <ExclamationCircleOutlined
-            className={`${styles.icon} ${styles['icon--warning']}`}
-          />
-          <div className={styles.content__title}> {title} </div>
-          <div className={styles.content__message}> {message} </div>
-          <div className={styles.content__button}>
-            <BasicButton
-              title={'No'}
-              type="outline"
-              onClick={onCancel}
-              className={styles.btn__no}
-            />
-            <BasicButton
-              title={labelBtnDelete ?? 'Yes'}
-              type="outline"
-              onClick={onConfirm}
-              loading={loading}
-              className={styles.btn__yes}
-            />
-          </div>
-        </div>
-      )}
-    </Modal>
+        )}
+      </>
+    </CommonModal>
   );
 };
 export default NotifyPopup;

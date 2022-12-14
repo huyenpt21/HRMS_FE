@@ -1,4 +1,5 @@
-import { notification, Popconfirm, Tooltip } from 'antd';
+import { notification, Tooltip } from 'antd';
+import NotifyPopup from 'components/NotifyPopup';
 import SvgIcon from 'components/SvgIcon';
 import {
   ACTION_TYPE,
@@ -43,51 +44,55 @@ export default function RequestMenuAction({
 }: IProps) {
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
   const requestIdRefInternal = useRef<number>();
+  const [isShowPopConfirm, setIsShowPopConfirm] = useState(false);
 
-  const { mutate: statusRequest } = useChangeStatusRequest({
-    onSuccess: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === 'Success') {
-        notification.success({
-          message: 'Responding request successfully',
-        });
+  const { mutate: statusRequest, isLoading: loadingRollback } =
+    useChangeStatusRequest({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === 'Success') {
+          notification.success({
+            message: 'Responding request successfully',
+          });
+          setIsShowRollbackModal(false);
+          refetchList();
+        }
+      },
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message) {
+          notification.error({ message: message });
+        }
         refetchList();
-      }
-    },
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({ message: message });
-      }
-      refetchList();
-    },
-  });
-  const { mutate: cancelRequest } = useCancelRequest({
-    onSuccess: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === 'Success') {
-        notification.success({
-          message: 'Cancel request successfully',
-        });
+      },
+    });
+  const { mutate: cancelRequest, isLoading: loadingCancelRequest } =
+    useCancelRequest({
+      onSuccess: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === 'Success') {
+          notification.success({
+            message: 'Cancel request successfully',
+          });
+          refetchList();
+        }
+      },
+      onError: (response: ResRequestModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message) {
+          notification.error({ message: message });
+        }
         refetchList();
-      }
-    },
-    onError: (response: ResRequestModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({ message: message });
-      }
-      refetchList();
-    },
-  });
+      },
+    });
   const actionRequestHandler = (
     requestId: number,
     requestType: REQUEST_ACTION_TYPE,
@@ -119,7 +124,6 @@ export default function RequestMenuAction({
       uid: requestIdRefInternal.current,
       body: { status: status },
     });
-    setIsShowRollbackModal(false);
   };
 
   return (
@@ -183,20 +187,16 @@ export default function RequestMenuAction({
               <SvgIcon icon="edit-border" />
             </span>
           </Tooltip>
-          <Popconfirm
-            title="Are you sure?"
-            onConfirm={() =>
-              actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL)
-            }
-            okText="Yes"
-            cancelText="No"
-          >
-            <Tooltip title="Cancel" placement="right">
-              <span className="cursor-pointer">
-                <SvgIcon icon="close-circle" />
-              </span>
-            </Tooltip>
-          </Popconfirm>
+          <Tooltip title="Cancel" placement="right">
+            <span
+              className="cursor-pointer"
+              onClick={() => {
+                setIsShowPopConfirm(true);
+              }}
+            >
+              <SvgIcon icon="close-circle" />
+            </span>
+          </Tooltip>
         </>
       )}
       {tabType === REQUEST_MENU.SUBORDINATE && (
@@ -205,6 +205,21 @@ export default function RequestMenuAction({
           handleQickActionRequest={handleRollback}
           onCancel={() => setIsShowRollbackModal(false)}
           requestStatus={record?.status}
+          isLoading={loadingRollback}
+        />
+      )}
+      {isShowPopConfirm && (
+        <NotifyPopup
+          title="Are you sure to cancel this request?"
+          message="This action cannot be reverse"
+          onCancel={() => {
+            setIsShowPopConfirm(false);
+          }}
+          onConfirm={() => {
+            actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL);
+          }}
+          visible={isShowPopConfirm}
+          isLoading={loadingCancelRequest}
         />
       )}
     </div>
