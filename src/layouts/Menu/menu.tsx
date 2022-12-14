@@ -365,6 +365,23 @@ export const menuItSupportManager: MenuItemType[] = [
     ],
   },
   {
+    title: 'Device Resource',
+    key: 'device',
+    icon: 'mouse',
+    children: [
+      {
+        title: 'Device Type Management',
+        key: 'device-type',
+        path: '/device/device-type',
+      },
+      {
+        title: 'Device Management',
+        key: 'device-management',
+        path: '/device/device-management',
+      },
+    ],
+  },
+  {
     title: 'Time Check',
     key: 'time-check',
     icon: 'calendar-search',
