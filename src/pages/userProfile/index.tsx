@@ -57,6 +57,9 @@ export default function UserProfile() {
       formValues.avatarImg = await uploadImage();
       setIsUploadingImage(false);
     }
+    if (!formValues?.avatarImg && personInfor?.avatarImg) {
+      formValues.avatarImg = personInfor?.avatarImg;
+    }
     updateUserInfo(formValues);
   };
   const uploadImage = async () => {
