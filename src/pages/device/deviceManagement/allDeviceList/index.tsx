@@ -1,19 +1,13 @@
-import { notification, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import { SorterResult, TablePaginationConfig } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import SvgIcon from 'components/SvgIcon';
-import { MESSAGE_RES, paginationConfig } from 'constants/common';
-import {
-  ACTION_TYPE,
-  DEVICE_MENU,
-  MENU_OPTION_KEY,
-  STATUS,
-} from 'constants/enums/common';
+import { paginationConfig } from 'constants/common';
+import { ACTION_TYPE, DEVICE_MENU, STATUS } from 'constants/enums/common';
 import { AllDeviceListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
-import { useDeleteDevice, useDeviceList } from 'hooks/useDevice';
+import { useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
-import { ResDepartmentModify } from 'models/department';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
 import MenuTableDevice from 'pages/device/components/menuTableDevice';
@@ -55,30 +49,9 @@ export default function AllDiviceList() {
     isLoading,
     isError,
     data: dataTable,
+    refetch: refetchList,
   } = useDeviceList(stateQuery, `${DEVICE.model.itSupport}/${DEVICE.service}`);
-  const { mutate: deviceDelete } = useDeleteDevice({
-    onSuccess: (response: ResDepartmentModify) => {
-      const {
-        metadata: { message },
-      } = response;
 
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({
-          message: 'Update information successfully',
-        });
-      }
-    },
-    onError: (response: ResDepartmentModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({
-          message: message,
-        });
-      }
-    },
-  });
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -129,7 +102,10 @@ export default function AllDiviceList() {
             <MenuTableDevice
               menuType={DEVICE_MENU.DEVICE_MANAGEMENT}
               record={record}
-              onClickMenu={menuActionHandler}
+              setIsShowDetailModal={setIsShowDetailModal}
+              deviceIdRef={deviceIdRef}
+              modalAction={modalAction}
+              stateQuery={stateQuery}
             />
           );
         }
@@ -157,19 +133,7 @@ export default function AllDiviceList() {
       }
     }
   }, [dataTable, stateQuery, isError]);
-  const menuActionHandler = (record: DeviceModel, action: MENU_OPTION_KEY) => {
-    switch (action) {
-      case MENU_OPTION_KEY.EDIT: {
-        setIsShowDetailModal(true);
-        deviceIdRef.current = record?.id;
-        modalAction.current = ACTION_TYPE.EDIT;
-        break;
-      }
-      case MENU_OPTION_KEY.DELETE: {
-        deviceDelete({ uid: record?.id, currentFilter: stateQuery });
-      }
-    }
-  };
+
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -225,6 +189,7 @@ export default function AllDiviceList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           deviceIdRef={deviceIdRef.current}
+          refetchList={refetchList}
         />
       )}
     </>

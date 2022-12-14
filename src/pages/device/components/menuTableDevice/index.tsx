@@ -1,25 +1,99 @@
-import { Popconfirm, Tooltip } from 'antd';
+import { notification, Tooltip } from 'antd';
+import NotifyPopup from 'components/NotifyPopup';
 import SvgIcon from 'components/SvgIcon';
-import { DEVICE_MENU, MENU_OPTION_KEY } from 'constants/enums/common';
-import { DeviceModel } from 'models/device';
-import { Dispatch, SetStateAction, MutableRefObject } from 'react';
+import { MESSAGE_RES } from 'constants/common';
+import {
+  ACTION_TYPE,
+  DEVICE_MENU,
+  MENU_OPTION_KEY,
+} from 'constants/enums/common';
+import { DEVICE } from 'constants/services';
+import { useDeleteDevice, useReturnDevice } from 'hooks/useDevice';
+import { ResDepartmentModify } from 'models/department';
+import { DeviceModel, ResDeviceModify } from 'models/device';
+import { Dispatch, MutableRefObject, SetStateAction, useState } from 'react';
 interface IProps {
   record: DeviceModel;
-  onClickMenu?: (
-    itemSelected: DeviceModel,
-    actionType: MENU_OPTION_KEY,
-  ) => void;
   menuType: DEVICE_MENU;
   setIsShowDetailModal?: Dispatch<SetStateAction<any>>;
   deviceRequestIdRef?: MutableRefObject<number | undefined>;
+  deviceIdRef?: MutableRefObject<number | undefined>;
+  modalAction?: MutableRefObject<number | undefined>;
+  stateQuery?: DeviceModel;
 }
 export default function DeviceMenuTable({
   record,
-  onClickMenu,
   menuType,
   setIsShowDetailModal,
   deviceRequestIdRef,
+  deviceIdRef,
+  modalAction,
+  stateQuery,
 }: IProps) {
+  const [isShowConfirmDelete, setIsShowConfirmDelete] = useState(false);
+  const [isShowConfirmReturn, setIsShowConfirmReturn] = useState(false);
+  const { mutate: deviceDelete, isLoading: loadingDeleteDevice } =
+    useDeleteDevice(
+      {
+        onSuccess: (response: ResDepartmentModify) => {
+          const {
+            metadata: { message },
+          } = response;
+          if (message === MESSAGE_RES.SUCCESS) {
+            notification.success({
+              message: 'Update information successfully',
+            });
+          }
+        },
+        onError: (response: ResDepartmentModify) => {
+          const {
+            metadata: { message },
+          } = response;
+          if (message) {
+            notification.error({
+              message: message,
+            });
+          }
+        },
+      },
+      `${DEVICE.model.itSupport}/${DEVICE.service}`,
+    );
+  const { mutate: returnDevice } = useReturnDevice({
+    onSuccess: (response: ResDeviceModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message === MESSAGE_RES.SUCCESS) {
+        notification.success({ message: 'Return device successfully' });
+      }
+    },
+    onError: (response: ResDeviceModify) => {
+      const {
+        metadata: { message },
+      } = response;
+      if (message) {
+        notification.error({
+          message: message,
+        });
+      }
+    },
+  });
+
+  const menuActionHandler = (record: DeviceModel, action: MENU_OPTION_KEY) => {
+    switch (action) {
+      case MENU_OPTION_KEY.EDIT: {
+        setIsShowDetailModal && setIsShowDetailModal(true);
+        if (deviceIdRef) deviceIdRef.current = record?.id;
+        if (modalAction) modalAction.current = ACTION_TYPE.EDIT;
+        break;
+      }
+      case MENU_OPTION_KEY.DELETE: {
+        stateQuery &&
+          deviceDelete({ uid: record?.id, currentFilter: stateQuery });
+      }
+    }
+  };
+
   return (
     <div
       className="menu-action"
@@ -31,47 +105,33 @@ export default function DeviceMenuTable({
         <>
           <Tooltip title="Edit" placement="left">
             <span
-              onClick={() =>
-                onClickMenu && onClickMenu(record, MENU_OPTION_KEY.EDIT)
-              }
+              onClick={() => menuActionHandler(record, MENU_OPTION_KEY.EDIT)}
               className="cursor-pointer"
             >
               <SvgIcon icon="edit-border" />
             </span>
           </Tooltip>
           {!record.isUsed && (
-            <Popconfirm
-              title="Are you sure?"
-              onConfirm={() =>
-                onClickMenu && onClickMenu(record, MENU_OPTION_KEY.DELETE)
-              }
-              okText="Yes"
-              cancelText="No"
-            >
-              <Tooltip title="Delete" placement="right">
-                <span className="cursor-pointer">
-                  <SvgIcon icon="close-circle" />
-                </span>
-              </Tooltip>
-            </Popconfirm>
+            <Tooltip title="Delete" placement="right">
+              <span
+                className="cursor-pointer"
+                onClick={() => setIsShowConfirmDelete(true)}
+              >
+                <SvgIcon icon="close-circle" />
+              </span>
+            </Tooltip>
           )}
         </>
       )}
       {menuType === DEVICE_MENU.MY_BORROW_DEVICE_HISTORY && (
-        <Popconfirm
-          title="Are you sure?"
-          onConfirm={() =>
-            onClickMenu && onClickMenu(record, MENU_OPTION_KEY.EDIT)
-          }
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title="Return">
-            <span className="cursor-pointer">
-              <SvgIcon icon="return" size={28} />
-            </span>
-          </Tooltip>
-        </Popconfirm>
+        <Tooltip title="Return">
+          <span
+            className="cursor-pointer"
+            onClick={() => setIsShowConfirmReturn(true)}
+          >
+            <SvgIcon icon="return" size={28} />
+          </span>
+        </Tooltip>
       )}
       {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_REQUEST && (
         <Tooltip title="Assign device">
@@ -87,6 +147,30 @@ export default function DeviceMenuTable({
             <SvgIcon icon="tag" />
           </span>
         </Tooltip>
+      )}
+      {isShowConfirmDelete && (
+        <NotifyPopup
+          title="Are you sure to delete this device?"
+          message="This action cannot be reverse"
+          onCancel={() => setIsShowConfirmDelete(false)}
+          onConfirm={() => {
+            menuActionHandler(record, MENU_OPTION_KEY.DELETE);
+          }}
+          visible={isShowConfirmDelete}
+          isLoading={loadingDeleteDevice}
+        />
+      )}
+      {isShowConfirmReturn && (
+        <NotifyPopup
+          title="Are you sure to return this device?"
+          message="This action cannot be reverse"
+          onCancel={() => setIsShowConfirmReturn(false)}
+          onConfirm={() => {
+            returnDevice(record.id);
+          }}
+          visible={isShowConfirmReturn}
+          isLoading={loadingDeleteDevice}
+        />
       )}
     </div>
   );

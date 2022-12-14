@@ -1,14 +1,14 @@
-import { notification, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
-import { DATE_TIME_US, MESSAGE_RES, paginationConfig } from 'constants/common';
+import { DATE_TIME_US, paginationConfig } from 'constants/common';
 import { DEVICE_MENU, STATUS_COLORS } from 'constants/enums/common';
 import { MyBorrowDeviceHistoryListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
-import { useDeviceList, useReturnDevice } from 'hooks/useDevice';
+import { useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
-import { DeviceListQuery, DeviceModel, ResDeviceModify } from 'models/device';
+import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
 import DeviceMenuTable from 'pages/device/components/menuTableDevice';
 import { useEffect, useState } from 'react';
@@ -56,26 +56,7 @@ export default function MyBorrowDeviceHistory() {
     `${DEVICE.model.borrowHistory}`,
     'my-borrow-device-history',
   );
-  const { mutate: returnDevice } = useReturnDevice({
-    onSuccess: (response: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({ message: 'Return device successfully' });
-      }
-    },
-    onError: (response: ResDeviceModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({
-          message: message,
-        });
-      }
-    },
-  });
+
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -141,7 +122,6 @@ export default function MyBorrowDeviceHistory() {
             <DeviceMenuTable
               menuType={DEVICE_MENU.MY_BORROW_DEVICE_HISTORY}
               record={record}
-              onClickMenu={menuActionHandler}
             />
           );
         }
@@ -169,9 +149,6 @@ export default function MyBorrowDeviceHistory() {
       }
     }
   }, [dataTable, stateQuery, isError]);
-  const menuActionHandler = (record: DeviceModel) => {
-    returnDevice(record.id);
-  };
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
