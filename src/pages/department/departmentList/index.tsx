@@ -1,19 +1,18 @@
-import { notification, TablePaginationConfig, Tooltip } from 'antd';
+import { TablePaginationConfig, Tooltip } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import SvgIcon from 'components/SvgIcon';
-import { MESSAGE_RES, paginationConfig } from 'constants/common';
-import { ACTION_TYPE, MENU_OPTION_KEY } from 'constants/enums/common';
+import { paginationConfig } from 'constants/common';
+import { ACTION_TYPE } from 'constants/enums/common';
 import { DepartmentHeader } from 'constants/header';
-import { useDeleteDepartment, useDepartmentList } from 'hooks/useDepartment';
+import { useDepartmentList } from 'hooks/useDepartment';
 import { HeaderTableFields } from 'models/common';
 import {
   DepartmentListQuery,
   DepartmentListSortFields,
   DepartmentModel,
-  ResDepartmentModify,
 } from 'models/department';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   isEmptyPagination,
@@ -32,7 +31,7 @@ export default function DepartmentList() {
   const [pagination, setPagination] = useState(paginationConfig);
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const [isShowDetailModal, setIsShowDetailModal] = useState(false);
-  const departmentId = useRef<number | undefined>();
+  const departmentIdRef = useRef<number | undefined>();
   // * defailt filters
   const defaultFilter: DepartmentListQuery = {
     page: searchParams.get('page')
@@ -52,27 +51,6 @@ export default function DepartmentList() {
   //  * get data header and content table
   const header: HeaderTableFields[] = DepartmentHeader;
   const { isLoading, isError, data: dataTable } = useDepartmentList(stateQuery);
-  const { mutate: deleteDepartment } = useDeleteDepartment({
-    onSuccess: (response: ResDepartmentModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({ message: 'Delete department successfully' });
-      }
-    },
-    onError: (response: ResDepartmentModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({
-          message: message,
-        });
-      }
-    },
-  });
-
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -110,7 +88,10 @@ export default function DepartmentList() {
         return (
           <MenuTableDepartment
             record={record}
-            onClickMenu={menuActionHandler}
+            departmentIdRef={departmentIdRef}
+            modalAction={modalAction}
+            setIsShowDetailModal={setIsShowDetailModal}
+            stateQuery={stateQuery}
           />
         );
       },
@@ -138,24 +119,6 @@ export default function DepartmentList() {
     }
   }, [dataTable, stateQuery, isError]);
 
-  const menuActionHandler = (
-    itemSelected: DepartmentModel,
-    actionType: MENU_OPTION_KEY,
-  ) => {
-    switch (actionType) {
-      case MENU_OPTION_KEY.EDIT: {
-        setIsShowDetailModal(true);
-        modalAction.current = ACTION_TYPE.EDIT;
-        departmentId.current = itemSelected.id;
-        break;
-      }
-      case MENU_OPTION_KEY.DELETE: {
-        deleteDepartment({ uid: itemSelected.id, currentFilter: stateQuery });
-        break;
-      }
-    }
-  };
-
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: any,
@@ -182,7 +145,7 @@ export default function DepartmentList() {
   };
   const cancelModalHandler = () => {
     setIsShowDetailModal(false);
-    departmentId.current = undefined;
+    departmentIdRef.current = undefined;
     modalAction.current = ACTION_TYPE.CREATE;
   };
 
@@ -208,7 +171,7 @@ export default function DepartmentList() {
         onRow={(record: DepartmentModel) => {
           return {
             onClick: () => {
-              departmentId.current = record.id;
+              departmentIdRef.current = record?.id;
               modalAction.current = ACTION_TYPE.VIEW_DETAIL;
               setIsShowDetailModal(true);
             },
@@ -220,7 +183,7 @@ export default function DepartmentList() {
           action={modalAction.current}
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
-          departmentId={departmentId.current}
+          departmentId={departmentIdRef.current}
         />
       )}
     </>
