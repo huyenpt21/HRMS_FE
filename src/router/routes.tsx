@@ -34,6 +34,7 @@ import Login from '../pages/login';
 import PrivateRoute from './PrivateRoute';
 import LoginRedirect from 'pages/login/loginRedirect';
 import SignatureProfileList from 'pages/signatureProfile';
+import ServerErrorPage from 'pages/serverError';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -239,6 +240,10 @@ export default function RouterElement() {
     {
       path: '403',
       element: <ForbiddenPage />,
+    },
+    {
+      path: '500',
+      element: <ServerErrorPage />,
     },
   ]);
 
