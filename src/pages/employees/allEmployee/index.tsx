@@ -1,4 +1,4 @@
-import { notification, TablePaginationConfig } from 'antd';
+import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import { paginationConfig } from 'constants/common';
@@ -8,16 +8,14 @@ import BasicTag from 'components/BasicTag';
 import {
   ACTION_TYPE,
   EMPLOYEE_MENU,
-  MENU_OPTION_KEY,
   STATUS_COLORS,
 } from 'constants/enums/common';
-import { useEmployeeList, useUpdateEmployee } from 'hooks/useEmployee';
+import { useEmployeeList } from 'hooks/useEmployee';
 import { HeaderTableFields } from 'models/common';
 import {
   EmployeeListFields,
   EmployeeListQuery,
   EmployeeModel,
-  ResEmployeeModify,
 } from 'models/employee';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -29,7 +27,6 @@ import {
 import EmployeeDetailModal from '../components/detailModal';
 import ExtraHeaderTable from '../components/extraHeader';
 import MenuAction from '../components/menuTable';
-import { EMPLOYEE_CHANGE_STATUS } from 'constants/services';
 export default function AllEmployeeList() {
   const [searchParams] = useSearchParams();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
@@ -72,24 +69,6 @@ export default function AllEmployeeList() {
     data: dataTable,
     refetch,
   } = useEmployeeList(stateQuery);
-  const { mutate: updateEmployee } = useUpdateEmployee(
-    {
-      onSuccess: (response: ResEmployeeModify) => {
-        const {
-          metadata: { message },
-        } = response;
-
-        if (message === 'Success') {
-          notification.success({
-            message: 'Update status successfully',
-          });
-          refetch();
-        }
-      },
-    },
-    EMPLOYEE_CHANGE_STATUS.service,
-  );
-
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -141,7 +120,15 @@ export default function AllEmployeeList() {
       width: 100,
       align: 'center',
       render: (_, record: EmployeeModel) => {
-        return <MenuAction record={record} onClickMenu={menuActionHandler} />;
+        return (
+          <MenuAction
+            record={record}
+            employeeRollNumberRef={employeeRollNumber}
+            modalAction={modalAction}
+            refetchList={refetch}
+            setIsShowDetailModal={setIsShowDetailModal}
+          />
+        );
       },
     });
     setColumnsHeader(columns);
@@ -166,34 +153,6 @@ export default function AllEmployeeList() {
       }
     }
   }, [dataTable, stateQuery, isError]);
-
-  const menuActionHandler = (
-    itemSelected: EmployeeModel,
-    actionType: MENU_OPTION_KEY,
-  ) => {
-    switch (actionType) {
-      case MENU_OPTION_KEY.EDIT: {
-        setIsShowDetailModal(true);
-        modalAction.current = ACTION_TYPE.EDIT;
-        employeeRollNumber.current = itemSelected.rollNumber;
-        break;
-      }
-      case MENU_OPTION_KEY.ACTIVE: {
-        updateEmployee({
-          uid: itemSelected.rollNumber,
-          body: { id: itemSelected.id, isActive: 1 },
-        });
-        break;
-      }
-      case MENU_OPTION_KEY.DEACTIVE: {
-        updateEmployee({
-          uid: itemSelected.rollNumber,
-          body: { id: itemSelected.id, isActive: 0 },
-        });
-        break;
-      }
-    }
-  };
 
   const handleTableChange = (
     pagination: TablePaginationConfig,

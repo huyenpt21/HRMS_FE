@@ -312,7 +312,11 @@ export default function EmployeeDetailModal({
                     </Col>
                     <Col span={12}>
                       <SelectCustomSearch
-                        url={`${MANAGER_LIST.service}?departmentId=${departmentId}`}
+                        url={
+                          actionModal === ACTION_TYPE.CREATE
+                            ? `${MANAGER_LIST.service}?departmentId=${departmentId}`
+                            : `${MANAGER_LIST.service}?departmentId=${departmentId}&rollNumber=${personInforRef.current?.rollNumber}`
+                        }
                         dataName="items"
                         name="managerId"
                         label="Manager"
@@ -322,7 +326,10 @@ export default function EmployeeDetailModal({
                         apiName="manager-master-data"
                         isCallApi={false}
                         refetchValue={departmentId}
-                        disabled={!departmentId}
+                        disabled={
+                          !departmentId ||
+                          actionModal === ACTION_TYPE.VIEW_DETAIL
+                        }
                       />
                     </Col>
                   </Row>
@@ -339,7 +346,10 @@ export default function EmployeeDetailModal({
                         apiName="position-master-data-detail"
                         isCallApi={false}
                         refetchValue={departmentId}
-                        disabled={!departmentId}
+                        disabled={
+                          !departmentId ||
+                          actionModal === ACTION_TYPE.VIEW_DETAIL
+                        }
                       />
                     </Col>
                     <Col span={12}>

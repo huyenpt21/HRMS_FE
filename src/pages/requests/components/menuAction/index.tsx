@@ -8,11 +8,7 @@ import {
   STATUS,
 } from 'constants/enums/common';
 import { useCancelRequest, useChangeStatusRequest } from 'hooks/useRequestList';
-import {
-  RequestListQuery,
-  RequestModel,
-  ResRequestModify,
-} from 'models/request';
+import { RequestModel, ResRequestModify } from 'models/request';
 import {
   Dispatch,
   MutableRefObject,
@@ -28,7 +24,6 @@ interface IProps {
   setIsShowDetailModal?: Dispatch<SetStateAction<boolean>>;
   modalAction?: MutableRefObject<ACTION_TYPE>;
   requestIdRef?: MutableRefObject<number>;
-  stateQuery?: RequestListQuery;
   refetchList: () => void;
   requestStatus?: string;
 }
@@ -38,7 +33,6 @@ export default function RequestMenuAction({
   setIsShowDetailModal,
   modalAction,
   requestIdRef,
-  stateQuery,
   refetchList,
   requestStatus,
 }: IProps) {
@@ -212,11 +206,9 @@ export default function RequestMenuAction({
         <NotifyPopup
           title="Are you sure to cancel this request?"
           message="This action cannot be reverse"
-          onCancel={() => {
-            setIsShowPopConfirm(false);
-          }}
+          onCancel={() => setIsShowPopConfirm(false)}
           onConfirm={() => {
-            actionRequestHandler(record.id, REQUEST_ACTION_TYPE.CANCEL);
+            actionRequestHandler(record?.id, REQUEST_ACTION_TYPE.CANCEL);
           }}
           visible={isShowPopConfirm}
           isLoading={loadingCancelRequest}

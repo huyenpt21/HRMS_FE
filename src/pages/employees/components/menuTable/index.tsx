@@ -1,15 +1,75 @@
-import { Popconfirm, Tooltip } from 'antd';
+import { notification, Tooltip } from 'antd';
+import NotifyPopup from 'components/NotifyPopup';
 import SvgIcon from 'components/SvgIcon';
-import { MENU_OPTION_KEY } from 'constants/enums/common';
-import { EmployeeModel } from 'models/employee';
+import { ACTION_TYPE, MENU_OPTION_KEY } from 'constants/enums/common';
+import { EMPLOYEE_CHANGE_STATUS } from 'constants/services';
+import { useUpdateEmployee } from 'hooks/useEmployee';
+import { EmployeeModel, ResEmployeeModify } from 'models/employee';
+import { useState, Dispatch, SetStateAction, MutableRefObject } from 'react';
 interface IProps {
   record: EmployeeModel;
-  onClickMenu: (
+  refetchList: () => void;
+  setIsShowDetailModal: Dispatch<SetStateAction<boolean>>;
+  modalAction: MutableRefObject<ACTION_TYPE>;
+  employeeRollNumberRef: MutableRefObject<string | undefined>;
+}
+export default function MenuAction({
+  record,
+  refetchList,
+  setIsShowDetailModal,
+  modalAction,
+  employeeRollNumberRef,
+}: IProps) {
+  const [isShowConfirmActive, setIsShowConfirmActive] = useState(false);
+  const [isShowConfirmInActive, setIsShowConfirmInActive] = useState(false);
+  const { mutate: updateEmployee, isLoading: loadingChangeStatus } =
+    useUpdateEmployee(
+      {
+        onSuccess: (response: ResEmployeeModify) => {
+          const {
+            metadata: { message },
+          } = response;
+
+          if (message === 'Success') {
+            notification.success({
+              message: 'Update status successfully',
+            });
+            refetchList();
+            setIsShowConfirmActive(false);
+            setIsShowConfirmInActive(false);
+          }
+        },
+      },
+      EMPLOYEE_CHANGE_STATUS.service,
+    );
+
+  const menuActionHandler = (
     itemSelected: EmployeeModel,
     actionType: MENU_OPTION_KEY,
-  ) => void;
-}
-export default function MenuAction({ record, onClickMenu }: IProps) {
+  ) => {
+    switch (actionType) {
+      case MENU_OPTION_KEY.EDIT: {
+        setIsShowDetailModal(true);
+        modalAction.current = ACTION_TYPE.EDIT;
+        employeeRollNumberRef.current = itemSelected?.rollNumber;
+        break;
+      }
+      case MENU_OPTION_KEY.ACTIVE: {
+        updateEmployee({
+          uid: itemSelected?.rollNumber,
+          body: { id: itemSelected.id, isActive: 1 },
+        });
+        break;
+      }
+      case MENU_OPTION_KEY.DEACTIVE: {
+        updateEmployee({
+          uid: itemSelected?.rollNumber,
+          body: { id: itemSelected.id, isActive: 0 },
+        });
+        break;
+      }
+    }
+  };
   return (
     <div
       className="menu-action"
@@ -18,45 +78,55 @@ export default function MenuAction({ record, onClickMenu }: IProps) {
       }}
     >
       {!record.isActive && (
-        <Popconfirm
-          title="Are you sure?"
-          onConfirm={() =>
-            onClickMenu && onClickMenu(record, MENU_OPTION_KEY.ACTIVE)
-          }
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title="Active" placement="left">
-            <span className="cursor-pointer">
-              <SvgIcon icon="accept-circle" />
-            </span>
-          </Tooltip>
-        </Popconfirm>
+        <Tooltip title="Active" placement="left">
+          <span
+            className="cursor-pointer"
+            onClick={() => setIsShowConfirmActive(true)}
+          >
+            <SvgIcon icon="accept-circle" />
+          </span>
+        </Tooltip>
       )}
       {!!record.isActive && (
-        <Popconfirm
-          title="Are you sure?"
-          onConfirm={() =>
-            onClickMenu && onClickMenu(record, MENU_OPTION_KEY.DEACTIVE)
-          }
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title="Inactivate" placement="left">
-            <span className="cursor-pointer">
-              <SvgIcon icon="close-circle" />
-            </span>
-          </Tooltip>
-        </Popconfirm>
+        <Tooltip title="Inactivate" placement="left">
+          <span
+            className="cursor-pointer"
+            onClick={() => setIsShowConfirmInActive(true)}
+          >
+            <SvgIcon icon="close-circle" />
+          </span>
+        </Tooltip>
       )}
       <Tooltip title="Edit" placement="right">
         <span
-          onClick={() => onClickMenu(record, MENU_OPTION_KEY.EDIT)}
+          onClick={() => menuActionHandler(record, MENU_OPTION_KEY.EDIT)}
           className="cursor-pointer"
         >
           <SvgIcon icon="edit-border" />
         </span>
       </Tooltip>
+      {isShowConfirmActive && (
+        <NotifyPopup
+          title="Are you sure to active this person?"
+          onCancel={() => setIsShowConfirmActive(false)}
+          onConfirm={() => {
+            menuActionHandler(record, MENU_OPTION_KEY.ACTIVE);
+          }}
+          visible={isShowConfirmActive}
+          isLoading={loadingChangeStatus}
+        />
+      )}
+      {isShowConfirmInActive && (
+        <NotifyPopup
+          title="Are you sure to inactive this person?"
+          onCancel={() => setIsShowConfirmInActive(false)}
+          onConfirm={() => {
+            menuActionHandler(record, MENU_OPTION_KEY.DEACTIVE);
+          }}
+          visible={isShowConfirmInActive}
+          isLoading={loadingChangeStatus}
+        />
+      )}
     </div>
   );
 }

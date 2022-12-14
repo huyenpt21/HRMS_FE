@@ -129,7 +129,6 @@ export default function MyRequestList() {
               setIsShowDetailModal={setIsShowDetailModal}
               modalAction={modalAction}
               requestIdRef={requestIdRef}
-              stateQuery={stateQuery}
               refetchList={refetchList}
             />
           );
