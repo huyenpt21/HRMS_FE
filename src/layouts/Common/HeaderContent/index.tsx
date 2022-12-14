@@ -25,7 +25,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
   const [notiData, setNotiData] = useState<NotifcationModel[]>([]);
-
+  const isLogout = useAppSelector((state) => state.auth.isLogout);
   const { data: unreadNotifs, refetch: refetchGetUnreadNotifs } =
     useGetUnReadNotifications();
   const { mutate: readNoti } = useReadNotification({
@@ -70,6 +70,16 @@ export default function HeaderContent({ marginLeft }: IProps) {
           );
         }
       });
+      if (isLogout) {
+        sse.removeEventListener('user-list-event', () => {
+          console.log('Close noti listener');
+        });
+      }
+      window.onbeforeunload = function () {
+        sse.removeEventListener('user-list-event', () => {
+          console.log('Close noti listener');
+        });
+      };
       sse.onerror = () => {
         sse.close();
       };
@@ -77,7 +87,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
         sse.close();
       };
     }
-  }, [personInfor]);
+  }, [personInfor, isLogout]);
 
   return (
     <>

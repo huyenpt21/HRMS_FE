@@ -1,9 +1,13 @@
 import SvgIcon from 'components/SvgIcon';
+import { useAppDispatch } from 'hooks';
 import { useNavigate } from 'react-router-dom';
+import { logout } from 'store/slice/auth';
 import styles from './menuExpand.module.less';
 
 export default function MenuExpand() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   return (
     <>
       <div className="backdrop"></div>
@@ -31,6 +35,7 @@ export default function MenuExpand() {
           className={styles.item}
           onClick={() => {
             localStorage.clear();
+            dispatch(logout({ isLogout: true }));
             navigate('/');
           }}
         >
