@@ -50,7 +50,12 @@ export default function DepartmentList() {
 
   //  * get data header and content table
   const header: HeaderTableFields[] = DepartmentHeader;
-  const { isLoading, isError, data: dataTable } = useDepartmentList(stateQuery);
+  const {
+    isLoading,
+    isError,
+    data: dataTable,
+    refetch: refetchList,
+  } = useDepartmentList(stateQuery);
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -184,6 +189,7 @@ export default function DepartmentList() {
           isVisible={isShowDetailModal}
           onCancel={cancelModalHandler}
           departmentId={departmentIdRef.current}
+          refetchList={refetchList}
         />
       )}
     </>
