@@ -1,15 +1,15 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { notification, Popconfirm, Tooltip, Typography } from 'antd';
+import { notification, Tooltip, Typography } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
+import NotifyPopup from 'components/NotifyPopup';
 import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
 import { DEVICE } from 'constants/services';
 import { useDeleteDevice, useUpdateDevice } from 'hooks/useDevice';
 import { DeviceListQuery, DeviceModel, ResDeviceModify } from 'models/device';
-import { EmployeeModel } from 'models/employee';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 interface IProps {
-  record: EmployeeModel;
+  record: DeviceModel;
   form: FormInstance;
   editingKey: number;
   setEditingKey: Dispatch<SetStateAction<number>>;
@@ -24,6 +24,8 @@ export default function MenuTableDeviceType({
   stateQuery,
   refetch,
 }: IProps) {
+  const [isShowConfirm, setIsShowConfirm] = useState(false);
+
   const { mutate: updateDeviceType } = useUpdateDevice(
     {
       onSuccess: (res: ResDeviceModify) => {
@@ -32,7 +34,7 @@ export default function MenuTableDeviceType({
         } = res;
         if (message === MESSAGE_RES.SUCCESS) {
           notification.success({
-            message: 'Update device type name successfully',
+            message: 'Update device type successfully',
           });
           refetch();
         }
@@ -50,30 +52,32 @@ export default function MenuTableDeviceType({
     },
     `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
   );
-  const { mutate: deleteDeviceType } = useDeleteDevice(
-    {
-      onSuccess: (res: ResDeviceModify) => {
-        const {
-          metadata: { message },
-        } = res;
-        if (message === MESSAGE_RES.SUCCESS) {
-          notification.success({ message: 'Delete device type successfully' });
-        }
+  const { mutate: deleteDeviceType, isLoading: loadingDelete } =
+    useDeleteDevice(
+      {
+        onSuccess: (res: ResDeviceModify) => {
+          const {
+            metadata: { message },
+          } = res;
+          if (message === MESSAGE_RES.SUCCESS) {
+            notification.success({
+              message: 'Delete device type successfully',
+            });
+          }
+        },
+        onError: (res: ResDeviceModify) => {
+          const {
+            metadata: { message },
+          } = res;
+          if (message) {
+            notification.error({
+              message: message,
+            });
+          }
+        },
       },
-      onError: (res: ResDeviceModify) => {
-        const {
-          metadata: { message },
-        } = res;
-        if (message) {
-          notification.error({
-            message: message,
-          });
-        }
-        refetch();
-      },
-    },
-    `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
-  );
+      `${DEVICE.model.itSupport}/${DEVICE.model.deviceType}`,
+    );
   const handleEdit = (record: DeviceModel & { id: React.Key }) => {
     form.setFieldsValue({ ...record });
     setEditingKey(record.id);
@@ -126,23 +130,36 @@ export default function MenuTableDeviceType({
                 <SvgIcon icon="edit-border" />
               </Typography.Link>
             </Tooltip>
-            <Popconfirm
-              title="Are you sure?"
-              onConfirm={() =>
-                deleteDeviceType({ uid: record.id, currentFilter: stateQuery })
-              }
-              okText="Yes"
-              cancelText="No"
-            >
+            {!!record?.isAllowDelete && (
               <Tooltip title="Delete" placement="right">
-                <Typography.Link disabled={editingKey !== -1}>
+                <Typography.Link
+                  disabled={editingKey !== -1}
+                  onClick={() => {
+                    setIsShowConfirm(true);
+                  }}
+                >
                   <SvgIcon icon="close-circle" />
                 </Typography.Link>
               </Tooltip>
-            </Popconfirm>
+            )}
           </>
         )}
       </div>
+      {isShowConfirm && (
+        <NotifyPopup
+          title="Are you sure to delete this device type?"
+          message="This action cannot be reverse"
+          onCancel={() => setIsShowConfirm(false)}
+          onConfirm={() =>
+            deleteDeviceType({
+              uid: record.id,
+              currentFilter: stateQuery,
+            })
+          }
+          visible={isShowConfirm}
+          isLoading={loadingDelete}
+        />
+      )}
     </>
   );
 }

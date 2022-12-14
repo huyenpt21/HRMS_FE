@@ -23,9 +23,9 @@ export default function DeviceTypeDetailModal({ isVisible, onCancel }: IProps) {
           metadata: { message },
         } = response;
         if (message === MESSAGE_RES.SUCCESS) {
-          notification.success({ message: 'Create deviceType successfully' });
-          onCancel();
+          notification.success({ message: 'Create device type successfully' });
         }
+        onCancel();
       },
       onError: (response: ResDeviceModify) => {
         const {

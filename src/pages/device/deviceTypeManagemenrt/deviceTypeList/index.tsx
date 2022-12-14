@@ -72,7 +72,7 @@ export default function DeviceTypeList() {
       title: (
         <div>
           <Tooltip
-            title="Can not edit or delete device types have device is currently in use"
+            title="Can not delete device types have device is currently in use"
             placement="topRight"
           >
             Action <SvgIcon icon="infor" size={18} />
@@ -84,19 +84,16 @@ export default function DeviceTypeList() {
       width: 100,
       align: 'center',
       render: (_, record: DeviceModel) => {
-        if (record.isAllowDelete) {
-          return (
-            <MenuTableDeviceType
-              record={record}
-              form={deviceTypeForm}
-              editingKey={editingKey}
-              setEditingKey={setEditingKey}
-              stateQuery={stateQuery}
-              refetch={refetch}
-            />
-          );
-        }
-        return <span>-</span>;
+        return (
+          <MenuTableDeviceType
+            record={record}
+            form={deviceTypeForm}
+            editingKey={editingKey}
+            setEditingKey={setEditingKey}
+            stateQuery={stateQuery}
+            refetch={refetch}
+          />
+        );
       },
     });
     setColumnsHeader(columns);
