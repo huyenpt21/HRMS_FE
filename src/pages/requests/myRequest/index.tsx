@@ -109,7 +109,7 @@ export default function MyRequestList() {
       title: (
         <div>
           <Tooltip
-            title="Can not edit or cancel requests that have been approved or rejected"
+            title="Can only edit or cancel requests that are pending"
             placement="topRight"
           >
             Action <SvgIcon icon="infor" size={18} />

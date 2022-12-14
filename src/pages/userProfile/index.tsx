@@ -12,11 +12,12 @@ import {
 import { GENDER_LIST } from 'constants/fixData';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storageFirebase } from 'firebaseSetup';
-import { useAppSelector } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { useUpdateUserInfor } from 'hooks/useEmployee';
 import { EmployeeModel } from 'models/employee';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
+import { getUserInfo } from 'store/slice/auth';
 import { getDateFormat } from 'utils/common';
 // import dataMock from './detailMock.json';
 import { UploadAvatar } from './uploadAvatar';
@@ -24,6 +25,7 @@ import styles from './userProfile.module.less';
 
 export default function UserProfile() {
   const [userProfileForm] = Form.useForm();
+  const dispatch = useAppDispatch();
   const userInfor = useAppSelector((state) => state.auth.user);
   const [imageFile, setImageFile] = useState<any>(undefined);
   const [personInfor, setPersonInfor] = useState<EmployeeModel>();
@@ -32,9 +34,11 @@ export default function UserProfile() {
     onSuccess: (res) => {
       const {
         metadata: { message },
+        data: { item: detailData },
       } = res;
-      if (message === MESSAGE_RES.SUCCESS) {
+      if (message === MESSAGE_RES.SUCCESS && detailData) {
         notification.success({ message: 'Update information successfully' });
+        dispatch(getUserInfo({ newUserInfor: detailData }));
       }
     },
   });
