@@ -3,7 +3,7 @@ import { SorterResult } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { DEVICE_MENU, STATUS_COLORS } from 'constants/enums/common';
+import { DEVICE_MENU, STATUS, STATUS_COLORS } from 'constants/enums/common';
 import { MyBorrowDeviceHistoryListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
 import { useDeviceList } from 'hooks/useDevice';
@@ -76,7 +76,7 @@ export default function MyBorrowDeviceHistory() {
           el.width = 230;
           break;
         }
-        case 'isReturned': {
+        case 'status': {
           el.width = 150;
           el.align = 'center';
         }
@@ -91,18 +91,29 @@ export default function MyBorrowDeviceHistory() {
             ) {
               return getDateFormat(data, DATE_TIME_US);
             }
-            if (el.key === 'isReturned') {
-              if (data)
+            if (el.key === 'status') {
+              if (data === STATUS.RETURNED)
                 return (
                   <BasicTag
                     statusColor={STATUS_COLORS.SUCCESS}
-                    text="Returned"
+                    text={STATUS.RETURNED}
                   />
                 );
-              else
+              else if (data === STATUS.USING)
                 return (
-                  <BasicTag statusColor={STATUS_COLORS.WARING} text="Using" />
+                  <BasicTag
+                    statusColor={STATUS_COLORS.WARING}
+                    text={STATUS.USING}
+                  />
                 );
+              else if (data === STATUS.DELETED) {
+                return (
+                  <BasicTag
+                    statusColor={STATUS_COLORS.DEFAULT}
+                    text={STATUS.DELETED}
+                  />
+                );
+              }
             }
             return <div>{data}</div>;
           }
@@ -117,7 +128,7 @@ export default function MyBorrowDeviceHistory() {
       width: 100,
       align: 'center',
       render: (_, record: DeviceModel) => {
-        if (!record?.isReturned) {
+        if (record?.status === STATUS.USING) {
           return (
             <DeviceMenuTable
               menuType={DEVICE_MENU.MY_BORROW_DEVICE_HISTORY}

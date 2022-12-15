@@ -328,8 +328,8 @@ export const AllBorrowDeviceHistoryListHeader = [
   },
   {
     title: 'Status',
-    key: 'isReturned',
-    dataIndex: 'isReturned',
+    key: 'status',
+    dataIndex: 'status',
   },
 ];
 export const MyBorrowDeviceHistoryListHeader = [
@@ -360,8 +360,8 @@ export const MyBorrowDeviceHistoryListHeader = [
   },
   {
     title: 'Status',
-    key: 'isReturned',
-    dataIndex: 'isReturned',
+    key: 'status',
+    dataIndex: 'status',
   },
 ];
 export const LeaveBudgetListHeader = [

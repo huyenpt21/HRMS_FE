@@ -6,7 +6,7 @@ export interface DeviceModel extends Resource {
   description?: string;
   isUsed?: number;
   deviceTypeName?: string;
-  isReturned?: number;
+  status?: string;
   borrowDate?: string;
   returnDate?: string;
   isAssigned?: number;

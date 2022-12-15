@@ -45,6 +45,13 @@ export default function DeviceStatus({ data }: IProps) {
       };
       break;
     }
+    case STATUS.DELETED: {
+      statusTag = {
+        statusColor: STATUS_COLORS.DEFAULT,
+        text: STATUS.DELETED,
+      };
+      break;
+    }
   }
   return <BasicTag statusColor={statusTag.statusColor} text={statusTag.text} />;
 }

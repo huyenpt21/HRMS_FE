@@ -3,7 +3,12 @@ import { SorterResult } from 'antd/lib/table/interface';
 import BasicTag from 'components/BasicTag';
 import CommonTable from 'components/CommonTable';
 import { DATE_TIME_US, paginationConfig } from 'constants/common';
-import { DEVICE_MENU, MENU_TYPE, STATUS_COLORS } from 'constants/enums/common';
+import {
+  DEVICE_MENU,
+  MENU_TYPE,
+  STATUS,
+  STATUS_COLORS,
+} from 'constants/enums/common';
 import { AllBorrowDeviceHistoryListHeader } from 'constants/header';
 import { DEVICE } from 'constants/services';
 import { useDeviceList } from 'hooks/useDevice';
@@ -93,7 +98,7 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
           el.width = 230;
           break;
         }
-        case 'isReturned': {
+        case 'status': {
           el.width = 150;
           el.align = 'center';
         }
@@ -108,18 +113,29 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
             ) {
               return getDateFormat(data, DATE_TIME_US);
             }
-            if (el.key === 'isReturned') {
-              if (data)
+            if (el.key === 'status') {
+              if (data === STATUS.RETURNED)
                 return (
                   <BasicTag
                     statusColor={STATUS_COLORS.SUCCESS}
-                    text="Returned"
+                    text={STATUS.RETURNED}
                   />
                 );
-              else
+              else if (data === STATUS.USING)
                 return (
-                  <BasicTag statusColor={STATUS_COLORS.WARING} text="Using" />
+                  <BasicTag
+                    statusColor={STATUS_COLORS.WARING}
+                    text={STATUS.USING}
+                  />
                 );
+              else if (data === STATUS.DELETED) {
+                return (
+                  <BasicTag
+                    statusColor={STATUS_COLORS.DEFAULT}
+                    text={STATUS.DELETED}
+                  />
+                );
+              }
             }
             return <div>{data}</div>;
           }

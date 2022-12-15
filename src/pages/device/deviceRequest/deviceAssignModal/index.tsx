@@ -9,8 +9,7 @@ import {
   useCheckRemainDevice,
   useRequestDetail,
 } from 'hooks/useRequestList';
-import { DeviceModel } from 'models/device';
-import { ResRequestModify } from 'models/request';
+import { RequestModel, ResRequestModify } from 'models/request';
 import FixDataHeaderRequest from 'pages/requests/components/fixDataHeaderRequest';
 import { useEffect, useState } from 'react';
 import styles from './assignDeviceModal.module.less';
@@ -28,7 +27,7 @@ export default function DeviceAssignModal({
   requestIdRef,
 }: IProps) {
   const [assignDeviceForm] = Form.useForm();
-  const [assignData, setAssignData] = useState<DeviceModel>();
+  const [assignData, setAssignData] = useState<RequestModel>();
   const { data: detailRequest } = useRequestDetail(requestIdRef || 0);
   const { mutate: checkRemainDivce } = useCheckRemainDevice({
     onSuccess: () => {},
@@ -90,7 +89,7 @@ export default function DeviceAssignModal({
     onCancel();
     assignDeviceForm.resetFields();
   };
-  const submitHandler = (formValues: DeviceModel) => {
+  const submitHandler = (formValues: RequestModel) => {
     delete formValues.deviceTypeId;
     formValues.requestId = requestIdRef;
     assignDevice(formValues);

@@ -38,7 +38,7 @@ export default function BorrowDeviceRequest() {
   const modalAction = useRef(ACTION_TYPE.CREATE);
   const requestIdRef = useRef<number>();
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
-  const [records, setRecords] = useState<DeviceModel[]>([]);
+  const [records, setRecords] = useState<RequestModel[]>([]);
   // * default feilters
   const defaultFilter: DeviceListQuery = {
     page: searchParams.get('page')

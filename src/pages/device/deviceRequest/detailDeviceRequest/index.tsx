@@ -3,6 +3,7 @@ import { Col, Divider, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import Loading from 'components/loading';
+import NotifyPopup from 'components/NotifyPopup';
 import { DATE_TIME_US, MESSAGE_RES } from 'constants/common';
 import { STATUS } from 'constants/enums/common';
 import { DEVICE } from 'constants/services';
@@ -20,12 +21,14 @@ export default function DetailDeviceRequest() {
   const navigate = useNavigate();
   const [requestForm] = Form.useForm();
   const [detailData, setDetailData] = useState<DeviceModel>();
+  const [isShowConfirmReturn, setIsShowConfirmReturn] = useState(false);
+
   const {
     data: detailRequest,
     refetch: refecthDetail,
     isLoading,
   } = useDeviceDetail(assignDeviceId ?? 0, `${DEVICE.model.borrowHistory}`);
-  const { mutate: returnDevice } = useReturnDevice({
+  const { mutate: returnDevice, isLoading: loadingReturn } = useReturnDevice({
     onSuccess: (response: ResDeviceModify) => {
       const {
         metadata: { message },
@@ -72,8 +75,8 @@ export default function DetailDeviceRequest() {
 
   return (
     <>
-      {isLoading && <Loading text="Working on it..." />}
-      {!isLoading && (
+      {(isLoading || loadingReturn) && <Loading text="Working on it..." />}
+      {!isLoading && !loadingReturn && (
         <Row className={styles.container}>
           <Col
             xs={24}
@@ -98,38 +101,35 @@ export default function DetailDeviceRequest() {
             <Divider />
             <Form form={requestForm} layout="vertical" disabled={true}>
               <Row gutter={36} className={styles.content__header}>
-                <Col span={!!detailData?.isReturned ? 6 : 8}>
-                  <Form.Item label="Status" name="isReturned">
-                    <DeviceStatus
-                      data={
-                        !!detailData?.isReturned
-                          ? STATUS.RETURNED
-                          : STATUS.USING
-                      }
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={!!detailData?.isReturned ? 9 : 8}>
+                {detailData?.status && (
+                  <Col span={detailData?.status === STATUS.RETURNED ? 6 : 8}>
+                    <Form.Item label="Status" name="isReturned">
+                      <DeviceStatus data={detailData?.status} />
+                    </Form.Item>
+                  </Col>
+                )}
+                <Col span={detailData?.status === STATUS.RETURNED ? 9 : 8}>
                   <BasicInput name="borrowDate" label="Borrow Time" />
                 </Col>
-                {!!detailData?.isReturned && (
+                {detailData?.status === STATUS.RETURNED && (
                   <Col span={9}>
                     <BasicInput name="returnDate" label="Returned Date" />
                   </Col>
                 )}
-                {!detailData?.isReturned && type === 'emp-self-service' && (
-                  <Col span={8} className={styles.btn__return}>
-                    <BasicButton
-                      title="Return"
-                      type="outline"
-                      disabled={false}
-                      icon={<RollbackOutlined />}
-                      onClick={() => {
-                        returnDevice(detailData?.id ?? -1);
-                      }}
-                    />
-                  </Col>
-                )}
+                {detailData?.status === STATUS.USING &&
+                  type === 'emp-self-service' && (
+                    <Col span={8} className={styles.btn__return}>
+                      <BasicButton
+                        title="Return"
+                        type="outline"
+                        disabled={false}
+                        icon={<RollbackOutlined />}
+                        onClick={() => {
+                          setIsShowConfirmReturn(true);
+                        }}
+                      />
+                    </Col>
+                  )}
               </Row>
               <Divider>Handover information</Divider>
               <Row gutter={36}>
@@ -154,6 +154,18 @@ export default function DetailDeviceRequest() {
             </Form>
           </Col>
         </Row>
+      )}
+      {isShowConfirmReturn && (
+        <NotifyPopup
+          title="Are you sure to return this device?"
+          message="This action cannot be reverse"
+          onCancel={() => setIsShowConfirmReturn(false)}
+          onConfirm={() => {
+            setIsShowConfirmReturn(false);
+            returnDevice(detailData?.id ?? -1);
+          }}
+          visible={isShowConfirmReturn}
+        />
       )}
     </>
   );

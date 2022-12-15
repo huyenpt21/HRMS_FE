@@ -13,6 +13,7 @@ export enum STATUS {
   RETURNED = 'Returned',
   AVAILABLE = 'Available',
   REGISTERED = 'Registered',
+  DELETED = 'Deleted',
 }
 export enum MENU_OPTION_KEY {
   EDIT = 'edit',
