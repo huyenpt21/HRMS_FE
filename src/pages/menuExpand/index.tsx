@@ -1,5 +1,5 @@
 import SvgIcon from 'components/SvgIcon';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 import { logout } from 'store/slice/auth';
 import styles from './menuExpand.module.less';
@@ -7,6 +7,9 @@ import styles from './menuExpand.module.less';
 export default function MenuExpand() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const isSecureCodeCreated = useAppSelector(
+    (state) => state.auth.isSecureCodeCreated,
+  );
 
   return (
     <>
@@ -22,7 +25,11 @@ export default function MenuExpand() {
         </div>
         <div
           className={styles.item}
-          onClick={() => navigate('setting/security-code/update')}
+          onClick={() =>
+            isSecureCodeCreated
+              ? navigate('setting/security-code/update')
+              : navigate('setting/security-code/create')
+          }
         >
           <div className={styles.content}>
             <span className={styles.wrapper}>

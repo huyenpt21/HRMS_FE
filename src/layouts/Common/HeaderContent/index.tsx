@@ -87,7 +87,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
         sse.close();
       };
     }
-  }, [personInfor, isLogout]);
+  }, [isLogout]);
 
   return (
     <>

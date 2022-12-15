@@ -1,12 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { USER_INFO, USER_MENU, USER_ROLES } from 'constants/common';
+import {
+  SECURE_CODE_CREATED,
+  USER_INFO,
+  USER_MENU,
+  USER_ROLES,
+} from 'constants/common';
 import { EmployeeModel } from 'models/employee';
 import { MenuItemType } from 'models/menu';
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    isLogin: false,
+    isSecureCodeCreated: JSON.parse(
+      localStorage.getItem(SECURE_CODE_CREATED) ?? 'false',
+    ),
     isLogout: false,
     user: JSON.parse(localStorage.getItem(USER_INFO) ?? '{}') as EmployeeModel,
     roles: JSON.parse(localStorage.getItem(USER_ROLES) ?? '[]') as number[],
@@ -15,8 +22,8 @@ export const authSlice = createSlice({
     ) as MenuItemType[],
   },
   reducers: {
-    login: (state, action) => {
-      state.isLogin = action.payload.isLogin;
+    checkSecureCode: (state, action) => {
+      state.isSecureCodeCreated = action.payload.isSecureCodeCreated;
     },
     getUserRoles: (state, action) => {
       state.roles = action.payload.userRoles;
@@ -33,6 +40,11 @@ export const authSlice = createSlice({
   },
 });
 
-export const { getUserRoles, getUserInfo, getUserMenu, login, logout } =
-  authSlice.actions;
+export const {
+  getUserRoles,
+  getUserInfo,
+  getUserMenu,
+  checkSecureCode,
+  logout,
+} = authSlice.actions;
 export default authSlice.reducer;

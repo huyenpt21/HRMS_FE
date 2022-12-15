@@ -3,7 +3,7 @@ export const ACCESS_TOKEN = 'at';
 export const USER_INFO = 'userInfo';
 export const USER_ROLES = 'userRoles';
 export const USER_MENU = 'userMenu';
-
+export const SECURE_CODE_CREATED = 'secureCodeCreated';
 export enum SortDir {
   ASC = 'asc',
   DESC = 'desc',

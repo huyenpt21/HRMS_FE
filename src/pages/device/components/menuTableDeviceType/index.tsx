@@ -97,7 +97,7 @@ export default function MenuTableDeviceType({
       <div className="menu-action">
         {record.id === editingKey && (
           <>
-            <Tooltip title="Save">
+            <Tooltip title="Save" placement="left">
               <span
                 onClick={async () => {
                   handleSave(record.id);
@@ -107,7 +107,7 @@ export default function MenuTableDeviceType({
                 <SvgIcon icon="check-square" />
               </span>
             </Tooltip>
-            <Tooltip title="Cancel">
+            <Tooltip title="Cancel" placement="right">
               <span
                 onClick={() => {
                   setEditingKey(-1);

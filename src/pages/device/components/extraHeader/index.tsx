@@ -176,7 +176,7 @@ export default function ExtraHeaderDevice({
                     onChange={(value) => {
                       setStateQuery((prev: DeviceListQuery) => ({
                         ...prev,
-                        isReturned: value,
+                        status: value,
                       }));
                     }}
                   />
