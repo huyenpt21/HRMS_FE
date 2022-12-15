@@ -1,4 +1,4 @@
-import { Col, Form, notification, Popconfirm, Row, Tooltip } from 'antd';
+import { Col, Form, notification, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker, {
   RangeValue,
@@ -53,8 +53,11 @@ import { DEVICE } from 'constants/services';
 import { storageFirebase } from 'firebaseSetup';
 import RollbackModal from '../components/rollbackModal';
 // import detailMock from './detailMock.json';
+import Loading from 'components/loading';
+import NotifyPopup from 'components/NotifyPopup';
 import { useGetOfficeTime } from 'hooks/useOfficeTime';
 import FixDataHeaderRequest from '../components/fixDataHeaderRequest';
+import NoticeRemainingTime from '../components/noticeRemainingTime';
 import {
   disableDateOT,
   disabledDate,
@@ -63,8 +66,6 @@ import {
   disabledRangeTime,
 } from './function';
 import styles from './requestDetailModal.module.less';
-import NoticeRemainingTime from '../components/noticeRemainingTime';
-import Loading from 'components/loading';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -92,6 +93,7 @@ export default function RequestDetailModal({
   const [isAllowRollback, setIsAllowRollback] = useState<number | undefined>(1);
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const [isShowRollbackModal, setIsShowRollbackModal] = useState(false);
+  const [isShowConfirmPopup, setIsShowConfirmPopup] = useState(false);
   const [dateSelected, setDateSelected] = useState<RangeValue>();
   const requestIdRefInternal = useRef<number>();
   const remainingTimeRef = useRef<RequestRemainingTime>();
@@ -389,6 +391,8 @@ export default function RequestDetailModal({
   };
 
   const handleChangeRequestType = (value: number, options: SelectBoxType) => {
+    requestForm.resetFields();
+    requestForm.setFieldValue('requestTypeId', value);
     requestIdRefInternal.current = value;
     options?.type && setRequestType(options?.type);
     if (
@@ -482,6 +486,10 @@ export default function RequestDetailModal({
                       showSearch
                       optionFilterProp="label"
                       onChange={handleChangeRequestType}
+                      disabled={
+                        actionModal === ACTION_TYPE.VIEW_DETAIL ||
+                        actionModal === ACTION_TYPE.EDIT
+                      }
                     />
                   </Col>
                   {requestStatus === STATUS.PENDING && (
@@ -698,11 +706,10 @@ export default function RequestDetailModal({
                 {actionModal !== ACTION_TYPE.VIEW_DETAIL && (
                   <div className={styles['modal__footer']}>
                     <BasicButton
-                      title="Cancel"
+                      title="Close"
                       type="outline"
                       className={styles['btn--cancel']}
                       onClick={cancelHandler}
-                      loading={loadingCancelRequest}
                     />
                     {actionModal === ACTION_TYPE.CREATE && (
                       <BasicButton
@@ -743,7 +750,7 @@ export default function RequestDetailModal({
               {actionModal === ACTION_TYPE.VIEW_DETAIL && (
                 <div className={styles['modal__footer']}>
                   <BasicButton
-                    title="Cancel"
+                    title="Close"
                     type="outline"
                     className={styles['btn--cancel']}
                     onClick={cancelHandler}
@@ -759,24 +766,17 @@ export default function RequestDetailModal({
                             onClick={() => setActionModal(ACTION_TYPE.EDIT)}
                           />
                           {requestIdRef && (
-                            <Popconfirm
-                              title="Are you sure?"
-                              onConfirm={() => cancelRequest(requestIdRef)}
-                              okText="Yes"
-                              cancelText="No"
-                              placement="bottom"
-                            >
-                              <Tooltip title="Cancel request">
-                                <span>
-                                  <BasicButton
-                                    title="Cancel"
-                                    type="outline"
-                                    className={`${styles['btn--reject']} ${styles['btn--save']}`}
-                                    danger
-                                  />
-                                </span>
-                              </Tooltip>
-                            </Popconfirm>
+                            <Tooltip title="Cancel request">
+                              <span>
+                                <BasicButton
+                                  title="Cancel"
+                                  type="outline"
+                                  className={`${styles['btn--reject']} ${styles['btn--save']}`}
+                                  danger
+                                  onClick={() => setIsShowConfirmPopup(true)}
+                                />
+                              </span>
+                            </Tooltip>
                           )}
                         </>
                       )}
@@ -847,6 +847,18 @@ export default function RequestDetailModal({
           onCancel={() => setIsShowRollbackModal(false)}
           handleQickActionRequest={handleQickActionRequest}
           requestStatus={requestStatus}
+        />
+      )}
+      {isShowConfirmPopup && (
+        <NotifyPopup
+          visible={isShowConfirmPopup}
+          onCancel={() => setIsShowConfirmPopup(false)}
+          onConfirm={() => {
+            setIsShowConfirmPopup(false);
+            requestIdRef && cancelRequest(requestIdRef);
+          }}
+          title="Are you sure to cancel this request?"
+          message="This action cannot be reverse"
         />
       )}
     </>
