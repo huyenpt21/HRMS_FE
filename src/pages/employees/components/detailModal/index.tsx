@@ -70,8 +70,16 @@ export default function EmployeeDetailModal({
           notification.success({
             message: 'Update information successfully',
           });
-          cancelHandler();
         }
+        cancelHandler();
+      },
+      onError: (response: ResEmployeeModify) => {
+        if (response?.metadata?.message) {
+          notification.error({
+            message: response?.metadata?.message,
+          });
+        }
+        cancelHandler();
       },
     });
 
@@ -88,6 +96,14 @@ export default function EmployeeDetailModal({
           });
           cancelHandler();
         }
+      },
+      onError: (response: ResEmployeeModify) => {
+        if (response?.metadata?.message) {
+          notification.error({
+            message: response?.metadata?.message,
+          });
+        }
+        cancelHandler();
       },
     });
   useEffect(() => {
@@ -173,6 +189,9 @@ export default function EmployeeDetailModal({
                         name="dateOfBirth"
                         label="Date Of Birth"
                         rules={[{ required: true }]}
+                        disabledDate={(current) =>
+                          current > moment().startOf('days')
+                        }
                       />
                     </Col>
                   </Row>
@@ -320,7 +339,6 @@ export default function EmployeeDetailModal({
                         dataName="items"
                         name="managerId"
                         label="Manager"
-                        rules={[{ required: true }]}
                         allowClear
                         placeholder="Choose manager"
                         apiName="manager-master-data"
@@ -380,14 +398,16 @@ export default function EmployeeDetailModal({
                         value="Manager"
                       />
                     </Col>
-                    <Col span={8}>
-                      <BasicRadioGroup
-                        label="Status"
-                        name="isActive"
-                        initialValue={COMMON_STATUS.ACTIVE}
-                        listRadio={COMMON_STATUS_LIST}
-                      />
-                    </Col>
+                    {actionModal !== ACTION_TYPE.CREATE && (
+                      <Col span={8}>
+                        <BasicRadioGroup
+                          label="Status"
+                          name="isActive"
+                          initialValue={COMMON_STATUS.ACTIVE}
+                          listRadio={COMMON_STATUS_LIST}
+                        />
+                      </Col>
+                    )}
                   </Row>
                 </Col>
               </Row>

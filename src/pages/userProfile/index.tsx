@@ -6,6 +6,7 @@ import BasicSelect from 'components/BasicSelect';
 import {
   DATE_TIME,
   MESSAGE_RES,
+  USER_INFO,
   US_DATE_FORMAT,
   validateMessages,
 } from 'constants/common';
@@ -39,6 +40,7 @@ export default function UserProfile() {
       if (message === MESSAGE_RES.SUCCESS && detailData) {
         notification.success({ message: 'Update information successfully' });
         dispatch(getUserInfo({ newUserInfor: detailData }));
+        localStorage.setItem(USER_INFO, JSON.stringify(detailData));
       }
     },
   });

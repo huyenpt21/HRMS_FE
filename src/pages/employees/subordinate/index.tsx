@@ -85,7 +85,7 @@ export default function SubordinateList() {
       if (el.key === 'fullName') {
         el.width = 300;
       }
-      if (el.key === 'positionName' || el.key === 'department') {
+      if (el.key === 'positionName' || el.key === 'departmentName') {
         el.width = 200;
       }
       if (el.key === 'email') {
