@@ -7,9 +7,9 @@ import Loading from 'components/loading';
 import NotifyPopup from 'components/NotifyPopup';
 import { MESSAGE_RES, YEAR_MONTH_NUM } from 'constants/common';
 import { SHAPE_TYPE } from 'constants/enums/common';
+import { useAppSelector } from 'hooks';
 import {
   useCheckSecureCodeCorrectly,
-  useCheckSecureCodeExist,
   useGetPayslip,
   useSendPayslipToEmail,
 } from 'hooks/usePayslip';
@@ -30,6 +30,9 @@ import styles from './payrollDetail.module.less';
 export default function PayslipDetail() {
   const [payslipForm] = Form.useForm();
   const navigate = useNavigate();
+  const isSecureCodeCreated = useAppSelector(
+    (state) => state.auth.isSecureCodeCreated,
+  );
   const [isShowPayslip, setIsShowPayslip] = useState(false);
   const [isShowPopConfirm, setIsShowPopConfirm] = useState(false);
   const payslipDataRef = useRef<PayslipModel>();
@@ -37,15 +40,11 @@ export default function PayslipDetail() {
     month: Number(moment().get('month')),
     year: Number(moment().get('year')),
   });
-  const { data: secureCodeData } = useCheckSecureCodeExist();
   useEffect(() => {
-    if (secureCodeData) {
-      const { data: isSecureCodeExist } = secureCodeData;
-      if (!isSecureCodeExist) {
-        setIsShowPopConfirm(true);
-      }
+    if (!isSecureCodeCreated) {
+      setIsShowPopConfirm(true);
     }
-  }, [secureCodeData]);
+  }, [isSecureCodeCreated]);
   const { mutate: sendPayslipToEmail } = useSendPayslipToEmail({
     onSuccess: (response: ResPayslipModify) => {
       const {

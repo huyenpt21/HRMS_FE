@@ -7,11 +7,12 @@ import {
 } from 'constants/common';
 import { useAppDispatch } from 'hooks';
 import { useGetuserInfo, useGetUserRoles } from 'hooks/useEmployee';
+import { useCheckSecureCodeExist } from 'hooks/usePayslip';
 
 import { EmployeeRoles } from 'models/employee';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getUserInfo, getUserRoles } from 'store/slice/auth';
+import { checkSecureCode, getUserInfo, getUserRoles } from 'store/slice/auth';
 export default function LoginRedirect() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -28,6 +29,13 @@ export default function LoginRedirect() {
   }, [accessToken]);
   const { data: getUserRole } = useGetUserRoles(acLocal ?? '');
   const { data: detailUserInfo } = useGetuserInfo(acLocal ?? '');
+  const { data: secureCodeData } = useCheckSecureCodeExist();
+  useEffect(() => {
+    if (secureCodeData) {
+      const { data: isSecureCodeCreated } = secureCodeData;
+      dispatch(checkSecureCode({ isSecureCodeCreated: isSecureCodeCreated }));
+    }
+  }, [secureCodeData]);
   useEffect(() => {
     if (detailUserInfo && detailUserInfo.data) {
       const {

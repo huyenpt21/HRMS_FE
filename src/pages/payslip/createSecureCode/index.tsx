@@ -2,7 +2,7 @@ import { Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import Loading from 'components/loading';
-import { MESSAGE_RES } from 'constants/common';
+import { MESSAGE_RES, SECURE_CODE_CREATED } from 'constants/common';
 import { useAppDispatch } from 'hooks';
 import { useCreateSecurityCode } from 'hooks/usePayslip';
 import { ResPayslipModify, SercurityCode } from 'models/payslip';
@@ -18,10 +18,14 @@ export default function CreateSecurityCode() {
       onSuccess: (response: ResPayslipModify) => {
         const {
           metadata: { message },
-          data: isSecureCodeCreate,
+          data: isSecureCodeCreated,
         } = response;
-        if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreate) {
+        if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreated) {
           dispath(checkSecureCode({ isSecureCodeCreated: true }));
+          localStorage.setItem(
+            SECURE_CODE_CREATED,
+            JSON.stringify(isSecureCodeCreated),
+          );
           notification.success({
             message: 'Create security code successfully',
           });

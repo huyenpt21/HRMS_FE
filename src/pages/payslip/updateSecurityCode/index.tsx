@@ -3,8 +3,8 @@ import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import Loading from 'components/loading';
 import { MESSAGE_RES } from 'constants/common';
+import { useAppSelector } from 'hooks';
 import {
-  useCheckSecureCodeExist,
   useForgotSecureCodeExist,
   useUpdateSecurityCode,
 } from 'hooks/usePayslip';
@@ -17,20 +17,18 @@ import styles from '../payrollDetail.module.less';
 export default function UpdateSecurityCode() {
   const [settingForm] = Form.useForm();
   const navigate = useNavigate();
-  const { data: secureCodeData, isLoading: loadingCheckExistCode } =
-    useCheckSecureCodeExist();
+  const isSecureCodeCreated = useAppSelector(
+    (state) => state.auth.isSecureCodeCreated,
+  );
   useEffect(() => {
-    if (secureCodeData) {
-      const { data: isSecureCodeExist } = secureCodeData;
-      if (!isSecureCodeExist) {
-        notification.warning({
-          message: 'You do not have a security code',
-          key: '1',
-        });
-        navigate('/setting/security-code/create');
-      }
+    if (!isSecureCodeCreated) {
+      notification.warning({
+        message: 'You do not have a security code',
+        key: '1',
+      });
+      navigate('/setting/security-code/create');
     }
-  }, [secureCodeData]);
+  }, [isSecureCodeCreated]);
 
   const { mutate: updateSecureCode, isLoading: loadingUpdateCode } =
     useUpdateSecurityCode({
@@ -105,107 +103,102 @@ export default function UpdateSecurityCode() {
           onFinish={submitHandler}
           className={styles.login__payslip}
         >
-          {(loadingSendEmail || loadingCheckExistCode || loadingUpdateCode) && (
+          {(loadingSendEmail || loadingUpdateCode) && (
             <Loading text="Working on it..." />
           )}
-          {!loadingSendEmail &&
-            !loadingCheckExistCode &&
-            !loadingUpdateCode && (
-              <>
-                <BasicInput
-                  name="currentSecureCode"
-                  label="Your old security code"
-                  type="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your security code!',
+          {!loadingSendEmail && !loadingUpdateCode && (
+            <>
+              <BasicInput
+                name="currentSecureCode"
+                label="Your old security code"
+                type="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter your security code!',
+                  },
+                  {
+                    whitespace: true,
+                    message: 'Only white spaces are invalid',
+                  },
+                  {
+                    min: 8,
+                    message: 'Expected at least 8 characters',
+                  },
+                ]}
+                allowClear
+              />
+              <BasicInput
+                name="newSecureCode"
+                label="New security code"
+                type="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter your security code!',
+                  },
+                  {
+                    whitespace: true,
+                    message: 'Only white spaces are invalid',
+                  },
+                  {
+                    min: 8,
+                    message: 'Expected at least 8 characters',
+                  },
+                ]}
+                allowClear
+                hasFeedback
+              />
+              <BasicInput
+                name="confirmSecureCode"
+                label="Confirm security code"
+                type="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please confirm your security code!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('newSecureCode') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error(
+                          'The two security codes that you entered do not match!',
+                        ),
+                      );
                     },
-                    {
-                      whitespace: true,
-                      message: 'Only white spaces are invalid',
-                    },
-                    {
-                      min: 8,
-                      message: 'Expected at least 8 characters',
-                    },
-                  ]}
-                  allowClear
-                />
-                <BasicInput
-                  name="newSecureCode"
-                  label="New security code"
-                  type="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your security code!',
-                    },
-                    {
-                      whitespace: true,
-                      message: 'Only white spaces are invalid',
-                    },
-                    {
-                      min: 8,
-                      message: 'Expected at least 8 characters',
-                    },
-                  ]}
-                  allowClear
-                  hasFeedback
-                />
-                <BasicInput
-                  name="confirmSecureCode"
-                  label="Confirm security code"
-                  type="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please confirm your security code!',
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (
-                          !value ||
-                          getFieldValue('newSecureCode') === value
-                        ) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(
-                          new Error(
-                            'The two security codes that you entered do not match!',
-                          ),
-                        );
-                      },
-                    }),
-                  ]}
-                  allowClear
-                  hasFeedback
-                />
-                <Row>
-                  <Col span={24}>
-                    <Tooltip
-                      title="Send new security code to your email"
-                      placement="topRight"
+                  }),
+                ]}
+                allowClear
+                hasFeedback
+              />
+              <Row>
+                <Col span={24}>
+                  <Tooltip
+                    title="Send new security code to your email"
+                    placement="topRight"
+                  >
+                    <p
+                      className={styles.forgot__text}
+                      onClick={handleForgotSecureCode}
                     >
-                      <p
-                        className={styles.forgot__text}
-                        onClick={handleForgotSecureCode}
-                      >
-                        Forgot your security code?
-                      </p>
-                    </Tooltip>
-                  </Col>
-                </Row>
-                <Row>
-                  <BasicButton
-                    title="Submit"
-                    type="filled"
-                    htmlType="submit"
-                    className={styles.login__btn}
-                  />
-                </Row>
-              </>
-            )}
+                      Forgot your security code?
+                    </p>
+                  </Tooltip>
+                </Col>
+              </Row>
+              <Row>
+                <BasicButton
+                  title="Submit"
+                  type="filled"
+                  htmlType="submit"
+                  className={styles.login__btn}
+                />
+              </Row>
+            </>
+          )}
         </Form>
       </Col>
     </div>

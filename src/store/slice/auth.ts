@@ -1,12 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { USER_INFO, USER_MENU, USER_ROLES } from 'constants/common';
+import {
+  SECURE_CODE_CREATED,
+  USER_INFO,
+  USER_MENU,
+  USER_ROLES,
+} from 'constants/common';
 import { EmployeeModel } from 'models/employee';
 import { MenuItemType } from 'models/menu';
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    isSecureCodeCreated: false,
+    isSecureCodeCreated: JSON.parse(
+      localStorage.getItem(SECURE_CODE_CREATED) ?? 'false',
+    ),
     isLogout: false,
     user: JSON.parse(localStorage.getItem(USER_INFO) ?? '{}') as EmployeeModel,
     roles: JSON.parse(localStorage.getItem(USER_ROLES) ?? '[]') as number[],
