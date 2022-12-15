@@ -226,11 +226,15 @@ export const DEVICE_MANAGEMENT_STATUS: SelectBoxType[] = [
 export const DEVICE_HISTORY_STATUS: SelectBoxType[] = [
   {
     label: 'Returned',
-    value: COMMON_STATUS.ACTIVE,
+    value: STATUS.RETURNED,
   },
   {
     label: 'Using',
-    value: COMMON_STATUS.INACTIVE,
+    value: STATUS.USING,
+  },
+  {
+    label: 'Deleted',
+    value: STATUS.DELETED,
   },
 ];
 export const PERIOD_TIME = {

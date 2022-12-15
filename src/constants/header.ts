@@ -183,7 +183,7 @@ export const MyTimeCheckHeader = [
     dataIndex: 'workingTime',
   },
   {
-    title: 'OT',
+    title: 'Over Time',
     key: 'ot',
     dataIndex: 'ot',
   },
