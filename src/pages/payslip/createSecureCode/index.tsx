@@ -3,13 +3,16 @@ import BasicButton from 'components/BasicButton';
 import BasicInput from 'components/BasicInput';
 import Loading from 'components/loading';
 import { MESSAGE_RES } from 'constants/common';
+import { useAppDispatch } from 'hooks';
 import { useCreateSecurityCode } from 'hooks/usePayslip';
 import { ResPayslipModify, SercurityCode } from 'models/payslip';
 import { useNavigate } from 'react-router-dom';
+import { checkSecureCode } from 'store/slice/auth';
 import styles from '../payrollDetail.module.less';
 export default function CreateSecurityCode() {
   const [settingForm] = Form.useForm();
   const navigate = useNavigate();
+  const dispath = useAppDispatch();
   const { mutate: createSecureCode, isLoading: loadingCreate } =
     useCreateSecurityCode({
       onSuccess: (response: ResPayslipModify) => {
@@ -18,6 +21,7 @@ export default function CreateSecurityCode() {
           data: isSecureCodeCreate,
         } = response;
         if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreate) {
+          dispath(checkSecureCode({ isSecureCodeCreated: true }));
           notification.success({
             message: 'Create security code successfully',
           });

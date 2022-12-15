@@ -11,7 +11,7 @@ import { useGetuserInfo, useGetUserRoles } from 'hooks/useEmployee';
 import { EmployeeRoles } from 'models/employee';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getUserInfo, getUserRoles, login } from 'store/slice/auth';
+import { getUserInfo, getUserRoles } from 'store/slice/auth';
 export default function LoginRedirect() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -66,7 +66,6 @@ export default function LoginRedirect() {
       !!localStorage.getItem(USER_ROLES) &&
       !!localStorage.getItem(USER_INFO)
     ) {
-      dispatch(login({ isLogin: true }));
       navigate('/');
     }
   }, [getUserRole, detailUserInfo]);
