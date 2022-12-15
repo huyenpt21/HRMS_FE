@@ -3,7 +3,7 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
-import { Col, notification, Row, Upload } from 'antd';
+import { Col, Form, notification, Row, Upload } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicSelect from 'components/BasicSelect';
 import { downloadFile } from 'components/DownloadFile';
@@ -39,6 +39,7 @@ export default function ExtraHeaderTable({
   stateQuery,
   refetch,
 }: IProps) {
+  const [filterForm] = Form.useForm();
   const token = localStorage.getItem(ACCESS_TOKEN) || null;
 
   const departmentIdRef = useRef<number>(-1);
@@ -142,7 +143,7 @@ export default function ExtraHeaderTable({
           </span>
         )}
       </div>
-      <div>
+      <Form form={filterForm} layout="vertical">
         <Row gutter={10} className={styles.filter__section}>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <InputDebounce
@@ -165,6 +166,7 @@ export default function ExtraHeaderTable({
                 handleChangeFilter(value, 'departmentId');
                 if (!value) departmentIdRef.current = -1;
                 if (value) departmentIdRef.current = value;
+                filterForm.setFieldValue('position', undefined);
               }}
               apiName="department-master-data"
               defaultValue={stateQuery?.departmentId ?? undefined}
@@ -175,6 +177,7 @@ export default function ExtraHeaderTable({
             <SelectCustomSearch
               url={`${POSITION_BY_DEPARTMENT.service}?departmentId=${departmentIdRef.current}`}
               dataName="items"
+              name="position"
               placeholder="Choose position"
               allowClear
               optionFilterProp="label"
@@ -202,7 +205,7 @@ export default function ExtraHeaderTable({
             />
           </Col>
         </Row>
-      </div>
+      </Form>
     </>
   );
 }
