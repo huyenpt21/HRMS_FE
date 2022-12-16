@@ -98,9 +98,9 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
                     <Paragraph ellipsis={{ rows: 2 }}>
                       <div>
                         <span className={styles.text__bold}>
-                          {item.userFrom}
+                          {item?.userFrom}
                         </span>{' '}
-                        <span>{item.content}</span>
+                        <span>{item?.content}</span>
                       </div>
                     </Paragraph>
                     <div className={styles.text__date}>
@@ -110,7 +110,7 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
                 }
                 className={styles.item__content}
               />
-              {!item.isRead && <SvgIcon icon="active" size={10} />}
+              {!item?.isRead && <SvgIcon icon="active" size={10} />}
             </List.Item>
           )}
         </VirtualList>

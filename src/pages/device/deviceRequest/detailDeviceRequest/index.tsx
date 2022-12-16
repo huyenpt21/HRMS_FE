@@ -109,13 +109,15 @@ export default function DetailDeviceRequest() {
                   </Col>
                 )}
                 <Col span={detailData?.status === STATUS.RETURNED ? 9 : 8}>
-                  <BasicInput name="borrowDate" label="Borrow Time" />
+                  <BasicInput name="borrowDate" label="Borrowed Time" />
                 </Col>
-                {detailData?.status === STATUS.RETURNED && (
-                  <Col span={9}>
-                    <BasicInput name="returnDate" label="Returned Date" />
-                  </Col>
-                )}
+                {(detailData?.status === STATUS.RETURNED ||
+                  detailData?.status === STATUS.DELETED) &&
+                  detailData?.returnDate && (
+                    <Col span={9}>
+                      <BasicInput name="returnDate" label="Returned Time" />
+                    </Col>
+                  )}
                 {detailData?.status === STATUS.USING &&
                   type === 'emp-self-service' && (
                     <Col span={8} className={styles.btn__return}>
