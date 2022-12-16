@@ -36,7 +36,9 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
       const {
         data: { items },
       } = res;
-      setDataNotiList((prev: NotifcationModel[]) => [...prev, ...items]);
+      if (items && items?.length !== 0) {
+        setDataNotiList((prev: NotifcationModel[]) => [...prev, ...items]);
+      }
     },
     onError: (res) => {
       const {
@@ -52,7 +54,7 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
   useEffect(() => {
     dataNotification({
       page: stateQuery.page,
-      limit: 5,
+      limit: 10,
     });
   }, []);
   const onScroll = (e: React.UIEvent<HTMLElement, UIEvent>) => {
@@ -61,10 +63,10 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
       ContainerHeight
     ) {
       dataNotification({
-        page: stateQuery.page++,
-        limit: 5,
+        page: ++stateQuery.page,
+        limit: 10,
       });
-      setStateQuery({ page: stateQuery.page++, limit: 5 });
+      setStateQuery((prev) => ({ page: ++prev.page, limit: 10 }));
     }
   };
   return (
