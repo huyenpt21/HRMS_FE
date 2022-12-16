@@ -73,6 +73,8 @@ export default function AllTimeCheck() {
     const columns = header.map((el: HeaderTableFields, index: number) => {
       // * eanble sort in column & custom width
       if (el.key === 'rollNumber') {
+        el.sorter = !isError;
+        el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = 150;
       }
       if (el.key === 'fullName') {

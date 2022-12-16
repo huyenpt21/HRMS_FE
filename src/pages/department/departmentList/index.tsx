@@ -48,7 +48,7 @@ export default function DepartmentList() {
     removeEmptyValueInObject(defaultFilter),
   );
 
-  //  * get data header and content table
+  // * get data header and content table
   const header: HeaderTableFields[] = DepartmentHeader;
   const {
     isLoading,
@@ -60,8 +60,8 @@ export default function DepartmentList() {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
-      if (el.key === 'departmentName') {
-        el.sorter = isError;
+      if (el.key === 'totalEmployee') {
+        el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
       return {

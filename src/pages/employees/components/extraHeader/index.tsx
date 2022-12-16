@@ -148,12 +148,12 @@ export default function ExtraHeaderTable({
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
             <InputDebounce
               suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Name, roll number"
+              placeholder="Search ..."
               allowClear
               setStateQuery={setStateQuery}
               keyParam="search"
               defaultValue={stateQuery?.search}
-              label="Search"
+              label="Roll Number / Name"
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>

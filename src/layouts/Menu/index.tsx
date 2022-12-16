@@ -40,7 +40,6 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
     }
     return menu;
   }, [userRoles]);
-
   const menuItems: MenuItem[] = useMemo(() => {
     return menuList?.map((menu: MenuItemType) => {
       return menu?.children?.length

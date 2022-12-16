@@ -71,6 +71,7 @@ export default function EmployeeDetailModal({
             message: 'Update information successfully',
           });
         }
+        refetchList && refetchList();
         cancelHandler();
       },
       onError: (response: ResEmployeeModify) => {

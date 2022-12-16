@@ -87,18 +87,19 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
                 item?.redirectUrl && navigate(item?.redirectUrl);
               }}
               className={styles.item}
+              title={`${item.userFrom} ${item.content}`}
             >
               <List.Item.Meta
                 avatar={<Avatar src={item?.avtUrl} size={'large'} />}
                 description={
                   <>
                     <Paragraph ellipsis={{ rows: 2 }}>
-                      <>
+                      <div>
                         <span className={styles.text__bold}>
                           {item.userFrom}
                         </span>{' '}
                         <span>{item.content}</span>
-                      </>
+                      </div>
                     </Paragraph>
                     <div className={styles.text__date}>
                       {getDateFormat(item?.createDate, DATE_TIME_US)}

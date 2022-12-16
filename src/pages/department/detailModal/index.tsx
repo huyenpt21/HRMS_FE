@@ -203,7 +203,8 @@ export default function DepartmentDetailModal({
                             {fields.length > 1 &&
                               positionList &&
                               (!!positionList[field.key]?.isAllowDelete ||
-                                !positionList[field.key]?.isAllowDelete) && (
+                                positionList[field.key]?.isAllowDelete ===
+                                  undefined) && (
                                 <span
                                   onClick={() => remove(field.name)}
                                   className={styles['icon--delete']}

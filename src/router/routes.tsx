@@ -35,6 +35,7 @@ import PrivateRoute from './PrivateRoute';
 import LoginRedirect from 'pages/login/loginRedirect';
 import SignatureProfileList from 'pages/signatureProfile';
 import ServerErrorPage from 'pages/serverError';
+import PermissionRoute from './PermissionRoute';
 
 export default function RouterElement() {
   let element = useRoutes([
@@ -42,9 +43,9 @@ export default function RouterElement() {
       path: '/',
       element: (
         <PrivateRoute>
-          {/* <PermissionRoute> */}
-          <MainLayout />
-          {/* </PermissionRoute> */}
+          <PermissionRoute>
+            <MainLayout />
+          </PermissionRoute>
         </PrivateRoute>
       ),
       children: [

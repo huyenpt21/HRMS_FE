@@ -189,11 +189,11 @@ export default function ExtraTableTimeCheck({
             <Col xs={24} sm={18} md={8} xl={8} xxl={6}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-                placeholder="Name, roll number"
+                placeholder="Search ..."
                 allowClear
                 setStateQuery={setStateQuery}
                 keyParam="search"
-                label="Employee Name"
+                label="Roll Number / Name"
               />
             </Col>
             <Col xs={24} sm={18} md={10} xl={8} xxl={6}>

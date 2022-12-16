@@ -31,7 +31,7 @@ export const authSlice = createSlice({
     getUserInfo: (state, action) => {
       state.user = action.payload.newUserInfor;
     },
-    getUserMenu: (state, action) => {
+    setUserMenu: (state, action) => {
       state.menus = action.payload.userMenu;
     },
     logout: (state, action) => {
@@ -43,7 +43,7 @@ export const authSlice = createSlice({
 export const {
   getUserRoles,
   getUserInfo,
-  getUserMenu,
+  setUserMenu,
   checkSecureCode,
   logout,
 } = authSlice.actions;
