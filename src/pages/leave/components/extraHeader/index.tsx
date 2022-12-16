@@ -26,11 +26,11 @@ export default function ExtraHeaderLeaveBudget({
             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
               <InputDebounce
                 suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-                placeholder="Name, roll number"
+                placeholder="Search ..."
                 allowClear
                 setStateQuery={setStateQuery}
                 keyParam="search"
-                label="Search"
+                label="Roll Number / Name"
               />
             </Col>
           )}

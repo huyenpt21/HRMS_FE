@@ -117,7 +117,7 @@ export default function SubordinateRequestList() {
       title: (
         <div>
           <Tooltip
-            title="Can not rollback action to requests that you respond over 2h"
+            title="Can only rollback within 2 hours. With borrow device request can't rollback once the device has been assigned"
             placement="topRight"
           >
             Action <SvgIcon icon="infor" size={18} />
