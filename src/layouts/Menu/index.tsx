@@ -3,7 +3,7 @@ import SvgIcon from 'components/SvgIcon';
 import { useAppSelector } from 'hooks';
 import { getItem, IMenuCProps, MenuItem, MenuItemType } from 'models/menu';
 import { useEffect, useMemo, useState } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   menuEmployee,
   menuHR,
@@ -13,14 +13,12 @@ import {
   menuManager,
   menus,
   menuSubEmployee,
-  personalUrl,
 } from './menu';
 
 export default function MenuSidebar({ collapsed }: IMenuCProps) {
   const [openKeys, setOpenKeys] = useState<any>([]);
   const [activeMenu, setActiveMenu] = useState<any>(undefined);
   const router = useLocation();
-  const navigate = useNavigate();
   const userRoles = useAppSelector((state) => state.auth.roles);
   //* get list of menu
   let menuList: MenuItemType[] = useMemo(() => {
@@ -42,30 +40,6 @@ export default function MenuSidebar({ collapsed }: IMenuCProps) {
     }
     return menu;
   }, [userRoles]);
-  const isAllowAccess: boolean = useMemo(() => {
-    const urlPathArray = menuList?.flatMap((item: MenuItemType) => {
-      if (item?.children) {
-        return item?.children.flatMap((el: MenuItemType) => {
-          return el?.path;
-        });
-      }
-      return item?.path;
-    });
-    urlPathArray.splice(0, 1);
-    const accessUrls = [...urlPathArray, ...personalUrl];
-    const isAllowAccess = !!accessUrls.find((item?: string) => {
-      return router.pathname?.includes(item ?? '');
-    });
-    return isAllowAccess;
-  }, [menuList, personalUrl, router]);
-
-  if (router?.pathname !== '/') {
-    console.log(2222, isAllowAccess);
-    if (!isAllowAccess) {
-      console.log(111, 'navigate');
-      navigate('/403');
-    }
-  }
   const menuItems: MenuItem[] = useMemo(() => {
     return menuList?.map((menu: MenuItemType) => {
       return menu?.children?.length
