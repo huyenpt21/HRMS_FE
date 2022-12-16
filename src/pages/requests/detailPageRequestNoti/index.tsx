@@ -7,12 +7,10 @@ import BasicInput from 'components/BasicInput';
 import BasicSelect from 'components/BasicSelect';
 import Loading from 'components/loading';
 import MultipleImagePreview from 'components/MultipleImagePreview';
-import SelectCustomSearch from 'components/SelectCustomSearch';
 import TimeRangePicker from 'components/TimeRangePicker';
 import { DATE_TIME_US, MESSAGE_RES } from 'constants/common';
 import { REQUEST_TYPE_KEY, STATUS } from 'constants/enums/common';
 import { REQUEST_MATERNITY_OPTION, REQUEST_TYPE_LIST } from 'constants/fixData';
-import { DEVICE } from 'constants/services';
 import { useChangeStatusRequest, useRequestDetail } from 'hooks/useRequestList';
 import { RequestModel, ResRequestModify } from 'models/request';
 import moment from 'moment-timezone';
@@ -219,13 +217,10 @@ export default function DetailPageRequestForNoti() {
               )}
               {requestData?.requestTypeName === REQUEST_TYPE_KEY.DEVICE && (
                 <Col span="12">
-                  <SelectCustomSearch
-                    url={`${DEVICE.model.deviceType}-${DEVICE.model.masterData}`}
-                    dataName="items"
-                    apiName="device-type-master-data"
+                  <BasicInput
                     label="Device Type"
                     placeholder="Choose device type"
-                    name="deviceTypeId"
+                    name="deviceTypeName"
                     allowClear
                   />
                 </Col>
