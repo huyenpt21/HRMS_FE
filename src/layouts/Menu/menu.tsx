@@ -1,6 +1,11 @@
 import { TeamOutlined } from '@ant-design/icons';
 import { MenuItemType } from 'models/menu';
 
+export const personalUrl: string[] = [
+  '/setting/security-code/create',
+  '/setting/security-code/update',
+  '/profile',
+];
 export const menuEmployee: MenuItemType[] = [
   {
     title: 'Home Page',

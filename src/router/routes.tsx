@@ -42,9 +42,9 @@ export default function RouterElement() {
       path: '/',
       element: (
         <PrivateRoute>
-          {/* <PermissionRoute> */}
-          <MainLayout />
-          {/* </PermissionRoute> */}
+          <PermissionRoute>
+            <MainLayout />
+          </PermissionRoute>
         </PrivateRoute>
       ),
       children: [
