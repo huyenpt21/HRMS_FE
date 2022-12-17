@@ -111,7 +111,7 @@ export default function DeviceMenuTable({
               <SvgIcon icon="edit-border" />
             </span>
           </Tooltip>
-          {!record.isUsed && (
+          {!record?.isUsed && (
             <Tooltip title="Delete" placement="right">
               <span
                 className="cursor-pointer"
@@ -139,7 +139,7 @@ export default function DeviceMenuTable({
             onClick={() => {
               setIsShowDetailModal && setIsShowDetailModal(true);
               if (deviceRequestIdRef) {
-                deviceRequestIdRef.current = record.id;
+                deviceRequestIdRef.current = record?.id;
               }
             }}
             className="cursor-pointer"
@@ -166,7 +166,7 @@ export default function DeviceMenuTable({
           message="This action cannot be reverse"
           onCancel={() => setIsShowConfirmReturn(false)}
           onConfirm={() => {
-            returnDevice(record.id);
+            returnDevice(record?.id);
           }}
           visible={isShowConfirmReturn}
           isLoading={loadingDeleteDevice}
