@@ -199,7 +199,7 @@ export default function ExtraHeaderTable({
           <Col span={4}>
             <BasicSelect
               options={COMMON_STATUS_LIST}
-              placeholder="Request status"
+              placeholder="Choose status"
               allowClear
               showSearch
               optionFilterProp="label"
@@ -207,7 +207,7 @@ export default function ExtraHeaderTable({
                 handleChangeFilter(value, 'isActive');
               }}
               defaultValue={stateQuery?.isActive ?? undefined}
-              label="Request Status"
+              label="Status"
             />
           </Col>
         </Row>
