@@ -71,11 +71,13 @@ export default function HeaderContent({ marginLeft }: IProps) {
         }
       });
       if (isLogout) {
+        sse.close();
         sse.removeEventListener('user-list-event', () => {
           console.log('Close noti listener');
         });
       }
       window.onbeforeunload = function () {
+        sse.close();
         sse.removeEventListener('user-list-event', () => {
           console.log('Close noti listener');
         });

@@ -120,10 +120,11 @@ export default function MyTimeCheck() {
             return <span>{data}</span>;
           }
           if (
-            (!data && el.key === 'ot') ||
-            el.key === 'workingTime' ||
-            el.key === 'inLate' ||
-            el.key === 'outEarly'
+            !data &&
+            (el.key === 'ot' ||
+              el.key === 'workingTime' ||
+              el.key === 'inLate' ||
+              el.key === 'outEarly')
           ) {
             return <span>0</span>;
           }
