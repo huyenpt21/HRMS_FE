@@ -23,6 +23,7 @@ export interface RequestModel extends Resource {
   otTimeRemainingOfYear?: number;
   periodTime?: number;
   isAssigned?: number;
+  isDeviceTypeDeleted?: number;
 }
 
 export interface OfficeTime {

@@ -33,7 +33,7 @@ export default function OfficeTime() {
 
         if (message === MESSAGE_RES.SUCCESS) {
           notification.success({
-            message: 'Update office successfully',
+            message: 'Update office time successfully',
           });
           setIsShowEditting(false);
         }

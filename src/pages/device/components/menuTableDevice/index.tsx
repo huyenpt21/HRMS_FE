@@ -41,7 +41,7 @@ export default function DeviceMenuTable({
           } = response;
           if (message === MESSAGE_RES.SUCCESS) {
             notification.success({
-              message: 'Update information successfully',
+              message: 'Delete device successfully',
             });
           }
         },
