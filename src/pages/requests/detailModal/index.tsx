@@ -535,7 +535,11 @@ export default function RequestDetailModal({
                         label="Device Type"
                         rules={[{ required: true }]}
                         placeholder="Choose device type"
-                        name="deviceTypeId"
+                        name={
+                          requestData?.isDeviceTypeDeleted
+                            ? 'deviceTypeName'
+                            : 'deviceTypeId'
+                        }
                         allowClear
                       />
                     </Col>
