@@ -2,6 +2,7 @@ import Loading from 'components/loading';
 import {
   ACCESS_TOKEN,
   MESSAGE_RES,
+  SECURE_CODE_CREATED,
   USER_INFO,
   USER_MENU,
   USER_ROLES,
@@ -25,7 +26,7 @@ import { MenuItemType } from 'models/menu';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  checkSecureCode,
+  setSecureCode,
   getUserInfo,
   getUserRoles,
   setUserMenu,
@@ -50,7 +51,11 @@ export default function LoginRedirect() {
   useEffect(() => {
     if (secureCodeData) {
       const { data: isSecureCodeCreated } = secureCodeData;
-      dispatch(checkSecureCode({ isSecureCodeCreated: isSecureCodeCreated }));
+      dispatch(setSecureCode({ isSecureCodeCreated: isSecureCodeCreated }));
+      localStorage.setItem(
+        SECURE_CODE_CREATED,
+        JSON.stringify(isSecureCodeCreated),
+      );
     }
   }, [secureCodeData]);
   useEffect(() => {

@@ -12,7 +12,7 @@ export const isEmptyPagination = (pagination?: Pagination) => {
   if (pagination) {
     return Object.entries(pagination).length === 0;
   }
-  return false;
+  return true;
 };
 
 export const removeEmptyValueInObject = (obj: any) => {
