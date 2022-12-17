@@ -165,8 +165,14 @@ export default function ExtraHeaderTable({
               onChangeHandle={(value) => {
                 handleChangeFilter(value, 'departmentId');
                 if (!value) departmentIdRef.current = -1;
-                if (value) departmentIdRef.current = value;
-                filterForm.setFieldValue('position', undefined);
+                if (value) {
+                  departmentIdRef.current = value;
+                  filterForm.setFieldValue('position', undefined);
+                  setStateQuery((prev: EmployeeListQuery) => ({
+                    ...prev,
+                    positionId: undefined,
+                  }));
+                }
               }}
               apiName="department-master-data"
               defaultValue={stateQuery?.departmentId ?? undefined}
