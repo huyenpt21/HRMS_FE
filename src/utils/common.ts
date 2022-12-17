@@ -8,8 +8,11 @@ import {
 import { isNumber } from 'lodash';
 import { Pagination, QueryParams, SelectBoxType } from 'models/common';
 import moment from 'moment';
-export const isEmptyPagination = (pagination: Pagination) => {
-  return Object.entries(pagination).length === 0;
+export const isEmptyPagination = (pagination?: Pagination) => {
+  if (pagination) {
+    return Object.entries(pagination).length === 0;
+  }
+  return false;
 };
 
 export const removeEmptyValueInObject = (obj: any) => {

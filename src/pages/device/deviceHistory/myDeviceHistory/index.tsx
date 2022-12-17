@@ -143,7 +143,7 @@ export default function MyBorrowDeviceHistory() {
   }, [stateQuery, isError]);
   // * get data source from API and set to state that store records for table
   useEffect(() => {
-    if (dataTable && dataTable.data) {
+    if (dataTable && dataTable?.data) {
       const {
         metadata: { pagination },
         data: { items: recordsTable },
@@ -153,9 +153,9 @@ export default function MyBorrowDeviceHistory() {
         // * set the pagination data from API
         setPagination((prevPagination: TablePaginationConfig) => ({
           ...prevPagination,
-          current: pagination.page,
-          pageSize: pagination.limit,
-          total: pagination.totalRecords,
+          current: pagination?.page,
+          pageSize: pagination?.limit,
+          total: pagination?.totalRecords,
         }));
       }
     }
@@ -188,7 +188,7 @@ export default function MyBorrowDeviceHistory() {
     return {
       onClick: () => {
         navigate({
-          pathname: `/emp-self-service/device-history/detail/${record.id}`,
+          pathname: `/emp-self-service/device-history/detail/${record?.id}`,
         });
       },
     };
@@ -206,7 +206,7 @@ export default function MyBorrowDeviceHistory() {
         />
       }
       stateQuery={stateQuery}
-      rowKey={(record: DeviceModel) => record.id}
+      rowKey={(record: DeviceModel) => record?.id}
       loading={isLoading}
       isShowScroll
       className={'cursor-pointer'}
