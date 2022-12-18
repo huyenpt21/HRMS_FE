@@ -92,7 +92,7 @@ export default function MenuTableDepartment({
       )}
       {isShowConfirm && (
         <NotifyPopup
-          title="Are you sure to delete this device?"
+          title="Are you sure to delete this department?"
           message="This action cannot be reverse"
           onCancel={() => setIsShowConfirm(false)}
           onConfirm={() => menuActionHandler(record, MENU_OPTION_KEY.DELETE)}
