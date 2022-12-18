@@ -10,7 +10,7 @@ import { useGetUnReadNotifications } from 'hooks/useNotification';
 import { NotifcationModel } from 'models/notification';
 import MenuExpand from 'pages/menuExpand';
 import NotificationExpand from 'pages/notificationExpand';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './headerContent.module.less';
 interface IProps {
@@ -22,7 +22,8 @@ export default function HeaderContent({ marginLeft }: IProps) {
   const personInfor = useAppSelector((state) => state.auth.user);
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
-  const [totalUnreadNotifs, setTotalUnreadNotifs] = useState<number>(0);
+  // const [totalUnreadNotifs, setTotalUnreadNotifs] = useState<number>(0);
+  const totalUnreadNotifsRef = useRef(0);
   const isLogout = useAppSelector((state) => state.auth.isLogout);
   const { data: unreadNotifs, refetch: refetchGetUnreadNotifs } =
     useGetUnReadNotifications();
@@ -34,70 +35,27 @@ export default function HeaderContent({ marginLeft }: IProps) {
         data: totalUnreadNotif,
       } = unreadNotifs;
       if (message === MESSAGE_RES.SUCCESS) {
-        setTotalUnreadNotifs(totalUnreadNotif);
+        totalUnreadNotifsRef.current = totalUnreadNotif;
       }
     }
   }, [unreadNotifs]);
 
   useEffect(() => {
     const url = `${REACT_APP_API_URL_WSS}ws`;
-    // Connection for all
-    const clientAll = new Client({
-      brokerURL: url,
-    });
-    clientAll.onConnect = function (frame) {
-      const subscriptionAll = clientAll?.subscribe(
-        '/notification/all',
-        (message) => {
-          if (message?.body) {
-            const notificationList = JSON.parse(message.body);
-            if (notificationList?.length > 0) {
-              setTotalUnreadNotifs((prev) => prev + notificationList);
-              notificationList?.map((el: NotifcationModel) =>
-                notification.info({
-                  message: (
-                    <div>
-                      <b>{el?.userFrom}</b> {el?.content}
-                    </div>
-                  ),
-                  onClick: () => {
-                    //send message read notif
-                    clientAll.publish({
-                      destination: '/ms-hrms/read-notifications',
-                      body: JSON.stringify({ notifID: el?.id }),
-                      skipContentLengthHeader: true,
-                    });
-                    //re-fetch get total unread notifs
-                    refetchGetUnreadNotifs();
-                    //redirect to notif page
-                    el?.redirectUrl && navigate(el?.redirectUrl);
-                  },
-                }),
-              );
-            }
-          }
-        },
-      );
-      //unsubcribe
-      if (isLogout) {
-        subscriptionAll.unsubscribe();
-      }
-    };
-    clientAll.activate();
-
     // Connection for single person
     if (!!personInfor?.id) {
-      const clientSingle = new Client({
+      const client = new Client({
         brokerURL: url,
       });
-      clientSingle.onConnect = function (frame) {
-        const subscriptionSingle = clientSingle?.subscribe(
+      client.onConnect = function (frame) {
+        const subscriptionSingle = client?.subscribe(
           `/notification/${personInfor?.id}`,
           (message) => {
             if (message.body) {
               const notificationList = JSON.parse(message.body);
               if (notificationList?.length > 0) {
-                setTotalUnreadNotifs((prev) => prev + notificationList);
+                totalUnreadNotifsRef.current =
+                  totalUnreadNotifsRef.current + notificationList.length;
                 notificationList?.map((el: NotifcationModel) =>
                   notification.info({
                     message: (
@@ -107,9 +65,9 @@ export default function HeaderContent({ marginLeft }: IProps) {
                     ),
                     onClick: () => {
                       //send message read notif
-                      clientAll.publish({
+                      client.publish({
                         destination: '/ms-hrms/read-notifications',
-                        body: JSON.stringify({ notifID: el?.id }),
+                        body: el?.id + '',
                         skipContentLengthHeader: true,
                       });
                       //re-fetch get total unread notifs
@@ -121,6 +79,8 @@ export default function HeaderContent({ marginLeft }: IProps) {
                 );
               }
             }
+            //re-fetch get total unread notifs
+            refetchGetUnreadNotifs();
           },
         );
         //unsubcribe
@@ -128,7 +88,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
           subscriptionSingle.unsubscribe();
         }
       };
-      clientSingle.activate();
+      client.activate();
     }
   }, [isLogout]);
 
@@ -156,14 +116,14 @@ export default function HeaderContent({ marginLeft }: IProps) {
               setIsShowMenuExpand(false);
             }}
           >
-            {!!totalUnreadNotifs && (
-              <Badge count={totalUnreadNotifs} size="default">
+            {!!totalUnreadNotifsRef.current && (
+              <Badge count={totalUnreadNotifsRef.current} size="default">
                 <Avatar shape="circle" size="large">
                   <SvgIcon icon="notification" />
                 </Avatar>
               </Badge>
             )}
-            {!totalUnreadNotifs && (
+            {!totalUnreadNotifsRef.current && (
               <Avatar shape="circle" size="large">
                 <SvgIcon icon="notification" />
               </Avatar>

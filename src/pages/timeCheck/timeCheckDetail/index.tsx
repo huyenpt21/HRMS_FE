@@ -199,6 +199,7 @@ export default function TimeCheckDetail() {
       stateQuery={stateQuery}
       rowKey={(record: TimeCheckModel) => record.id}
       loading={isLoading}
+      isShowScroll
     />
   );
 }

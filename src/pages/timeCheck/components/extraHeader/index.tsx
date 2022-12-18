@@ -43,7 +43,8 @@ export default function ExtraTableTimeCheck({
     let startDate: string | undefined;
     let endDate: string | undefined;
     switch (menuType) {
-      case MENU_TYPE.MINE: {
+      case MENU_TYPE.MINE:
+      case MENU_TYPE.DETAIL: {
         startDate = getStartEndDateFormat(dateString[0], DATE_TIME);
         endDate = getStartEndDateFormat(dateString[1], DATE_TIME, false);
         break;
@@ -54,13 +55,12 @@ export default function ExtraTableTimeCheck({
         endDate = getEndOfWeek(date, DATE_TIME).toString();
       }
     }
-    if (!!date) {
-      setStateQuery((prev: any) => ({
-        ...prev,
-        startDate: startDate,
-        endDate: endDate,
-      }));
-    }
+    console.log(111, startDate, endDate, menuType);
+    setStateQuery((prev: any) => ({
+      ...prev,
+      startDate: startDate,
+      endDate: endDate,
+    }));
   };
   const extraFooter = () => {
     return (
@@ -179,7 +179,7 @@ export default function ExtraTableTimeCheck({
               isUseDefaultValue={!!stateQuery.startDate}
               onCalendarChange={(values: RangeValue) => setDates(values)}
               disabledDate={disableDate}
-              allowClear
+              // allowClear
               inputReadOnly={false}
             />
           </Col>

@@ -2,12 +2,9 @@ import { Client } from '@stomp/stompjs';
 import { Avatar, List, notification } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import SvgIcon from 'components/SvgIcon';
-import { ACCESS_TOKEN, DATE_TIME_US } from 'constants/common';
+import { DATE_TIME_US } from 'constants/common';
 import urls from 'constants/url';
-import {
-  useGetAllNorification,
-  useReadNotification,
-} from 'hooks/useNotification';
+import { useGetAllNorification } from 'hooks/useNotification';
 import { NotifcationModel, NotificationQuery } from 'models/notification';
 import VirtualList from 'rc-virtual-list';
 import { useEffect, useState } from 'react';
@@ -24,13 +21,6 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
   const [stateQuery, setStateQuery] = useState<NotificationQuery>({
     limit: 5,
     page: 1,
-  });
-  const { mutate: readNoti } = useReadNotification({
-    onSuccess: (res) => {
-      if (res?.data === 'OK') {
-        refecthUnreadNotif();
-      }
-    },
   });
   const [dataNotiList, setDataNotiList] = useState<NotifcationModel[]>([]);
   const { mutate: dataNotification, isLoading } = useGetAllNorification({
@@ -72,20 +62,14 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
     }
   };
   const handleOnClickNotif = (item: NotifcationModel) => {
-    if (item?.id) readNoti(item?.id);
-    const token = localStorage.getItem(ACCESS_TOKEN);
     const url = `${REACT_APP_API_URL_WSS}ws`;
     const client = new Client({
       brokerURL: url,
-      connectHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
     });
     client.onConnect = function () {
       //send read notif message
       client.publish({
         destination: '/ms-hrms/read-notifications',
-        // body: JSON.stringify({ notifID: item?.id }),
         body: item?.id + '',
         skipContentLengthHeader: true,
       });
