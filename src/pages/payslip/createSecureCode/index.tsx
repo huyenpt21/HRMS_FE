@@ -7,7 +7,7 @@ import { useAppDispatch } from 'hooks';
 import { useCreateSecurityCode } from 'hooks/usePayslip';
 import { ResPayslipModify, SercurityCode } from 'models/payslip';
 import { useNavigate } from 'react-router-dom';
-import { checkSecureCode } from 'store/slice/auth';
+import { setSecureCode } from 'store/slice/auth';
 import styles from '../payrollDetail.module.less';
 export default function CreateSecurityCode() {
   const [settingForm] = Form.useForm();
@@ -21,7 +21,7 @@ export default function CreateSecurityCode() {
           data: isSecureCodeCreated,
         } = response;
         if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCreated) {
-          dispath(checkSecureCode({ isSecureCodeCreated: true }));
+          dispath(setSecureCode({ isSecureCodeCreated: true }));
           localStorage.setItem(
             SECURE_CODE_CREATED,
             JSON.stringify(isSecureCodeCreated),

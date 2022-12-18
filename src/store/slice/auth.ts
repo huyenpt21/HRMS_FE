@@ -22,7 +22,7 @@ export const authSlice = createSlice({
     ) as MenuItemType[],
   },
   reducers: {
-    checkSecureCode: (state, action) => {
+    setSecureCode: (state, action) => {
       state.isSecureCodeCreated = action.payload.isSecureCodeCreated;
     },
     getUserRoles: (state, action) => {
@@ -40,11 +40,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const {
-  getUserRoles,
-  getUserInfo,
-  setUserMenu,
-  checkSecureCode,
-  logout,
-} = authSlice.actions;
+export const { getUserRoles, getUserInfo, setUserMenu, setSecureCode, logout } =
+  authSlice.actions;
 export default authSlice.reducer;
