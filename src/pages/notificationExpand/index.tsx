@@ -1,7 +1,9 @@
+import { Client } from '@stomp/stompjs';
 import { Avatar, List, notification } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_TIME_US } from 'constants/common';
+import { ACCESS_TOKEN, DATE_TIME_US } from 'constants/common';
+import urls from 'constants/url';
 import {
   useGetAllNorification,
   useReadNotification,
@@ -16,14 +18,13 @@ interface IProps {
   refecthUnreadNotif: () => {};
 }
 export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
+  const { REACT_APP_API_URL_WSS }: any = urls;
   const ContainerHeight = 400;
   const navigate = useNavigate();
   const [stateQuery, setStateQuery] = useState<NotificationQuery>({
     limit: 5,
     page: 1,
   });
-
-  const [dataNotiList, setDataNotiList] = useState<NotifcationModel[]>([]);
   const { mutate: readNoti } = useReadNotification({
     onSuccess: (res) => {
       if (res?.data === 'OK') {
@@ -31,6 +32,7 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
       }
     },
   });
+  const [dataNotiList, setDataNotiList] = useState<NotifcationModel[]>([]);
   const { mutate: dataNotification, isLoading } = useGetAllNorification({
     onSuccess: (res) => {
       const {
@@ -69,6 +71,31 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
       setStateQuery((prev) => ({ page: ++prev.page, limit: 10 }));
     }
   };
+  const handleOnClickNotif = (item: NotifcationModel) => {
+    if (item?.id) readNoti(item?.id);
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    const url = `${REACT_APP_API_URL_WSS}ws`;
+    const client = new Client({
+      brokerURL: url,
+      connectHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    client.onConnect = function () {
+      //send read notif message
+      client.publish({
+        destination: '/ms-hrms/read-notifications',
+        // body: JSON.stringify({ notifID: item?.id }),
+        body: item?.id + '',
+        skipContentLengthHeader: true,
+      });
+      //re-fetch get total unread notifs
+      refecthUnreadNotif();
+      //redirect to notif page
+      item?.redirectUrl && navigate(item?.redirectUrl);
+    };
+    client.activate();
+  };
   return (
     <>
       <div className="backdrop"></div>
@@ -85,8 +112,7 @@ export default function NotificationExpand({ refecthUnreadNotif }: IProps) {
             <List.Item
               key={index}
               onClick={() => {
-                item?.id && readNoti(item?.id);
-                item?.redirectUrl && navigate(item?.redirectUrl);
+                handleOnClickNotif(item);
               }}
               className={styles.item}
               title={`${item.userFrom} ${item.content}`}

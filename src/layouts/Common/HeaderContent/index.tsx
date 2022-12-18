@@ -1,3 +1,4 @@
+import { Client } from '@stomp/stompjs';
 import { Badge, Image, notification } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Header } from 'antd/lib/layout/layout';
@@ -5,10 +6,7 @@ import SvgIcon from 'components/SvgIcon';
 import { MESSAGE_RES } from 'constants/common';
 import urls from 'constants/url';
 import { useAppSelector } from 'hooks';
-import {
-  useGetUnReadNotifications,
-  useReadNotification,
-} from 'hooks/useNotification';
+import { useGetUnReadNotifications } from 'hooks/useNotification';
 import { NotifcationModel } from 'models/notification';
 import MenuExpand from 'pages/menuExpand';
 import NotificationExpand from 'pages/notificationExpand';
@@ -19,75 +17,118 @@ interface IProps {
   marginLeft: number;
 }
 export default function HeaderContent({ marginLeft }: IProps) {
-  const { REACT_APP_API_URL }: any = urls;
+  const { REACT_APP_API_URL_WSS } = urls;
   const navigate = useNavigate();
   const personInfor = useAppSelector((state) => state.auth.user);
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
-  const [notiData, setNotiData] = useState<NotifcationModel[]>([]);
+  const [totalUnreadNotifs, setTotalUnreadNotifs] = useState<number>(0);
   const isLogout = useAppSelector((state) => state.auth.isLogout);
   const { data: unreadNotifs, refetch: refetchGetUnreadNotifs } =
     useGetUnReadNotifications();
-  const { mutate: readNoti } = useReadNotification({
-    onSuccess: (res) => {
-      if (res?.data === 'OK') {
-        refetchGetUnreadNotifs();
-      }
-    },
-  });
+
   useEffect(() => {
     if (unreadNotifs && unreadNotifs.data) {
       const {
         metadata: { message },
-        data: { items },
+        data: totalUnreadNotif,
       } = unreadNotifs;
       if (message === MESSAGE_RES.SUCCESS) {
-        setNotiData(items);
+        setTotalUnreadNotifs(totalUnreadNotif);
       }
     }
   }, [unreadNotifs]);
 
   useEffect(() => {
-    if (!!personInfor?.email) {
-      let url = REACT_APP_API_URL + 'push-notifications/' + personInfor?.email;
-      const sse = new EventSource(url);
-      sse.addEventListener('user-list-event', (event) => {
-        const notificationList = JSON.parse(event?.data);
-        if (notificationList?.items?.length > 0) {
-          setNotiData(notificationList?.items);
-          notificationList?.items?.map((el: NotifcationModel) =>
-            notification.info({
-              message: (
-                <div>
-                  <b>{el?.userFrom}</b> {el?.content}
-                </div>
-              ),
-              onClick: () => {
-                el?.id && readNoti(el?.id);
-                el?.redirectUrl && navigate(el?.redirectUrl);
-              },
-            }),
-          );
-        }
-      });
+    const url = `${REACT_APP_API_URL_WSS}ws`;
+    // Connection for all
+    const clientAll = new Client({
+      brokerURL: url,
+    });
+    clientAll.onConnect = function (frame) {
+      const subscriptionAll = clientAll?.subscribe(
+        '/notification/all',
+        (message) => {
+          if (message?.body) {
+            const notificationList = JSON.parse(message.body);
+            if (notificationList?.length > 0) {
+              setTotalUnreadNotifs((prev) => prev + notificationList);
+              notificationList?.map((el: NotifcationModel) =>
+                notification.info({
+                  message: (
+                    <div>
+                      <b>{el?.userFrom}</b> {el?.content}
+                    </div>
+                  ),
+                  onClick: () => {
+                    //send message read notif
+                    clientAll.publish({
+                      destination: '/ms-hrms/read-notifications',
+                      body: JSON.stringify({ notifID: el?.id }),
+                      skipContentLengthHeader: true,
+                    });
+                    //re-fetch get total unread notifs
+                    refetchGetUnreadNotifs();
+                    //redirect to notif page
+                    el?.redirectUrl && navigate(el?.redirectUrl);
+                  },
+                }),
+              );
+            }
+          }
+        },
+      );
+      //unsubcribe
       if (isLogout) {
-        sse.close();
-        sse.removeEventListener('user-list-event', () => {
-          console.log('Close noti listener');
-        });
+        subscriptionAll.unsubscribe();
       }
-      window.onbeforeunload = function () {
-        sse.close();
-        sse.removeEventListener('user-list-event', () => {
-          console.log('Close noti listener');
-        });
+    };
+    clientAll.activate();
+
+    // Connection for single person
+    if (!!personInfor?.id) {
+      const clientSingle = new Client({
+        brokerURL: url,
+      });
+      clientSingle.onConnect = function (frame) {
+        const subscriptionSingle = clientSingle?.subscribe(
+          `/notification/${personInfor?.id}`,
+          (message) => {
+            if (message.body) {
+              const notificationList = JSON.parse(message.body);
+              if (notificationList?.length > 0) {
+                setTotalUnreadNotifs((prev) => prev + notificationList);
+                notificationList?.map((el: NotifcationModel) =>
+                  notification.info({
+                    message: (
+                      <div>
+                        <b>{el?.userFrom}</b> {el?.content}
+                      </div>
+                    ),
+                    onClick: () => {
+                      //send message read notif
+                      clientAll.publish({
+                        destination: '/ms-hrms/read-notifications',
+                        body: JSON.stringify({ notifID: el?.id }),
+                        skipContentLengthHeader: true,
+                      });
+                      //re-fetch get total unread notifs
+                      refetchGetUnreadNotifs();
+                      //redirect to notif page
+                      el?.redirectUrl && navigate(el?.redirectUrl);
+                    },
+                  }),
+                );
+              }
+            }
+          },
+        );
+        //unsubcribe
+        if (isLogout) {
+          subscriptionSingle.unsubscribe();
+        }
       };
-      sse.onerror = () => {
-        sse.close();
-      };
-      return () => {
-        sse.close();
-      };
+      clientSingle.activate();
     }
   }, [isLogout]);
 
@@ -115,20 +156,14 @@ export default function HeaderContent({ marginLeft }: IProps) {
               setIsShowMenuExpand(false);
             }}
           >
-            {notiData?.length > 0 &&
-              !!notiData[notiData?.length - 1]?.totalNotificationNotRead && (
-                <Badge
-                  count={
-                    notiData[notiData?.length - 1]?.totalNotificationNotRead
-                  }
-                  size="default"
-                >
-                  <Avatar shape="circle" size="large">
-                    <SvgIcon icon="notification" />
-                  </Avatar>
-                </Badge>
-              )}
-            {!notiData[notiData?.length - 1]?.totalNotificationNotRead && (
+            {!!totalUnreadNotifs && (
+              <Badge count={totalUnreadNotifs} size="default">
+                <Avatar shape="circle" size="large">
+                  <SvgIcon icon="notification" />
+                </Avatar>
+              </Badge>
+            )}
+            {!totalUnreadNotifs && (
               <Avatar shape="circle" size="large">
                 <SvgIcon icon="notification" />
               </Avatar>
