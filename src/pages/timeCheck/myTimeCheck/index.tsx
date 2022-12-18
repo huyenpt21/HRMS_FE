@@ -117,6 +117,15 @@ export default function MyTimeCheck() {
                 </span>
               );
             }
+            if (
+              (el.key === 'inLate' ||
+                el.key === 'outEarly' ||
+                el.key === 'workingTime' ||
+                el.key === 'ot') &&
+              typeof data === 'number'
+            ) {
+              return <span>{data?.toFixed(2)}</span>;
+            }
             return <span>{data}</span>;
           }
           if (
