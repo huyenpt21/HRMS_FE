@@ -1,19 +1,11 @@
 import { Popconfirm, Tooltip } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { SignatureProfileModel } from 'models/signatureProfile';
-import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 interface IProps {
   record: SignatureProfileModel;
   onClickMenu: (itemSelected: SignatureProfileModel) => void;
-  setIsShowDetailModal?: Dispatch<SetStateAction<any>>;
-  registeredDateRef: MutableRefObject<string | undefined>;
 }
-export default function SignatureMenuTable({
-  record,
-  onClickMenu,
-  setIsShowDetailModal,
-  registeredDateRef,
-}: IProps) {
+export default function SignatureMenuTable({ record, onClickMenu }: IProps) {
   return (
     <div
       className="menu-action"
@@ -21,19 +13,6 @@ export default function SignatureMenuTable({
         e.stopPropagation();
       }}
     >
-      {!record?.isRegistered && (
-        <Tooltip title="Register" placement="right">
-          <span
-            onClick={() => {
-              setIsShowDetailModal && setIsShowDetailModal(true);
-              registeredDateRef.current = record?.registeredDate;
-            }}
-            className="cursor-pointer"
-          >
-            <SvgIcon icon="tag" />
-          </span>
-        </Tooltip>
-      )}
       {!!record?.isRegistered && (
         <Popconfirm
           title="Are you sure?"

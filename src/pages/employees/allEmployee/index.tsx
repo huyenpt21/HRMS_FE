@@ -117,7 +117,7 @@ export default function AllEmployeeList() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      width: 100,
+      width: 140,
       align: 'center',
       render: (_, record: EmployeeModel) => {
         return (

@@ -10,7 +10,7 @@ import { useGetUnReadNotifications } from 'hooks/useNotification';
 import { NotifcationModel } from 'models/notification';
 import MenuExpand from 'pages/menuExpand';
 import NotificationExpand from 'pages/notificationExpand';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './headerContent.module.less';
 interface IProps {
@@ -22,8 +22,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
   const personInfor = useAppSelector((state) => state.auth.user);
   const [isShowMenuExpand, setIsShowMenuExpand] = useState(false);
   const [isShowNotiExpand, setIsShowNotiExpand] = useState(false);
-  // const [totalUnreadNotifs, setTotalUnreadNotifs] = useState<number>(0);
-  const totalUnreadNotifsRef = useRef(0);
+  const [totalUnreadNotifs, setTotalUnreadNotifs] = useState<number>(0);
   const isLogout = useAppSelector((state) => state.auth.isLogout);
   const { data: unreadNotifs, refetch: refetchGetUnreadNotifs } =
     useGetUnReadNotifications();
@@ -35,7 +34,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
         data: totalUnreadNotif,
       } = unreadNotifs;
       if (message === MESSAGE_RES.SUCCESS) {
-        totalUnreadNotifsRef.current = totalUnreadNotif;
+        setTotalUnreadNotifs(totalUnreadNotif);
       }
     }
   }, [unreadNotifs]);
@@ -54,8 +53,7 @@ export default function HeaderContent({ marginLeft }: IProps) {
             if (message.body) {
               const notificationList = JSON.parse(message.body);
               if (notificationList?.length > 0) {
-                totalUnreadNotifsRef.current =
-                  totalUnreadNotifsRef.current + notificationList.length;
+                setTotalUnreadNotifs((prev) => prev + notificationList.length);
                 notificationList?.map((el: NotifcationModel) =>
                   notification.info({
                     message: (
@@ -116,14 +114,14 @@ export default function HeaderContent({ marginLeft }: IProps) {
               setIsShowMenuExpand(false);
             }}
           >
-            {!!totalUnreadNotifsRef.current && (
-              <Badge count={totalUnreadNotifsRef.current} size="default">
+            {!!totalUnreadNotifs && (
+              <Badge count={totalUnreadNotifs} size="default">
                 <Avatar shape="circle" size="large">
                   <SvgIcon icon="notification" />
                 </Avatar>
               </Badge>
             )}
-            {!totalUnreadNotifsRef.current && (
+            {!totalUnreadNotifs && (
               <Avatar shape="circle" size="large">
                 <SvgIcon icon="notification" />
               </Avatar>

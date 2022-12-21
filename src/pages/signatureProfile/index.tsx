@@ -1,12 +1,10 @@
 import { Col, notification, Row } from 'antd';
 import { TablePaginationConfig } from 'antd/lib/table/interface';
-import BasicSelect from 'components/BasicSelect';
 import CommonTable from 'components/CommonTable';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
 import { DATE_TIME, MESSAGE_RES, paginationConfig } from 'constants/common';
 import { STATUS } from 'constants/enums/common';
-import { SIGNATURE_STATUS_LIST } from 'constants/fixData';
 import { SignatureProfileListHeader } from 'constants/header';
 import {
   useDeleteSignature,
@@ -18,7 +16,7 @@ import {
   SignatureProfileListQuery,
   SignatureProfileModel,
 } from 'models/signatureProfile';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   getDateFormat,
@@ -28,7 +26,6 @@ import {
 import SignatureMenuTable from './components/signatureMenuTable';
 import SignatureStatus from './components/signatureStatus';
 // import dataMock from './dataMock.json';
-import SignatureRegisterModal from './modalRegister';
 import styles from './signatureProfile.module.less';
 
 export default function SignatureProfileList() {
@@ -36,8 +33,6 @@ export default function SignatureProfileList() {
   const [columnsHeader, setColumnsHeader] = useState<HeaderTableFields[]>([]);
   const [records, setRecords] = useState<SignatureProfileModel[]>([]);
   const [pagination, setPagination] = useState(paginationConfig);
-  const registeredDateRef = useRef<string | undefined>();
-  const [isShowDetailModal, setIsShowDetailModal] = useState(false);
   // * defailt filters
   const defaultFilter: SignatureProfileListQuery = {
     page: searchParams.get('page')
@@ -89,8 +84,8 @@ export default function SignatureProfileList() {
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
       // * enable sort in column
-      if (el.key === 'id') {
-        el.width = 60;
+      if (el.key === 'rollNumber') {
+        el.width = 150;
       } else if (el.key === 'registeredDate') {
         el.width = 300;
       } else if (el.key === 'employeeName') {
@@ -124,12 +119,7 @@ export default function SignatureProfileList() {
       align: 'center',
       render: (_, record: SignatureProfileModel) => {
         return (
-          <SignatureMenuTable
-            record={record}
-            onClickMenu={menuActionHandler}
-            setIsShowDetailModal={setIsShowDetailModal}
-            registeredDateRef={registeredDateRef}
-          />
+          <SignatureMenuTable record={record} onClickMenu={menuActionHandler} />
         );
       },
     });
@@ -170,10 +160,7 @@ export default function SignatureProfileList() {
       limit: pagination.pageSize,
     }));
   };
-  const cancelModalHandler = () => {
-    registeredDateRef.current = undefined;
-    setIsShowDetailModal(false);
-  };
+
   return (
     <>
       <CommonTable
@@ -198,23 +185,6 @@ export default function SignatureProfileList() {
                   defaultValue={stateQuery?.search}
                 />
               </Col>
-              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
-                <BasicSelect
-                  options={SIGNATURE_STATUS_LIST}
-                  placeholder="Signature status"
-                  allowClear
-                  showSearch
-                  label="Status"
-                  optionFilterProp="label"
-                  onChange={(value) => {
-                    setStateQuery((prev: SignatureProfileListQuery) => ({
-                      ...prev,
-                      isRegistered: value,
-                    }));
-                  }}
-                  defaultValue={stateQuery?.isRegistered}
-                />
-              </Col>
             </Row>
           </>
         }
@@ -224,14 +194,6 @@ export default function SignatureProfileList() {
         isShowScroll
         className={'cursor-pointer'}
       />
-      {isShowDetailModal && (
-        <SignatureRegisterModal
-          isVisible={isShowDetailModal}
-          onCancel={cancelModalHandler}
-          refetchList={refetch}
-          registeredDateRef={registeredDateRef.current}
-        />
-      )}
     </>
   );
 }

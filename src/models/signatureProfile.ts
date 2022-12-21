@@ -14,7 +14,7 @@ export interface SignatureProfileListFilter {
 
 export interface SignatureRegister {
   idSignature?: string;
-  personId?: string;
+  personId?: number;
 }
 
 export type SignatureProfileListSortFields = 'personName';

@@ -8,6 +8,8 @@ export const EMPLOYEE = {
     readNoti: 'read-notifications',
     template: 'template',
     unread: 'unread',
+    signature: 'signature',
+    masterData: 'master-data',
   },
 };
 

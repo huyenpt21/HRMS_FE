@@ -475,6 +475,11 @@ export const SignatureProfileListHeader = [
     dataIndex: 'registeredDate',
   },
   {
+    title: 'Roll Number',
+    key: 'rollNumber',
+    dataIndex: 'rollNumber',
+  },
+  {
     title: 'Employee Name',
     key: 'employeeName',
     dataIndex: 'employeeName',

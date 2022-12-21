@@ -6,6 +6,7 @@ import { EMPLOYEE_CHANGE_STATUS } from 'constants/services';
 import { useUpdateEmployee } from 'hooks/useEmployee';
 import { EmployeeModel, ResEmployeeModify } from 'models/employee';
 import { useState, Dispatch, SetStateAction, MutableRefObject } from 'react';
+import SignatureRegisterModal from '../modalRegister';
 interface IProps {
   record: EmployeeModel;
   refetchList: () => void;
@@ -22,6 +23,7 @@ export default function MenuAction({
 }: IProps) {
   const [isShowConfirmActive, setIsShowConfirmActive] = useState(false);
   const [isShowConfirmInActive, setIsShowConfirmInActive] = useState(false);
+  const [isShowRegisterModal, setIsShowRegisterModal] = useState(false);
   const { mutate: updateEmployee, isLoading: loadingChangeStatus } =
     useUpdateEmployee(
       {
@@ -70,6 +72,9 @@ export default function MenuAction({
       }
     }
   };
+  const cancelModalHandler = () => {
+    setIsShowRegisterModal(false);
+  };
   return (
     <div
       className="menu-action"
@@ -77,8 +82,19 @@ export default function MenuAction({
         e.stopPropagation();
       }}
     >
+      <Tooltip title="Register signature" placement="left">
+        <span
+          onClick={() => {
+            setIsShowRegisterModal(true);
+            // registeredDateRef.current = record?.registeredDate;
+          }}
+          className="cursor-pointer"
+        >
+          <SvgIcon icon="tag" />
+        </span>
+      </Tooltip>
       {!record.isActive && (
-        <Tooltip title="Active" placement="left">
+        <Tooltip title="Active" placement="top">
           <span
             className="cursor-pointer"
             onClick={() => setIsShowConfirmActive(true)}
@@ -88,7 +104,7 @@ export default function MenuAction({
         </Tooltip>
       )}
       {!!record.isActive && (
-        <Tooltip title="Inactivate" placement="left">
+        <Tooltip title="Inactivate" placement="top">
           <span
             className="cursor-pointer"
             onClick={() => setIsShowConfirmInActive(true)}
@@ -125,6 +141,13 @@ export default function MenuAction({
           }}
           visible={isShowConfirmInActive}
           isLoading={loadingChangeStatus}
+        />
+      )}
+      {isShowRegisterModal && (
+        <SignatureRegisterModal
+          isVisible={isShowRegisterModal}
+          onCancel={cancelModalHandler}
+          employee={record}
         />
       )}
     </div>

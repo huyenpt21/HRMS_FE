@@ -4,8 +4,9 @@ import BasicInput from 'components/BasicInput';
 import CommonModal from 'components/CommonModal';
 import SelectCustomSearch from 'components/SelectCustomSearch';
 import { validateMessages } from 'constants/common';
-import { DEVICE, EMPLOYEE } from 'constants/services';
+import { EMPLOYEE } from 'constants/services';
 import { useRegisterSignature } from 'hooks/useSignatureProfile';
+import { EmployeeModel } from 'models/employee';
 import {
   ResSignatureProfileModify,
   SignatureRegister,
@@ -14,14 +15,12 @@ import styles from './signatureRegister.module.less';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
-  refetchList: () => void;
-  registeredDateRef?: string;
+  employee?: EmployeeModel;
 }
 export default function SignatureRegisterModal({
   isVisible,
   onCancel,
-  refetchList,
-  registeredDateRef,
+  employee,
 }: IProps) {
   const [registerSignatureForm] = Form.useForm();
   const { mutate: registerSignature, isLoading } = useRegisterSignature({
@@ -34,7 +33,6 @@ export default function SignatureRegisterModal({
         notification.success({
           message: 'Register signature successfully',
         });
-        refetchList();
         cancelHandler();
       }
     },
@@ -53,6 +51,7 @@ export default function SignatureRegisterModal({
     registerSignatureForm.resetFields();
   };
   const submitHandler = (formValues: SignatureRegister) => {
+    formValues.personId = employee?.id;
     registerSignature(formValues);
   };
   return (
@@ -75,22 +74,21 @@ export default function SignatureRegisterModal({
           <Row gutter={32}>
             <Col span="12">
               <BasicInput
-                label="Signature Profile"
-                placeholder="Cannot find device type"
-                name="registeredDate"
+                label="Employee"
+                placeholder="Can not find this employee"
+                name="personId"
                 disabled={true}
-                defaultValue={registeredDateRef}
-                initialValueForm={registeredDateRef}
+                defaultValue={`${employee?.fullName} - ${employee?.rollNumber}`}
               />
             </Col>
             <Col span="12">
               <SelectCustomSearch
-                url={`${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${DEVICE.model.masterData}`}
+                url={`${EMPLOYEE.model.signature}/${EMPLOYEE.model.masterData}`}
                 dataName="items"
-                apiName="employe-list-all-master-data"
-                label="Employe"
-                placeholder="Choose employee"
-                name="personId"
+                apiName="register-date-list-master-data"
+                label="Register Date"
+                placeholder="Choose register date"
+                name="registeredDate"
                 rules={[{ required: true }]}
               />
             </Col>
