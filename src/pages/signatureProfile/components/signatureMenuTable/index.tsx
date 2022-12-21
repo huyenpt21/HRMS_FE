@@ -1,11 +1,51 @@
-import { Popconfirm, Tooltip } from 'antd';
+import { notification, Tooltip } from 'antd';
+import NotifyPopup from 'components/NotifyPopup';
 import SvgIcon from 'components/SvgIcon';
-import { SignatureProfileModel } from 'models/signatureProfile';
+import { MESSAGE_RES } from 'constants/common';
+import { useDeleteSignature } from 'hooks/useSignatureProfile';
+import {
+  ResSignatureProfileModify,
+  SignatureProfileModel,
+} from 'models/signatureProfile';
+import { useState } from 'react';
 interface IProps {
   record: SignatureProfileModel;
-  onClickMenu: (itemSelected: SignatureProfileModel) => void;
+  refetch: () => {};
 }
-export default function SignatureMenuTable({ record, onClickMenu }: IProps) {
+export default function SignatureMenuTable({ record, refetch }: IProps) {
+  const [isShowConfirm, setIsShowConfirm] = useState(false);
+  const { mutate: deleteSignature, isLoading: loadingDelete } =
+    useDeleteSignature({
+      onSuccess: (response: ResSignatureProfileModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message === MESSAGE_RES.SUCCESS) {
+          notification.success({
+            message: 'Delete signature profile successfully',
+          });
+          refetch();
+        }
+        setIsShowConfirm(false);
+      },
+      onError: (response: ResSignatureProfileModify) => {
+        const {
+          metadata: { message },
+        } = response;
+        if (message) {
+          notification.error({ message: message });
+        }
+        setIsShowConfirm(false);
+      },
+    });
+  const menuActionHandler = (record: SignatureProfileModel) => {
+    record?.registeredDate &&
+      record?.personId &&
+      deleteSignature({
+        personId: record?.personId,
+        registeredDate: record?.registeredDate,
+      });
+  };
   return (
     <div
       className="menu-action"
@@ -13,19 +53,20 @@ export default function SignatureMenuTable({ record, onClickMenu }: IProps) {
         e.stopPropagation();
       }}
     >
-      {!!record?.isRegistered && (
-        <Popconfirm
-          title="Are you sure?"
-          onConfirm={() => onClickMenu(record)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tooltip title="Delete" placement="right">
-            <span className="cursor-pointer">
-              <SvgIcon icon="close-circle" />
-            </span>
-          </Tooltip>
-        </Popconfirm>
+      <Tooltip title="Delete" placement="right">
+        <span className="cursor-pointer" onClick={() => setIsShowConfirm(true)}>
+          <SvgIcon icon="close-circle" />
+        </span>
+      </Tooltip>
+      {isShowConfirm && (
+        <NotifyPopup
+          title="Are you sure to delete this signature profile?"
+          message="This action cannot be reverse"
+          onCancel={() => setIsShowConfirm(false)}
+          onConfirm={() => menuActionHandler(record)}
+          visible={isShowConfirm}
+          isLoading={loadingDelete}
+        />
       )}
     </div>
   );

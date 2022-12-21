@@ -1,18 +1,14 @@
-import { Col, notification, Row } from 'antd';
+import { Col, Row } from 'antd';
 import { TablePaginationConfig } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_TIME, MESSAGE_RES, paginationConfig } from 'constants/common';
+import { DATE_TIME, paginationConfig } from 'constants/common';
 import { STATUS } from 'constants/enums/common';
 import { SignatureProfileListHeader } from 'constants/header';
-import {
-  useDeleteSignature,
-  useSignatureList,
-} from 'hooks/useSignatureProfile';
+import { useSignatureList } from 'hooks/useSignatureProfile';
 import { HeaderTableFields } from 'models/common';
 import {
-  ResSignatureProfileModify,
   SignatureProfileListQuery,
   SignatureProfileModel,
 } from 'models/signatureProfile';
@@ -59,27 +55,7 @@ export default function SignatureProfileList() {
     data: dataTable,
     refetch,
   } = useSignatureList(stateQuery);
-  const { mutate: deleteSignature } = useDeleteSignature({
-    onSuccess: (response: ResSignatureProfileModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message === MESSAGE_RES.SUCCESS) {
-        notification.success({
-          message: 'Update information successfully',
-        });
-        refetch();
-      }
-    },
-    onError: (response: ResSignatureProfileModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({ message: message });
-      }
-    },
-  });
+
   // * render header and data in table
   useEffect(() => {
     const columns = header.map((el: HeaderTableFields) => {
@@ -118,9 +94,7 @@ export default function SignatureProfileList() {
       width: 100,
       align: 'center',
       render: (_, record: SignatureProfileModel) => {
-        return (
-          <SignatureMenuTable record={record} onClickMenu={menuActionHandler} />
-        );
+        return <SignatureMenuTable record={record} refetch={refetch} />;
       },
     });
     setColumnsHeader(columns);
@@ -144,14 +118,7 @@ export default function SignatureProfileList() {
       }
     }
   }, [dataTable, stateQuery, isError]);
-  const menuActionHandler = (record: SignatureProfileModel) => {
-    record?.registeredDate &&
-      record?.personId &&
-      deleteSignature({
-        personId: record?.personId,
-        registeredDate: record?.registeredDate,
-      });
-  };
+
   const handleTableChange = (pagination: TablePaginationConfig) => {
     // * set changing of pagination to state query
     setStateQuery((prev: SignatureProfileListQuery) => ({
