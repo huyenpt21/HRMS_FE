@@ -52,7 +52,7 @@ export const useReturnDevice = ({
     (id: number) =>
       fetchApi(
         {
-          url: `${DEVICE.model.return}/${id}`,
+          url: `${DEVICE.model.itSupport}/${DEVICE.model.return}/${id}`,
           options: {
             method: 'PUT',
           },

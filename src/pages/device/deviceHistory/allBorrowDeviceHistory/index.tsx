@@ -15,6 +15,7 @@ import { useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
+import DeviceMenuTable from 'pages/device/components/menuTableDevice';
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -105,7 +106,7 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
       }
       return {
         ...el,
-        render: (data: string | number) => {
+        render: (data: string | number, _: DeviceModel) => {
           if (data !== null && data !== undefined) {
             if (
               (el.key === 'borrowDate' || el.key === 'returnDate') &&
@@ -142,6 +143,24 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
           return <span>-</span>;
         },
       };
+    });
+    columns.push({
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      width: 100,
+      align: 'center',
+      render: (_, record: DeviceModel) => {
+        if (record?.status === STATUS.USING) {
+          return (
+            <DeviceMenuTable
+              menuType={DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY}
+              record={record}
+            />
+          );
+        }
+        return <span>-</span>;
+      },
     });
     setColumnsHeader(columns);
   }, [stateQuery, isError]);

@@ -10,7 +10,6 @@ import { useDeviceList } from 'hooks/useDevice';
 import { HeaderTableFields } from 'models/common';
 import { DeviceListQuery, DeviceModel } from 'models/device';
 import ExtraHeaderDevice from 'pages/device/components/extraHeader';
-import DeviceMenuTable from 'pages/device/components/menuTableDevice';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -120,24 +119,6 @@ export default function MyBorrowDeviceHistory() {
           return <span>-</span>;
         },
       };
-    });
-    columns.push({
-      title: 'Action',
-      key: 'action',
-      dataIndex: 'action',
-      width: 100,
-      align: 'center',
-      render: (_, record: DeviceModel) => {
-        if (record?.status === STATUS.USING) {
-          return (
-            <DeviceMenuTable
-              menuType={DEVICE_MENU.MY_BORROW_DEVICE_HISTORY}
-              record={record}
-            />
-          );
-        }
-        return <span>-</span>;
-      },
     });
     setColumnsHeader(columns);
   }, [stateQuery, isError]);

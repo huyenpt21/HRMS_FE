@@ -66,6 +66,7 @@ export default function DeviceMenuTable({
       if (message === MESSAGE_RES.SUCCESS) {
         notification.success({ message: 'Return device successfully' });
       }
+      setIsShowConfirmReturn(false);
     },
     onError: (response: ResDeviceModify) => {
       const {
@@ -75,6 +76,7 @@ export default function DeviceMenuTable({
         notification.error({
           message: message,
         });
+        setIsShowConfirmReturn(false);
       }
     },
   });
@@ -123,8 +125,8 @@ export default function DeviceMenuTable({
           )}
         </>
       )}
-      {menuType === DEVICE_MENU.MY_BORROW_DEVICE_HISTORY && (
-        <Tooltip title="Return">
+      {menuType === DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY && (
+        <Tooltip title="Return" placement="right">
           <span
             className="cursor-pointer"
             onClick={() => setIsShowConfirmReturn(true)}
