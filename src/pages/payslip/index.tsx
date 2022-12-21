@@ -1,5 +1,5 @@
 import { SendOutlined } from '@ant-design/icons';
-import { Col, Divider, Form, notification, Row, Tooltip } from 'antd';
+import { Col, Divider, Empty, Form, notification, Row, Tooltip } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDatePicker from 'components/BasicDatePicker';
 import BasicInput from 'components/BasicInput';
@@ -8,11 +8,7 @@ import NotifyPopup from 'components/NotifyPopup';
 import { MESSAGE_RES, YEAR_MONTH_NUM } from 'constants/common';
 import { SHAPE_TYPE } from 'constants/enums/common';
 import { useAppSelector } from 'hooks';
-import {
-  useCheckSecureCodeCorrectly,
-  useGetPayslip,
-  useSendPayslipToEmail,
-} from 'hooks/usePayslip';
+import { useGetPayslip, useSendPayslipToEmail } from 'hooks/usePayslip';
 import {
   PayslipFilter,
   PayslipModel,
@@ -36,47 +32,27 @@ export default function PayslipDetail() {
   const [isShowPayslip, setIsShowPayslip] = useState(false);
   const [isShowPopConfirm, setIsShowPopConfirm] = useState(false);
   const payslipDataRef = useRef<PayslipModel>();
-  const dateFilterRef = useRef<PayslipFilter>({
-    month: Number(moment().get('month')),
+  const payslipFilterRef = useRef<PayslipFilter>({
+    month: Number(moment().subtract(1, 'month')),
     year: Number(moment().get('year')),
   });
+  const dateFilterRef = useRef<moment.Moment>(moment().subtract(1, 'month'));
   useEffect(() => {
     if (!isSecureCodeCreated) {
       setIsShowPopConfirm(true);
     }
   }, [isSecureCodeCreated]);
-  const { mutate: sendPayslipToEmail } = useSendPayslipToEmail({
-    onSuccess: (response: ResPayslipModify) => {
-      const {
-        metadata: { message },
-        data: isSent,
-      } = response;
-      if (message === MESSAGE_RES.SUCCESS && !!isSent) {
-        notification.success({ message: 'Sent payslip to email successfully' });
-      }
-    },
-    onError: (response: ResPayslipModify) => {
-      const {
-        metadata: { message },
-      } = response;
-      if (message) {
-        notification.error({
-          message: message,
-        });
-      }
-    },
-  });
-  const { mutate: checkSecureCodeCorrect, isLoading: loadingCheckSecuCode } =
-    useCheckSecureCodeCorrectly({
+  const { mutate: sendPayslipToEmail, isLoading: loadingSendToEmail } =
+    useSendPayslipToEmail({
       onSuccess: (response: ResPayslipModify) => {
         const {
           metadata: { message },
-          data: isSecureCodeCorrect,
+          data: isSent,
         } = response;
-        if (message === MESSAGE_RES.SUCCESS && !!isSecureCodeCorrect) {
-          setIsShowPayslip(true);
-        } else {
-          notification.error({ message: 'Incorrect security code' });
+        if (message === MESSAGE_RES.SUCCESS && !!isSent) {
+          notification.success({
+            message: 'Sent payslip to email successfully',
+          });
         }
       },
       onError: (response: ResPayslipModify) => {
@@ -90,14 +66,6 @@ export default function PayslipDetail() {
         }
       },
     });
-  useEffect(() => {
-    if (isShowPayslip) {
-      payslipData({
-        month: Number(moment().get('month')),
-        year: Number(moment().get('year')),
-      });
-    }
-  }, [isShowPayslip]);
   const { mutate: payslipData, isLoading: loadingGetPayslip } = useGetPayslip({
     onSuccess: (response: ResPayslipDetail) => {
       const {
@@ -106,6 +74,7 @@ export default function PayslipDetail() {
       } = response;
       if (message === MESSAGE_RES.SUCCESS) {
         payslipDataRef.current = payrollDisplayDto;
+        setIsShowPayslip(true);
       }
     },
     onError: (response: ResPayslipDetail) => {
@@ -113,6 +82,7 @@ export default function PayslipDetail() {
         metadata: { message },
       } = response;
       if (message) {
+        payslipDataRef.current = undefined;
         notification.error({
           message: message,
         });
@@ -121,16 +91,29 @@ export default function PayslipDetail() {
   });
 
   const submitHandler = (formValue: SercurityCode) => {
-    checkSecureCodeCorrect(formValue);
-  };
-  const handleChangeFilterDate = (_: moment.Moment, dateString: string) => {
-    const month = Number(dateString.split('/')[0].trim());
-    const year = Number(dateString.split('/')[1].trim());
-    dateFilterRef.current = {
+    const month = Number(moment().get('month'));
+    const year = Number(moment().get('year'));
+    payslipFilterRef.current = {
+      currentSecureCode: formValue?.currentSecureCode,
       month: month,
       year: year,
     };
-    payslipData({ month: month, year: year });
+    payslipData({
+      currentSecureCode: formValue?.currentSecureCode,
+      month: month,
+      year: year,
+    });
+  };
+  const handleChangeFilterDate = (value: moment.Moment, dateString: string) => {
+    dateFilterRef.current = value;
+    const month = Number(dateString.split('/')[0].trim());
+    const year = Number(dateString.split('/')[1].trim());
+    payslipFilterRef.current = {
+      ...payslipFilterRef.current,
+      month: month,
+      year: year,
+    };
+    payslipData({ ...payslipFilterRef.current, month: month, year: year });
   };
   return (
     <div className={styles.container}>
@@ -145,8 +128,8 @@ export default function PayslipDetail() {
       >
         {!isShowPayslip && (
           <>
-            {loadingCheckSecuCode && <Loading text="Working on it..." />}
-            {!loadingCheckSecuCode && (
+            {loadingGetPayslip && <Loading text="Working on it..." />}
+            {!loadingGetPayslip && (
               <>
                 <Row className={styles.header__title}>
                   <div>Enter your security code</div>
@@ -187,8 +170,10 @@ export default function PayslipDetail() {
         )}
         {isShowPayslip && (
           <>
-            {loadingGetPayslip && <Loading text="Working on it..." />}
-            {!loadingGetPayslip && (
+            {(loadingGetPayslip || loadingSendToEmail) && (
+              <Loading text="Working on it..." />
+            )}
+            {!loadingGetPayslip && !loadingSendToEmail && (
               <>
                 <div className={styles.header__section}>
                   <div className={styles.header__title}>Payslip</div>
@@ -204,11 +189,12 @@ export default function PayslipDetail() {
                         name="date"
                         picker="month"
                         format={YEAR_MONTH_NUM}
-                        defaultValue={moment().subtract(1, 'month')}
+                        defaultValue={dateFilterRef.current}
                         onChange={handleChangeFilterDate}
                         disabledDate={(current) =>
                           current >= moment().startOf('month')
                         }
+                        inputReadOnly
                       />
                     </Col>
                     <Col className={styles.text__bold}>
@@ -221,84 +207,89 @@ export default function PayslipDetail() {
                 </div>
                 <Divider />
                 <div className={styles.content__section}>
-                  <Row gutter={32}>
-                    <Col span="12">Total work day:</Col>
-                    <Col span="12" className={styles.text_right}>
-                      {payslipDataRef.current?.totalWork}
-                    </Col>
-                  </Row>
-                  <Divider />
-                  <Row gutter={32}>
-                    <Col span="12">Actual work day:</Col>
-                    <Col span="12" className={styles.text_right}>
-                      {payslipDataRef.current?.actualWork}
-                    </Col>
-                  </Row>
-                  <Divider />
-                  <h3>Earnings</h3>
-                  <div className={styles.pl__16}>
-                    <Row gutter={32}>
-                      <Col span="12">Basic salary:</Col>
-                      <Col span="12" className={styles.text_right}>
-                        {payslipDataRef.current?.basicSalary}
-                      </Col>
-                    </Row>
-                    <Divider />
-                    <Row gutter={32}>
-                      <Col span="12">Bonus salary:</Col>
-                      <Col span="12" className={styles.text_right}>
-                        {payslipDataRef.current?.salaryBonus}
-                      </Col>
-                    </Row>
-                    <Divider />
-                    <Row gutter={32}>
-                      <Col span="12">OT salary:</Col>
-                      <Col span="12" className={styles.text_right}>
-                        {payslipDataRef.current?.otSalary}
-                      </Col>
-                    </Row>
-                  </div>
-                  <Divider />
-                  <h3>Deductions</h3>
-                  <div className={styles.pl__16}>
-                    <Row gutter={32} className={styles.ml__12}>
-                      <Col span="12">Tax:</Col>
-                      <Col span="12" className={styles.text_right}>
-                        {payslipDataRef.current?.tax}
-                      </Col>
-                    </Row>
-                    <Divider />
-                    <Row gutter={32}>
-                      <Col span="12">Social Insurance (10.5%):</Col>
-                      <Col span="12" className={styles.text_right}>
-                        {payslipDataRef.current?.socialInsurance}
-                      </Col>
-                    </Row>
-                  </div>
-                  <Divider />
-                  <Row
-                    gutter={32}
-                    className={`${styles.text__main} ${styles.net__income}`}
-                  >
-                    <Col span={12}>NET Income:</Col>
-                    <Col span={12} className={styles.text_right}>
-                      {payslipDataRef.current?.actuallyReceived}
-                    </Col>
-                  </Row>
-                  <Row gutter={32} className={styles.send__email}>
-                    <Tooltip title="Send to email">
-                      <span>
-                        <BasicButton
-                          type="outline"
-                          shape={SHAPE_TYPE.ROUND}
-                          icon={<SendOutlined />}
-                          onClick={() => {
-                            sendPayslipToEmail(dateFilterRef.current);
-                          }}
-                        />
-                      </span>
-                    </Tooltip>
-                  </Row>
+                  {!!payslipDataRef.current && (
+                    <>
+                      <Row gutter={32}>
+                        <Col span="12">Total work day:</Col>
+                        <Col span="12" className={styles.text_right}>
+                          {payslipDataRef.current?.totalWork}
+                        </Col>
+                      </Row>
+                      <Divider />
+                      <Row gutter={32}>
+                        <Col span="12">Actual work day:</Col>
+                        <Col span="12" className={styles.text_right}>
+                          {payslipDataRef.current?.actualWork}
+                        </Col>
+                      </Row>
+                      <Divider />
+                      <h3>Earnings</h3>
+                      <div className={styles.pl__16}>
+                        <Row gutter={32}>
+                          <Col span="12">Basic salary:</Col>
+                          <Col span="12" className={styles.text_right}>
+                            {payslipDataRef.current?.basicSalary}
+                          </Col>
+                        </Row>
+                        <Divider />
+                        <Row gutter={32}>
+                          <Col span="12">Bonus salary:</Col>
+                          <Col span="12" className={styles.text_right}>
+                            {payslipDataRef.current?.salaryBonus}
+                          </Col>
+                        </Row>
+                        <Divider />
+                        <Row gutter={32}>
+                          <Col span="12">OT salary:</Col>
+                          <Col span="12" className={styles.text_right}>
+                            {payslipDataRef.current?.otSalary}
+                          </Col>
+                        </Row>
+                      </div>
+                      <Divider />
+                      <h3>Deductions</h3>
+                      <div className={styles.pl__16}>
+                        <Row gutter={32} className={styles.ml__12}>
+                          <Col span="12">Tax:</Col>
+                          <Col span="12" className={styles.text_right}>
+                            {payslipDataRef.current?.tax}
+                          </Col>
+                        </Row>
+                        <Divider />
+                        <Row gutter={32}>
+                          <Col span="12">Social Insurance (10.5%):</Col>
+                          <Col span="12" className={styles.text_right}>
+                            {payslipDataRef.current?.socialInsurance}
+                          </Col>
+                        </Row>
+                      </div>
+                      <Divider />
+                      <Row
+                        gutter={32}
+                        className={`${styles.text__main} ${styles.net__income}`}
+                      >
+                        <Col span={12}>NET Income:</Col>
+                        <Col span={12} className={styles.text_right}>
+                          {payslipDataRef.current?.actuallyReceived}
+                        </Col>
+                      </Row>
+                      <Row gutter={32} className={styles.send__email}>
+                        <Tooltip title="Send to email">
+                          <span>
+                            <BasicButton
+                              type="outline"
+                              shape={SHAPE_TYPE.ROUND}
+                              icon={<SendOutlined />}
+                              onClick={() => {
+                                sendPayslipToEmail(payslipFilterRef.current);
+                              }}
+                            />
+                          </span>
+                        </Tooltip>
+                      </Row>
+                    </>
+                  )}
+                  {!payslipDataRef.current && <Empty />}
                 </div>
               </>
             )}

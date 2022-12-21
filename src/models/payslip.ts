@@ -24,6 +24,7 @@ export interface SercurityCode {
 export interface PayslipFilter {
   month?: number;
   year?: number;
+  currentSecureCode?: string;
 }
 
 export type PayslipQuery = PayslipFilter;
