@@ -104,7 +104,9 @@ export default function HeaderContent({ marginLeft }: IProps) {
             <Avatar size={50} src={<Image src={personInfor?.avatarImg} />} />
           </div>
           <div className={styles['user__infor']}>
-            <div className={styles.user__name}>{personInfor?.fullName}</div>
+            <div className={styles.user__name}>{`${personInfor?.fullName}${
+              personInfor?.userName ? `(${personInfor?.userName})` : ''
+            }`}</div>
             <div className={styles.user__role}>{personInfor?.positionName}</div>
           </div>
           <div

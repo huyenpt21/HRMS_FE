@@ -78,6 +78,9 @@ export default function AllEmployeeList() {
         el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
+      if (el.key === 'userName') {
+        el.width = 150;
+      }
       if (el.key === 'fullName') {
         el.width = 300;
       }
@@ -93,7 +96,7 @@ export default function AllEmployeeList() {
       return {
         ...el,
         render: (data: any, record: EmployeeModel) => {
-          if (data !== null) {
+          if (data !== null || data !== undefined) {
             if (el.key === 'isActive') {
               if (data)
                 return (

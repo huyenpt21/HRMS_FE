@@ -215,13 +215,13 @@ export default function UserProfile() {
           <div className={styles.personal__info}>
             <div className={styles.title__text}>Working Information</div>
             <Row gutter={12} className={styles['infor--header']}>
-              <Col span={10}>
+              <Col span={12}>
                 <span>Roll Number: </span>
                 <span className={styles['text--bold']}>
                   {personInfor?.rollNumber}
                 </span>
               </Col>
-              <Col span={14}>
+              <Col span={12}>
                 <span>Email: </span>
                 <span className={styles['text--bold']}>
                   {personInfor?.email}
@@ -229,34 +229,42 @@ export default function UserProfile() {
               </Col>
             </Row>
             <Row gutter={12} className={styles['infor--header']}>
-              <Col span={10}>
+              <Col span={12}>
+                <span>User Name: </span>
+                <span className={styles['text--bold']}>
+                  {personInfor?.userName}
+                </span>
+              </Col>
+              <Col span={12}>
                 <span>Department: </span>
                 <span className={styles['text--bold']}>
                   {personInfor?.departmentName}
                 </span>
               </Col>
-              <Col span={14}>
-                <span>Manager: </span>
-                <span className={styles['text--bold']}>
-                  {personInfor?.managerName}
-                </span>
-              </Col>
             </Row>
             <Row gutter={12} className={styles['infor--header']}>
-              <Col span={10}>
-                <span>Ranking: </span>
-                <span className={styles['text--bold']}>
-                  {personInfor?.rankingName}
-                </span>
-              </Col>
-              <Col span={14}>
+              <Col span={12}>
                 <span>Position: </span>
                 <span className={styles['text--bold']}>
                   {personInfor?.positionName}
                 </span>
               </Col>
+              <Col span={12}>
+                <span>Ranking: </span>
+                <span className={styles['text--bold']}>
+                  {personInfor?.rankingName}
+                </span>
+              </Col>
             </Row>
             <Row gutter={12} className={styles['infor--header']}>
+              {personInfor?.managerName && (
+                <Col span={12}>
+                  <span>Manager: </span>
+                  <span className={styles['text--bold']}>
+                    {personInfor?.managerName}
+                  </span>
+                </Col>
+              )}
               <Col span={12}>
                 <span>Onboard Date: </span>
                 <span className={styles['text--bold']}>

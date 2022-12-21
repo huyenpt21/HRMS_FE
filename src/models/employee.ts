@@ -22,6 +22,7 @@ export interface EmployeeModel extends Resource {
   rankingName?: string;
   avatarImg?: string;
   roles?: EmployeeRoles[];
+  userName?: string;
 }
 
 export interface EmployeeListFilter {

@@ -10,6 +10,11 @@ export const EmployeeListAllHeader = [
     dataIndex: 'fullName',
   },
   {
+    title: 'User Name',
+    key: 'userName',
+    dataIndex: 'userName',
+  },
+  {
     title: 'Email',
     key: 'email',
     dataIndex: 'email',
