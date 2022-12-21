@@ -1,5 +1,9 @@
-import { BackwardOutlined, DownloadOutlined } from '@ant-design/icons';
-import { Col, Row } from 'antd';
+import {
+  BackwardOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
+import { Col, notification, Row, Upload } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicDateRangePicker, {
   RangeValue,
@@ -7,7 +11,7 @@ import BasicDateRangePicker, {
 import { downloadFile } from 'components/DownloadFile';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_TIME, US_DATE_FORMAT } from 'constants/common';
+import { ACCESS_TOKEN, DATE_TIME, US_DATE_FORMAT } from 'constants/common';
 import { MENU_TYPE } from 'constants/enums/common';
 import { TIME_CHECK } from 'constants/services';
 import { TimeCheckEmployeeInfo, TimeCheckListQuery } from 'models/timeCheck';
@@ -28,16 +32,19 @@ interface IProps {
   setStateQuery: Dispatch<SetStateAction<TimeCheckListQuery>>;
   stateQuery: TimeCheckListQuery;
   employeeInfor?: TimeCheckEmployeeInfo;
+  refetchList?: () => {};
 }
 export default function ExtraTableTimeCheck({
   menuType,
   setStateQuery,
   stateQuery,
   employeeInfor,
+  refetchList,
 }: IProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [dates, setDates] = useState<RangeValue>(null);
+  const token = localStorage.getItem(ACCESS_TOKEN) || null;
 
   const handleChangeDate = (date: any, dateString: string[]) => {
     let startDate: string | undefined;
@@ -55,7 +62,6 @@ export default function ExtraTableTimeCheck({
         endDate = getEndOfWeek(date, DATE_TIME).toString();
       }
     }
-    console.log(111, startDate, endDate, menuType);
     setStateQuery((prev: any) => ({
       ...prev,
       startDate: startDate,
@@ -141,13 +147,48 @@ export default function ExtraTableTimeCheck({
             />
           )}
           {menuType === MENU_TYPE.ALL && (
-            <BasicButton
-              title="Download"
-              type="outline"
-              icon={<DownloadOutlined />}
-              onClick={downloadHandler}
-              className={styles.btn}
-            />
+            <span>
+              <BasicButton
+                title="Download"
+                type="outline"
+                icon={<DownloadOutlined />}
+                onClick={downloadHandler}
+                className={styles.btn}
+              />
+              <Upload
+                className={styles.btn}
+                action={`${process.env.REACT_APP_API_URL}${TIME_CHECK.model.hr}/${TIME_CHECK.service}/${TIME_CHECK.model.import}`}
+                headers={{ authorization: 'Bearer ' + token }}
+                onChange={(info) => {
+                  if (info.file.status === 'done') {
+                    if (info.file.response?.data === 'OK') {
+                      refetchList && refetchList();
+                      notification.success({
+                        message: info.file.response?.metadata?.message,
+                      });
+                    } else {
+                      notification.error({
+                        message: info.file.response?.metadata?.message,
+                      });
+                    }
+                  } else {
+                    if (info.file.response?.metadata?.message) {
+                      notification.error({
+                        message: info.file.response?.metadata?.message,
+                        key: '1',
+                      });
+                    }
+                  }
+                }}
+                showUploadList={false}
+              >
+                <BasicButton
+                  title="Upload"
+                  type="outline"
+                  icon={<UploadOutlined />}
+                />
+              </Upload>
+            </span>
           )}
         </div>
         {menuType === MENU_TYPE.DETAIL && (
@@ -179,8 +220,7 @@ export default function ExtraTableTimeCheck({
               isUseDefaultValue={!!stateQuery.startDate}
               onCalendarChange={(values: RangeValue) => setDates(values)}
               disabledDate={disableDate}
-              // allowClear
-              inputReadOnly={false}
+              inputReadOnly
             />
           </Col>
         )}
@@ -209,6 +249,7 @@ export default function ExtraTableTimeCheck({
                 onChange={handleChangeDate}
                 renderExtraFooter={extraFooter}
                 value={moment(stateQuery.startDate)}
+                inputReadOnly
               />
             </Col>
           </>

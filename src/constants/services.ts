@@ -68,6 +68,7 @@ export const TIME_CHECK = {
     allSubordinate: 'all-subordinate',
     detail: 'detail-subordinate',
     export: 'export',
+    import: 'import',
   },
 };
 

@@ -21,7 +21,6 @@ export const downloadFile = async (
     params: param,
   };
   const response = await axios(config);
-
   const outputFilename = nameFileDownload;
   const urlDownload = URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement('a');

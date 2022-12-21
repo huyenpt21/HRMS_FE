@@ -117,13 +117,23 @@ export default function TimeCheckDetail() {
                 </span>
               );
             }
+            if (
+              (el.key === 'inLate' ||
+                el.key === 'outEarly' ||
+                el.key === 'workingTime' ||
+                el.key === 'ot') &&
+              typeof data === 'number'
+            ) {
+              return <span>{data?.toFixed(1)}</span>;
+            }
             return <span>{data}</span>;
           }
           if (
-            (!data && el.key === 'ot') ||
-            el.key === 'workingTime' ||
-            el.key === 'inLate' ||
-            el.key === 'outEarly'
+            !data &&
+            (el.key === 'ot' ||
+              el.key === 'workingTime' ||
+              el.key === 'inLate' ||
+              el.key === 'outEarly')
           ) {
             return <span>0</span>;
           }

@@ -83,7 +83,7 @@ export default function SignatureRegisterModal({
             </Col>
             <Col span="12">
               <SelectCustomSearch
-                url={`${EMPLOYEE.model.signature}/${EMPLOYEE.model.masterData}`}
+                url={`${EMPLOYEE.model.signature}-${EMPLOYEE.model.masterData}`}
                 dataName="items"
                 apiName="register-date-list-master-data"
                 label="Register Date"

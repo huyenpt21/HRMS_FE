@@ -124,7 +124,7 @@ export default function MyTimeCheck() {
                 el.key === 'ot') &&
               typeof data === 'number'
             ) {
-              return <span>{data?.toFixed(2)}</span>;
+              return <span>{data?.toFixed(1)}</span>;
             }
             return <span>{data}</span>;
           }

@@ -168,22 +168,22 @@ export const MyTimeCheckHeader = [
     dataIndex: 'timeOut',
   },
   {
-    title: 'In Late',
+    title: 'In Late (m)',
     key: 'inLate',
     dataIndex: 'inLate',
   },
   {
-    title: 'Out Early',
+    title: 'Out Early (m)',
     key: 'outEarly',
     dataIndex: 'outEarly',
   },
   {
-    title: 'Working Time',
+    title: 'Working Time (h)',
     key: 'workingTime',
     dataIndex: 'workingTime',
   },
   {
-    title: 'Over Time',
+    title: 'Over Time (h)',
     key: 'ot',
     dataIndex: 'ot',
   },

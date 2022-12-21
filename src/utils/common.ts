@@ -41,14 +41,14 @@ export const getStartOfWeek = (
   format?: string,
 ) => {
   return format
-    ? moment(date).startOf('isoWeek').format(format)
-    : moment(date).startOf('isoWeek');
+    ? moment(date).startOf('week').format(format)
+    : moment(date).startOf('week');
 };
 
 export const getEndOfWeek = (date: moment.Moment | string, format?: string) => {
   return format
-    ? moment(date).endOf('isoWeek').format(format)
-    : moment(date).endOf('isoWeek');
+    ? moment(date).endOf('week').format(format)
+    : moment(date).endOf('week');
 };
 
 export const getDateFormat = (
