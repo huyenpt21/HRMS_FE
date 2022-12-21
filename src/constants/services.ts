@@ -33,6 +33,7 @@ export const OFFICE_TIME = {
   service: 'office-time',
   model: {
     hr: 'hr',
+    lunchBreak: 'lunch-break-time',
   },
 };
 

@@ -20,6 +20,7 @@ interface IProps {
   deviceIdRef?: MutableRefObject<number | undefined>;
   modalAction?: MutableRefObject<number | undefined>;
   stateQuery?: DeviceModel;
+  refetch?: () => {};
 }
 export default function DeviceMenuTable({
   record,
@@ -29,6 +30,7 @@ export default function DeviceMenuTable({
   deviceIdRef,
   modalAction,
   stateQuery,
+  refetch,
 }: IProps) {
   const [isShowConfirmDelete, setIsShowConfirmDelete] = useState(false);
   const [isShowConfirmReturn, setIsShowConfirmReturn] = useState(false);
@@ -43,6 +45,7 @@ export default function DeviceMenuTable({
             notification.success({
               message: 'Delete device successfully',
             });
+            refetch && refetch();
           }
         },
         onError: (response: ResDepartmentModify) => {
@@ -66,6 +69,7 @@ export default function DeviceMenuTable({
       if (message === MESSAGE_RES.SUCCESS) {
         notification.success({ message: 'Return device successfully' });
       }
+      refetch && refetch();
       setIsShowConfirmReturn(false);
     },
     onError: (response: ResDeviceModify) => {

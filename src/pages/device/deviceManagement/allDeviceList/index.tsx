@@ -106,6 +106,7 @@ export default function AllDiviceList() {
               deviceIdRef={deviceIdRef}
               modalAction={modalAction}
               stateQuery={stateQuery}
+              refetch={refetchList}
             />
           );
         }

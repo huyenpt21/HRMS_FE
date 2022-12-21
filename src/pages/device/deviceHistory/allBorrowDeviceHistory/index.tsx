@@ -64,6 +64,7 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
     isLoading,
     isError,
     data: dataTable,
+    refetch,
   } = useDeviceList(
     stateQuery,
     menuType === MENU_TYPE.ALL
@@ -156,6 +157,7 @@ export default function AllBorrowDeviceHistory({ menuType }: IProps) {
             <DeviceMenuTable
               menuType={DEVICE_MENU.ALL_BORROW_DEVICE_HISTORY}
               record={record}
+              refetch={refetch}
             />
           );
         }

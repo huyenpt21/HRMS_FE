@@ -78,13 +78,14 @@ export default function AllEmployeeList() {
         el.sorter = !isError;
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
       }
-      if (el.key === 'userName') {
-        el.width = 150;
-      }
       if (el.key === 'fullName') {
         el.width = 300;
       }
-      if (el.key === 'positionName' || el.key === 'departmentName') {
+      if (
+        el.key === 'positionName' ||
+        el.key === 'departmentName' ||
+        el.key === 'userName'
+      ) {
         el.width = 200;
       }
       if (el.key === 'email') {

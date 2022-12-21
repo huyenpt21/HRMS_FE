@@ -40,3 +40,29 @@ export const useUpdateOfficeTime = ({
     },
   );
 };
+export const useUpdateLunchBreakOfficeTime = ({
+  onError,
+  onSuccess,
+}: MutationProps<ResOfficeTimelModify>) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (officeTime: OfficeTimelModel) =>
+      fetchApi(
+        {
+          url: `${OFFICE_TIME.model.hr}/${OFFICE_TIME.model.lunchBreak}`,
+          options: {
+            method: 'PUT',
+            body: JSON.stringify(officeTime),
+          },
+        },
+        undefined,
+      ),
+    {
+      onError: (error: any) => onError?.(error),
+      onSuccess: successHandler(onSuccess),
+      onSettled: () => {
+        queryClient.invalidateQueries(['get-office-time']);
+      },
+    },
+  );
+};
