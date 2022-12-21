@@ -180,6 +180,38 @@ export const REQUEST_TYPE_LIST: SelectBoxType[] = [
     value: 11,
   },
 ];
+export const REQUEST_TYPE_INTERN_LIST: SelectBoxType[] = [
+  {
+    label: 'Business Trip',
+    type: REQUEST_TYPE_KEY.OTHER,
+    value: 2,
+  },
+  {
+    label: 'Forgot Check In/Out',
+    type: REQUEST_TYPE_KEY.FORGOT_CHECK_IN_OUT,
+    value: 4,
+  },
+  {
+    label: 'Maternity Leave',
+    type: REQUEST_TYPE_KEY.MATERNITY,
+    value: 5,
+  },
+  {
+    label: 'Over Time',
+    type: REQUEST_TYPE_KEY.OT,
+    value: 7,
+  },
+  {
+    label: 'Work from home',
+    type: REQUEST_TYPE_KEY.OTHER,
+    value: 9,
+  },
+  {
+    label: 'Borrow Device',
+    type: REQUEST_TYPE_KEY.DEVICE,
+    value: 11,
+  },
+];
 
 export const MY_REQUEST_STATUS_LIST: SelectBoxType[] = [
   {

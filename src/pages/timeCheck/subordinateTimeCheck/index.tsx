@@ -73,12 +73,12 @@ export default function SubordinateTimeCheck() {
         el.sortOrder = sortInforWithDir(el.key, stateQuery);
         el.width = 150;
       }
-      if (el.key === 'personName') {
+      if (el.key === 'fullName') {
         el.width = 230;
       }
       if (
         el.key !== 'rollNumber' &&
-        el.key !== 'personName' &&
+        el.key !== 'fullName' &&
         el.key !== 'requestTypeName'
       ) {
         el.width = 150;

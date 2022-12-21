@@ -12,7 +12,7 @@ export interface EmployeeModel extends Resource {
   address?: string;
   managerId?: string;
   positionId?: string;
-  rankId?: string;
+  rankId?: number;
   onBoardDate?: string;
   isManager?: number;
   isActive?: number;

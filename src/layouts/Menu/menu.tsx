@@ -105,7 +105,7 @@ export const menuManager: MenuItemType[] = [
     icon: 'calendar-search',
     children: [
       {
-        title: 'Subordinate Attendence',
+        title: 'Subordinate Time Check',
         key: 'sub-time-check',
         path: '/time-check/subordinate',
       },
@@ -159,7 +159,7 @@ export const menuHR: MenuItemType[] = [
     icon: 'calendar-search',
     children: [
       {
-        title: 'All Employee Attendence',
+        title: 'All Employee Time Check',
         key: 'all-employee-time-check',
         path: '/time-check/all',
       },
@@ -292,12 +292,12 @@ export const menuHrManager: MenuItemType[] = [
     icon: 'calendar-search',
     children: [
       {
-        title: 'Subordinate Attendence',
+        title: 'Subordinate Time Check',
         key: 'sub-time-check',
         path: '/time-check/subordinate',
       },
       {
-        title: 'All Employee Attendence',
+        title: 'All Employee Time Check',
         key: 'all-employee-time-check',
         path: '/time-check/all',
       },
@@ -392,7 +392,7 @@ export const menuItSupportManager: MenuItemType[] = [
     icon: 'calendar-search',
     children: [
       {
-        title: 'Subordinate Attendence',
+        title: 'Subordinate Time Check',
         key: 'sub-time-check',
         path: '/time-check/subordinate',
       },

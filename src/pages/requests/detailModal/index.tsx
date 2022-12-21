@@ -20,7 +20,11 @@ import {
   REQUEST_TYPE_KEY,
   STATUS,
 } from 'constants/enums/common';
-import { REQUEST_MATERNITY_OPTION, REQUEST_TYPE_LIST } from 'constants/fixData';
+import {
+  REQUEST_MATERNITY_OPTION,
+  REQUEST_TYPE_INTERN_LIST,
+  REQUEST_TYPE_LIST,
+} from 'constants/fixData';
 import {
   deleteObject,
   getDownloadURL,
@@ -66,6 +70,7 @@ import {
   disabledRangeTime,
 } from './function';
 import styles from './requestDetailModal.module.less';
+import { useAppSelector } from 'hooks';
 interface IProps {
   isVisible: boolean;
   onCancel: () => void;
@@ -85,6 +90,7 @@ export default function RequestDetailModal({
   tabType,
 }: IProps) {
   const [requestForm] = Form.useForm();
+  const userInfor = useAppSelector((state) => state.auth.user);
   const [actionModal, setActionModal] = useState(action);
   const [requestData, setRequestData] = useState<RequestModel>();
   const [requestType, setRequestType] = useState<string | undefined>('');
@@ -477,7 +483,11 @@ export default function RequestDetailModal({
                 <Row gutter={20}>
                   <Col span="12">
                     <BasicSelect
-                      options={REQUEST_TYPE_LIST}
+                      options={
+                        userInfor?.rankId === 1
+                          ? REQUEST_TYPE_INTERN_LIST
+                          : REQUEST_TYPE_LIST
+                      }
                       label="Request Type"
                       rules={[{ required: true }]}
                       placeholder="Choose request type"

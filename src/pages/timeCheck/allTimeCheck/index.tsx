@@ -90,7 +90,6 @@ export default function AllTimeCheck() {
         el.width = 150;
         el.align = 'center';
       }
-
       return {
         ...el,
         title: () => {
