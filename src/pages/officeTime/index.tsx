@@ -1,4 +1,4 @@
-import { Card, Col, Divider, Form, notification, Row } from 'antd';
+import { Card, Col, Form, notification, Row } from 'antd';
 import BasicButton from 'components/BasicButton';
 import Loading from 'components/loading';
 import TimeComponent from 'components/TimePicker';
@@ -65,9 +65,9 @@ export default function OfficeTime() {
       } = response;
       if (message === MESSAGE_RES.SUCCESS) {
         notification.success({
-          message: 'Update office time successfully',
+          message: 'Update lunch break time successfully',
         });
-        setIsShowEditting(false);
+        setIsShowLunchBreakEditting(false);
       }
     },
     onError: (response: ResOfficeTimelModify) => {
@@ -107,16 +107,17 @@ export default function OfficeTime() {
         <Row className={styles.header__section}>
           <div className={styles.header__title}>Office Time</div>
         </Row>
-        {(isLoading || loadingUpdate || loadingUpdateLunchBreakTime) && (
-          <Loading text="Working on it..." />
-        )}
-        {!isLoading && !loadingUpdate && !loadingUpdateLunchBreakTime && (
+        {(loadingUpdate || isLoading) && <Loading text="Working on it..." />}
+        {!loadingUpdate && !isLoading && (
           <>
             <Row className={styles.content__section}>
               <Col span={10}>
                 <Card
                   title="Start"
-                  headStyle={{ fontWeight: 600, color: 'rgba(0, 0, 0, 0.8)' }}
+                  headStyle={{
+                    fontWeight: 600,
+                    color: 'rgba(0, 0, 0, 0.8)',
+                  }}
                   bodyStyle={{
                     backgroundColor: '#FFEFD6',
                     color: 'rgba(0, 0, 0, 0.8)',
@@ -136,7 +137,10 @@ export default function OfficeTime() {
               <Col span={10}>
                 <Card
                   title="Finish"
-                  headStyle={{ fontWeight: 600, color: 'rgba(0, 0, 0, 0.8)' }}
+                  headStyle={{
+                    fontWeight: 600,
+                    color: 'rgba(0, 0, 0, 0.8)',
+                  }}
                   bodyStyle={{
                     backgroundColor: '#BCEAD5',
                     color: 'rgba(0, 0, 0, 0.8)',
@@ -183,7 +187,10 @@ export default function OfficeTime() {
                     <TimeComponent
                       name="timeStart"
                       rules={[
-                        { required: true, message: 'Start time is requied' },
+                        {
+                          required: true,
+                          message: 'Start time is requied',
+                        },
                       ]}
                       allowClear
                       defaultValue={officeTimeData?.timeStart}
@@ -194,7 +201,10 @@ export default function OfficeTime() {
                     <TimeComponent
                       name="timeFinish"
                       rules={[
-                        { required: true, message: 'Finish time is requied' },
+                        {
+                          required: true,
+                          message: 'Finish time is requied',
+                        },
                       ]}
                       allowClear
                       defaultValue={officeTimeData?.timeFinish}
@@ -204,10 +214,18 @@ export default function OfficeTime() {
                 </Row>
               </Form>
             )}
-            <Divider />
-            <Row className={styles.header__section}>
-              <div className={styles.header__title}>Lunch Break Time</div>
-            </Row>
+          </>
+        )}
+      </div>
+      <div className={styles.main}>
+        <Row className={styles.header__section}>
+          <div className={styles.header__title}>Lunch Break Time</div>
+        </Row>
+        {(loadingUpdateLunchBreakTime || isLoading) && (
+          <Loading text="Working on it..." />
+        )}
+        {!loadingUpdateLunchBreakTime && !isLoading && (
+          <>
             <Row className={styles.content__section}>
               <Col span={10}>
                 <Card
