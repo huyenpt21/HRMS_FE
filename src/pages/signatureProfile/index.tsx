@@ -3,7 +3,7 @@ import { TablePaginationConfig } from 'antd/lib/table/interface';
 import CommonTable from 'components/CommonTable';
 import InputDebounce from 'components/InputSearchDedounce/InputSearchDebounce';
 import SvgIcon from 'components/SvgIcon';
-import { DATE_TIME, paginationConfig } from 'constants/common';
+import { paginationConfig } from 'constants/common';
 import { STATUS } from 'constants/enums/common';
 import { SignatureProfileListHeader } from 'constants/header';
 import { useSignatureList } from 'hooks/useSignatureProfile';
@@ -79,7 +79,7 @@ export default function SignatureProfileList() {
               return <SignatureStatus data={STATUS.PENDING} />;
             }
             if (el.key === 'registeredDate') {
-              return getDateFormat(data, DATE_TIME);
+              return getDateFormat(data, 'MM/DD/YYYY HH:mm:ss');
             }
             return <div>{data}</div>;
           }
