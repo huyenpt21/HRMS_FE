@@ -124,7 +124,10 @@ export default function TimeCheckDetail() {
                 el.key === 'ot') &&
               typeof data === 'number'
             ) {
-              return <span>{data?.toFixed(1)}</span>;
+              if (Number(data?.toFixed(2)) % 1 === 0)
+                return <span>{data?.toFixed(0)}</span>;
+              if (Number(data) % 1 !== 0)
+                return <span>{data?.toFixed(2)}</span>;
             }
             return <span>{data}</span>;
           }
