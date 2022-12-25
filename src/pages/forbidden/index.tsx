@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const ForbiddenPage = () => {
   const navigate = useNavigate();
-
-  document.title = '403: This page could not be access';
   return (
     <>
       <Row justify="center" align="middle" style={{ height: '100vh' }}>

@@ -119,7 +119,7 @@ export default function DetailDeviceRequest() {
                     </Col>
                   )}
                 {detailData?.status === STATUS.USING &&
-                  type === 'emp-self-service' && (
+                  type === 'human-resource' && (
                     <Col span={8} className={styles.btn__return}>
                       <BasicButton
                         title="Return"

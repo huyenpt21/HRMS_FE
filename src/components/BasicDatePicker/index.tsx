@@ -1,6 +1,7 @@
-import { DatePicker, Form } from 'antd';
+import { ConfigProvider, DatePicker, Form } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { US_DATE_FORMAT } from 'constants/common';
+import locale from 'antd/es/locale/vi_VN';
 import moment from 'moment';
 import styles from './index.module.less';
 
@@ -49,33 +50,35 @@ const BasicDatePicker = ({
     : false;
 
   return (
-    <Form.Item
-      label={label ? label : ''}
-      colon={colon || false}
-      name={name}
-      required={isRequired}
-      rules={rules}
-      className={classNameFormItem}
-      initialValue={defaultValue ? defaultValue : undefined}
-    >
-      <DatePicker
-        className={styles.date__picker}
-        size={'large'}
-        defaultValue={defaultValue ? defaultValue : undefined}
-        format={format ?? US_DATE_FORMAT}
-        onChange={onChange}
-        disabled={disabled}
-        disabledDate={disabledDate}
-        picker={picker}
-        placeholder={placeholder ? placeholder : US_DATE_FORMAT}
-        suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
-        allowClear={allowClear}
-        renderExtraFooter={renderExtraFooter}
-        defaultPickerValue={defaultPickerValue}
-        value={value}
-        inputReadOnly={inputReadOnly}
-      />
-    </Form.Item>
+    <ConfigProvider locale={locale}>
+      <Form.Item
+        label={label ? label : ''}
+        colon={colon || false}
+        name={name}
+        required={isRequired}
+        rules={rules}
+        className={classNameFormItem}
+        initialValue={defaultValue ? defaultValue : undefined}
+      >
+        <DatePicker
+          className={styles.date__picker}
+          size={'large'}
+          defaultValue={defaultValue ? defaultValue : undefined}
+          format={format ?? US_DATE_FORMAT}
+          onChange={onChange}
+          disabled={disabled}
+          disabledDate={disabledDate}
+          picker={picker}
+          placeholder={placeholder ? placeholder : US_DATE_FORMAT}
+          suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
+          allowClear={allowClear}
+          renderExtraFooter={renderExtraFooter}
+          defaultPickerValue={defaultPickerValue}
+          value={value}
+          inputReadOnly={inputReadOnly}
+        />
+      </Form.Item>
+    </ConfigProvider>
   );
 };
 export default BasicDatePicker;

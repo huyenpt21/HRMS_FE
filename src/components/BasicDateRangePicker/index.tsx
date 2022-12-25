@@ -1,10 +1,10 @@
-import { DatePicker, Form } from 'antd';
+import { ConfigProvider, DatePicker, Form } from 'antd';
 import SvgIcon from 'components/SvgIcon';
 import { US_DATE_FORMAT } from 'constants/common';
 import moment from 'moment';
 import { Dispatch, SetStateAction } from 'react';
 import styles from './index.module.less';
-
+import locale from 'antd/es/locale/vi_VN';
 export type RangeValue = [moment.Moment | null, moment.Moment | null] | null;
 type EventValue<DateType> = DateType | null;
 type RangeType = 'start' | 'end';
@@ -55,36 +55,40 @@ const BasicDateRangePicker = (props: IProps) => {
     : undefined;
   return (
     <span className={styles['picker--container']}>
-      <Form.Item
-        label={props.label ? props.label : ''}
-        colon={props.colon || false}
-        name={props.name}
-        required={isRequired}
-        rules={props.rules}
-        initialValue={defaultDate}
-      >
-        <RangePicker
-          className={`${styles['header__time']} ${props.className}`}
-          format={props.format ? props.format : US_DATE_FORMAT}
-          defaultValue={
-            props.isUseDefaultValue
-              ? [moment(props.defaultStartDate), moment(props.defaultEndDate)]
-              : undefined
-          }
-          onChange={props.onChange}
-          suffixIcon={<SvgIcon icon="calendar-search" size={20} color="#aaa" />}
-          size="large"
-          disabled={props.disabled}
-          disabledDate={props.disabledDate}
-          placeholder={props.placeholder}
-          showTime={props.showTime}
-          onCalendarChange={props.onCalendarChange}
-          allowClear={props.allowClear}
-          disabledTime={props.disabledTime}
-          hideDisabledOptions={props.hideDisabledOptions}
-          inputReadOnly={props.inputReadOnly}
-        />
-      </Form.Item>
+      <ConfigProvider locale={locale}>
+        <Form.Item
+          label={props.label ? props.label : ''}
+          colon={props.colon || false}
+          name={props.name}
+          required={isRequired}
+          rules={props.rules}
+          initialValue={defaultDate}
+        >
+          <RangePicker
+            className={`${styles['header__time']} ${props.className}`}
+            format={props.format ? props.format : US_DATE_FORMAT}
+            defaultValue={
+              props.isUseDefaultValue
+                ? [moment(props.defaultStartDate), moment(props.defaultEndDate)]
+                : undefined
+            }
+            onChange={props.onChange}
+            suffixIcon={
+              <SvgIcon icon="calendar-search" size={20} color="#aaa" />
+            }
+            size="large"
+            disabled={props.disabled}
+            disabledDate={props.disabledDate}
+            placeholder={props.placeholder}
+            showTime={props.showTime}
+            onCalendarChange={props.onCalendarChange}
+            allowClear={props.allowClear}
+            disabledTime={props.disabledTime}
+            hideDisabledOptions={props.hideDisabledOptions}
+            inputReadOnly={props.inputReadOnly}
+          />
+        </Form.Item>
+      </ConfigProvider>
     </span>
   );
 };
