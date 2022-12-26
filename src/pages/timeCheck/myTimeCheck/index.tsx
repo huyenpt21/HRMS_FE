@@ -125,9 +125,8 @@ export default function MyTimeCheck() {
               typeof data === 'number'
             ) {
               if (Number(data?.toFixed(2)) % 1 === 0)
-                return <span>{data?.toFixed(0)}</span>;
-              if (Number(data) % 1 !== 0)
-                return <span>{data?.toFixed(2)}</span>;
+                return <b>{data?.toFixed(0)}</b>;
+              if (Number(data) % 1 !== 0) return <b>{data?.toFixed(2)}</b>;
             }
             return <span>{data}</span>;
           }

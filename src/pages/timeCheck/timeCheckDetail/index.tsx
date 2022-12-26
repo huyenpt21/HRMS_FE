@@ -87,7 +87,7 @@ export default function TimeCheckDetail() {
       return {
         ...el,
         render: (data: any, record: TimeCheckModel) => {
-          if (data !== null) {
+          if (data) {
             if (el.key === 'date') {
               return <span>{getDateFormat(data, DATE_TIME_US)}</span>;
             }
@@ -125,9 +125,8 @@ export default function TimeCheckDetail() {
               typeof data === 'number'
             ) {
               if (Number(data?.toFixed(2)) % 1 === 0)
-                return <span>{data?.toFixed(0)}</span>;
-              if (Number(data) % 1 !== 0)
-                return <span>{data?.toFixed(2)}</span>;
+                return <b>{data?.toFixed(0)}</b>;
+              if (Number(data) % 1 !== 0) return <b>{data?.toFixed(2)}</b>;
             }
             return <span>{data}</span>;
           }

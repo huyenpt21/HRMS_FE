@@ -148,12 +148,6 @@ export const BorrowDeviceListHeader = [
     key: 'receiver',
     dataIndex: 'receiver',
   },
-
-  {
-    title: 'Status',
-    key: 'isAssigned',
-    dataIndex: 'isAssigned',
-  },
 ];
 
 export const MyTimeCheckHeader = [

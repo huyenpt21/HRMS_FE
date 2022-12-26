@@ -121,7 +121,6 @@ export default function EmployeeDetailModal({
         employeeForm.setFieldsValue(employee);
         employeeForm.setFieldsValue({
           dateOfBirth: moment(employee.dateOfBirth),
-          onBoardDate: moment(employee.onBoardDate),
         });
       }
     }
@@ -133,7 +132,6 @@ export default function EmployeeDetailModal({
   };
 
   const submitHandler = (formValues: EmployeeModel) => {
-    formValues.onBoardDate = getDateFormat(formValues.onBoardDate, DATE_TIME);
     formValues.dateOfBirth = getDateFormat(formValues.dateOfBirth, DATE_TIME);
     formValues.isManager = formValues.isManager ? 1 : 0;
 
@@ -346,7 +344,7 @@ export default function EmployeeDetailModal({
                           allowClear
                           placeholder="Choose manager"
                           apiName="manager-master-data"
-                          isCallApi={false}
+                          isCallApi={!!departmentId}
                           refetchValue={departmentId}
                           disabled={
                             !departmentId ||
@@ -382,15 +380,6 @@ export default function EmployeeDetailModal({
                           rules={[{ required: true }]}
                           allowClear
                           placeholder="Choose ranking"
-                        />
-                      </Col>
-                    </Row>
-                    <Row gutter={12}>
-                      <Col span={12}>
-                        <BasicDatePicker
-                          name="onBoardDate"
-                          label="Onboard Date"
-                          rules={[{ required: true }]}
                         />
                       </Col>
                     </Row>
