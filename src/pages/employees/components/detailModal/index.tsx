@@ -12,13 +12,14 @@ import {
   COMMON_STATUS,
   DATE_TIME,
   MESSAGE_RES,
+  US_DATE_FORMAT,
   validateMessages,
 } from 'constants/common';
 import { ACTION_TYPE, EMPLOYEE_MENU } from 'constants/enums/common';
 import {
+  COMMON_STATUS_LIST,
   GENDER_LIST,
   RANKING_LIST,
-  COMMON_STATUS_LIST,
 } from 'constants/fixData';
 import {
   DEPARTMENT,
@@ -32,7 +33,7 @@ import {
 } from 'hooks/useEmployee';
 import { EmployeeModel, ResEmployeeModify } from 'models/employee';
 import moment from 'moment-timezone';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getDateFormat } from 'utils/common';
 import SignatureRegisterModal from '../modalRegister';
 import styles from './addEmployee.module.less';
@@ -121,6 +122,7 @@ export default function EmployeeDetailModal({
         employeeForm.setFieldsValue(employee);
         employeeForm.setFieldsValue({
           dateOfBirth: moment(employee.dateOfBirth),
+          onBoardDate: moment(employee.onBoardDate),
         });
       }
     }
@@ -264,20 +266,39 @@ export default function EmployeeDetailModal({
                     </div>
                     {(actionModal === ACTION_TYPE.EDIT ||
                       actionModal === ACTION_TYPE.VIEW_DETAIL) && (
-                      <Row gutter={12} className={styles['infor--header']}>
-                        <Col span={12}>
-                          <span>Roll Number: </span>
-                          <span className={styles['text--bold']}>
-                            {personInforRef.current?.rollNumber}
-                          </span>
-                        </Col>
-                        <Col span={12}>
-                          <span>Email: </span>
-                          <span className={styles['text--bold']}>
-                            {personInforRef.current?.email}
-                          </span>
-                        </Col>
-                      </Row>
+                      <>
+                        <Row gutter={12} className={styles['infor--header']}>
+                          <Col span={12}>
+                            <span>Roll Number: </span>
+                            <span className={styles['text--bold']}>
+                              {personInforRef.current?.rollNumber}
+                            </span>
+                          </Col>
+                          <Col span={12}>
+                            <span>Email: </span>
+                            <span className={styles['text--bold']}>
+                              {personInforRef.current?.email}
+                            </span>
+                          </Col>
+                        </Row>
+                        <Row gutter={12} className={styles['infor--header']}>
+                          <Col span={12}>
+                            <span>User Name: </span>
+                            <span className={styles['text--bold']}>
+                              {personInforRef.current?.userName}
+                            </span>
+                          </Col>
+                          <Col span={12}>
+                            <span>Onboard Date: </span>
+                            <span className={styles['text--bold']}>
+                              {getDateFormat(
+                                personInforRef.current?.onBoardDate,
+                                US_DATE_FORMAT,
+                              )}
+                            </span>
+                          </Col>
+                        </Row>
+                      </>
                     )}
                     <Row gutter={12}>
                       <Col span={12}>

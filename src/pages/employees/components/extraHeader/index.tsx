@@ -60,8 +60,6 @@ export default function ExtraHeaderTable({
       moment(),
       DATE_TIME,
     )}.xlsx`;
-    delete stateQuery.limit;
-    delete stateQuery.page;
     downloadFile(url, outputFilename, stateQuery);
   };
   const downloadTemplateHandler = async () => {
@@ -71,7 +69,6 @@ export default function ExtraHeaderTable({
       DATE_TIME,
     )}.xlsx`;
     downloadFile(url, outputFilename);
-    refetch && refetch();
   };
   const getByTitle = () => {
     if (menuType === EMPLOYEE_MENU.ALL) {
