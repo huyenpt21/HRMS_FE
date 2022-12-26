@@ -46,6 +46,11 @@ interface IProps {
 const { RangePicker } = DatePicker;
 
 const BasicDateRangePicker = (props: IProps) => {
+  moment.locale('vi', {
+    week: {
+      dow: 1, // Date offset
+    },
+  });
   const isRequired = props.rules
     ? props.rules.filter((r: any) => r.required === true).length > 0
     : false;
