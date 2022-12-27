@@ -57,6 +57,7 @@ export default function TimeCheckDetail() {
     isLoading,
     isError,
     data: dataTable,
+    refetch: refetchList,
   } = useTimeCheckList(
     stateQuery,
     `${TIME_CHECK.model.manager}/${TIME_CHECK.service}/${TIME_CHECK.model.detail}`,
@@ -204,6 +205,7 @@ export default function TimeCheckDetail() {
             personName: records[0]?.personName,
             rollNumber: records[0]?.rollNumber,
           }}
+          refetchList={refetchList}
         />
       }
       onChange={handleTableChange}

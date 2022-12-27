@@ -3,7 +3,7 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
-import { Col, Form, notification, Row, Upload } from 'antd';
+import { Card, Col, Form, notification, Row, Upload } from 'antd';
 import BasicButton from 'components/BasicButton';
 import BasicSelect from 'components/BasicSelect';
 import { downloadFile } from 'components/DownloadFile';
@@ -18,9 +18,17 @@ import {
   EMPLOYEE,
   POSITION_BY_DEPARTMENT,
 } from 'constants/services';
+import { useGetTotalEmployee } from 'hooks/useEmployee';
 import { EmployeeListQuery } from 'models/employee';
 import moment from 'moment-timezone';
-import { Dispatch, MutableRefObject, SetStateAction, useRef } from 'react';
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { getDateFormat } from 'utils/common';
 import styles from './extraHeaderEmployee.module.less';
 interface IProps {
@@ -41,6 +49,15 @@ export default function ExtraHeaderTable({
 }: IProps) {
   const [filterForm] = Form.useForm();
   const token = localStorage.getItem(ACCESS_TOKEN) || null;
+  const { data: totalEmployeeData } = useGetTotalEmployee();
+  const [totalEmployee, setTotalEmployee] = useState(0);
+
+  useEffect(() => {
+    if (totalEmployeeData && totalEmployeeData?.data) {
+      const total = totalEmployeeData.data?.item?.total;
+      setTotalEmployee(total);
+    }
+  }, [totalEmployeeData]);
 
   const departmentIdRef = useRef<number>(-1);
   const addEmployeeHandler = () => {
@@ -141,71 +158,95 @@ export default function ExtraHeaderTable({
         )}
       </div>
       <Form form={filterForm} layout="vertical">
-        <Row gutter={10} className={styles.filter__section}>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
-            <InputDebounce
-              suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-              placeholder="Search ..."
-              allowClear
-              setStateQuery={setStateQuery}
-              keyParam="search"
-              defaultValue={stateQuery?.search}
-              label="Roll Number / Name"
-            />
+        <Row className={styles.filter__section}>
+          <Col span={21}>
+            <Row gutter={10}>
+              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                <InputDebounce
+                  suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
+                  placeholder="Search ..."
+                  allowClear
+                  setStateQuery={setStateQuery}
+                  keyParam="search"
+                  defaultValue={stateQuery?.search}
+                  label="Roll Number / Name"
+                />
+              </Col>
+              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                <SelectCustomSearch
+                  url={DEPARTMENT.model.masterData}
+                  dataName="items"
+                  allowClear
+                  placeholder="Choose department"
+                  onChangeHandle={(value) => {
+                    handleChangeFilter(value, 'departmentId');
+                    if (!value) departmentIdRef.current = -1;
+                    if (value) {
+                      departmentIdRef.current = value;
+                      filterForm.setFieldValue('position', undefined);
+                      setStateQuery((prev: EmployeeListQuery) => ({
+                        ...prev,
+                        positionId: undefined,
+                      }));
+                    }
+                  }}
+                  apiName="department-master-data"
+                  defaultValue={stateQuery?.departmentId ?? undefined}
+                  label="Department"
+                />
+              </Col>
+              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                <SelectCustomSearch
+                  url={`${POSITION_BY_DEPARTMENT.service}?departmentId=${departmentIdRef.current}`}
+                  dataName="items"
+                  name="position"
+                  placeholder="Choose position"
+                  allowClear
+                  optionFilterProp="label"
+                  apiName="position-master-data"
+                  onChangeHandle={(value) => {
+                    handleChangeFilter(value, 'positionId');
+                  }}
+                  refetchValue={departmentIdRef.current}
+                  defaultValue={stateQuery?.positionId ?? undefined}
+                  label="Position"
+                />
+              </Col>
+              <Col span={4}>
+                <BasicSelect
+                  options={COMMON_STATUS_LIST}
+                  placeholder="Choose status"
+                  allowClear
+                  showSearch
+                  optionFilterProp="label"
+                  onChange={(value) => {
+                    handleChangeFilter(value, 'isActive');
+                  }}
+                  defaultValue={stateQuery?.isActive ?? undefined}
+                  label="Status"
+                />
+              </Col>
+            </Row>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
-            <SelectCustomSearch
-              url={DEPARTMENT.model.masterData}
-              dataName="items"
-              allowClear
-              placeholder="Choose department"
-              onChangeHandle={(value) => {
-                handleChangeFilter(value, 'departmentId');
-                if (!value) departmentIdRef.current = -1;
-                if (value) {
-                  departmentIdRef.current = value;
-                  filterForm.setFieldValue('position', undefined);
-                  setStateQuery((prev: EmployeeListQuery) => ({
-                    ...prev,
-                    positionId: undefined,
-                  }));
-                }
+          <Col span={2.5}>
+            <Card
+              title="Total employee"
+              size="small"
+              headStyle={{
+                fontWeight: 600,
+                color: 'rgba(0, 0, 0, 0.8)',
+                backgroundColor: '#A8D1D1',
               }}
-              apiName="department-master-data"
-              defaultValue={stateQuery?.departmentId ?? undefined}
-              label="Department"
-            />
-          </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
-            <SelectCustomSearch
-              url={`${POSITION_BY_DEPARTMENT.service}?departmentId=${departmentIdRef.current}`}
-              dataName="items"
-              name="position"
-              placeholder="Choose position"
-              allowClear
-              optionFilterProp="label"
-              apiName="position-master-data"
-              onChangeHandle={(value) => {
-                handleChangeFilter(value, 'positionId');
+              bodyStyle={{
+                color: 'rgba(0, 0, 0, 0.8)',
+                fontWeight: 600,
+                fontSize: '18px',
+                textAlign: 'center',
+                padding: '5px !important',
               }}
-              refetchValue={departmentIdRef.current}
-              defaultValue={stateQuery?.positionId ?? undefined}
-              label="Position"
-            />
-          </Col>
-          <Col span={4}>
-            <BasicSelect
-              options={COMMON_STATUS_LIST}
-              placeholder="Choose status"
-              allowClear
-              showSearch
-              optionFilterProp="label"
-              onChange={(value) => {
-                handleChangeFilter(value, 'isActive');
-              }}
-              defaultValue={stateQuery?.isActive ?? undefined}
-              label="Status"
-            />
+            >
+              {totalEmployee}
+            </Card>
           </Col>
         </Row>
       </Form>

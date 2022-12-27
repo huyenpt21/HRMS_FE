@@ -10,6 +10,7 @@ export const EMPLOYEE = {
     unread: 'unread',
     signature: 'signature',
     masterData: 'master-data',
+    total: 'total',
   },
 };
 

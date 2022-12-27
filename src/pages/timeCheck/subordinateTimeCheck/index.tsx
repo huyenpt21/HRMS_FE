@@ -60,6 +60,7 @@ export default function SubordinateTimeCheck() {
     isLoading,
     isError,
     data: dataTable,
+    refetch: refetchList,
   } = useTimeCheckList(
     stateQuery,
     `${TIME_CHECK.model.manager}/${TIME_CHECK.service}/${TIME_CHECK.model.allSubordinate}`,
@@ -217,6 +218,7 @@ export default function SubordinateTimeCheck() {
             menuType={MENU_TYPE.SUBORDINATE}
             setStateQuery={setStateQuery}
             stateQuery={stateQuery}
+            refetchList={refetchList}
           />
         }
         stateQuery={stateQuery}

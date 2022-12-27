@@ -74,6 +74,15 @@ export const useGetUserRoles = (token: string) =>
       enabled: !!token,
     },
   );
+export const useGetTotalEmployee = () =>
+  useQuery(['total-employees'], () =>
+    fetchApi(
+      {
+        url: `${EMPLOYEE.model.hr}/${EMPLOYEE.service}/${EMPLOYEE.model.total}`,
+      },
+      undefined,
+    ),
+  );
 
 export const useUpdateUserInfor = ({
   onError,

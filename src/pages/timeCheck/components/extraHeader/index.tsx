@@ -1,6 +1,7 @@
 import {
   BackwardOutlined,
   DownloadOutlined,
+  ReloadOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
 import { Col, notification, Row, Upload } from 'antd';
@@ -32,7 +33,7 @@ interface IProps {
   setStateQuery: Dispatch<SetStateAction<TimeCheckListQuery>>;
   stateQuery: TimeCheckListQuery;
   employeeInfor?: TimeCheckEmployeeInfo;
-  refetchList?: () => {};
+  refetchList: () => {};
 }
 export default function ExtraTableTimeCheck({
   menuType,
@@ -132,6 +133,9 @@ export default function ExtraTableTimeCheck({
     delete stateQuery.page;
     downloadFile(url, outputFilename, stateQuery);
   };
+  const handleClickReload = () => {
+    refetchList();
+  };
 
   return (
     <>
@@ -139,11 +143,30 @@ export default function ExtraTableTimeCheck({
         <div className={styles.header__top}>
           <div className="header__title">{handleTitle()}</div>
           {menuType === MENU_TYPE.DETAIL && (
+            <span>
+              <BasicButton
+                title="Back"
+                type="filled"
+                icon={<BackwardOutlined />}
+                onClick={handleBackButton}
+              />
+              <BasicButton
+                title="Reload"
+                type="outline"
+                icon={<ReloadOutlined />}
+                className={styles.btn}
+                onClick={handleClickReload}
+              />
+            </span>
+          )}
+          {(menuType === MENU_TYPE.MINE ||
+            menuType === MENU_TYPE.SUBORDINATE) && (
             <BasicButton
-              title="Back"
-              type="filled"
-              icon={<BackwardOutlined />}
-              onClick={handleBackButton}
+              title="Reload"
+              type="outline"
+              icon={<ReloadOutlined />}
+              className={styles.btn}
+              onClick={handleClickReload}
             />
           )}
           {menuType === MENU_TYPE.ALL && (
@@ -162,7 +185,7 @@ export default function ExtraTableTimeCheck({
                 onChange={(info) => {
                   if (info.file.status === 'done') {
                     if (info.file.response?.data === 'OK') {
-                      refetchList && refetchList();
+                      refetchList();
                       notification.success({
                         message: info.file.response?.metadata?.message,
                       });
@@ -188,6 +211,13 @@ export default function ExtraTableTimeCheck({
                   icon={<UploadOutlined />}
                 />
               </Upload>
+              <BasicButton
+                title="Reload"
+                type="outline"
+                icon={<ReloadOutlined />}
+                className={styles.btn}
+                onClick={handleClickReload}
+              />
             </span>
           )}
         </div>
@@ -226,31 +256,35 @@ export default function ExtraTableTimeCheck({
         )}
         {(menuType === MENU_TYPE.SUBORDINATE || menuType === MENU_TYPE.ALL) && (
           <>
-            <Col xs={24} sm={18} md={8} xl={8} xxl={6}>
-              <InputDebounce
-                suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
-                placeholder="Search ..."
-                allowClear
-                setStateQuery={setStateQuery}
-                keyParam="search"
-                label="Roll Number / Name"
-              />
-            </Col>
-            <Col xs={24} sm={18} md={10} xl={8} xxl={6}>
-              <BasicDatePicker
-                label="Filter date"
-                picker="week"
-                format={`${getDateFormat(
-                  stateQuery.startDate,
-                  US_DATE_FORMAT,
-                )} - ${getDateFormat(stateQuery.endDate, US_DATE_FORMAT)}`}
-                defaultValue={moment(stateQuery.startDate)}
-                allowClear={false}
-                onChange={handleChangeDate}
-                renderExtraFooter={extraFooter}
-                value={moment(stateQuery.startDate)}
-                inputReadOnly
-              />
+            <Col span={22}>
+              <Row gutter={20}>
+                <Col xs={24} sm={18} md={8} xl={8} xxl={6}>
+                  <InputDebounce
+                    suffix={<SvgIcon icon="search" color="#ccc" size="16" />}
+                    placeholder="Search ..."
+                    allowClear
+                    setStateQuery={setStateQuery}
+                    keyParam="search"
+                    label="Roll Number / Name"
+                  />
+                </Col>
+                <Col xs={24} sm={18} md={10} xl={8} xxl={6}>
+                  <BasicDatePicker
+                    label="Filter date"
+                    picker="week"
+                    format={`${getDateFormat(
+                      stateQuery.startDate,
+                      US_DATE_FORMAT,
+                    )} - ${getDateFormat(stateQuery.endDate, US_DATE_FORMAT)}`}
+                    defaultValue={moment(stateQuery.startDate)}
+                    allowClear={false}
+                    onChange={handleChangeDate}
+                    renderExtraFooter={extraFooter}
+                    value={moment(stateQuery.startDate)}
+                    inputReadOnly
+                  />
+                </Col>
+              </Row>
             </Col>
           </>
         )}

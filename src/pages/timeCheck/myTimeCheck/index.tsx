@@ -58,7 +58,12 @@ export default function MyTimeCheck() {
     removeEmptyValueInObject(defaultFilter),
   );
   // * get data table from API
-  const { isLoading, isError, data: dataTable } = useTimeCheckList(stateQuery);
+  const {
+    isLoading,
+    isError,
+    data: dataTable,
+    refetch: refetchList,
+  } = useTimeCheckList(stateQuery);
   // * get header
   let header: HeaderTableFields[] = MyTimeCheckHeader;
   // * render header and data in table
@@ -199,6 +204,7 @@ export default function MyTimeCheck() {
           menuType={MENU_TYPE.MINE}
           setStateQuery={setStateQuery}
           stateQuery={stateQuery}
+          refetchList={refetchList}
         />
       }
       stateQuery={stateQuery}

@@ -64,6 +64,7 @@ export default function AllTimeCheck() {
     isLoading,
     isError,
     data: dataTable,
+    refetch: refetchList,
   } = useTimeCheckList(
     stateQuery,
     `${TIME_CHECK.model.hr}/${TIME_CHECK.service}/${TIME_CHECK.model.allEmployee}`,
@@ -227,6 +228,7 @@ export default function AllTimeCheck() {
             menuType={MENU_TYPE.ALL}
             setStateQuery={setStateQuery}
             stateQuery={stateQuery}
+            refetchList={refetchList}
           />
         }
         stateQuery={stateQuery}
