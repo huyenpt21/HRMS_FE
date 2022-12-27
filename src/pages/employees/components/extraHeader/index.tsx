@@ -228,26 +228,28 @@ export default function ExtraHeaderTable({
               </Col>
             </Row>
           </Col>
-          <Col span={2.5}>
-            <Card
-              title="Total employee"
-              size="small"
-              headStyle={{
-                fontWeight: 600,
-                color: 'rgba(0, 0, 0, 0.8)',
-                backgroundColor: '#A8D1D1',
-              }}
-              bodyStyle={{
-                color: 'rgba(0, 0, 0, 0.8)',
-                fontWeight: 600,
-                fontSize: '18px',
-                textAlign: 'center',
-                padding: '5px !important',
-              }}
-            >
-              {totalEmployee}
-            </Card>
-          </Col>
+          {menuType === EMPLOYEE_MENU.ALL && (
+            <Col span={2.5}>
+              <Card
+                title="Total employee"
+                size="small"
+                headStyle={{
+                  fontWeight: 600,
+                  color: 'rgba(0, 0, 0, 0.8)',
+                  backgroundColor: '#A8D1D1',
+                }}
+                bodyStyle={{
+                  color: 'rgba(0, 0, 0, 0.8)',
+                  fontWeight: 600,
+                  fontSize: '18px',
+                  textAlign: 'center',
+                  padding: '5px !important',
+                }}
+              >
+                {totalEmployee}
+              </Card>
+            </Col>
+          )}
         </Row>
       </Form>
     </>
